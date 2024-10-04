@@ -1,0 +1,243 @@
+#ifndef _LOGIT_FILE_LOGGER_HPP_INCLUDED
+#define _LOGIT_FILE_LOGGER_HPP_INCLUDED
+/// \file FileLogger.hpp
+/// \brief File logger implementation that outputs logs to files with rotation and deletion of old logs.
+
+#include "ILogger.hpp"
+#include "../TaskExecutor.hpp"
+#include "../LogMacros.hpp"
+#include "../Utils/path_utils.hpp"
+#include <iostream>
+#include <fstream>
+#include <mutex>
+#include <atomic>
+#include <regex>
+#include <queue>
+#include <functional>
+
+namespace logit {
+
+    /// \class FileLogger
+    /// \brief Logger that outputs log messages to files with date-based rotation and old file deletion.
+    ///
+    /// The `FileLogger` provides synchronous or asynchronous logging to files.
+    /// It writes logs to files named by date in a configurable directory.
+    /// When the UTC day changes, it creates a new log file.
+    /// It also deletes log files older than a specified number of days.
+    class FileLogger : public ILogger {
+    public:
+
+        /// \struct Config
+        /// \brief Configuration for the file logger.
+        struct Config {
+            std::string directory = "logs"; ///< Directory where log files are stored.
+            bool async = true; ///< Flag indicating whether logging should be asynchronous.
+            int auto_delete_days = 30; ///< Number of days after which old log files are deleted.
+        };
+
+        /// \brief Default constructor that uses default configuration.
+        FileLogger() {
+            start_logging();
+        }
+
+        /// \brief Constructor with custom configuration.
+        /// \param config The configuration for the logger.
+        FileLogger(const Config& config) : m_config(config) {
+            start_logging();
+        }
+
+        /// \brief Constructor with directory and asynchronous flag.
+        /// \param directory The directory where log files will be stored.
+        /// \param async Boolean flag for asynchronous logging.
+        /// \param auto_delete_days Number of days after which old log files are deleted.
+        FileLogger(const std::string& directory, const bool& async = true, const int& auto_delete_days = 30) {
+            m_config.directory = directory;
+            m_config.async = async;
+            m_config.auto_delete_days = auto_delete_days;
+            start_logging();
+        }
+
+        virtual ~FileLogger() {
+            stop_logging();
+        }
+
+        /// \brief Logs a message to a file with thread safety.
+        ///
+        /// If asynchronous logging is enabled, the message is added to the task queue;
+        /// otherwise, it is logged directly.
+        ///
+        /// \param record The log record containing log information.
+        /// \param message The formatted log message.
+        void log(const LogRecord& record, const std::string& message) override {
+            if (!m_config.async) {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                try {
+                    write_log(message, record.timestamp_ms);
+                } catch (const std::exception& e) {
+                    std::cerr << "Log error: " << e.what() << std::endl;
+                }
+                return;
+            }
+            auto timestamp_ms = record.timestamp_ms;
+            TaskExecutor::get_instance().add_task([this, message, timestamp_ms]() {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                try {
+                    write_log(message, timestamp_ms);
+                } catch (const std::exception& e) {
+                    std::cerr << "Log async log error: " << e.what() << std::endl;
+                }
+            });
+        }
+
+        /// \brief Waits for all asynchronous tasks to complete.
+        void wait() override {
+            if (!m_config.async) return;
+            TaskExecutor::get_instance().wait();
+        }
+
+    private:
+        mutable std::mutex m_mutex;    ///< Mutex to protect file operations.
+        Config             m_config;   ///< Configuration for the file logger.
+        std::ofstream      m_file;     ///< Output file stream for logging.
+        int64_t            m_current_date_ts = 0; ///< Timestamp of the current log file's date.
+
+        /// \brief Starts the logging process by initializing the file and directory.
+        void start_logging() {
+            // потоки ввода-вывода (например, std::cin, std::cout, std::cerr) могут быть закрыты до завершения программы.
+            // В этом случае вызовы функций, которые используют потоки ввода-вывода (например, конструктор std::regex),
+            // могут приводить к нежелательным поведениям, таким как зависание или ошибки сегментации.
+            is_valid_log_filename("2024-01-01.txt");
+            std::lock_guard<std::mutex> lock(m_mutex);
+            try {
+                initialize_directory();
+                open_log_file(get_current_utc_date_ts());
+                remove_old_logs();
+            } catch (const std::exception& e) {
+                std::cerr << "Initialization error: " << e.what() << std::endl;
+            }
+        }
+
+        /// \brief Stops the logging process by closing the file and waiting for tasks.
+        void stop_logging() {
+            wait();
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (m_file.is_open()) {
+                m_file.close();
+            }
+        }
+
+        /// \brief Initializes the logging directory.
+        void initialize_directory() {
+            create_directories(get_directory_path());
+        }
+
+        /// \brief Gets the full path to the logging directory.
+        /// \return The path to the logging directory.
+        std::string get_directory_path() const {
+            return get_exe_path() + "/" + m_config.directory;
+        }
+
+        /// \brief Opens a new log file based on the provided date timestamp.
+        /// \param date_ts The timestamp representing the date for the log file.
+        void open_log_file(const int64_t& date_ts) {
+            if (m_file.is_open()) {
+                m_file.close();
+            }
+            m_current_date_ts = date_ts;
+            std::string file_path = create_file_path(date_ts);
+            m_file.open(file_path, std::ios_base::app);
+            if (!m_file.is_open()) {
+                throw std::runtime_error("Failed to open log file: " + file_path);
+            }
+        }
+
+        /// \brief Creates a file path for the log file based on the date timestamp.
+        /// \param date_ts The timestamp representing the date for the log file.
+        /// \return The path to the log file.
+        std::string create_file_path(const int64_t& date_ts) const {
+            std::string date_str = time_shield::to_iso8601_date_str(date_ts);
+            return get_directory_path() + "/" + date_str + ".txt";
+        }
+
+        /// \brief Writes a log message to the file.
+        /// \param message The log message to write.
+        /// \param timestamp_ms The timestamp of the log message in milliseconds.
+        void write_log(const std::string& message, const int64_t& timestamp_ms) {
+            const int64_t message_date_ts = time_shield::start_of_day(time_shield::ms_to_sec(timestamp_ms));
+            if (message_date_ts != m_current_date_ts) {
+                open_log_file(message_date_ts);
+                remove_old_logs();
+            }
+            if (m_file.is_open()) {
+                m_file << message << std::endl;
+            }
+        }
+
+        /// \brief Removes old log files based on the auto-delete days configuration.
+        void remove_old_logs() {
+            const int64_t threshold_ts = m_current_date_ts - (time_shield::SEC_PER_DAY * m_config.auto_delete_days);
+#           if __cplusplus >= 201703L
+            fs::path dir_path(get_directory_path());
+            if (!fs::exists(dir_path) ||
+                !fs::is_directory(dir_path)) {
+                return;
+            }
+
+            for (const auto& entry : fs::directory_iterator(dir_path)) {
+                if (!fs::is_regular_file(entry.status())) continue;
+                std::string filename = entry.path().filename().string();
+                if (is_valid_log_filename(filename)) {
+                    const int64_t file_date_ts = get_date_ts_from_filename(filename);
+                    if (file_date_ts < threshold_ts) {
+                        fs::remove(entry.path());
+                    }
+                }
+            }
+#           else
+            std::vector<std::string> file_list = get_list_files(get_directory_path());
+            for (const auto& file_path : file_list) {
+                // Извлекаем имя файла
+                std::string filename = file_path.substr(file_path.find_last_of("/\\") + 1);
+                if (is_valid_log_filename(filename)) {
+                    const int64_t file_date_ts = get_date_ts_from_filename(filename);
+                    if (file_date_ts < threshold_ts) {
+                        remove(file_path.c_str());
+                    }
+                }
+            }
+#           endif
+        }
+
+        /// \brief Checks if the filename matches the log file naming pattern.
+        /// \param filename The filename to check.
+        /// \return True if the filename matches the pattern, false otherwise.
+        bool is_valid_log_filename(const std::string& filename) const {
+            static const std::regex pattern(R"((\d{4}-\d{2}-\d{2})\.txt)");
+            return std::regex_match(filename, pattern);
+        }
+
+        /// \brief Extracts the date timestamp from the log filename.
+        /// \param filename The filename to extract the date from.
+        /// \return The date timestamp.
+        int64_t get_date_ts_from_filename(const std::string& filename) const {
+            constexpr size_t EXTENSION_LENGTH = sizeof(".txt") - 1;
+            return time_shield::ts(filename.substr(0, filename.size() - EXTENSION_LENGTH));
+        }
+
+        /// \brief Gets the current UTC date timestamp in seconds.
+        /// \return The current UTC date timestamp in seconds.
+        int64_t get_current_utc_date_ts() const {
+            return time_shield::start_of_day(time_shield::ms_to_sec(current_timestamp_ms()));
+        }
+
+        /// \brief Gets the current timestamp in milliseconds.
+        /// \return The current timestamp in milliseconds.
+        int64_t current_timestamp_ms() const {
+            return LOGIT_CURRENT_TIMESTAMP_MS();
+        }
+
+    }; // FileLogger
+
+}; // namespace logit
+
+#endif // _LOGIT_FILE_LOGGER_HPP_INCLUDED

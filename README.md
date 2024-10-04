@@ -21,12 +21,12 @@ The library combines the simplicity of macro-based logging similar to **IceCream
 Here’s a simple example demonstrating how to use LogIt++ in your application:
 
 ```cpp
-#define LOGIT_SHORT_NAME //
+#define LOGIT_SHORT_NAME
 #include <log-it/LogIt.hpp>
 
 int main() {
     // Initialize the logger with default console output
-    LOGIT_CONSOLE_DEFAULT();
+    LOGIT_ADD_CONSOLE_DEFAULT();
 
     float a = 123.456f;
     int b = 789;
@@ -68,25 +68,49 @@ int main() {
 ## Configuration Macros
 LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:
 
-- **LOGIT_BASE_PATH**: Defines the base path used for log file paths. If LOGIT_BASE_PATH is not defined, it defaults to an empty string.
+- **LOGIT_BASE_PATH**: Defines the base path used for log file paths. If `LOGIT_BASE_PATH` is not defined or is empty ({}), the full path from `__FILE__` will be used for log file paths. You can override this to specify a custom base path for your log files.
 
 ```cpp
 #define LOGIT_BASE_PATH "/path/to/your/project"
 ```
 
-- **LOGIT_DEFAULT_COLOR**: Defines the default color for console output. If LOGIT_DEFAULT_COLOR is not defined, it defaults to TextColor::LightGray.
+- **LOGIT_DEFAULT_COLOR**: Defines the default color for console output. If `LOGIT_DEFAULT_COLOR` is not defined, it defaults to TextColor::LightGray. You can set a custom console text color by overriding this macro.
 
 ```cpp
 #define LOGIT_DEFAULT_COLOR TextColor::Green
 ```
 
-- **LOGIT_CURRENT_TIMESTAMP_MS**: Macro to get the current timestamp in milliseconds. You can override this macro to use a custom timestamp function.
+- **LOGIT_CURRENT_TIMESTAMP_MS**: Macro to get the current timestamp in milliseconds. By default, it uses *std::chrono* to get the timestamp. You can override this to provide a custom timestamp function if needed.
 
 ```cpp
 #define LOGIT_CURRENT_TIMESTAMP_MS() my_custom_timestamp_function()
 ```
 
-- **LOGIT_SHORT_NAME**: Enables short names for logging macros, such as LOG_T, LOG_D, LOG_E, etc.
+- **LOGIT_CONSOLE_PATTERN**: Defines the default log pattern for the console logger. This pattern controls the formatting of log messages sent to the console, including timestamp, message, and color. If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%H:%M:%S.%e | %^%v%$`.
+
+```cpp
+#define LOGIT_CONSOLE_PATTERN "%H:%M:%S.%e | %^%v%$"
+```
+
+- **LOGIT_FILE_LOGGER_PATH**: Defines the default directory path for log files. If `LOGIT_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs". You can set this to a custom path to control where the log files are stored.
+
+```cpp
+#define LOGIT_FILE_LOGGER_PATH "/custom/log/directory"
+```
+
+- **LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS**: Defines the number of days after which old log files are deleted. If LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS is not defined, it defaults to `30` days. You can set this to a custom value to control the log file retention policy.
+
+```cpp
+#define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS 60  // Keep logs for 60 days
+```
+
+- **LOGIT_FILE_LOGGER_PATTERN**: Defines the default log pattern for file-based loggers. This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v`.
+
+```cpp
+#define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %v"
+```
+
+- **LOGIT_SHORT_NAME**: Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for more concise logging statements.
 
 - **LOGIT_USE_FMT_LIB**: Enables the use of the fmt library for string formatting.
 

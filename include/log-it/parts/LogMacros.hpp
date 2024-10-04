@@ -362,7 +362,7 @@
 #endif // LOGIT_SHORT_NAME
 
 //------------------------------------------------------------------------------
-// Macros for starting the console logger with optional pattern and mode (async/sync)
+// Macros for starting the console logger with optional pattern and mode
 
 #if __cplusplus >= 201703L // C++17 or later
 
@@ -371,26 +371,51 @@
 /// \param logger_args Arguments for the logger constructor, enclosed in parentheses.
 /// \param formatter_type The type of formatter (e.g., `SimpleLogFormatter`).
 /// \param formatter_args Arguments for the formatter constructor, enclosed in parentheses.
+///
+/// This version uses `std::make_unique` for C++17 compatibility.
 #define LOGIT_ADD_LOGGER(logger_type, logger_args, formatter_type, formatter_args)  \
     logit::Logger::get_instance().add_logger(                                       \
         std::make_unique<logger_type> logger_args,                                  \
         std::make_unique<formatter_type> formatter_args)
 
-/// \brief Macro for starting the logger with console output and a specific pattern and mode (C++17 or later).
+/// \brief Macro for adding a console logger with a specific pattern and mode (C++17 or later).
 /// \param pattern The format pattern for log messages.
 /// \param async Boolean indicating whether logging should be asynchronous (true) or synchronous (false).
 ///
 /// This version uses `std::make_unique`, available in C++17 and later.
-#define LOGIT_CONSOLE(pattern, async)                           \
-    logit::Logger::get_instance().add_logger(                   \
-        std::make_unique<logit::ConsoleLogger>(async),          \
+#define LOGIT_ADD_CONSOLE(pattern, async)                                   \
+    logit::Logger::get_instance().add_logger(                               \
+        std::make_unique<logit::ConsoleLogger>(async),                      \
         std::make_unique<logit::SimpleLogFormatter>(pattern));
 
-/// \brief Macro for starting the logger with default console output (C++17 or later).
-#define LOGIT_CONSOLE_DEFAULT()                                 \
-    logit::Logger::get_instance().add_logger(                   \
-        std::make_unique<logit::ConsoleLogger>(true),           \
-        std::make_unique<logit::SimpleLogFormatter>("%H:%M:%S.%e | %^%v%$"));
+/// \brief Macro for adding the default console logger (C++17 or later).
+///
+/// This logger uses the default format pattern and asynchronous logging.
+#define LOGIT_ADD_CONSOLE_DEFAULT()                                         \
+    logit::Logger::get_instance().add_logger(                               \
+        std::make_unique<logit::ConsoleLogger>(true),                       \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN));
+
+/// \brief Macro for adding a file logger with specific settings (C++17 or later).
+/// \param directory The directory where log files will be stored.
+/// \param async Boolean indicating whether logging should be asynchronous (true) or synchronous (false).
+/// \param auto_delete_days Number of days after which old log files are deleted.
+/// \param pattern The format pattern for log messages.
+#define LOGIT_ADD_FILE_LOGGER(directory, async, auto_delete_days, pattern)  \
+    logit::Logger::get_instance().add_logger(                               \
+        std::make_unique<logit::FileLogger>(                                \
+            directory, async, auto_delete_days),                            \
+        std::make_unique<logit::SimpleLogFormatter>(pattern));
+
+/// \brief Macro for adding the default file logger (C++17 or later).
+///
+/// This logger writes logs to the default file path and deletes logs older than the default number of days.
+#define LOGIT_ADD_FILE_LOGGER_DEFAULT()                                     \
+    logit::Logger::get_instance().add_logger(                               \
+        std::make_unique<logit::FileLogger>(                                \
+            LOGIT_FILE_LOGGER_PATH, true,                                   \
+            LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS),                            \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN));
 
 #else // C++11 fallback
 
@@ -399,27 +424,53 @@
 /// \param logger_args Arguments for the logger constructor, enclosed in parentheses.
 /// \param formatter_type The type of formatter (e.g., `SimpleLogFormatter`).
 /// \param formatter_args Arguments for the formatter constructor, enclosed in parentheses.
+///
 /// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
 #define LOGIT_ADD_LOGGER(logger_type, logger_args, formatter_type, formatter_args)  \
     logit::Logger::get_instance().add_logger(                                       \
         std::unique_ptr<logger_type>(new logger_type logger_args),                  \
         std::unique_ptr<formatter_type>(new formatter_type formatter_args))
 
-/// \brief Macro for starting the logger with console output and a specific pattern and mode (C++11).
+/// \brief Macro for adding a console logger with a specific pattern and mode (C++11).
 /// \param pattern The format pattern for log messages.
 /// \param async Boolean indicating whether logging should be asynchronous (true) or synchronous (false).
 ///
 /// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
-#define LOGIT_CONSOLE(pattern, async)                           \
-    logit::Logger::get_instance().add_logger(                   \
-        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(async)),  \
+#define LOGIT_ADD_CONSOLE(pattern, async)                                       \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(async)), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)));
 
-/// \brief Macro for starting the logger with default console output (C++11).
-#define LOGIT_CONSOLE_DEFAULT()                                 \
-    logit::Logger::get_instance().add_logger(                   \
-        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(true)),   \
-        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter("%H:%M:%S.%e | %^%v%$")));
+/// \brief Macro for adding the default console logger (C++11).
+///
+/// This logger uses the default format pattern and asynchronous logging.
+#define LOGIT_ADD_CONSOLE_DEFAULT()                                             \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(true)),  \
+        std::unique_ptr<logit::SimpleLogFormatter>(                             \
+            new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)));
+
+/// \brief Macro for adding a file logger with specific settings (C++11).
+/// \param directory The directory where log files will be stored.
+/// \param async Boolean indicating whether logging should be asynchronous (true) or synchronous (false).
+/// \param auto_delete_days Number of days after which old log files are deleted.
+/// \param pattern The format pattern for log messages.
+#define LOGIT_ADD_FILE_LOGGER(directory, async, auto_delete_days, pattern)  \
+    logit::Logger::get_instance().add_logger(                               \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger(           \
+            directory, async, auto_delete_days)),                           \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)));
+
+/// \brief Macro for adding the default file logger (C++11).
+///
+/// This logger writes logs to the default file path and deletes logs older than the default number of days.
+#define LOGIT_ADD_FILE_LOGGER_DEFAULT()                                 \
+    logit::Logger::get_instance().add_logger(                           \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger(       \
+            LOGIT_FILE_LOGGER_PATH, true,                               \
+            LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS)),                       \
+        std::unique_ptr<logit::SimpleLogFormatter>(                     \
+            new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)));
 
 #endif // C++ version check
 

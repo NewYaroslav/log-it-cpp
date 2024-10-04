@@ -43,7 +43,7 @@ namespace logit {
             // Automatically log when the LogStream object is destroyed (end of line).
             Logger::get_instance().log_and_return(LogRecord{
                 m_level, LOGIT_CURRENT_TIMESTAMP_MS(),
-                logit::make_relative(m_file, LOGIT_BASE_PATH), m_line, m_function,
+                m_file, m_line, m_function,
                 m_stream.str(), std::string(),  // No argument names for stream-based logs.
                 m_logger_index
             });

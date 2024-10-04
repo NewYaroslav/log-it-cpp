@@ -10,6 +10,7 @@
 #include "parts/LogMacros.hpp"
 #include "parts/Formatter/SimpleLogFormatter.hpp"
 #include "parts/Logger/ConsoleLogger.hpp"
+#include "parts/Logger/FileLogger.hpp"
 
 /// \namespace logit
 /// \brief The primary namespace for the LogIt++ library.
@@ -39,7 +40,7 @@ The library combines the simplicity of macro-based logging similar to **IceCream
 Here's a simple example demonstrating how to use LogIt++ in your application:
 
 \code{.cpp}
-#define LOGIT_SHORT_NAME //
+#define LOGIT_SHORT_NAME
 #include <log-it/LogIt.hpp>
 
 int main() {
@@ -88,28 +89,76 @@ int main() {
 LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:
 
 - **LOGIT_BASE_PATH**:
-    \brief Defines the base path used for log file paths. Defaults to an empty string if not defined.
+\brief Defines the base path used for log file paths. If LOGIT_BASE_PATH is not defined or is empty ({}), the full path from __FILE__ will be used for log file paths.
 
-    \code{.cpp}
-    // Defines the base path for project folder.
-    #define LOGIT_BASE_PATH "/path/to/your/project"
-    \endcode
+\code{.cpp}
+// Defines the base path for project folder.
+#define LOGIT_BASE_PATH "/path/to/your/project"
+\endcode
 
 - **LOGIT_DEFAULT_COLOR**:
-    \brief Sets the default color for console output. Defaults to `TextColor::LightGray` if not defined.
+\brief Sets the default color for console output. If LOGIT_DEFAULT_COLOR is not defined, it defaults to TextColor::LightGray.
 
-    \code{.cpp}
-    // Sets the default log message color to green.
-    #define LOGIT_DEFAULT_COLOR TextColor::Green
-    \endcode
+\code{.cpp}
+// Sets the default log message color to green.
+#define LOGIT_DEFAULT_COLOR TextColor::Green
+\endcode
 
 - **LOGIT_CURRENT_TIMESTAMP_MS**:
-    \brief Macro to get the current timestamp in milliseconds. By default, it uses `std::chrono` for time calculation.
+\brief Macro to get the current timestamp in milliseconds. By default, it uses std::chrono for time calculation. You can override this to customize the timestamp generation.
 
-    \code{.cpp}
-    // Customize timestamp calculation if needed.
-    #define LOGIT_CURRENT_TIMESTAMP_MS() my_custom_timestamp_function()
-    \endcode
+\code{.cpp}
+// Customize timestamp calculation if needed.
+#define LOGIT_CURRENT_TIMESTAMP_MS() my_custom_timestamp_function()
+\endcode
+
+- **LOGIT_CONSOLE_PATTERN**:
+\brief Defines the default log pattern for the console logger. If LOGIT_CONSOLE_PATTERN is not defined, it defaults to %H:%M:%S.%e | %^%v%$.
+
+\code{.cpp}
+// Customize the console log message pattern.
+#define LOGIT_CONSOLE_PATTERN "%H:%M:%S.%e | %v"
+\endcode
+
+- **LOGIT_FILE_LOGGER_PATH**:
+\brief Defines the default directory path for log files. If LOGIT_FILE_LOGGER_PATH is not defined, it defaults to "data/logs".
+
+\code{.cpp}
+// Specify a custom path for log files.
+#define LOGIT_FILE_LOGGER_PATH "/custom/log/directory"
+\endcode
+
+LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS**:
+\brief Defines the number of days after which old log files are deleted. If LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS is not defined, it defaults to 30 days.
+
+\code{.cpp}
+// Set the number of days to keep log files.
+#define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS 60
+\endcode
+
+- **LOGIT_FILE_LOGGER_PATTERN**:
+\brief Defines the default log pattern for file-based loggers. If LOGIT_FILE_LOGGER_PATTERN is not defined, it defaults to [%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v.
+
+\code{.cpp}
+// Customize the log file message pattern.
+#define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %v"
+\endcode
+
+- **LOGIT_SHORT_NAME**:
+\brief Enables short names for logging macros, such as LOG_T, LOG_D, LOG_E, etc., for concise logging.
+
+\code{.cpp}
+// Enable short macro names for logging.
+#define LOGIT_SHORT_NAME
+\endcode
+
+- **LOGIT_USE_FMT_LIB**:
+\brief Enables the use of the fmt library for string formatting. If defined, the logging system will use fmt for advanced formatting of log messages.
+
+\code{.cpp}
+// Enable use of the fmt library for formatting.
+#define LOGIT_USE_FMT_LIB
+\endcode
 
 \section format_flags_sec Log Message Formatting Flags
 
@@ -165,15 +214,22 @@ Below is a list of all supported format flags and their meanings:
 To define a custom format for your log messages, you can use the following method:
 
 \code{.cpp}
+LOGIT_ADD_LOGGER(
+	logit::ConsoleLogger, (),
+	logit::SimpleLogFormatter,
+	("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
+
+// or...
+
 logit::Logger::get_instance().add_logger(
     std::make_unique<logit::ConsoleLogger>(),
     std::make_unique<logit::SimpleLogFormatter>("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
 \endcode
 
-Alternatively, you can use the `LOGIT_CONSOLE` macro for an even simpler setup:
+Alternatively, you can use the `LOGIT_ADD_CONSOLE` macro for an even simpler setup:
 
 \code{.cpp}
-LOGIT_CONSOLE("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$", true);
+LOGIT_ADD_CONSOLE("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$", true);
 \endcode
 
 This example format will produce log messages like:
@@ -185,7 +241,7 @@ This example format will produce log messages like:
 You can adjust the format string by changing or rearranging the format flags according to your needs. For example, if you prefer short log levels and don't need thread information, you could use:
 
 \code{.cpp}
-LOGIT_CONSOLE("[%Y-%m-%d %H:%M:%S.%e] [%L] %^%v%$", true);
+LOGIT_ADD_CONSOLE("[%Y-%m-%d %H:%M:%S.%e] [%L] %^%v%$", true);
 \endcode
 
 This will produce more compact log messages like:
@@ -245,6 +301,12 @@ private:
 This `FileLogger` class writes log messages to a specified file. You can add this logger to your logging system like this:
 
 \code{.cpp}
+LOGIT_ADD_LOGGER(
+	FileLogger, ("logfile.txt"),
+	logit::SimpleLogFormatter, ());
+
+// or...
+
 logit::Logger::get_instance().add_logger(
     std::make_unique<FileLogger>("logfile.txt"),
     std::make_unique<logit::SimpleLogFormatter>());
@@ -280,7 +342,7 @@ This `JsonLogFormatter` formats log messages as JSON objects. You can combine it
 
 \code{.cpp}
 LOGIT_ADD_LOGGER(
-	logit::FileLogger, ("logfile.json"),
+	FileLogger, ("logfile.json"),
 	logit::JsonLogFormatter, ());
 
 // or...
