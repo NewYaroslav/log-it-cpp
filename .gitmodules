@@ -1,0 +1,6 @@
+[submodule "libs/time-shield-cpp"]
+	path = libs/time-shield-cpp
+	url = https://github.com/NewYaroslav/time-shield-cpp.git
+[submodule "libs/fmt"]
+	path = libs/fmt
+	url = https://github.com/fmtlib/fmt.git
