@@ -1,4 +1,3 @@
-# log-it-cpp
 # LogIt++ Library
 
 ## Introduction
@@ -146,6 +145,13 @@ Below is a list of supported format flags:
 To define a custom format for your log messages, you can use the following method:
 
 ```cpp
+LOGIT_ADD_LOGGER(
+	logit::ConsoleLogger, (), 
+	logit::SimpleLogFormatter, 
+	("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
+
+// or...
+
 logit::Logger::get_instance().add_logger(
     std::make_unique<logit::ConsoleLogger>(),
     std::make_unique<logit::SimpleLogFormatter>("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));

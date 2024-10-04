@@ -279,6 +279,12 @@ public:
 This `JsonLogFormatter` formats log messages as JSON objects. You can combine it with any logger, including the `FileLogger`, as shown below:
 
 \code{.cpp}
+LOGIT_ADD_LOGGER(
+	logit::FileLogger, ("logfile.json"),
+	logit::JsonLogFormatter, ());
+
+// or...
+
 logit::Logger::get_instance().add_logger(
     std::make_unique<FileLogger>("logfile.json"),
     std::make_unique<JsonLogFormatter>());

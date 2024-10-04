@@ -366,6 +366,16 @@
 
 #if __cplusplus >= 201703L // C++17 or later
 
+/// \brief Macro for adding a logger with a specific formatter (C++17 or later).
+/// \param logger_type The type of logger (e.g., `ConsoleLogger`).
+/// \param logger_args Arguments for the logger constructor, enclosed in parentheses.
+/// \param formatter_type The type of formatter (e.g., `SimpleLogFormatter`).
+/// \param formatter_args Arguments for the formatter constructor, enclosed in parentheses.
+#define LOGIT_ADD_LOGGER(logger_type, logger_args, formatter_type, formatter_args)  \
+    logit::Logger::get_instance().add_logger(                                       \
+        std::make_unique<logger_type> logger_args,                                  \
+        std::make_unique<formatter_type> formatter_args)
+
 /// \brief Macro for starting the logger with console output and a specific pattern and mode (C++17 or later).
 /// \param pattern The format pattern for log messages.
 /// \param async Boolean indicating whether logging should be asynchronous (true) or synchronous (false).
@@ -383,6 +393,17 @@
         std::make_unique<logit::SimpleLogFormatter>("%H:%M:%S.%e | %^%v%$"));
 
 #else // C++11 fallback
+
+/// \brief Macro for adding a logger with a specific formatter (C++11).
+/// \param logger_type The type of logger (e.g., `ConsoleLogger`).
+/// \param logger_args Arguments for the logger constructor, enclosed in parentheses.
+/// \param formatter_type The type of formatter (e.g., `SimpleLogFormatter`).
+/// \param formatter_args Arguments for the formatter constructor, enclosed in parentheses.
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
+#define LOGIT_ADD_LOGGER(logger_type, logger_args, formatter_type, formatter_args)  \
+    logit::Logger::get_instance().add_logger(                                       \
+        std::unique_ptr<logger_type>(new logger_type logger_args),                  \
+        std::unique_ptr<formatter_type>(new formatter_type formatter_args))
 
 /// \brief Macro for starting the logger with console output and a specific pattern and mode (C++11).
 /// \param pattern The format pattern for log messages.
