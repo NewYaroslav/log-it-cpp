@@ -50,7 +50,10 @@ namespace logit {
         /// \param directory The directory where log files will be stored.
         /// \param async Boolean flag for asynchronous logging.
         /// \param auto_delete_days Number of days after which old log files are deleted.
-        FileLogger(const std::string& directory, const bool& async = true, const int& auto_delete_days = 30) {
+        FileLogger(
+                const std::string& directory,
+                const bool& async = true,
+                const int& auto_delete_days = 30) {
             m_config.directory = directory;
             m_config.async = async;
             m_config.auto_delete_days = auto_delete_days;

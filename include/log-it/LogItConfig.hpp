@@ -18,6 +18,34 @@
     #define LOGIT_DEFAULT_COLOR TextColor::LightGray
 #endif
 
+#ifndef LOGIT_COLOR_TRACE
+    #define LOGIT_COLOR_TRACE   TextColor::DarkGray
+#endif
+
+#ifndef LOGIT_COLOR_DEBUG
+    #define LOGIT_COLOR_DEBUG   TextColor::Blue
+#endif
+
+#ifndef LOGIT_COLOR_INFO
+    #define LOGIT_COLOR_INFO    TextColor::Green
+#endif
+
+#ifndef LOGIT_COLOR_WARN
+    #define LOGIT_COLOR_WARN    TextColor::Yellow
+#endif
+
+#ifndef LOGIT_COLOR_ERROR
+    #define LOGIT_COLOR_ERROR   TextColor::Red
+#endif
+
+#ifndef LOGIT_COLOR_FATAL
+    #define LOGIT_COLOR_FATAL   TextColor::Magenta
+#endif
+
+#ifndef LOGIT_COLOR_DEFAULT
+    #define LOGIT_COLOR_DEFAULT TextColor::White
+#endif
+
 /// \brief Macro to get the current timestamp in milliseconds.
 /// If LOGIT_CURRENT_TIMESTAMP_MS is not defined, it uses `std::chrono` to return the current time in milliseconds.
 ///

@@ -122,21 +122,21 @@ namespace logit {
     inline std::string get_log_level_color(const LogLevel& log_level) {
         switch (log_level) {
             case LogLevel::LOG_LVL_TRACE:
-                return to_string(TextColor::DarkGray);
+                return to_string(LOGIT_COLOR_TRACE);
             case LogLevel::LOG_LVL_DEBUG:
-                return to_string(TextColor::Blue);
+                return to_string(LOGIT_COLOR_DEBUG);
             case LogLevel::LOG_LVL_INFO:
-                return to_string(TextColor::Green);
+                return to_string(LOGIT_COLOR_INFO);
             case LogLevel::LOG_LVL_WARN:
-                return to_string(TextColor::Yellow);
+                return to_string(LOGIT_COLOR_WARN);
             case LogLevel::LOG_LVL_ERROR:
-                return to_string(TextColor::Red);
+                return to_string(LOGIT_COLOR_ERROR);
             case LogLevel::LOG_LVL_FATAL:
-                return to_string(TextColor::Magenta);
+                return to_string(LOGIT_COLOR_FATAL);
             default:
                 break;
-        };
-        return to_string(TextColor::White);
+        }
+        return to_string(LOGIT_COLOR_DEFAULT);
     }
 
 }; // namespace logit

@@ -98,7 +98,7 @@ LogIt++ provides several macros that allow for customization and configuration. 
 #define LOGIT_FILE_LOGGER_PATH "/custom/log/directory"
 ```
 
-- **LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS**: Defines the number of days after which old log files are deleted. If LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS is not defined, it defaults to `30` days. You can set this to a custom value to control the log file retention policy.
+- **LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS**: Defines the number of days after which old log files are deleted. If `LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS` is not defined, it defaults to `30` days. You can set this to a custom value to control the log file retention policy.
 
 ```cpp
 #define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS 60  // Keep logs for 60 days
