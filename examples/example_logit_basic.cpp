@@ -36,8 +36,11 @@ int main() {
     LOGIT_ERROR("An error has occurred during processing with color", color);
     LOGIT_FATAL("Fatal error! Immediate attention required!");
 
-    // Demonstrating log formatting and streaming
-    LOGIT_FORMAT_INFO("Formatted log: %.2f, %d", someFloat, someInt);
+    // Demonstrating formatted logging for homogeneous variables
+    LOGIT_FORMAT_INFO("%.2f", someFloat, 654.321f);     // Logging two float values
+    LOGIT_FORMAT_INFO("%.4d", someInt, 999);            // Logging two int values
+
+    // Stream-based logging
     LOGIT_STREAM_INFO() << "Stream logging: float=" << someFloat << ", int=" << someInt << ", color=" << color;
 
     // Writing to the unique file logger using the second logger (index 2)

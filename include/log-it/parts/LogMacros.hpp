@@ -40,12 +40,12 @@
 #if defined(LOGIT_SHORT_NAME)
 // Shorter versions of the stream-based logging macros when LOGIT_SHORT_NAME is defined
 
-#define LOG_S_TRACE     LOGIT_STREAM_TRACE()
-#define LOG_S_DEBUG     LOGIT_STREAM_DEBUG()
-#define LOG_S_INFO      LOGIT_STREAM_INFO()
-#define LOG_S_WARN      LOGIT_STREAM_WARN()
-#define LOG_S_ERROR     LOGIT_STREAM_ERROR()
-#define LOG_S_FATAL     LOGIT_STREAM_FATAL()
+#define LOG_S_TRACE()           LOGIT_STREAM_TRACE()
+#define LOG_S_DEBUG()           LOGIT_STREAM_DEBUG()
+#define LOG_S_INFO()            LOGIT_STREAM_INFO()
+#define LOG_S_WARN()            LOGIT_STREAM_WARN()
+#define LOG_S_ERROR()           LOGIT_STREAM_ERROR()
+#define LOG_S_FATAL()           LOGIT_STREAM_FATAL()
 
 #define LOG_S_TRACE_TO(index)  LOGIT_STREAM_TRACE_TO(index)
 #define LOG_S_DEBUG_TO(index)  LOGIT_STREAM_DEBUG_TO(index)
@@ -278,34 +278,24 @@
 #define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, logit::format(fmt, __VA_ARGS__))
 
 //------------------------------------------------------------------------------
-
-
-#if defined(LOGIT_SHORT_NAME)
-// Уровень TRACE
-#define LOG_TRACE(...)                 LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, std::string(), #__VA_ARGS__, __VA_ARGS__)
-#define LOG_TRACE0()                   LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, std::string())
-#define LOG_TRACE_NOARGS()             LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, std::string())
-#define LOG_FORMAT_TRACE(format, ...)  LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, format, #__VA_ARGS__, __VA_ARGS__)
-#define LOG_PRINT_TRACE(format)        LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, format)
-#define LOG_PRINTF_TRACE(format, ...)  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, logit::format(format, __VA_ARGS__))
-#endif
-
-#if defined(LOGIT_SHORT_NAME)
 // Shorter versions of the macros when LOGIT_SHORT_NAME is defined
+#if defined(LOGIT_SHORT_NAME)
 
 // TRACE level
 #define LOG_T(...)                      LOGIT_TRACE(__VA_ARGS__)
 #define LOG_T0()                        LOGIT_TRACE0()
 #define LOG_T_NOARGS()                  LOGIT_NOARGS_TRACE()
 #define LOG_TF(fmt, ...)                LOGIT_FORMAT_TRACE(fmt, __VA_ARGS__)
-#define LOG_T_PRINT(fmt)                LOGIT_PRINT_TRACE(fmt)
+#define LOG_T_PRINT(...)                LOGIT_PRINT_TRACE(__VA_ARGS__)
 #define LOG_T_PRINTF(fmt, ...)          LOGIT_PRINTF_TRACE(fmt, __VA_ARGS__)
+#define LOG_TP(...)                     LOGIT_PRINT_TRACE(__VA_ARGS__)
+#define LOG_TPF(fmt, ...)               LOGIT_PRINTF_TRACE(fmt, __VA_ARGS__)
 
 #define LOG_TRACE(...)                  LOGIT_TRACE(__VA_ARGS__)
 #define LOG_TRACE0()                    LOGIT_TRACE0()
 #define LOG_TRACE_NOARGS()              LOGIT_NOARGS_TRACE()
 #define LOG_TRACEF(fmt, ...)            LOGIT_FORMAT_TRACE(fmt, __VA_ARGS__)
-#define LOG_TRACE_PRINT(fmt)            LOGIT_PRINT_TRACE(fmt)
+#define LOG_TRACE_PRINT(...)            LOGIT_PRINT_TRACE(__VA_ARGS__)
 #define LOG_TRACE_PRINTF(fmt, ...)      LOGIT_PRINTF_TRACE(fmt, __VA_ARGS__)
 
 // INFO level
@@ -313,14 +303,16 @@
 #define LOG_I0()                        LOGIT_INFO0()
 #define LOG_I_NOARGS()                  LOGIT_NOARGS_INFO()
 #define LOG_IF(fmt, ...)                LOGIT_FORMAT_INFO(fmt, __VA_ARGS__)
-#define LOG_I_PRINT(fmt)                LOGIT_PRINT_INFO(fmt)
+#define LOG_I_PRINT(...)                LOGIT_PRINT_INFO(__VA_ARGS__)
 #define LOG_I_PRINTF(fmt, ...)          LOGIT_PRINTF_INFO(fmt, __VA_ARGS__)
+#define LOG_IP(...)                     LOGIT_PRINT_INFO(__VA_ARGS__)
+#define LOG_IPF(fmt, ...)               LOGIT_PRINTF_INFO(fmt, __VA_ARGS__)
 
 #define LOG_INFO(...)                   LOGIT_INFO(__VA_ARGS__)
 #define LOG_INFO0()                     LOGIT_INFO0()
 #define LOG_INFO_NOARGS()               LOGIT_NOARGS_INFO()
 #define LOG_INFOF(fmt, ...)             LOGIT_FORMAT_INFO(fmt, __VA_ARGS__)
-#define LOG_INFO_PRINT(fmt)             LOGIT_PRINT_INFO(fmt)
+#define LOG_INFO_PRINT(...)             LOGIT_PRINT_INFO(__VA_ARGS__)
 #define LOG_INFO_PRINTF(fmt, ...)       LOGIT_PRINTF_INFO(fmt, __VA_ARGS__)
 
 // DEBUG level
@@ -328,14 +320,16 @@
 #define LOG_D0()                        LOGIT_DEBUG0()
 #define LOG_D_NOARGS()                  LOGIT_NOARGS_DEBUG()
 #define LOG_DF(fmt, ...)                LOGIT_FORMAT_DEBUG(fmt, __VA_ARGS__)
-#define LOG_D_PRINT(fmt)                LOGIT_PRINT_DEBUG(fmt)
+#define LOG_D_PRINT(...)                LOGIT_PRINT_DEBUG(__VA_ARGS__)
 #define LOG_D_PRINTF(fmt, ...)          LOGIT_PRINTF_DEBUG(fmt, __VA_ARGS__)
+#define LOG_DP(...)                     LOGIT_PRINT_DEBUG(__VA_ARGS__)
+#define LOG_DPF(fmt, ...)               LOGIT_PRINTF_DEBUG(fmt, __VA_ARGS__)
 
 #define LOG_DEBUG(...)                  LOGIT_DEBUG(__VA_ARGS__)
 #define LOG_DEBUG0()                    LOGIT_DEBUG0()
 #define LOG_DEBUG_NOARGS()              LOGIT_NOARGS_DEBUG()
 #define LOG_DEBUGF(fmt, ...)            LOGIT_FORMAT_DEBUG(fmt, __VA_ARGS__)
-#define LOG_DEBUG_PRINT(fmt)            LOGIT_PRINT_DEBUG(fmt)
+#define LOG_DEBUG_PRINT(...)            LOGIT_PRINT_DEBUG(__VA_ARGS__)
 #define LOG_DEBUG_PRINTF(fmt, ...)      LOGIT_PRINTF_DEBUG(fmt, __VA_ARGS__)
 
 // WARN level
@@ -343,14 +337,16 @@
 #define LOG_W0()                        LOGIT_WARN0()
 #define LOG_W_NOARGS()                  LOGIT_NOARGS_WARN()
 #define LOG_WF(fmt, ...)                LOGIT_FORMAT_WARN(fmt, __VA_ARGS__)
-#define LOG_W_PRINT(fmt)                LOGIT_PRINT_WARN(fmt)
+#define LOG_W_PRINT(...)                LOGIT_PRINT_WARN(__VA_ARGS__)
 #define LOG_W_PRINTF(fmt, ...)          LOGIT_PRINTF_WARN(fmt, __VA_ARGS__)
+#define LOG_WP(...)                     LOGIT_PRINT_WARN(__VA_ARGS__)
+#define LOG_WPF(fmt, ...)               LOGIT_PRINTF_WARN(fmt, __VA_ARGS__)
 
 #define LOG_WARN(...)                   LOGIT_WARN(__VA_ARGS__)
 #define LOG_WARN0()                     LOGIT_WARN0()
 #define LOG_WARN_NOARGS()               LOGIT_NOARGS_WARN()
 #define LOG_WARNF(fmt, ...)             LOGIT_FORMAT_WARN(fmt, __VA_ARGS__)
-#define LOG_WARN_PRINT(fmt)             LOGIT_PRINT_WARN(fmt)
+#define LOG_WARN_PRINT(...)             LOGIT_PRINT_WARN(__VA_ARGS__)
 #define LOG_WARN_PRINTF(fmt, ...)       LOGIT_PRINTF_WARN(fmt, __VA_ARGS__)
 
 // ERROR level
@@ -358,14 +354,16 @@
 #define LOG_E0()                        LOGIT_ERROR0()
 #define LOG_E_NOARGS()                  LOGIT_NOARGS_ERROR()
 #define LOG_EF(fmt, ...)                LOGIT_FORMAT_ERROR(fmt, __VA_ARGS__)
-#define LOG_E_PRINT(fmt)                LOGIT_PRINT_ERROR(fmt)
+#define LOG_E_PRINT(...)                LOGIT_PRINT_ERROR(__VA_ARGS__)
 #define LOG_E_PRINTF(fmt, ...)          LOGIT_PRINTF_ERROR(fmt, __VA_ARGS__)
+#define LOG_EP(...)                     LOGIT_PRINT_ERROR(__VA_ARGS__)
+#define LOG_EPF(fmt, ...)               LOGIT_PRINTF_ERROR(fmt, __VA_ARGS__)
 
 #define LOG_ERROR(...)                  LOGIT_ERROR(__VA_ARGS__)
 #define LOG_ERROR0()                    LOGIT_ERROR0()
 #define LOG_ERROR_NOARGS()              LOGIT_NOARGS_ERROR()
 #define LOG_ERRORF(fmt, ...)            LOGIT_FORMAT_ERROR(fmt, __VA_ARGS__)
-#define LOG_ERROR_PRINT(fmt)            LOGIT_PRINT_ERROR(fmt)
+#define LOG_ERROR_PRINT(...)            LOGIT_PRINT_ERROR(__VA_ARGS__)
 #define LOG_ERROR_PRINTF(fmt, ...)      LOGIT_PRINTF_ERROR(fmt, __VA_ARGS__)
 
 // FATAL level
@@ -373,14 +371,16 @@
 #define LOG_F0()                        LOGIT_FATAL0()
 #define LOG_F_NOARGS()                  LOGIT_NOARGS_FATAL()
 #define LOG_FF(fmt, ...)                LOGIT_FORMAT_FATAL(fmt, __VA_ARGS__)
-#define LOG_F_PRINT(fmt)                LOGIT_PRINT_FATAL(fmt)
+#define LOG_F_PRINT(...)                LOGIT_PRINT_FATAL(__VA_ARGS__)
 #define LOG_F_PRINTF(fmt, ...)          LOGIT_PRINTF_FATAL(fmt, __VA_ARGS__)
+#define LOG_FP(...)                     LOGIT_PRINT_FATAL(__VA_ARGS__)
+#define LOG_FPF(fmt, ...)               LOGIT_PRINTF_FATAL(fmt, __VA_ARGS__)
 
 #define LOG_FATAL(...)                  LOGIT_FATAL(__VA_ARGS__)
 #define LOG_FATAL0()                    LOGIT_FATAL0()
 #define LOG_FATAL_NOARGS()              LOGIT_NOARGS_FATAL()
 #define LOG_FATALF(fmt, ...)            LOGIT_FORMAT_FATAL(fmt, __VA_ARGS__)
-#define LOG_FATAL_PRINT(fmt)            LOGIT_PRINT_FATAL(fmt)
+#define LOG_FATAL_PRINT(...)            LOGIT_PRINT_FATAL(__VA_ARGS__)
 #define LOG_FATAL_PRINTF(fmt, ...)      LOGIT_PRINTF_FATAL(fmt, __VA_ARGS__)
 
 #endif // LOGIT_SHORT_NAME

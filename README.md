@@ -65,55 +65,6 @@ int main() {
 }
 ```
 
-## Configuration Macros
-LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:
-
-- **LOGIT_BASE_PATH**: Defines the base path used for log file paths. If `LOGIT_BASE_PATH` is not defined or is empty ({}), the full path from `__FILE__` will be used for log file paths. You can override this to specify a custom base path for your log files.
-
-```cpp
-#define LOGIT_BASE_PATH "/path/to/your/project"
-```
-
-- **LOGIT_DEFAULT_COLOR**: Defines the default color for console output. If `LOGIT_DEFAULT_COLOR` is not defined, it defaults to TextColor::LightGray. You can set a custom console text color by overriding this macro.
-
-```cpp
-#define LOGIT_DEFAULT_COLOR TextColor::Green
-```
-
-- **LOGIT_CURRENT_TIMESTAMP_MS**: Macro to get the current timestamp in milliseconds. By default, it uses *std::chrono* to get the timestamp. You can override this to provide a custom timestamp function if needed.
-
-```cpp
-#define LOGIT_CURRENT_TIMESTAMP_MS() my_custom_timestamp_function()
-```
-
-- **LOGIT_CONSOLE_PATTERN**: Defines the default log pattern for the console logger. This pattern controls the formatting of log messages sent to the console, including timestamp, message, and color. If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%H:%M:%S.%e | %^%v%$`.
-
-```cpp
-#define LOGIT_CONSOLE_PATTERN "%H:%M:%S.%e | %^%v%$"
-```
-
-- **LOGIT_FILE_LOGGER_PATH**: Defines the default directory path for log files. If `LOGIT_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs". You can set this to a custom path to control where the log files are stored.
-
-```cpp
-#define LOGIT_FILE_LOGGER_PATH "/custom/log/directory"
-```
-
-- **LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS**: Defines the number of days after which old log files are deleted. If `LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS` is not defined, it defaults to `30` days. You can set this to a custom value to control the log file retention policy.
-
-```cpp
-#define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS 60  // Keep logs for 60 days
-```
-
-- **LOGIT_FILE_LOGGER_PATTERN**: Defines the default log pattern for file-based loggers. This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v`.
-
-```cpp
-#define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %v"
-```
-
-- **LOGIT_SHORT_NAME**: Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for more concise logging statements.
-
-- **LOGIT_USE_FMT_LIB**: Enables the use of the fmt library for string formatting.
-
 ## Log Message Formatting Flags
 LogIt++ supports customizable log message formatting using format flags. You can define how each log message should appear by including placeholders for different pieces of information such as the timestamp, log level, file name, function name, and message.
 
@@ -165,6 +116,112 @@ Below is a list of supported format flags:
 
 	- `%v`: The log message content
 	
+## Shortened Logging Macros
+
+LogIt++ provides shortened versions of logging macros when LOGIT_SHORT_NAME is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.
+
+### Available TRACE-level macros:
+
+- Basic logging:
+
+	- `LOG_T(...)`: Logs a TRACE-level message.
+	- `LOG_T0()`: Logs a TRACE-level message without arguments.
+	- `LOG_T_NOARGS()`: Logs a TRACE-level message with no arguments.
+	
+- Formatted logging:
+
+	- `LOG_TF(fmt, ...)`: Logs a formatted TRACE-level message using format strings.
+	- `LOG_T_PRINT(...)`: Logs a TRACE-level message by printing each argument.
+	- `LOG_T_PRINTF(fmt, ...)`: Logs a formatted TRACE-level message using printf-style formatting.
+	- `LOG_TP(...)`: Alias for `LOG_T_PRINT(...)`.
+	- `LOG_TPF(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
+	
+- Alternative TRACE-level macros:
+
+	- `LOG_TRACE(...)`: Logs a TRACE-level message (same as `LOG_T(...)`).
+	- `LOG_TRACE0()`: Logs a TRACE-level message without arguments (same as `LOG_T0()`).
+	- `LOG_TRACE_NOARGS()`: Logs a TRACE-level message with no arguments (same as `LOG_T_NOARGS()`).
+	- `LOG_TRACEF(fmt, ...)`: Logs a formatted TRACE-level message (same as `LOG_TF(fmt, ...)`).
+	- `LOG_TRACE_PRINT(...)`: Logs a TRACE-level message by printing each argument (same as `LOG_T_PRINT(...)`).
+	- `LOG_TRACE_PRINTF(fmt, ...)`: Logs a formatted TRACE-level message using printf-style formatting (same as `LOG_T_PRINTF(fmt, ...)`).
+
+- Example:
+
+```cpp
+LOG_T("Trace message using short macro");
+LOG_TF("%.4d", 999);
+LOG_T_PRINT("Printing trace message with multiple variables: ", var1, var2);
+LOG_TRACE("Trace message (alias for LOG_T)");
+LOG_TRACE_PRINTF("Formatted trace: value = %d", value);
+```
+
+## Configuration Macros
+LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:
+
+- **LOGIT_BASE_PATH**: Defines the base path used for log file paths. If `LOGIT_BASE_PATH` is not defined or is empty ({}), the full path from `__FILE__` will be used for log file paths. You can override this to specify a custom base path for your log files.
+
+```cpp
+#define LOGIT_BASE_PATH "/path/to/your/project"
+```
+
+- **LOGIT_DEFAULT_COLOR**: Defines the default color for console output. If `LOGIT_DEFAULT_COLOR` is not defined, it defaults to TextColor::LightGray. You can set a custom console text color by overriding this macro.
+
+```cpp
+#define LOGIT_DEFAULT_COLOR TextColor::Green
+```
+
+- **LOGIT_CURRENT_TIMESTAMP_MS**: Macro to get the current timestamp in milliseconds. By default, it uses *std::chrono* to get the timestamp. You can override this to provide a custom timestamp function if needed.
+
+```cpp
+#define LOGIT_CURRENT_TIMESTAMP_MS() my_custom_timestamp_function()
+```
+
+- **LOGIT_CONSOLE_PATTERN**: Defines the default log pattern for the console logger. This pattern controls the formatting of log messages sent to the console, including timestamp, message, and color. If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%H:%M:%S.%e | %^%v%$`.
+
+```cpp
+#define LOGIT_CONSOLE_PATTERN "%H:%M:%S.%e | %^%v%$"
+```
+
+- **LOGIT_FILE_LOGGER_PATH**: Defines the default directory path for log files. If `LOGIT_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs". You can set this to a custom path to control where the log files are stored.
+
+```cpp
+#define LOGIT_FILE_LOGGER_PATH "/custom/log/directory"
+```
+
+- **LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS**: Defines the number of days after which old log files are deleted. If `LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS` is not defined, it defaults to `30` days. You can set this to a custom value to control the log file retention policy.
+
+```cpp
+#define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS 60  // Keep logs for 60 days
+```
+
+- **LOGIT_FILE_LOGGER_PATTERN**: Defines the default log pattern for file-based loggers. This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v`.
+
+```cpp
+#define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %v"
+```
+
+- **LOGIT_UNIQUE_FILE_LOGGER_PATH**: Defines the default directory path for unique log files. If LOGIT_UNIQUE_FILE_LOGGER_PATH is not defined, it defaults to "data/logs/unique_logs". You can specify a custom path for unique log files.
+
+```cpp
+#define LOGIT_UNIQUE_FILE_LOGGER_PATH "/custom/unique/log/directory"
+```
+
+- **LOGIT_UNIQUE_FILE_LOGGER_PATTERN**: Defines the default log pattern for unique file-based loggers. If LOGIT_UNIQUE_FILE_LOGGER_PATTERN is not defined, it defaults to "%v". You can customize this pattern to control the format of log messages in unique files.
+
+```cpp
+#define LOGIT_UNIQUE_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %v"
+```
+
+- **LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH**: Defines the length of the hash used in unique log file names. If LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH is not defined, it defaults to 8 characters. This ensures that unique filenames are generated for each log entry.
+
+```cpp
+#define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 12  // Set hash length to 12 characters
+```
+
+- **LOGIT_SHORT_NAME**: Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for more concise logging statements.
+
+- **LOGIT_USE_FMT_LIB**: Enables the use of the fmt library for string formatting.
+
 ## Example Format
 To define a custom format for your log messages, you can use the following method:
 
@@ -269,9 +326,5 @@ LogIt++ supports the **fmt** library for advanced string formatting, which is al
 #define LOGIT_USE_FMT_LIB
 ```
 
-## Repository
-The LogIt++ library is open-source and hosted on GitHub:
-LogIt++ GitHub Repository
-
 ## License
-This library is licensed under the MIT License. See the LICENSE file for more details.
+This library is licensed under the MIT License. See the [LICENSE](https://github.com/NewYaroslav/log-it-cpp/blob/main/LICENSE) file in the repository for more details.
