@@ -45,7 +45,8 @@ namespace logit {
                 m_level, LOGIT_CURRENT_TIMESTAMP_MS(),
                 m_file, m_line, m_function,
                 m_stream.str(), std::string(),  // No argument names for stream-based logs.
-                m_logger_index
+                m_logger_index,
+                false
             });
         }
 

@@ -67,9 +67,19 @@
 /// \brief Defines the default directory path for log files.
 /// If `LOGIT_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs".
 ///
-/// This macro specifies the directory where log files will be stored.
+/// This macro specifies the directory where regular log files will be stored.
+/// The default path is relative to the application's execution directory.
 #ifndef LOGIT_FILE_LOGGER_PATH
     #define LOGIT_FILE_LOGGER_PATH "data/logs"
+#endif
+
+/// \brief Defines the default directory path for unique log files.
+/// If `LOGIT_UNIQUE_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs/unique_logs".
+///
+/// This macro specifies the directory where unique log files, created by `UniqueFileLogger`,
+/// will be stored. Each log message will generate a new file in this directory.
+#ifndef LOGIT_UNIQUE_FILE_LOGGER_PATH
+    #define LOGIT_UNIQUE_FILE_LOGGER_PATH "data/logs/unique_logs"
 #endif
 
 /// \brief Defines the number of days after which old log files are deleted.
@@ -87,6 +97,18 @@
 /// This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information.
 #ifndef LOGIT_FILE_LOGGER_PATTERN
     #define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v"
+#endif
+
+/// \brief Defines the default log pattern for unique file-based loggers.
+/// If `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` is not defined, it defaults to "%v".
+#ifndef LOGIT_UNIQUE_FILE_LOGGER_PATTERN
+    #define LOGIT_UNIQUE_FILE_LOGGER_PATTERN "%v"
+#endif
+
+/// \brief Defines the default hash length for unique file names.
+/// If `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` is not defined, it defaults to 8.
+#ifndef LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH
+    #define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 8
 #endif
 
 #endif // _LOGIT_CONFIG_HPP_INCLUDED

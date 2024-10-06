@@ -41,6 +41,15 @@ namespace logit {
         White,
     };
 
+    /// \enum LoggerParam
+    /// \brief Enumeration for different logger parameters that can be retrieved.
+    enum class LoggerParam {
+        LastFileName,          ///< The name of the last file written to.
+        LastFilePath,          ///< The full path of the last file written to.
+        LastLogTimestamp,      ///< The timestamp of the last log.
+        TimeSinceLastLog       ///< The time elapsed since the last log in seconds.
+    };
+
     /// \brief Convert LogLevel to a C-style string representation.
     /// \param level The log level.
     /// \param mode The output mode (0 for full name, 1 for abbreviation).

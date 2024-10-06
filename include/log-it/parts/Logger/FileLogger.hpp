@@ -30,9 +30,9 @@ namespace logit {
         /// \struct Config
         /// \brief Configuration for the file logger.
         struct Config {
-            std::string directory = "logs"; ///< Directory where log files are stored.
-            bool async = true; ///< Flag indicating whether logging should be asynchronous.
-            int auto_delete_days = 30; ///< Number of days after which old log files are deleted.
+            std::string directory           = "logs"; ///< Directory where log files are stored.
+            bool        async               = true; ///< Flag indicating whether logging should be asynchronous.
+            int         auto_delete_days    = 30;   ///< Number of days after which old log files are deleted.
         };
 
         /// \brief Default constructor that uses default configuration.
@@ -60,6 +60,7 @@ namespace logit {
             start_logging();
         }
 
+        /// \brief Destructor to stop logging and close file.
         virtual ~FileLogger() {
             stop_logging();
         }
@@ -72,6 +73,7 @@ namespace logit {
         /// \param record The log record containing log information.
         /// \param message The formatted log message.
         void log(const LogRecord& record, const std::string& message) override {
+            m_last_log_ts = record.timestamp_ms;
             if (!m_config.async) {
                 std::lock_guard<std::mutex> lock(m_mutex);
                 try {
@@ -92,6 +94,47 @@ namespace logit {
             });
         }
 
+        /// \brief Retrieves a string parameter from the logger.
+        /// \param param The parameter type to retrieve.
+        /// \return A string representing the requested parameter.
+        std::string get_string_param(const LoggerParam& param) const override {
+            switch (param) {
+            case LoggerParam::LastFileName: return get_last_log_file_name();
+            case LoggerParam::LastFilePath: return get_last_log_file_path();
+            case LoggerParam::LastLogTimestamp: return std::to_string(get_last_log_ts());
+            case LoggerParam::TimeSinceLastLog: return std::to_string(get_time_since_last_log());
+            default:
+                break;
+            };
+            return std::string();
+        }
+
+        /// \brief Retrieves an integer parameter from the logger.
+        /// \param param The parameter type to retrieve.
+        /// \return An integer representing the requested parameter, or 0 if the parameter is unsupported.
+        int64_t get_int_param(const LoggerParam& param) const override {
+            switch (param) {
+            case LoggerParam::LastLogTimestamp: return get_last_log_ts();
+            case LoggerParam::TimeSinceLastLog: return get_time_since_last_log();
+            default:
+                break;
+            };
+            return 0;
+        }
+
+        /// \brief Retrieves a floating-point parameter from the logger.
+        /// \param param The parameter type to retrieve.
+        /// \return A double representing the requested parameter, or 0.0 if the parameter is unsupported.
+        double get_float_param(const LoggerParam& param) const override {
+            switch (param) {
+            case LoggerParam::LastLogTimestamp: return (double)get_last_log_ts() / 1000.0;
+            case LoggerParam::TimeSinceLastLog: return (double)get_time_since_last_log() / 1000.0;
+            default:
+                break;
+            };
+            return 0.0;
+        }
+
         /// \brief Waits for all asynchronous tasks to complete.
         void wait() override {
             if (!m_config.async) return;
@@ -102,14 +145,18 @@ namespace logit {
         mutable std::mutex m_mutex;    ///< Mutex to protect file operations.
         Config             m_config;   ///< Configuration for the file logger.
         std::ofstream      m_file;     ///< Output file stream for logging.
+        mutable std::mutex m_file_path_mutex; ///< Mutex to protect file path operations.
+        std::string        m_file_path; ///< Path of the currently open log file.
+        std::string        m_file_name; ///< Name of the currently open log file.
         int64_t            m_current_date_ts = 0; ///< Timestamp of the current log file's date.
+        std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
 
         /// \brief Starts the logging process by initializing the file and directory.
         void start_logging() {
             // потоки ввода-вывода (например, std::cin, std::cout, std::cerr) могут быть закрыты до завершения программы.
             // В этом случае вызовы функций, которые используют потоки ввода-вывода (например, конструктор std::regex),
             // могут приводить к нежелательным поведениям, таким как зависание или ошибки сегментации.
-            is_valid_log_filename("2024-01-01.txt");
+            is_valid_log_filename("2024-01-01.log");
             std::lock_guard<std::mutex> lock(m_mutex);
             try {
                 initialize_directory();
@@ -147,10 +194,13 @@ namespace logit {
                 m_file.close();
             }
             m_current_date_ts = date_ts;
-            std::string file_path = create_file_path(date_ts);
-            m_file.open(file_path, std::ios_base::app);
+            std::unique_lock<std::mutex> lock(m_file_path_mutex);
+            m_file_path = create_file_path(date_ts);
+            m_file_name = get_file_name(m_file_path);
+            lock.unlock();
+            m_file.open(m_file_path, std::ios_base::app);
             if (!m_file.is_open()) {
-                throw std::runtime_error("Failed to open log file: " + file_path);
+                throw std::runtime_error("Failed to open log file: " + m_file_path);
             }
         }
 
@@ -159,7 +209,7 @@ namespace logit {
         /// \return The path to the log file.
         std::string create_file_path(const int64_t& date_ts) const {
             std::string date_str = time_shield::to_iso8601_date_str(date_ts);
-            return get_directory_path() + "/" + date_str + ".txt";
+            return get_directory_path() + "/" + date_str + ".log";
         }
 
         /// \brief Writes a log message to the file.
@@ -215,7 +265,7 @@ namespace logit {
         /// \param filename The filename to check.
         /// \return True if the filename matches the pattern, false otherwise.
         bool is_valid_log_filename(const std::string& filename) const {
-            static const std::regex pattern(R"((\d{4}-\d{2}-\d{2})\.txt)");
+            static const std::regex pattern(R"((\d{4}-\d{2}-\d{2})\.log)");
             return std::regex_match(filename, pattern);
         }
 
@@ -223,7 +273,7 @@ namespace logit {
         /// \param filename The filename to extract the date from.
         /// \return The date timestamp.
         int64_t get_date_ts_from_filename(const std::string& filename) const {
-            constexpr size_t EXTENSION_LENGTH = sizeof(".txt") - 1;
+            constexpr size_t EXTENSION_LENGTH = sizeof(".log") - 1;
             return time_shield::ts(filename.substr(0, filename.size() - EXTENSION_LENGTH));
         }
 
@@ -237,6 +287,32 @@ namespace logit {
         /// \return The current timestamp in milliseconds.
         int64_t current_timestamp_ms() const {
             return LOGIT_CURRENT_TIMESTAMP_MS();
+        }
+
+        /// \brief Retrieves the last log file path.
+        /// \return The last log file path.
+        std::string get_last_log_file_path() const {
+            std::lock_guard<std::mutex> lock(m_file_path_mutex);
+            return m_file_path;
+        }
+
+        /// \brief Retrieves the last log file name.
+        /// \return The last log file name.
+        std::string get_last_log_file_name() const {
+            std::lock_guard<std::mutex> lock(m_file_path_mutex);
+            return m_file_name;
+        }
+
+        /// \brief Retrieves the timestamp of the last log.
+        /// \return The last log timestamp.
+        int64_t get_last_log_ts() const {
+            return m_last_log_ts;
+        }
+
+        /// \brief Retrieves the time since the last log.
+        /// \return The time in milliseconds since the last log.
+        int64_t get_time_since_last_log() const {
+            return LOGIT_CURRENT_TIMESTAMP_MS() - m_last_log_ts;
         }
 
     }; // FileLogger

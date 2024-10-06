@@ -11,6 +11,7 @@
 #include "parts/Formatter/SimpleLogFormatter.hpp"
 #include "parts/Logger/ConsoleLogger.hpp"
 #include "parts/Logger/FileLogger.hpp"
+#include "parts/Logger/UniqueFileLogger.hpp"
 
 /// \namespace logit
 /// \brief The primary namespace for the LogIt++ library.

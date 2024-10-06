@@ -12,6 +12,7 @@
 #include <windows.h>
 #endif
 #include <mutex>
+#include <atomic>
 
 namespace logit {
 
@@ -75,6 +76,7 @@ namespace logit {
         /// \param record The log record containing log information.
         /// \param message The formatted log message.
         void log(const LogRecord& record, const std::string& message) override {
+            m_last_log_ts = record.timestamp_ms;
             std::unique_lock<std::mutex> lock(m_mutex);
             if (!m_config.async) {
 #               if defined(__MINGW32__) || defined(_WIN32)
@@ -99,6 +101,49 @@ namespace logit {
             });
         }
 
+        /// \brief Retrieves a string parameter from the logger.
+        ///
+        /// This function does not return parameters related to file-based loggers, such as
+        /// `LastFileName` and `LastFilePath`.
+        ///
+        /// \param param The parameter type to retrieve.
+        /// \return A string representing the requested parameter, or an empty string if the parameter is unsupported.
+        std::string get_string_param(const LoggerParam& param) const override {
+            switch (param) {
+            case LoggerParam::LastLogTimestamp: return std::to_string(get_last_log_ts());
+            case LoggerParam::TimeSinceLastLog: return std::to_string(get_time_since_last_log());
+            default:
+                break;
+            };
+            return std::string();
+        }
+
+        /// \brief Retrieves an integer parameter from the logger.
+        /// \param param The parameter type to retrieve.
+        /// \return An integer representing the requested parameter, or 0 if the parameter is unsupported.
+        int64_t get_int_param(const LoggerParam& param) const override {
+            switch (param) {
+            case LoggerParam::LastLogTimestamp: return get_last_log_ts();
+            case LoggerParam::TimeSinceLastLog: return get_time_since_last_log();
+            default:
+                break;
+            };
+            return 0;
+        }
+
+        /// \brief Retrieves a floating-point parameter from the logger.
+        /// \param param The parameter type to retrieve.
+        /// \return A double representing the requested parameter, or 0.0 if the parameter is unsupported.
+        double get_float_param(const LoggerParam& param) const override {
+            switch (param) {
+            case LoggerParam::LastLogTimestamp: return (double)get_last_log_ts() / 1000.0;
+            case LoggerParam::TimeSinceLastLog: return (double)get_time_since_last_log() / 1000.0;
+            default:
+                break;
+            };
+            return 0.0;
+        }
+
         /// \brief Waits for all asynchronous tasks to complete.
         /// If asynchronous logging is enabled, waits for all pending log messages to be written.
         void wait() override {
@@ -111,6 +156,7 @@ namespace logit {
     private:
         mutable std::mutex m_mutex;     ///< Mutex to protect console output
         Config             m_config;    ///< Configuration for the console logger.
+        std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
 
 #       if defined(__MINGW32__) || defined(_WIN32)
 
@@ -236,6 +282,18 @@ namespace logit {
 #           else
             std::cout << to_string(m_config.default_color);
 #           endif
+        }
+
+        /// \brief Retrieves the timestamp of the last log.
+        /// \return The last log timestamp.
+        int64_t get_last_log_ts() const {
+            return m_last_log_ts;
+        }
+
+        /// \brief Retrieves the time since the last log.
+        /// \return The time in milliseconds since the last log.
+        int64_t get_time_since_last_log() const {
+            return LOGIT_CURRENT_TIMESTAMP_MS() - m_last_log_ts;
         }
     }; // ConsoleLogger
 

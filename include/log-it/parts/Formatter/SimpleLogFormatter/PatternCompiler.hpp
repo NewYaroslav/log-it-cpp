@@ -248,7 +248,7 @@ namespace logit {
                         }
                         using ValueType = VariableValue::ValueType;
                         for (size_t i = 0; i < record.args_array.size(); ++i) {
-                            if (i) temp_stream << ", ";
+                            if (!record.print_mode && i) temp_stream << ", ";
                             const auto& arg = record.args_array[i];
                             switch (arg.type) {
                             case ValueType::STRING_VAL:
@@ -264,22 +264,32 @@ namespace logit {
                                 break;
                             };
                         }
-                    } else if (!record.args_array.empty()) {
+                    } else
+                    if (!record.args_array.empty()) {
                         using ValueType = VariableValue::ValueType;
                         for (size_t i = 0; i < record.args_array.size(); ++i) {
-                            if (i) temp_stream << ", ";
+                            if (!record.print_mode && i) temp_stream << ", ";
                             const auto& arg = record.args_array[i];
                             switch (arg.type) {
                             case ValueType::STRING_VAL:
                             case ValueType::EXCEPTION_VAL:
                                 temp_stream << arg.to_string();
                                 break;
+                            case ValueType::ENUM_VAL:
+                                if (arg.is_literal) {
+                                    if (record.print_mode) temp_stream << arg.name;
+                                    else temp_stream << arg.name << ": " << arg.to_string();
+                                    break;
+                                }
+                                temp_stream << arg.to_string();
+                                break;
                             default:
                                 if (arg.is_literal) {
-                                    temp_stream << arg.name << ": " << arg.to_string();
-                                } else {
-                                    temp_stream << arg.to_string();
+                                    if (record.print_mode) temp_stream << arg.to_string();
+                                    else temp_stream << arg.name << ": " << arg.to_string();
+                                    break;
                                 }
+                                temp_stream << arg.to_string();
                                 break;
                             };
                         }

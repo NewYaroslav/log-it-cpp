@@ -41,11 +41,15 @@ namespace logit {
         /// \brief Adds a logger and its corresponding formatter.
         /// \param logger A unique pointer to the logger instance.
         /// \param formatter A unique pointer to the formatter instance.
+        /// \param single_mode If true, this logger will only be invoked by specific log macros
+        /// (e.g., LOGIT_TRACE_TO) that explicitly target it using the logger's index.
+        /// It will not process logs from general log macros (e.g., LOGIT_TRACE).
         void add_logger(
                 std::unique_ptr<ILogger> logger,
-                std::unique_ptr<ILogFormatter> formatter) {
+                std::unique_ptr<ILogFormatter> formatter,
+                const bool& single_mode = false) {
             std::lock_guard<std::mutex> lock(m_mutex);
-            m_loggers.push_back(LoggerStrategy{std::move(logger), std::move(formatter)});
+            m_loggers.push_back(LoggerStrategy{std::move(logger), std::move(formatter), single_mode});
         }
 
         /// \brief Logs a `LogRecord` using all added loggers and formatters.
@@ -63,8 +67,45 @@ namespace logit {
                 return;
             }
             for (const auto& strategy : m_loggers) {
+                if (strategy.single_mode) continue;
                 strategy.logger->log(record, strategy.formatter->format(record));
             }
+        }
+
+        /// \brief Retrieves a string parameter from the logger.
+        /// \param logger_index The index of the logger.
+        /// \param param The logger parameter to retrieve.
+        /// \return A string representing the requested parameter, or an empty string if the parameter is unsupported.
+        std::string get_string_param(const int& logger_index, const LoggerParam& param) const {
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+                const auto& strategy = m_loggers[logger_index];
+                return strategy.logger->get_string_param(param);
+            }
+            return std::string();
+        }
+
+        /// \brief Retrieves an integer parameter from the logger.
+        /// \param logger_index The index of the logger.
+        /// \param param The logger parameter to retrieve.
+        /// \return An integer representing the requested parameter, or 0 if the parameter is unsupported.
+        int64_t get_int_param(const int& logger_index, const LoggerParam& param) const {
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+                const auto& strategy = m_loggers[logger_index];
+                return strategy.logger->get_int_param(param);
+            }
+            return 0;
+        }
+
+        /// \brief Retrieves a floating-point parameter from the logger.
+        /// \param logger_index The index of the logger.
+        /// \param param The logger parameter to retrieve.
+        /// \return A double representing the requested parameter, or 0.0 if the parameter is unsupported.
+        double get_float_param(const int& logger_index, const LoggerParam& param) const {
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+                const auto& strategy = m_loggers[logger_index];
+                return strategy.logger->get_float_param(param);
+            }
+            return 0.0;
         }
 
         /// \brief Logs the message and returns a tuple of arguments.
@@ -104,6 +145,7 @@ namespace logit {
         struct LoggerStrategy {
             std::unique_ptr<ILogger> logger;            ///< The logger instance.
             std::unique_ptr<ILogFormatter> formatter;   ///< The formatter instance.
+            bool single_mode;                           ///< Flag indicating if the logger is in single mode.
         };
 
         std::vector<LoggerStrategy> m_loggers;  ///< Container for logger-formatter pairs.
@@ -125,7 +167,6 @@ namespace logit {
             log(mutable_record);
         }
 
-        /// \brief Private constructor to enforce the singleton pattern.
         Logger() = default;
 
         ~Logger() {

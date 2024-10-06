@@ -172,6 +172,15 @@ namespace logit {
         return list_files;
     }
 
+    /// \brief Extracts the file name from a full file path.
+    /// \param file_path The full file path as a string.
+    /// \return The extracted file name, or the full string if no directory separator is found.
+    std::string get_file_name(const std::string& file_path) {
+        size_t pos = file_path.find_last_of("/\\");
+        if (pos == std::string::npos) return file_path;
+        return file_path.substr(pos + 1);
+    }
+
 #if __cplusplus >= 201703L
 
     /// \brief Computes the relative path from base_path to file_path using C++17 std::filesystem.
