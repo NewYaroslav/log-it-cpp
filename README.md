@@ -1,6 +1,8 @@
 # LogIt++ Library
 ![LogIt++ Logo](docs/logo-640x320.png)
 
+[Читать на русском](README-RU.md)
+
 ## Introduction
 
 **LogIt++** is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations.
@@ -32,6 +34,7 @@ int main() {
 
     float a = 123.456f;
     int b = 789;
+	int c = 899;
     const char* someStr = "Hello, World!";
 
     // Basic logging using macros
@@ -41,10 +44,10 @@ int main() {
 
     // Formatted logging
     LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
-    LOG_FORMAT_WARN("Warning! Values: a = %.2f, b = %d", a, b);
+    LOG_FORMAT_WARN("%.4d", b, c);
 
     // Error and fatal logs
-    LOG_ERROR("An error occurred with value b =", b);
+    LOG_ERROR("An error occurred", b);
     LOG_FATAL("Fatal error. Terminating application.");
 
     // Conditional logging
@@ -52,13 +55,13 @@ int main() {
     LOG_WARN_IF(a > 100, "Value of a exceeds 100");
 
     // Stream-based logging with short and long names
-    LOG_S_INFO << "Logging a float: " << a << ", and an int: " << b;
-    LOG_S_ERROR << "Error occurred in the system";
+    LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
+    LOG_S_ERROR() << "Error occurred in the system";
     LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
 
     // Using LOGIT_TRACE for tracing function execution
     LOGIT_TRACE0();  // Trace without arguments
-    LOG_TRACE("Entering main function with variable a =", a);
+    LOG_PRINT_TRACE("Entering main function with variable a =", a);
 
     // Wait for all asynchronous logs to be processed
     LOGIT_WAIT();
@@ -66,6 +69,8 @@ int main() {
     return 0;
 }
 ```
+
+For more usage examples, please refer to the `examples` folder in the repository, where you can find detailed demonstrations of various logging scenarios and configurations.
 
 ## Log Message Formatting Flags
 LogIt++ supports customizable log message formatting using format flags. You can define how each log message should appear by including placeholders for different pieces of information such as the timestamp, log level, file name, function name, and message.
@@ -113,14 +118,16 @@ Below is a list of supported format flags:
 
 	- `%^`: Start color formatting
 	- `%$`: End color formatting
-	
+	- `%SC`: Start removing color codes (Strip Color)
+	- `%EC`: End removing color codes (End Color)
+
 - *Message Flags*:
 
 	- `%v`: The log message content
 	
 ## Shortened Logging Macros
 
-LogIt++ provides shortened versions of logging macros when LOGIT_SHORT_NAME is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.
+LogIt++ provides shortened versions of logging macros when `LOGIT_SHORT_NAME` is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.
 
 ### Available TRACE-level macros:
 
@@ -158,15 +165,16 @@ LOG_TRACE_PRINTF("Formatted trace: value = %d", value);
 ```
 
 ## Configuration Macros
+
 LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:
 
-- **LOGIT_BASE_PATH**: Defines the base path used for log file paths. If `LOGIT_BASE_PATH` is not defined or is empty ({}), the full path from `__FILE__` will be used for log file paths. You can override this to specify a custom base path for your log files.
+- **LOGIT_BASE_PATH**: Defines the base path used for log file paths. If `LOGIT_BASE_PATH` is not defined or is empty (`{}`), the full path from `__FILE__` will be used for log file paths. You can override this to specify a custom base path for your log files.
 
 ```cpp
 #define LOGIT_BASE_PATH "/path/to/your/project"
 ```
 
-- **LOGIT_DEFAULT_COLOR**: Defines the default color for console output. If `LOGIT_DEFAULT_COLOR` is not defined, it defaults to TextColor::LightGray. You can set a custom console text color by overriding this macro.
+- **LOGIT_DEFAULT_COLOR**: Defines the default color for console output. If `LOGIT_DEFAULT_COLOR` is not defined, it defaults to `TextColor::LightGray`. You can set a custom console text color by overriding this macro.
 
 ```cpp
 #define LOGIT_DEFAULT_COLOR TextColor::Green
@@ -196,25 +204,25 @@ LogIt++ provides several macros that allow for customization and configuration. 
 #define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS 60  // Keep logs for 60 days
 ```
 
-- **LOGIT_FILE_LOGGER_PATTERN**: Defines the default log pattern for file-based loggers. This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v`.
+- **LOGIT_FILE_LOGGER_PATTERN**: Defines the default log pattern for file-based loggers. This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v`.
 
 ```cpp
-#define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %v"
+#define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %SC%v"
 ```
 
-- **LOGIT_UNIQUE_FILE_LOGGER_PATH**: Defines the default directory path for unique log files. If LOGIT_UNIQUE_FILE_LOGGER_PATH is not defined, it defaults to "data/logs/unique_logs". You can specify a custom path for unique log files.
+- **LOGIT_UNIQUE_FILE_LOGGER_PATH**: Defines the default directory path for unique log files. If `LOGIT_UNIQUE_FILE_LOGGER_PATH` is not defined, it defaults to *"data/logs/unique_logs"*. You can specify a custom path for unique log files.
 
 ```cpp
 #define LOGIT_UNIQUE_FILE_LOGGER_PATH "/custom/unique/log/directory"
 ```
 
-- **LOGIT_UNIQUE_FILE_LOGGER_PATTERN**: Defines the default log pattern for unique file-based loggers. If LOGIT_UNIQUE_FILE_LOGGER_PATTERN is not defined, it defaults to "%v". You can customize this pattern to control the format of log messages in unique files.
+- **LOGIT_UNIQUE_FILE_LOGGER_PATTERN**: Defines the default log pattern for unique file-based loggers. If `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` is not defined, it defaults to `"%v"`. You can customize this pattern to control the format of log messages in unique files.
 
 ```cpp
-#define LOGIT_UNIQUE_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %v"
+#define LOGIT_UNIQUE_FILE_LOGGER_PATTERN "%v"
 ```
 
-- **LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH**: Defines the length of the hash used in unique log file names. If LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH is not defined, it defaults to 8 characters. This ensures that unique filenames are generated for each log entry.
+- **LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH**: Defines the length of the hash used in unique log file names. If `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` is not defined, it defaults to `8` characters. This ensures that unique filenames are generated for each log entry.
 
 ```cpp
 #define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 12  // Set hash length to 12 characters
@@ -225,6 +233,7 @@ LogIt++ provides several macros that allow for customization and configuration. 
 - **LOGIT_USE_FMT_LIB**: Enables the use of the fmt library for string formatting.
 
 ## Example Format
+
 To define a custom format for your log messages, you can use the following method:
 
 ```cpp
@@ -241,6 +250,7 @@ logit::Logger::get_instance().add_logger(
 ```
 
 ## Custom Logger Backend and Formatter
+
 You can extend LogIt++ by implementing your own loggers and formatters. Here’s how:
 
 ### Custom Logger Example
@@ -302,6 +312,7 @@ public:
 ```
 
 ## Installation
+
 LogIt++ is a header-only library. To integrate it into your project, follow these steps:
 
 1. Clone the repository with its submodules:
@@ -322,7 +333,7 @@ If you are using an IDE like **Visual Studio** or **CLion**, you can add the inc
 
 4. (Optional) Enable fmt support:
 
-LogIt++ supports the **fmt** library for advanced string formatting, which is also included as a submodule. To enable `fmt` in LogIt++, define the macro `LOGIT_USE_FMT_LIB` in your project:
+LogIt++ supports the *fmt* library for advanced string formatting, which is also included as a submodule. To enable *fmt* in LogIt++, define the macro `LOGIT_USE_FMT_LIB` in your project:
 
 ```cpp
 #define LOGIT_USE_FMT_LIB
