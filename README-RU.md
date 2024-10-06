@@ -26,44 +26,44 @@
 #include <log-it/LogIt.hpp>
 
 int main() {
-    // Инициализация логгера с выводом в консоль по умолчанию
-    LOGIT_ADD_CONSOLE_DEFAULT();
+	// Инициализация логгера с выводом в консоль по умолчанию
+	LOGIT_ADD_CONSOLE_DEFAULT();
 
-    float a = 123.456f;
-    int b = 789;
+	float a = 123.456f;
+	int b = 789;
 	int c = 899;
-    const char* someStr = "Hello, World!";
+	const char* someStr = "Hello, World!";
 
-    // Базовое логирование с использованием макросов
-    LOG_INFO("Starting the application");
-    LOG_DEBUG("Variable values", a, b);
-    LOG_WARN("This is a warning message");
+	// Базовое логирование с использованием макросов
+	LOG_INFO("Starting the application");
+	LOG_DEBUG("Variable values", a, b);
+	LOG_WARN("This is a warning message");
 
-    // Логирование с форматированием
-    LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
-    LOG_FORMAT_WARN("%.4d", b, c);
+	// Логирование с форматированием
+	LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
+	LOG_FORMAT_WARN("%.4d", b, c);
 
-    // Логирование ошибок и фатальных ошибок
-    LOG_ERROR("An error occurred", b);
-    LOG_FATAL("Fatal error. Terminating application.");
+	// Логирование ошибок и фатальных ошибок
+	LOG_ERROR("An error occurred", b);
+	LOG_FATAL("Fatal error. Terminating application.");
 
-    // Условное логирование
-    LOG_ERROR_IF(b < 0, "Value of b is negative");
-    LOG_WARN_IF(a > 100, "Value of a exceeds 100");
+	// Условное логирование
+	LOG_ERROR_IF(b < 0, "Value of b is negative");
+	LOG_WARN_IF(a > 100, "Value of a exceeds 100");
 
-    // Потоковое логирование с использованием коротких и длинных макросов
-    LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
-    LOG_S_ERROR() << "Error occurred in the system";
-    LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
+	// Потоковое логирование с использованием коротких и длинных макросов
+	LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
+	LOG_S_ERROR() << "Error occurred in the system";
+	LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
 
-    // Использование LOGIT_TRACE для трассировки выполнения функций
-    LOGIT_TRACE0();  // Trace without arguments
-    LOG_PRINT_TRACE("Entering main function with variable a =", a);
+	// Использование LOGIT_TRACE для трассировки выполнения функций
+	LOGIT_TRACE0();	 // Trace without arguments
+	LOG_PRINT_TRACE("Entering main function with variable a =", a);
 
-    // Ожидание завершения всех асинхронных операций логирования
-    LOGIT_WAIT();
+	// Ожидание завершения всех асинхронных операций логирования
+	LOGIT_WAIT();
 
-    return 0;
+	return 0;
 }
 ```
 
@@ -223,7 +223,7 @@ LogIt++ предоставляет несколько макросов, кото
 - **LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH**: Определяет длину хеша, используемого в уникальных именах файлов логов. Если `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` не определен, по умолчанию используется `8` символов. Это обеспечивает уникальные имена файлов для каждого лога.
 
 ```cpp
-#define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 12  // Set hash length to 12 characters
+#define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 12	 // Set hash length to 12 characters
 ```
 
 - **LOGIT_SHORT_NAME**: Включает короткие имена для макросов логирования, таких как `LOG_T`, `LOG_D`, `LOG_E` и другие, для более лаконичных записей логов.
@@ -243,8 +243,8 @@ LOGIT_ADD_LOGGER(
 // или...
 
 logit::Logger::get_instance().add_logger(
-    std::make_unique<logit::ConsoleLogger>(),
-    std::make_unique<logit::SimpleLogFormatter>("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
+	std::make_unique<logit::ConsoleLogger>(),
+	std::make_unique<logit::SimpleLogFormatter>("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
 ```
 
 ## Пример пользовательского логгера и форматтера
@@ -260,29 +260,29 @@ logit::Logger::get_instance().add_logger(
 
 class FileLogger : public logit::ILogger {
 public:
-    FileLogger(const std::string& file_name) : m_file_name(file_name) {
-        m_log_file.open(file_name, std::ios::out | std::ios::app);
-    }
+	FileLogger(const std::string& file_name) : m_file_name(file_name) {
+		m_log_file.open(file_name, std::ios::out | std::ios::app);
+	}
 
-    ~FileLogger() {
-        if (m_log_file.is_open()) {
-            m_log_file.close();
-        }
-    }
+	~FileLogger() {
+		if (m_log_file.is_open()) {
+			m_log_file.close();
+		}
+	}
 
-    void log(const logit::LogRecord& record, const std::string& message) override {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        if (m_log_file.is_open()) {
-            m_log_file << message << std::endl;
-        }
-    }
+	void log(const logit::LogRecord& record, const std::string& message) override {
+		std::lock_guard<std::mutex> lock(m_mutex);
+		if (m_log_file.is_open()) {
+			m_log_file << message << std::endl;
+		}
+	}
 
-    void wait() override {}
+	void wait() override {}
 
 private:
-    std::string m_file_name;
-    std::ofstream m_log_file;
-    std::mutex m_mutex;
+	std::string m_file_name;
+	std::ofstream m_log_file;
+	std::mutex m_mutex;
 };
 ```
 
@@ -294,18 +294,18 @@ private:
 
 class JsonLogFormatter : public logit::ILogFormatter {
 public:
-    std::string format(const logit::LogRecord& record) const override {
-        Json::Value log_entry;
-        log_entry["level"] = static_cast<int>(record.log_level);
-        log_entry["timestamp_ms"] = record.timestamp_ms;
-        log_entry["file"] = record.file;
-        log_entry["line"] = record.line;
-        log_entry["function"] = record.function;
-        log_entry["message"] = record.format;
+	std::string format(const logit::LogRecord& record) const override {
+		Json::Value log_entry;
+		log_entry["level"] = static_cast<int>(record.log_level);
+		log_entry["timestamp_ms"] = record.timestamp_ms;
+		log_entry["file"] = record.file;
+		log_entry["line"] = record.line;
+		log_entry["function"] = record.function;
+		log_entry["message"] = record.format;
 
-        Json::StreamWriterBuilder writer;
-        return Json::writeString(writer, log_entry);
-    }
+		Json::StreamWriterBuilder writer;
+		return Json::writeString(writer, log_entry);
+	}
 };
 ```
 

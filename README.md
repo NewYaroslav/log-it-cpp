@@ -29,44 +29,44 @@ Here’s a simple example demonstrating how to use LogIt++ in your application:
 #include <log-it/LogIt.hpp>
 
 int main() {
-    // Initialize the logger with default console output
-    LOGIT_ADD_CONSOLE_DEFAULT();
+	// Initialize the logger with default console output
+	LOGIT_ADD_CONSOLE_DEFAULT();
 
-    float a = 123.456f;
-    int b = 789;
+	float a = 123.456f;
+	int b = 789;
 	int c = 899;
-    const char* someStr = "Hello, World!";
+	const char* someStr = "Hello, World!";
 
-    // Basic logging using macros
-    LOG_INFO("Starting the application");
-    LOG_DEBUG("Variable values", a, b);
-    LOG_WARN("This is a warning message");
+	// Basic logging using macros
+	LOG_INFO("Starting the application");
+	LOG_DEBUG("Variable values", a, b);
+	LOG_WARN("This is a warning message");
 
-    // Formatted logging
-    LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
-    LOG_FORMAT_WARN("%.4d", b, c);
+	// Formatted logging
+	LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
+	LOG_FORMAT_WARN("%.4d", b, c);
 
-    // Error and fatal logs
-    LOG_ERROR("An error occurred", b);
-    LOG_FATAL("Fatal error. Terminating application.");
+	// Error and fatal logs
+	LOG_ERROR("An error occurred", b);
+	LOG_FATAL("Fatal error. Terminating application.");
 
-    // Conditional logging
-    LOG_ERROR_IF(b < 0, "Value of b is negative");
-    LOG_WARN_IF(a > 100, "Value of a exceeds 100");
+	// Conditional logging
+	LOG_ERROR_IF(b < 0, "Value of b is negative");
+	LOG_WARN_IF(a > 100, "Value of a exceeds 100");
 
-    // Stream-based logging with short and long names
-    LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
-    LOG_S_ERROR() << "Error occurred in the system";
-    LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
+	// Stream-based logging with short and long names
+	LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
+	LOG_S_ERROR() << "Error occurred in the system";
+	LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
 
-    // Using LOGIT_TRACE for tracing function execution
-    LOGIT_TRACE0();  // Trace without arguments
-    LOG_PRINT_TRACE("Entering main function with variable a =", a);
+	// Using LOGIT_TRACE for tracing function execution
+	LOGIT_TRACE0();	 // Trace without arguments
+	LOG_PRINT_TRACE("Entering main function with variable a =", a);
 
-    // Wait for all asynchronous logs to be processed
-    LOGIT_WAIT();
+	// Wait for all asynchronous logs to be processed
+	LOGIT_WAIT();
 
-    return 0;
+	return 0;
 }
 ```
 
@@ -225,7 +225,7 @@ LogIt++ provides several macros that allow for customization and configuration. 
 - **LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH**: Defines the length of the hash used in unique log file names. If `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` is not defined, it defaults to `8` characters. This ensures that unique filenames are generated for each log entry.
 
 ```cpp
-#define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 12  // Set hash length to 12 characters
+#define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 12	 // Set hash length to 12 characters
 ```
 
 - **LOGIT_SHORT_NAME**: Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for more concise logging statements.
@@ -245,8 +245,8 @@ LOGIT_ADD_LOGGER(
 // or...
 
 logit::Logger::get_instance().add_logger(
-    std::make_unique<logit::ConsoleLogger>(),
-    std::make_unique<logit::SimpleLogFormatter>("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
+	std::make_unique<logit::ConsoleLogger>(),
+	std::make_unique<logit::SimpleLogFormatter>("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
 ```
 
 ## Custom Logger Backend and Formatter
@@ -262,29 +262,29 @@ You can extend LogIt++ by implementing your own loggers and formatters. Here’s
 
 class FileLogger : public logit::ILogger {
 public:
-    FileLogger(const std::string& file_name) : m_file_name(file_name) {
-        m_log_file.open(file_name, std::ios::out | std::ios::app);
-    }
+	FileLogger(const std::string& file_name) : m_file_name(file_name) {
+		m_log_file.open(file_name, std::ios::out | std::ios::app);
+	}
 
-    ~FileLogger() {
-        if (m_log_file.is_open()) {
-            m_log_file.close();
-        }
-    }
+	~FileLogger() {
+		if (m_log_file.is_open()) {
+			m_log_file.close();
+		}
+	}
 
-    void log(const logit::LogRecord& record, const std::string& message) override {
-        std::lock_guard<std::mutex> lock(m_mutex);
-        if (m_log_file.is_open()) {
-            m_log_file << message << std::endl;
-        }
-    }
+	void log(const logit::LogRecord& record, const std::string& message) override {
+		std::lock_guard<std::mutex> lock(m_mutex);
+		if (m_log_file.is_open()) {
+			m_log_file << message << std::endl;
+		}
+	}
 
-    void wait() override {}
+	void wait() override {}
 
 private:
-    std::string m_file_name;
-    std::ofstream m_log_file;
-    std::mutex m_mutex;
+	std::string m_file_name;
+	std::ofstream m_log_file;
+	std::mutex m_mutex;
 };
 ```
 
@@ -296,18 +296,18 @@ private:
 
 class JsonLogFormatter : public logit::ILogFormatter {
 public:
-    std::string format(const logit::LogRecord& record) const override {
-        Json::Value log_entry;
-        log_entry["level"] = static_cast<int>(record.log_level);
-        log_entry["timestamp_ms"] = record.timestamp_ms;
-        log_entry["file"] = record.file;
-        log_entry["line"] = record.line;
-        log_entry["function"] = record.function;
-        log_entry["message"] = record.format;
+	std::string format(const logit::LogRecord& record) const override {
+		Json::Value log_entry;
+		log_entry["level"] = static_cast<int>(record.log_level);
+		log_entry["timestamp_ms"] = record.timestamp_ms;
+		log_entry["file"] = record.file;
+		log_entry["line"] = record.line;
+		log_entry["function"] = record.function;
+		log_entry["message"] = record.format;
 
-        Json::StreamWriterBuilder writer;
-        return Json::writeString(writer, log_entry);
-    }
+		Json::StreamWriterBuilder writer;
+		return Json::writeString(writer, log_entry);
+	}
 };
 ```
 
