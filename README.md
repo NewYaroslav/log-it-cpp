@@ -1,4 +1,5 @@
 # LogIt++ Library
+![LogIt++ Logo](docs/logo-640x320.png)
 
 ## Introduction
 
@@ -326,6 +327,11 @@ LogIt++ supports the **fmt** library for advanced string formatting, which is al
 ```cpp
 #define LOGIT_USE_FMT_LIB
 ```
+
+## Documentation
+
+Detailed documentation for LogIt++, including API reference and usage examples, can be found [here](https://newyaroslav.github.io/log-it-cpp/).
+
 
 ## License
 This library is licensed under the MIT License. See the [LICENSE](https://github.com/NewYaroslav/log-it-cpp/blob/main/LICENSE) file in the repository for more details.
