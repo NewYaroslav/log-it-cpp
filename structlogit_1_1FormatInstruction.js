@@ -32,12 +32,14 @@ var structlogit_1_1FormatInstruction =
       [ "EndColor", "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a3cf2c4f1030c2974a1b3028ed71b5783", null ],
       [ "Message", "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a4c2a8fe7eaf24721cc7a9f0175115bd4", null ]
     ] ],
-    [ "FormatInstruction", "structlogit_1_1FormatInstruction.html#a8f8f4fcb6c86040126e4e7e2bef7fd0c", null ],
-    [ "FormatInstruction", "structlogit_1_1FormatInstruction.html#aaf619f9b68c978f0a5301bd3eb8f6539", null ],
+    [ "FormatInstruction", "structlogit_1_1FormatInstruction.html#ac27520674973ed3f8103693719fc222a", null ],
+    [ "FormatInstruction", "structlogit_1_1FormatInstruction.html#a3faa501eacddb571d371a2a414db7cb6", null ],
     [ "apply", "structlogit_1_1FormatInstruction.html#a5965e36b6cd1a20461826c245e733c5d", null ],
+    [ "remove_ansi_escape_codes", "structlogit_1_1FormatInstruction.html#acea0c9eb68183459fb6ba3caddf02b4e", null ],
     [ "center_align", "structlogit_1_1FormatInstruction.html#a51d02027ece52ac3283aa0329f23998d", null ],
     [ "left_align", "structlogit_1_1FormatInstruction.html#ac86749e4633d3c8790223948d2739727", null ],
     [ "static_text", "structlogit_1_1FormatInstruction.html#a1d7880701961d480a82b53de2962bdaa", null ],
+    [ "strip_ansi", "structlogit_1_1FormatInstruction.html#a3533ffecf52adc87e5ae551770f8c005", null ],
     [ "truncate", "structlogit_1_1FormatInstruction.html#a135c41afe872f8ab5dbfb07092063d63", null ],
     [ "type", "structlogit_1_1FormatInstruction.html#a02acd24128bb2dafba5b7edbefb21d7e", null ],
     [ "width", "structlogit_1_1FormatInstruction.html#a0dfac7e47e27be071b72040f76674600", null ]

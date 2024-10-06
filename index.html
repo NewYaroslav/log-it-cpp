@@ -113,8 +113,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <div class="textblock"><p>Defines the base path used for log file paths. If LOGIT_BASE_PATH is not defined or is empty ({}), the full path from <b>FILE</b> will be used for log file paths.  </p>
 <h1><a class="anchor" id="intro_sec"></a>
 Introduction</h1>
-<p>LogIt++** is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations.</p>
-<p>The library combines the simplicity of macro-based logging similar to <b>IceCream-Cpp</b> and the configurability of logging backends and formats like <b>spdlog</b>.</p>
+<p>LogIt++** is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. The library combines the simplicity of macro-based logging similar to <b>IceCream-Cpp</b> and the configurability of logging backends and formats like <b>spdlog</b>. LogIt++ is fully compatible with C++11, ensuring support for a wide range of compilers and systems.</p>
 <h1><a class="anchor" id="features_sec"></a>
 Features</h1>
 <ul>
@@ -233,6 +232,8 @@ Color Formatting</h2>
 <ul>
 <li><code>%^</code>: Start color formatting</li>
 <li><code>%$</code>: End color formatting</li>
+<li><code>SC</code>: Start removing color codes (Strip Color)</li>
+<li><code>EC</code>: End removing color codes (End Color)</li>
 </ul>
 <h2><a class="anchor" id="message_flags"></a>
 Message Content</h2>

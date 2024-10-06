@@ -157,8 +157,8 @@ Macros</h2></td></tr>
 <tr class="memitem:ab4d42b8c5a8fe2468557178ce120780b" id="r_ab4d42b8c5a8fe2468557178ce120780b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4d42b8c5a8fe2468557178ce120780b">LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</a>&#160;&#160;&#160;30</td></tr>
 <tr class="memdesc:ab4d42b8c5a8fe2468557178ce120780b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the number of days after which old log files are deleted. If <code>LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</code> is not defined, it defaults to 30 days.  <br /></td></tr>
 <tr class="separator:ab4d42b8c5a8fe2468557178ce120780b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afeff518c76cf3749e91fdb8ad5e64bfa" id="r_afeff518c76cf3749e91fdb8ad5e64bfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afeff518c76cf3749e91fdb8ad5e64bfa">LOGIT_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v&quot;</td></tr>
-<tr class="memdesc:afeff518c76cf3749e91fdb8ad5e64bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v".  <br /></td></tr>
+<tr class="memitem:afeff518c76cf3749e91fdb8ad5e64bfa" id="r_afeff518c76cf3749e91fdb8ad5e64bfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afeff518c76cf3749e91fdb8ad5e64bfa">LOGIT_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v&quot;</td></tr>
+<tr class="memdesc:afeff518c76cf3749e91fdb8ad5e64bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v".  <br /></td></tr>
 <tr class="separator:afeff518c76cf3749e91fdb8ad5e64bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9084ea16f31554bdf35137910c027811" id="r_a9084ea16f31554bdf35137910c027811"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9084ea16f31554bdf35137910c027811">LOGIT_UNIQUE_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;%v&quot;</td></tr>
 <tr class="memdesc:a9084ea16f31554bdf35137910c027811"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for unique file-based loggers. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "%v".  <br /></td></tr>
@@ -425,12 +425,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LOGIT_FILE_LOGGER_PATTERN&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v&quot;</td>
+          <td class="memname">#define LOGIT_FILE_LOGGER_PATTERN&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v". </p>
+<p>Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v". </p>
 <p>This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information. </p>
 
 <p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00099">99</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>

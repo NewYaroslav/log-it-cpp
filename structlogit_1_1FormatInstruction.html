@@ -111,6 +111,7 @@ $(function(){initNavTree('structlogit_1_1FormatInstruction.html',''); initResiza
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="structlogit_1_1FormatInstruction-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">logit::FormatInstruction Struct Reference</div></div>
 </div><!--header-->
@@ -168,12 +169,12 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a8f8f4fcb6c86040126e4e7e2bef7fd0c" id="r_a8f8f4fcb6c86040126e4e7e2bef7fd0c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f8f4fcb6c86040126e4e7e2bef7fd0c">FormatInstruction</a> (const std::string &amp;text)</td></tr>
-<tr class="memdesc:a8f8f4fcb6c86040126e4e7e2bef7fd0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for static text.  <br /></td></tr>
-<tr class="separator:a8f8f4fcb6c86040126e4e7e2bef7fd0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf619f9b68c978f0a5301bd3eb8f6539" id="r_aaf619f9b68c978f0a5301bd3eb8f6539"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaf619f9b68c978f0a5301bd3eb8f6539">FormatInstruction</a> (const <a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a> <a class="el" href="#a02acd24128bb2dafba5b7edbefb21d7e">type</a>, const int <a class="el" href="#a0dfac7e47e27be071b72040f76674600">width</a>=0, const bool left=false, const bool center=false, const bool trunc=false)</td></tr>
-<tr class="memdesc:aaf619f9b68c978f0a5301bd3eb8f6539"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for other types.  <br /></td></tr>
-<tr class="separator:aaf619f9b68c978f0a5301bd3eb8f6539"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac27520674973ed3f8103693719fc222a" id="r_ac27520674973ed3f8103693719fc222a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac27520674973ed3f8103693719fc222a">FormatInstruction</a> (const std::string &amp;text, const bool &amp;<a class="el" href="#a3533ffecf52adc87e5ae551770f8c005">strip_ansi</a>)</td></tr>
+<tr class="memdesc:ac27520674973ed3f8103693719fc222a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for static text.  <br /></td></tr>
+<tr class="separator:ac27520674973ed3f8103693719fc222a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3faa501eacddb571d371a2a414db7cb6" id="r_a3faa501eacddb571d371a2a414db7cb6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3faa501eacddb571d371a2a414db7cb6">FormatInstruction</a> (const <a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a> &amp;<a class="el" href="#a02acd24128bb2dafba5b7edbefb21d7e">type</a>, const int &amp;<a class="el" href="#a0dfac7e47e27be071b72040f76674600">width</a>=0, const bool &amp;left=false, const bool &amp;center=false, const bool &amp;trunc=false, const bool &amp;<a class="el" href="#a3533ffecf52adc87e5ae551770f8c005">strip_ansi</a>=false)</td></tr>
+<tr class="memdesc:a3faa501eacddb571d371a2a414db7cb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for other types.  <br /></td></tr>
+<tr class="separator:a3faa501eacddb571d371a2a414db7cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5965e36b6cd1a20461826c245e733c5d" id="r_a5965e36b6cd1a20461826c245e733c5d"><td class="memTemplParams" colspan="2">template&lt;class StreamType &gt; </td></tr>
 <tr class="memitem:a5965e36b6cd1a20461826c245e733c5d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a5965e36b6cd1a20461826c245e733c5d">apply</a> (StreamType &amp;oss, const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record, const time_shield::DateTimeStruct &amp;dt) const</td></tr>
 <tr class="memdesc:a5965e36b6cd1a20461826c245e733c5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply formatting considering alignment and width.  <br /></td></tr>
@@ -199,6 +200,15 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a135c41afe872f8ab5dbfb07092063d63" id="r_a135c41afe872f8ab5dbfb07092063d63"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a135c41afe872f8ab5dbfb07092063d63">truncate</a> = false</td></tr>
 <tr class="memdesc:a135c41afe872f8ab5dbfb07092063d63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Truncation flag.  <br /></td></tr>
 <tr class="separator:a135c41afe872f8ab5dbfb07092063d63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3533ffecf52adc87e5ae551770f8c005" id="r_a3533ffecf52adc87e5ae551770f8c005"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3533ffecf52adc87e5ae551770f8c005">strip_ansi</a> = false</td></tr>
+<tr class="memdesc:a3533ffecf52adc87e5ae551770f8c005"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes ANSI escape codes (e.g., colors) if true.  <br /></td></tr>
+<tr class="separator:a3533ffecf52adc87e5ae551770f8c005"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:acea0c9eb68183459fb6ba3caddf02b4e" id="r_acea0c9eb68183459fb6ba3caddf02b4e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acea0c9eb68183459fb6ba3caddf02b4e">remove_ansi_escape_codes</a> (const std::string &amp;input) const</td></tr>
+<tr class="memdesc:acea0c9eb68183459fb6ba3caddf02b4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes ANSI escape codes (including color codes and cursor movement) from a string.  <br /></td></tr>
+<tr class="separator:acea0c9eb68183459fb6ba3caddf02b4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Structure to store log formatting instructions. </p>
@@ -294,8 +304,8 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a8f8f4fcb6c86040126e4e7e2bef7fd0c" name="a8f8f4fcb6c86040126e4e7e2bef7fd0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8f8f4fcb6c86040126e4e7e2bef7fd0c">&#9670;&#160;</a></span>FormatInstruction() <span class="overload">[1/2]</span></h2>
+<a id="ac27520674973ed3f8103693719fc222a" name="ac27520674973ed3f8103693719fc222a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac27520674973ed3f8103693719fc222a">&#9670;&#160;</a></span>FormatInstruction() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -306,8 +316,12 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">logit::FormatInstruction::FormatInstruction </td>
           <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>text</em></span></td><td>)</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>text</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>strip_ansi</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -321,16 +335,17 @@ Public Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">text</td><td>The static text. </td></tr>
+    <tr><td class="paramname">strip_ansi</td><td>If true, removes ANSI escape codes (e.g., colors). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00080">80</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00082">82</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
-<a id="aaf619f9b68c978f0a5301bd3eb8f6539" name="aaf619f9b68c978f0a5301bd3eb8f6539"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf619f9b68c978f0a5301bd3eb8f6539">&#9670;&#160;</a></span>FormatInstruction() <span class="overload">[2/2]</span></h2>
+<a id="a3faa501eacddb571d371a2a414db7cb6" name="a3faa501eacddb571d371a2a414db7cb6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3faa501eacddb571d371a2a414db7cb6">&#9670;&#160;</a></span>FormatInstruction() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -341,27 +356,32 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">logit::FormatInstruction::FormatInstruction </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+          <td class="paramtype">const <a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>width</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>width</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>left</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>left</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>center</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>center</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>trunc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>trunc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>strip_ansi</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -379,11 +399,12 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramname">left</td><td>Left alignment flag. </td></tr>
     <tr><td class="paramname">center</td><td>Center alignment flag. </td></tr>
     <tr><td class="paramname">trunc</td><td>Truncation flag. </td></tr>
+    <tr><td class="paramname">strip_ansi</td><td>If true, removes ANSI escape codes (e.g., colors). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00090">90</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00093">93</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -438,7 +459,43 @@ template&lt;class StreamType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00106">106</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00111">111</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+
+</div>
+</div>
+<a id="acea0c9eb68183459fb6ba3caddf02b4e" name="acea0c9eb68183459fb6ba3caddf02b4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acea0c9eb68183459fb6ba3caddf02b4e">&#9670;&#160;</a></span>remove_ansi_escape_codes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string logit::FormatInstruction::remove_ansi_escape_codes </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>input</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Removes ANSI escape codes (including color codes and cursor movement) from a string. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">input</td><td>The input string containing possible ANSI escape codes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string with all ANSI escape codes removed. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00341">341</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -494,6 +551,24 @@ template&lt;class StreamType &gt; </div>
 <p>Used only if type == StaticText. </p>
 
 <p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00070">70</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a3533ffecf52adc87e5ae551770f8c005" name="a3533ffecf52adc87e5ae551770f8c005"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3533ffecf52adc87e5ae551770f8c005">&#9670;&#160;</a></span>strip_ansi</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool logit::FormatInstruction::strip_ansi = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Removes ANSI escape codes (e.g., colors) if true. </p>
+
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00077">77</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>

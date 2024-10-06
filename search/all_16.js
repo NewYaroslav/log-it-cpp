@@ -24,5 +24,6 @@ var searchData=
   ['stop_5flogging_21',['stop_logging',['../classlogit_1_1FileLogger.html#a0dbec9e3d81aa7ad8e15c1b5d8c386c0',1,'logit::FileLogger::stop_logging()'],['../classlogit_1_1UniqueFileLogger.html#a7d97258b4ec56a8fbb3d391b055271a7',1,'logit::UniqueFileLogger::stop_logging()']]],
   ['string_5fval_22',['STRING_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314',1,'logit::VariableValue']]],
   ['string_5fvalue_23',['string_value',['../structlogit_1_1VariableValue.html#a8aea95a0ccfc7a71d04ea6447f948173',1,'logit::VariableValue']]],
-  ['summary_24',['Summary',['../index.html#summary_custom_backend',1,'']]]
+  ['strip_5fansi_24',['strip_ansi',['../structlogit_1_1FormatInstruction.html#a3533ffecf52adc87e5ae551770f8c005',1,'logit::FormatInstruction']]],
+  ['summary_25',['Summary',['../index.html#summary_custom_backend',1,'']]]
 ];
