@@ -4,3 +4,6 @@
 [submodule "libs/fmt"]
 	path = libs/fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule ".github/doxygen-awesome-css"]
+	path = .github/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git

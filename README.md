@@ -4,7 +4,8 @@
 
 **LogIt++** is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations.
 
-The library combines the simplicity of macro-based logging similar to **IceCream-Cpp** and the configurability of logging backends and formats like **spdlog**.
+The library combines the simplicity of macro-based logging similar to **IceCream-Cpp** and the configurability of logging backends and formats like **spdlog**. 
+LogIt++ is fully compatible with C++11, ensuring support for a wide range of compilers and systems.
 
 ## Features
 
