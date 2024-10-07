@@ -23,7 +23,6 @@ var searchData=
   ['custom_20formatter_20example_20',['Custom Formatter Example',['../index.html#custom_formatter',1,'']]],
   ['custom_20logger_20backend_20and_20formatter_21',['Custom Logger Backend and Formatter',['../index.html#custom_backend_sec',1,'']]],
   ['custom_20logger_20example_22',['Custom Logger Example',['../index.html#custom_logger',1,'']]],
-  ['customlogger_23',['CustomLogger',['../classCustomLogger.html',1,'CustomLogger'],['../classCustomLogger.html#a34573d44dd9dfc12a52b5d7fa5ca4931',1,'CustomLogger::CustomLogger()']]],
-  ['cyan_24',['CYAN',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50aafe71cad474c15ce63b300c470eef8cc',1,'example_logit_basic.cpp']]],
-  ['cyan_25',['Cyan',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a023c239d2f2538f140a20e72c7b73f20',1,'logit']]]
+  ['cyan_23',['CYAN',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50aafe71cad474c15ce63b300c470eef8cc',1,'example_logit_basic.cpp']]],
+  ['cyan_24',['Cyan',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a023c239d2f2538f140a20e72c7b73f20',1,'logit']]]
 ];

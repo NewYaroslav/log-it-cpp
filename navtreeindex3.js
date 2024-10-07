@@ -1,13 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"namespacelogit.html#ad2db70d1585274b64495732271ef3277":[1,0,0,18],
-"namespacelogit.html#ae3cef80cd421fcd0e7acef8a75ccf61f":[1,0,0,35],
-"namespacemembers.html":[1,1,0],
-"namespacemembers_enum.html":[1,1,3],
-"namespacemembers_func.html":[1,1,1],
-"namespacemembers_type.html":[1,1,2],
-"namespaces.html":[1,0],
-"pages.html":[],
 "path__utils_8hpp.html":[3,0,2,0,0,2,3],
 "path__utils_8hpp.html#a05248803515ef4cb8d7b62ff79fa0d4e":[3,0,2,0,0,2,3,2],
 "path__utils_8hpp.html#a0ba53ba88f1916d46b8da7847f734d67":[3,0,2,0,0,2,3,4],
@@ -249,5 +241,13 @@ var NAVTREEINDEX3 =
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a27e2030757f7835e837edcf5a1bf0a6a":[2,0,0,13,0,14],
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a30e197f6196444b539d5f330e121047b":[1,0,0,13,0,2],
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a30e197f6196444b539d5f330e121047b":[2,0,0,13,0,2],
-"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a32d7df287b8e64ba22bfcdc34bafa529":[1,0,0,13,0,9]
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a32d7df287b8e64ba22bfcdc34bafa529":[1,0,0,13,0,9],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a32d7df287b8e64ba22bfcdc34bafa529":[2,0,0,13,0,9],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314":[1,0,0,13,0,12],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314":[2,0,0,13,0,12],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb":[1,0,0,13,0,7],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb":[2,0,0,13,0,7],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71":[1,0,0,13,0,5],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71":[2,0,0,13,0,5],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a605e14fd7caf8083a817b6b1ea1c5192":[1,0,0,13,0,6]
 };

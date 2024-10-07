@@ -110,10 +110,11 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">LogIt++ Library </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Defines the base path used for log file paths. If LOGIT_BASE_PATH is not defined or is empty ({}), the full path from <b>FILE</b> will be used for log file paths.  </p>
+<div class="textblock"><p>Defines the base path used for log file paths. If <code>LOGIT_BASE_PATH</code> is not defined or is empty ({}), the full path from <code>__FILE__</code> will be used for log file paths.  </p>
 <h1><a class="anchor" id="intro_sec"></a>
 Introduction</h1>
-<p>LogIt++** is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. The library combines the simplicity of macro-based logging similar to <b>IceCream-Cpp</b> and the configurability of logging backends and formats like <b>spdlog</b>. LogIt++ is fully compatible with C++11, ensuring support for a wide range of compilers and systems.</p>
+<p>LogIt**++ is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. The library combines the simplicity of macro-based logging similar to <b>IceCream-Cpp</b> and the configurability of logging backends and formats like <b>spdlog</b>.</p>
+<p>LogIt++ is fully compatible with C++11, ensuring support for a wide range of compilers and systems.</p>
 <h1><a class="anchor" id="features_sec"></a>
 Features</h1>
 <ul>
@@ -184,40 +185,40 @@ Log Message Formatting Flags</h1>
 <h2><a class="anchor" id="datetime_flags"></a>
 Date and Time Flags</h2>
 <ul>
-<li><code>Y</code>: Year (e.g., 2024)</li>
-<li><code>m</code>: Month (01-12)</li>
-<li><code>d</code>: Day of the month (01-31)</li>
-<li><code>H</code>: Hour (00-23)</li>
-<li><code>M</code>: Minute (00-59)</li>
-<li><code>S</code>: Second (00-59)</li>
-<li><code>e</code>: Millisecond (000-999)</li>
-<li><code>C</code>: Two-digit year (e.g., 24 for 2024)</li>
-<li><code>c</code>: Full date and time (e.g., Mon Oct 4 12:45:30 2024)</li>
-<li><code>D</code>: Short date (e.g., 10/04/24)</li>
-<li><code>T</code>, <code>X</code>: Time in ISO 8601 format (e.g., 12:45:30)</li>
-<li><code>F</code>: Date in ISO 8601 format (e.g., 2024-10-04)</li>
-<li><code>s</code>, <code>E</code>: Unix timestamp in seconds</li>
-<li><code>ms</code>: Unix timestamp in milliseconds</li>
+<li><code>%Y</code>: Year (e.g., 2024)</li>
+<li><code>%m</code>: Month (01-12)</li>
+<li><code>%d</code>: Day of the month (01-31)</li>
+<li><code>%H</code>: Hour (00-23)</li>
+<li><code>%M</code>: Minute (00-59)</li>
+<li><code>%S</code>: Second (00-59)</li>
+<li><code>%e</code>: Millisecond (000-999)</li>
+<li><code>%C</code>: Two-digit year (e.g., 24 for 2024)</li>
+<li><code>%c</code>: Full date and time (e.g., Mon Oct 4 12:45:30 2024)</li>
+<li><code>%D</code>: Short date (e.g., 10/04/24)</li>
+<li><code>%T</code>, <code>%X</code>: Time in ISO 8601 format (e.g., 12:45:30)</li>
+<li><code>%F</code>: Date in ISO 8601 format (e.g., 2024-10-04)</li>
+<li><code>%s</code>, <code>%E</code>: Unix timestamp in seconds</li>
+<li><code>%ms</code>: Unix timestamp in milliseconds</li>
 </ul>
 <h2><a class="anchor" id="weekday_month_flags"></a>
 Weekday and Month Names</h2>
 <ul>
-<li><code>b</code>: Abbreviated month name (e.g., Jan)</li>
-<li><code>B</code>: Full month name (e.g., January)</li>
-<li><code>a</code>: Abbreviated weekday name (e.g., Mon)</li>
-<li><code>A</code>: Full weekday name (e.g., Monday)</li>
+<li><code>%b</code>: Abbreviated month name (e.g., Jan)</li>
+<li><code>%B</code>: Full month name (e.g., January)</li>
+<li><code>%a</code>: Abbreviated weekday name (e.g., Mon)</li>
+<li><code>%A</code>: Full weekday name (e.g., Monday)</li>
 </ul>
 <h2><a class="anchor" id="log_level_flags"></a>
 Log Level</h2>
 <ul>
-<li><code>l</code>: Full log level (e.g., INFO, ERROR)</li>
-<li><code>L</code>: Short log level (e.g., I for INFO, E for ERROR)</li>
+<li><code>%l</code>: Full log level (e.g., INFO, ERROR)</li>
+<li><code>%L</code>: Short log level (e.g., I for INFO, E for ERROR)</li>
 </ul>
 <h2><a class="anchor" id="file_function_flags"></a>
 File and Function Information</h2>
 <ul>
-<li><code>f</code>, <code>fn</code>, <code>bs</code>: Base name of the source file (e.g., main.cpp)</li>
-<li><code>g</code>, <code>ffn</code>: Full file path (e.g., /home/user/project/src/main.cpp)</li>
+<li><code>%f</code>, <code>%fn</code>, <code>%bs</code>: Base name of the source file (e.g., main.cpp)</li>
+<li><code>%g</code>, <code>%ffn</code>: Full file path (e.g., /home/user/project/src/main.cpp)</li>
 <li><code>%@</code>: Source file and line number (e.g., main.cpp:45)</li>
 <li><code>%#</code>: Line number (e.g., 45)</li>
 <li><code>%!</code>: Function name (e.g., main)</li>
@@ -225,20 +226,20 @@ File and Function Information</h2>
 <h2><a class="anchor" id="thread_flags"></a>
 Thread Information</h2>
 <ul>
-<li><code>t</code>: Thread identifier</li>
+<li><code>%t</code>: Thread identifier</li>
 </ul>
 <h2><a class="anchor" id="color_flags"></a>
 Color Formatting</h2>
 <ul>
 <li><code>%^</code>: Start color formatting</li>
 <li><code>%$</code>: End color formatting</li>
-<li><code>SC</code>: Start removing color codes (Strip Color)</li>
-<li><code>EC</code>: End removing color codes (End Color)</li>
+<li><code>%SC</code>: Start removing color codes (Strip Color)</li>
+<li><code>%EC</code>: End removing color codes (End Color)</li>
 </ul>
 <h2><a class="anchor" id="message_flags"></a>
 Message Content</h2>
 <ul>
-<li><code>v</code>: The log message content</li>
+<li><code>%v</code>: The log message content</li>
 </ul>
 <h2><a class="anchor" id="example_format"></a>
 Example Format</h2>
@@ -314,7 +315,7 @@ Configuration Macros</h1>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_DEFAULT_COLOR</b>:</li>
 </ul>
-<p>Sets the default color for console output. If LOGIT_DEFAULT_COLOR is not defined, it defaults to TextColor::LightGray.</p>
+<p>Sets the default color for console output. If <code>LOGIT_DEFAULT_COLOR</code> is not defined, it defaults to <code>TextColor::LightGray</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// Sets the default log message color to green.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_DEFAULT_COLOR TextColor::Green</span></div>
 </div><!-- fragment --><ul>
@@ -335,56 +336,56 @@ Configuration Macros</h1>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_CURRENT_TIMESTAMP_MS</b>:</li>
 </ul>
-<p>Macro to get the current timestamp in milliseconds. By default, it uses std::chrono for time calculation. You can override this to customize the timestamp generation.</p>
+<p>Macro to get the current timestamp in milliseconds. By default, it uses <code>std::chrono</code> for time calculation. You can override this to customize the timestamp generation.</p>
 <div class="fragment"><div class="line"><span class="comment">// Customize timestamp calculation if needed.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_CURRENT_TIMESTAMP_MS() my_custom_timestamp_function()</span></div>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_CONSOLE_PATTERN</b>:</li>
 </ul>
-<p>Defines the default log pattern for the console logger. If LOGIT_CONSOLE_PATTERN is not defined, it defaults to H:M:S.e | %^v$.</p>
+<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to <code>%H:%M:%S.%e | %^%v%$</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// Customize the console log message pattern.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_CONSOLE_PATTERN &quot;%H:%M:%S.%e | %v&quot;</span></div>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_FILE_LOGGER_PATH</b>:</li>
 </ul>
-<p>Defines the default directory path for log files. If LOGIT_FILE_LOGGER_PATH is not defined, it defaults to "data/logs".</p>
+<p>Defines the default directory path for log files. If <code>LOGIT_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs".</p>
 <div class="fragment"><div class="line"><span class="comment">// Specify a custom path for log files.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_FILE_LOGGER_PATH &quot;/custom/log/directory&quot;</span></div>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</b>:</li>
 </ul>
-<p>Defines the number of days after which old log files are deleted. If LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS is not defined, it defaults to 30 days.</p>
+<p>Defines the number of days after which old log files are deleted. If <code>LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</code> is not defined, it defaults to <code>30</code> days.</p>
 <div class="fragment"><div class="line"><span class="comment">// Set the number of days to keep log files.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS 60</span></div>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_FILE_LOGGER_PATTERN</b>:</li>
 </ul>
-<p>Defines the default log pattern for file-based loggers. If LOGIT_FILE_LOGGER_PATTERN is not defined, it defaults to [Y-m-d H:M:S.e] [ffn:%#] [%!] [thread:t] [l] v.</p>
+<p>Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to <code>[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// Customize the log file message pattern.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_FILE_LOGGER_PATTERN &quot;[%Y-%m-%d %H:%M:%S.%e] [%l] %v&quot;</span></div>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_UNIQUE_FILE_LOGGER_PATH</b>:</li>
 </ul>
-<p>Defines the default directory path for unique log files. If LOGIT_UNIQUE_FILE_LOGGER_PATH is not defined, it defaults to <code>"data/logs/unique_logs"</code>.</p>
+<p>Defines the default directory path for unique log files. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs/unique_logs".</p>
 <div class="fragment"><div class="line"><span class="comment">// Specify a custom path for unique log files.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_UNIQUE_FILE_LOGGER_PATH &quot;/custom/unique/log/directory&quot;</span></div>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</b>:</li>
 </ul>
-<p>Defines the default log pattern for unique file-based loggers. If LOGIT_UNIQUE_FILE_LOGGER_PATTERN is not defined, it defaults to "%v".</p>
+<p>Defines the default log pattern for unique file-based loggers. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</code> is not defined, it defaults to <code>v</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// Customize the unique file log message pattern.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_UNIQUE_FILE_LOGGER_PATTERN &quot;[%Y-%m-%d %H:%M:%S.%e] [%l] %v&quot;</span></div>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</b>:</li>
 </ul>
-<p>Defines the length of the hash used in the unique log file names. If <code>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</code> is not defined, it defaults to 8 characters.</p>
+<p>Defines the length of the hash used in the unique log file names. If <code>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</code> is not defined, it defaults to <code>8</code> characters.</p>
 <p>This macro controls the length of the hash part in the filenames for unique log files, ensuring unique names for each log.</p>
 <div class="fragment"><div class="line"><span class="comment">// Set the hash length to 12 characters for unique file names.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 12</span></div>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_SHORT_NAME</b>:</li>
 </ul>
-<p>Enables short names for logging macros, such as LOG_T, LOG_D, LOG_E, etc., for concise logging.</p>
+<p>Enables short names for logging macros, such as <code>LOG_T</code>, <code>LOG_D</code>, <code>LOG_E</code>, etc., for concise logging.</p>
 <div class="fragment"><div class="line"><span class="comment">// Enable short macro names for logging.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_SHORT_NAME</span></div>
 </div><!-- fragment --><ul>
@@ -403,7 +404,7 @@ Custom Logger Example</h2>
 <div class="line"><span class="preprocessor">#include &lt;mutex&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">log-it/LogIt.hpp</a>&gt;</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">class </span>FileLogger : <span class="keyword">public</span> <a class="code hl_class" href="classlogit_1_1ILogger.html">logit::ILogger</a> {</div>
+<div class="line"><span class="keyword">class </span>FileLogger : <span class="keyword">public</span> <a class="code hl_interface" href="classlogit_1_1ILogger.html">logit::ILogger</a> {</div>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    <span class="comment">// Constructor to initialize the file logger with a file name</span></div>
 <div class="line">    FileLogger(<span class="keyword">const</span> std::string&amp; file_name) : m_file_name(file_name) {</div>
@@ -454,7 +455,7 @@ Custom Formatter Example</h2>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">log-it/LogIt.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;json/json.h&gt;</span>  <span class="comment">// Or your preferred JSON library</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">class </span>JsonLogFormatter : <span class="keyword">public</span> <a class="code hl_class" href="classlogit_1_1ILogFormatter.html">logit::ILogFormatter</a> {</div>
+<div class="line"><span class="keyword">class </span>JsonLogFormatter : <span class="keyword">public</span> <a class="code hl_interface" href="classlogit_1_1ILogFormatter.html">logit::ILogFormatter</a> {</div>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    <span class="comment">// Formats the log record into a JSON string</span></div>
 <div class="line">    std::string <a class="code hl_function" href="classlogit_1_1ILogFormatter.html#ae513f0253954fd91a0cbbec91fe2d333">format</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structlogit_1_1LogRecord.html">logit::LogRecord</a>&amp; record)<span class="keyword"> const override </span>{</div>

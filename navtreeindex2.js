@@ -1,13 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"classlogit_1_1TaskExecutor.html#aaacb830e722cd9f074cc4fa611811c05":[1,0,0,11,14],
-"classlogit_1_1TaskExecutor.html#aaacb830e722cd9f074cc4fa611811c05":[2,0,0,11,14],
-"classlogit_1_1TaskExecutor.html#abe84b6674bbf1ae60c5527b5ea16a8fe":[1,0,0,11,9],
-"classlogit_1_1TaskExecutor.html#abe84b6674bbf1ae60c5527b5ea16a8fe":[2,0,0,11,9],
-"classlogit_1_1TaskExecutor.html#ad8c2157b95313d9b7afb0b943b94d5c5":[1,0,0,11,5],
-"classlogit_1_1TaskExecutor.html#ad8c2157b95313d9b7afb0b943b94d5c5":[2,0,0,11,5],
-"classlogit_1_1TaskExecutor.html#adfe82b7987640219085d4a3f8aff3f0a":[1,0,0,11,10],
-"classlogit_1_1TaskExecutor.html#adfe82b7987640219085d4a3f8aff3f0a":[2,0,0,11,10],
 "classlogit_1_1TaskExecutor.html#af8021fcfa067e73418d65c0000a59c5f":[1,0,0,11,0],
 "classlogit_1_1TaskExecutor.html#af8021fcfa067e73418d65c0000a59c5f":[2,0,0,11,0],
 "classlogit_1_1UniqueFileLogger.html":[1,0,0,12],
@@ -98,8 +90,8 @@ var NAVTREEINDEX2 =
 "example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4":[3,0,1,0,2],
 "example__logit__basic_8cpp_source.html":[3,0,1,0],
 "example__logit__custom__backend_8cpp.html":[3,0,1,1],
-"example__logit__custom__backend_8cpp.html#a3bf179993f836ab365df8a1888cd027d":[3,0,1,1,1],
-"example__logit__custom__backend_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4":[3,0,1,1,2],
+"example__logit__custom__backend_8cpp.html#a3bf179993f836ab365df8a1888cd027d":[3,0,1,1,0],
+"example__logit__custom__backend_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4":[3,0,1,1,1],
 "example__logit__custom__backend_8cpp_source.html":[3,0,1,1],
 "example__logit__customized_8cpp.html":[3,0,1,2],
 "example__logit__customized_8cpp.html#a0f7223e40eee5ab323ba83d779b471c9":[3,0,1,2,3],
@@ -249,5 +241,13 @@ var NAVTREEINDEX2 =
 "namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31aee38e4d5dd68c4e440825018d549cb47":[1,0,0,17,9],
 "namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31af780aab6295a2f368ac69a514f8b4605":[1,0,0,17,2],
 "namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31afb55202637692de4a494e9ade4cff2dd":[1,0,0,17,7],
-"namespacelogit.html#ac61cbb6336ea2c74d086799e21fab375":[1,0,0,19]
+"namespacelogit.html#ac61cbb6336ea2c74d086799e21fab375":[1,0,0,19],
+"namespacelogit.html#ad2db70d1585274b64495732271ef3277":[1,0,0,18],
+"namespacelogit.html#ae3cef80cd421fcd0e7acef8a75ccf61f":[1,0,0,35],
+"namespacemembers.html":[1,1,0],
+"namespacemembers_enum.html":[1,1,3],
+"namespacemembers_func.html":[1,1,1],
+"namespacemembers_type.html":[1,1,2],
+"namespaces.html":[1,0],
+"pages.html":[]
 };

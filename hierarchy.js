@@ -9,7 +9,6 @@ var hierarchy =
       [ "logit::SimpleLogFormatter", "classlogit_1_1SimpleLogFormatter.html", null ]
     ] ],
     [ "logit::ILogger", "classlogit_1_1ILogger.html", [
-      [ "CustomLogger", "classCustomLogger.html", null ],
       [ "logit::ConsoleLogger", "classlogit_1_1ConsoleLogger.html", null ],
       [ "logit::FileLogger", "classlogit_1_1FileLogger.html", null ],
       [ "logit::UniqueFileLogger", "classlogit_1_1UniqueFileLogger.html", null ]
