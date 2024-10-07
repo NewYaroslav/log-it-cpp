@@ -4,9 +4,12 @@
 #include <sstream>
 #include <log-it/LogIt.hpp>
 
+
+/// \cond
 // Custom Logger class inheriting from ILogger
 class CustomLogger : public logit::ILogger {
 public:
+
     CustomLogger() = default;
 
     /// \brief Logs a message by formatting the log record and message.
@@ -46,6 +49,7 @@ public:
 
     ~CustomLogger() override = default;
 };
+/// \endcond
 
 int main() {
     std::cout << "Starting logging example with custom backend..." << std::endl;

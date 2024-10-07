@@ -3,8 +3,9 @@
 
 \section intro_sec Introduction
 
-**LogIt++** is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. 
+**LogIt**++ is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. 
 The library combines the simplicity of macro-based logging similar to **IceCream-Cpp** and the configurability of logging backends and formats like **spdlog**.
+
 LogIt++ is fully compatible with C++11, ensuring support for a wide range of compilers and systems.
 
 \section features_sec Features
@@ -73,49 +74,49 @@ LogIt++ supports customizable log message formatting using format flags. You can
 Below is a list of all supported format flags and their meanings:
 
 \subsection datetime_flags Date and Time Flags
-- `%Y`: Year (e.g., 2024)
-- `%m`: Month (01-12)
-- `%d`: Day of the month (01-31)
-- `%H`: Hour (00-23)
-- `%M`: Minute (00-59)
-- `%S`: Second (00-59)
-- `%e`: Millisecond (000-999)
-- `%C`: Two-digit year (e.g., 24 for 2024)
-- `%c`: Full date and time (e.g., Mon Oct 4 12:45:30 2024)
-- `%D`: Short date (e.g., 10/04/24)
-- `%T`, `%X`: Time in ISO 8601 format (e.g., 12:45:30)
-- `%F`: Date in ISO 8601 format (e.g., 2024-10-04)
-- `%s`, `%E`: Unix timestamp in seconds
-- `%ms`: Unix timestamp in milliseconds
+- `%%Y`: Year (e.g., 2024)
+- `%%m`: Month (01-12)
+- `%%d`: Day of the month (01-31)
+- `%%H`: Hour (00-23)
+- `%%M`: Minute (00-59)
+- `%%S`: Second (00-59)
+- `%%e`: Millisecond (000-999)
+- `%%C`: Two-digit year (e.g., 24 for 2024)
+- `%%c`: Full date and time (e.g., Mon Oct 4 12:45:30 2024)
+- `%%D`: Short date (e.g., 10/04/24)
+- `%%T`, `%%X`: Time in ISO 8601 format (e.g., 12:45:30)
+- `%%F`: Date in ISO 8601 format (e.g., 2024-10-04)
+- `%%s`, `%%E`: Unix timestamp in seconds
+- `%%ms`: Unix timestamp in milliseconds
 
 \subsection weekday_month_flags Weekday and Month Names
-- `%b`: Abbreviated month name (e.g., Jan)
-- `%B`: Full month name (e.g., January)
-- `%a`: Abbreviated weekday name (e.g., Mon)
-- `%A`: Full weekday name (e.g., Monday)
+- `%%b`: Abbreviated month name (e.g., Jan)
+- `%%B`: Full month name (e.g., January)
+- `%%a`: Abbreviated weekday name (e.g., Mon)
+- `%%A`: Full weekday name (e.g., Monday)
 
 \subsection log_level_flags Log Level
-- `%l`: Full log level (e.g., INFO, ERROR)
-- `%L`: Short log level (e.g., I for INFO, E for ERROR)
+- `%%l`: Full log level (e.g., INFO, ERROR)
+- `%%L`: Short log level (e.g., I for INFO, E for ERROR)
 
 \subsection file_function_flags File and Function Information
-- `%f`, `%fn`, `%bs`: Base name of the source file (e.g., main.cpp)
-- `%g`, `%ffn`: Full file path (e.g., /home/user/project/src/main.cpp)
+- `%%f`, `%%fn`, `%%bs`: Base name of the source file (e.g., main.cpp)
+- `%%g`, `%%ffn`: Full file path (e.g., /home/user/project/src/main.cpp)
 - `%@`: Source file and line number (e.g., main.cpp:45)
 - `%#`: Line number (e.g., 45)
 - `%!`: Function name (e.g., main)
 
 \subsection thread_flags Thread Information
-- `%t`: Thread identifier
+- `%%t`: Thread identifier
 
 \subsection color_flags Color Formatting
 - `%^`: Start color formatting
 - `%$`: End color formatting
-- `%SC`: Start removing color codes (Strip Color)
-- `%EC`: End removing color codes (End Color)
+- `%%SC`: Start removing color codes (Strip Color)
+- `%%EC`: End removing color codes (End Color)
 	
 \subsection message_flags Message Content
-- `%v`: The log message content
+- `%%v`: The log message content
 
 \subsection example_format Example Format
 
@@ -198,7 +199,7 @@ LOG_TRACE_PRINTF("Formatted trace: value = %d", value);
 LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:
 
 - **LOGIT_BASE_PATH**:
-\brief Defines the base path used for log file paths. If LOGIT_BASE_PATH is not defined or is empty ({}), the full path from __FILE__ will be used for log file paths.
+\brief Defines the base path used for log file paths. If `LOGIT_BASE_PATH` is not defined or is empty ({}), the full path from `__FILE__` will be used for log file paths.
 
 \code{.cpp}
 // Defines the base path for project folder.
@@ -206,7 +207,7 @@ LogIt++ provides several macros that allow for customization and configuration. 
 \endcode
 
 - **LOGIT_DEFAULT_COLOR**:
-\brief Sets the default color for console output. If LOGIT_DEFAULT_COLOR is not defined, it defaults to TextColor::LightGray.
+\brief Sets the default color for console output. If `LOGIT_DEFAULT_COLOR` is not defined, it defaults to `TextColor::LightGray`.
 
 \code{.cpp}
 // Sets the default log message color to green.
@@ -231,7 +232,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_CURRENT_TIMESTAMP_MS**:
-\brief Macro to get the current timestamp in milliseconds. By default, it uses std::chrono for time calculation. You can override this to customize the timestamp generation.
+\brief Macro to get the current timestamp in milliseconds. By default, it uses `std::chrono` for time calculation. You can override this to customize the timestamp generation.
 
 \code{.cpp}
 // Customize timestamp calculation if needed.
@@ -239,7 +240,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_CONSOLE_PATTERN**:
-\brief Defines the default log pattern for the console logger. If LOGIT_CONSOLE_PATTERN is not defined, it defaults to %H:%M:%S.%e | %^%v%$.
+\brief Defines the default log pattern for the console logger. If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%%H:%%M:%%S.%%e | %^%%v%$`.
 
 \code{.cpp}
 // Customize the console log message pattern.
@@ -247,7 +248,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_FILE_LOGGER_PATH**:
-\brief Defines the default directory path for log files. If LOGIT_FILE_LOGGER_PATH is not defined, it defaults to "data/logs".
+\brief Defines the default directory path for log files. If `LOGIT_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs".
 
 \code{.cpp}
 // Specify a custom path for log files.
@@ -255,7 +256,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS**:
-\brief Defines the number of days after which old log files are deleted. If LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS is not defined, it defaults to 30 days.
+\brief Defines the number of days after which old log files are deleted. If `LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS` is not defined, it defaults to `30` days.
 
 \code{.cpp}
 // Set the number of days to keep log files.
@@ -263,7 +264,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_FILE_LOGGER_PATTERN**:
-\brief Defines the default log pattern for file-based loggers. If LOGIT_FILE_LOGGER_PATTERN is not defined, it defaults to [%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %v.
+\brief Defines the default log pattern for file-based loggers. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%%Y-%%m-%%d %%H:%%M:%%S.%%e] [%%ffn:%#] [%!] [thread:%%t] [%%l] %%SC%%v`.
 
 \code{.cpp}
 // Customize the log file message pattern.
@@ -271,7 +272,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_UNIQUE_FILE_LOGGER_PATH**:
-\brief Defines the default directory path for unique log files. If LOGIT_UNIQUE_FILE_LOGGER_PATH is not defined, it defaults to `"data/logs/unique_logs"`.
+\brief Defines the default directory path for unique log files. If `LOGIT_UNIQUE_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs/unique_logs".
 
 \code{.cpp}
 // Specify a custom path for unique log files.
@@ -279,7 +280,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_UNIQUE_FILE_LOGGER_PATTERN**:
-\brief Defines the default log pattern for unique file-based loggers. If LOGIT_UNIQUE_FILE_LOGGER_PATTERN is not defined, it defaults to "%v".
+\brief Defines the default log pattern for unique file-based loggers. If `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` is not defined, it defaults to `%v`.
 
 \code{.cpp}
 // Customize the unique file log message pattern.
@@ -287,7 +288,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH**:
-\brief Defines the length of the hash used in the unique log file names. If `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` is not defined, it defaults to 8 characters.
+\brief Defines the length of the hash used in the unique log file names. If `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` is not defined, it defaults to `8` characters.
 
 This macro controls the length of the hash part in the filenames for unique log files, ensuring unique names for each log.
 
@@ -297,7 +298,7 @@ This macro controls the length of the hash part in the filenames for unique log 
 \endcode
 
 - **LOGIT_SHORT_NAME**:
-\brief Enables short names for logging macros, such as LOG_T, LOG_D, LOG_E, etc., for concise logging.
+\brief Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for concise logging.
 
 \code{.cpp}
 // Enable short macro names for logging.

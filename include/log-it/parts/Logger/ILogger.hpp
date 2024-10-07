@@ -8,7 +8,7 @@
 
 namespace logit {
 
-	/// \class ILogger
+	/// \interface ILogger
 	/// \brief Interface for loggers that handle log message output.
 	class ILogger {
 	public:

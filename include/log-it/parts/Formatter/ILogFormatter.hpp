@@ -8,7 +8,7 @@
 
 namespace logit {
 
-	/// \class ILogFormatter
+	/// \interface ILogFormatter
 	/// \brief Interface for formatting log records.
 	///
 	/// The `ILogFormatter` class defines an interface that any log formatter must implement.
