@@ -113,8 +113,8 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 <div class="textblock"><p>Defines the base path used for log file paths. If <code>LOGIT_BASE_PATH</code> is not defined or is empty ({}), the full path from <code>__FILE__</code> will be used for log file paths.  </p>
 <h1><a class="anchor" id="intro_sec"></a>
 Introduction</h1>
-<p>LogIt**++ is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. The library combines the simplicity of macro-based logging similar to <b>IceCream-Cpp</b> and the configurability of logging backends and formats like <b>spdlog</b>.</p>
-<p>LogIt++ is fully compatible with C++11, ensuring support for a wide range of compilers and systems.</p>
+<p><code>LogIt++</code> is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. The library combines the simplicity of macro-based logging similar to <b>IceCream-Cpp</b> and the configurability of logging backends and formats like <b>spdlog</b>.</p>
+<p><code>LogIt++</code> is fully compatible with <code>C++11</code>, ensuring support for a wide range of compilers and systems.</p>
 <h1><a class="anchor" id="features_sec"></a>
 Features</h1>
 <ul>
@@ -180,7 +180,7 @@ Usage</h1>
 <div class="ttc" id="aexample__logit__basic_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> <a href="example__logit__basic_8cpp_source.html#l00020">example_logit_basic.cpp:20</a></div></div>
 </div><!-- fragment --><h1><a class="anchor" id="format_flags_sec"></a>
 Log Message Formatting Flags</h1>
-<p>LogIt++ supports customizable log message formatting using format flags. You can define how each log message should appear by including placeholders for different pieces of information such as the timestamp, log level, file name, function name, and message.</p>
+<p><code>LogIt++</code> supports customizable log message formatting using format flags. You can define how each log message should appear by including placeholders for different pieces of information such as the timestamp, log level, file name, function name, and message.</p>
 <p>Below is a list of all supported format flags and their meanings:</p>
 <h2><a class="anchor" id="datetime_flags"></a>
 Date and Time Flags</h2>
@@ -271,7 +271,7 @@ Example Format</h2>
 </pre><p>You can also include static text and other custom formatting options by mixing text with the flags.</p>
 <h1><a class="anchor" id="short_macros"></a>
 Shortened Logging Macros</h1>
-<p>LogIt++ provides shortened versions of logging macros when <code>LOGIT_SHORT_NAME</code> is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.</p>
+<p><code>LogIt++</code> provides shortened versions of logging macros when <code>LOGIT_SHORT_NAME</code> is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.</p>
 <h3><a class="anchor" id="autotoc_md0"></a>
 Available TRACE-level macros:</h3>
 <ul>
@@ -314,7 +314,9 @@ Available TRACE-level macros:</h3>
 </li>
 </ul>
 <p>These macros provide flexibility and convenience when logging messages at the TRACE level. They allow you to choose between different logging styles, such as standard logging, formatted logging, and printing each argument separately.</p>
-<p>Note**: Similar macros are available for other log levels—INFO (<code>LOG_I</code>, <code>LOG_INFO</code>), DEBUG (<code>LOG_D</code>, <code>LOG_DEBUG</code>), WARN (<code>LOG_W</code>, <code>LOG_WARN</code>), ERROR (<code>LOG_E</code>, <code>LOG_ERROR</code>), and FATAL (<code>LOG_F</code>, <code>LOG_FATAL</code>). The naming conventions are consistent across levels, you only need to replace the level letter or word in the macro name.</p>
+<h4><a class="anchor" id="autotoc_md1"></a>
+Note:</h4>
+<p>Similar macros are available for other log levels — <b>INFO</b> (<code>LOG_I</code>, <code>LOG_INFO</code>), <b>DEBUG</b> (<code>LOG_D</code>, <code>LOG_DEBUG</code>), <b>WARN</b> (<code>LOG_W</code>, <code>LOG_WARN</code>), <b>ERROR</b> (<code>LOG_E</code>, <code>LOG_ERROR</code>), and <b>FATAL</b> (<code>LOG_F</code>, <code>LOG_FATAL</code>). The naming conventions are consistent across levels, you only need to replace the level letter or word in the macro name.</p>
 <div class="fragment"><div class="line">LOG_T(<span class="stringliteral">&quot;Trace message using short macro&quot;</span>); </div>
 <div class="line">LOG_FT(<span class="stringliteral">&quot;%.4d&quot;</span>, 999); </div>
 <div class="line">LOG_PRINT_T(<span class="stringliteral">&quot;Printing trace message with multiple variables: &quot;</span>, var1, var2); </div>
