@@ -135,24 +135,42 @@ LogIt++ provides shortened versions of logging macros when `LOGIT_SHORT_NAME` is
 
 	- `LOG_T(...)`: Logs a TRACE-level message.
 	- `LOG_T0()`: Logs a TRACE-level message without arguments.
-	- `LOG_T_NOARGS()`: Logs a TRACE-level message with no arguments.
+	- `LOG_0T()`: Alias for `LOG_T0()`.
+	- `LOG_0_T()`: Alias for `LOG_T0()`.
+	- `LOG_T_NOARGS()`: Alias for `LOG_T0()`.
+	- `LOG_NOARGS_T()`: Alias for `LOG_T0()`.
 	
 - Formatted logging:
 
 	- `LOG_TF(fmt, ...)`: Logs a formatted TRACE-level message using format strings.
+	- `LOG_FT(fmt, ...)`: Alias for `LOG_TF(fmt, ...)`.
 	- `LOG_T_PRINT(...)`: Logs a TRACE-level message by printing each argument.
+	- `LOG_PRINT_T(...)`: Alias for `LOG_T_PRINT(...)`.
 	- `LOG_T_PRINTF(fmt, ...)`: Logs a formatted TRACE-level message using printf-style formatting.
+	- `LOG_PRINTF_T(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
 	- `LOG_TP(...)`: Alias for `LOG_T_PRINT(...)`.
+	- `LOG_PT(...)`: Alias for `LOG_T_PRINT(...)`.
 	- `LOG_TPF(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
+	- `LOG_PFT(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
 	
 - Alternative TRACE-level macros:
 
 	- `LOG_TRACE(...)`: Logs a TRACE-level message (same as `LOG_T(...)`).
 	- `LOG_TRACE0()`: Logs a TRACE-level message without arguments (same as `LOG_T0()`).
+	- `LOG_0TRACE()`: Alias for `LOG_TRACE0()`.
+	- `LOG_0_TRACE()`: Alias for `LOG_TRACE0()`.
 	- `LOG_TRACE_NOARGS()`: Logs a TRACE-level message with no arguments (same as `LOG_T_NOARGS()`).
+	- `LOG_NOARGS_TRACE()`: Alias for `LOG_TRACE_NOARGS()`.
 	- `LOG_TRACEF(fmt, ...)`: Logs a formatted TRACE-level message (same as `LOG_TF(fmt, ...)`).
+	- `LOG_FTRACE(fmt, ...)`: Alias for `LOG_TRACEF(fmt, ...)`.
 	- `LOG_TRACE_PRINT(...)`: Logs a TRACE-level message by printing each argument (same as `LOG_T_PRINT(...)`).
+	- `LOG_PRINT_TRACE(...)`: Alias for `LOG_TRACE_PRINT(...)`.
 	- `LOG_TRACE_PRINTF(fmt, ...)`: Logs a formatted TRACE-level message using printf-style formatting (same as `LOG_T_PRINTF(fmt, ...)`).
+	- `LOG_PRINTF_TRACE(fmt, ...)`: Alias for `LOG_TRACE_PRINTF(fmt, ...)`.
+
+These macros provide flexibility and convenience when logging messages at the TRACE level. They allow you to choose between different logging styles, such as standard logging, formatted logging, and printing each argument separately.
+
+**Note**: Similar macros are available for other log levels—INFO (`LOG_I`, `LOG_INFO`), DEBUG (`LOG_D`, `LOG_DEBUG`), WARN (`LOG_W`, `LOG_WARN`), ERROR (`LOG_E`, `LOG_ERROR`), and FATAL (`LOG_F`, `LOG_FATAL`). The naming conventions are consistent across levels, you only need to replace the level letter or word in the macro name.
 
 - Example:
 
