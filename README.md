@@ -8,7 +8,7 @@
 **LogIt++** is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations.
 
 The library combines the simplicity of macro-based logging similar to **IceCream-Cpp** and the configurability of logging backends and formats like **spdlog**. 
-LogIt++ is fully compatible with C++11, ensuring support for a wide range of compilers and systems.
+LogIt++ is fully compatible with `C++11`.
 
 ## Features
 
@@ -73,7 +73,8 @@ int main() {
 For more usage examples, please refer to the `examples` folder in the repository, where you can find detailed demonstrations of various logging scenarios and configurations.
 
 ## Log Message Formatting Flags
-LogIt++ supports customizable log message formatting using format flags. You can define how each log message should appear by including placeholders for different pieces of information such as the timestamp, log level, file name, function name, and message.
+
+`LogIt++` supports customizable log message formatting using format flags. You can define how each log message should appear by including placeholders for different pieces of information such as the timestamp, log level, file name, function name, and message.
 
 Below is a list of supported format flags:
 
@@ -170,7 +171,7 @@ LogIt++ provides shortened versions of logging macros when `LOGIT_SHORT_NAME` is
 
 These macros provide flexibility and convenience when logging messages at the TRACE level. They allow you to choose between different logging styles, such as standard logging, formatted logging, and printing each argument separately.
 
-**Note**: Similar macros are available for other log levels—INFO (`LOG_I`, `LOG_INFO`), DEBUG (`LOG_D`, `LOG_DEBUG`), WARN (`LOG_W`, `LOG_WARN`), ERROR (`LOG_E`, `LOG_ERROR`), and FATAL (`LOG_F`, `LOG_FATAL`). The naming conventions are consistent across levels, you only need to replace the level letter or word in the macro name.
+**Note**: Similar macros are available for other log levels — **INFO** (`LOG_I`, `LOG_INFO`), **DEBUG** (`LOG_D`, `LOG_DEBUG`), **WARN** (`LOG_W`, `LOG_WARN`), **ERROR** (`LOG_E`, `LOG_ERROR`), and **FATAL** (`LOG_F`, `LOG_FATAL`). The naming conventions are consistent across levels, you only need to replace the level letter or word in the macro name.
 
 - Example:
 
