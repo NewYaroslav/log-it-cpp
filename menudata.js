@@ -115,5 +115,5 @@ var menudata={children:[
 {text:"Enumerator",url:"globals_eval.html"},
 {text:"Macros",url:"globals_defs.html",children:[
 {text:"_",url:"globals_defs.html#index__5F"},
-{text:"l",url:"globals_defs.html#index_l"},
-{text:"u",url:"globals_defs.html#index_u"}]}]}]}]}
+{text:"l",url:"globals_defs_l.html#index_l"},
+{text:"u",url:"globals_defs_u.html#index_u"}]}]}]}]}

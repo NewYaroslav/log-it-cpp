@@ -172,11 +172,11 @@ Usage</h1>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aLogIt_8hpp_html"><div class="ttname"><a href="LogIt_8hpp.html">LogIt.hpp</a></div><div class="ttdoc">Main header file for the LogIt++ library.</div></div>
-<div class="ttc" id="aLogMacros_8hpp_html_a0b84a7b443921e0390272d98960576e7"><div class="ttname"><a href="LogMacros_8hpp.html#a0b84a7b443921e0390272d98960576e7">LOGIT_ADD_CONSOLE_DEFAULT</a></div><div class="ttdeci">#define LOGIT_ADD_CONSOLE_DEFAULT()</div><div class="ttdoc">Macro for adding the default console logger. This logger uses the default format pattern and asynchro...</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00607">LogMacros.hpp:607</a></div></div>
-<div class="ttc" id="aLogMacros_8hpp_html_a12684b2496a4438b7a97301261c08f97"><div class="ttname"><a href="LogMacros_8hpp.html#a12684b2496a4438b7a97301261c08f97">LOGIT_WAIT</a></div><div class="ttdeci">#define LOGIT_WAIT()</div><div class="ttdoc">Macro for waiting for all asynchronous loggers to finish processing.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00775">LogMacros.hpp:775</a></div></div>
-<div class="ttc" id="aLogMacros_8hpp_html_a17ef9ac072ae417ecfd4fff7c1aa79ac"><div class="ttname"><a href="LogMacros_8hpp.html#a17ef9ac072ae417ecfd4fff7c1aa79ac">LOGIT_INFO_IF</a></div><div class="ttdeci">#define LOGIT_INFO_IF(condition,...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00241">LogMacros.hpp:241</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a0b84a7b443921e0390272d98960576e7"><div class="ttname"><a href="LogMacros_8hpp.html#a0b84a7b443921e0390272d98960576e7">LOGIT_ADD_CONSOLE_DEFAULT</a></div><div class="ttdeci">#define LOGIT_ADD_CONSOLE_DEFAULT()</div><div class="ttdoc">Macro for adding the default console logger. This logger uses the default format pattern and asynchro...</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00726">LogMacros.hpp:726</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a12684b2496a4438b7a97301261c08f97"><div class="ttname"><a href="LogMacros_8hpp.html#a12684b2496a4438b7a97301261c08f97">LOGIT_WAIT</a></div><div class="ttdeci">#define LOGIT_WAIT()</div><div class="ttdoc">Macro for waiting for all asynchronous loggers to finish processing.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00894">LogMacros.hpp:894</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a17ef9ac072ae417ecfd4fff7c1aa79ac"><div class="ttname"><a href="LogMacros_8hpp.html#a17ef9ac072ae417ecfd4fff7c1aa79ac">LOGIT_INFO_IF</a></div><div class="ttdeci">#define LOGIT_INFO_IF(condition,...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00267">LogMacros.hpp:267</a></div></div>
 <div class="ttc" id="aLogMacros_8hpp_html_a658290ef063a518a1b8919c415c79d5e"><div class="ttname"><a href="LogMacros_8hpp.html#a658290ef063a518a1b8919c415c79d5e">LOGIT_STREAM_WARN</a></div><div class="ttdeci">#define LOGIT_STREAM_WARN()</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00029">LogMacros.hpp:29</a></div></div>
-<div class="ttc" id="aLogMacros_8hpp_html_ae285f974f6218755066c11483f6b3f31"><div class="ttname"><a href="LogMacros_8hpp.html#ae285f974f6218755066c11483f6b3f31">LOGIT_WARN_IF</a></div><div class="ttdeci">#define LOGIT_WARN_IF(condition,...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00257">LogMacros.hpp:257</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_ae285f974f6218755066c11483f6b3f31"><div class="ttname"><a href="LogMacros_8hpp.html#ae285f974f6218755066c11483f6b3f31">LOGIT_WARN_IF</a></div><div class="ttdeci">#define LOGIT_WARN_IF(condition,...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00287">LogMacros.hpp:287</a></div></div>
 <div class="ttc" id="aexample__logit__basic_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> <a href="example__logit__basic_8cpp_source.html#l00020">example_logit_basic.cpp:20</a></div></div>
 </div><!-- fragment --><h1><a class="anchor" id="format_flags_sec"></a>
 Log Message Formatting Flags</h1>
@@ -254,14 +254,14 @@ Example Format</h2>
 <div class="line"><a class="code hl_function" href="classlogit_1_1Logger.html#ac212f0bc0118797f4b8069db59d175d2">logit::Logger::get_instance</a>().<a class="code hl_function" href="classlogit_1_1Logger.html#a9eb54527ed964e7f9adc4a62bc1d157d">add_logger</a>(</div>
 <div class="line">    std::make_unique&lt;logit::ConsoleLogger&gt;(),</div>
 <div class="line">    std::make_unique&lt;logit::SimpleLogFormatter&gt;(<span class="stringliteral">&quot;[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$&quot;</span>));</div>
-<div class="ttc" id="aLogMacros_8hpp_html_ab5e8261127ffa4f6a6888411195ecfc9"><div class="ttname"><a href="LogMacros_8hpp.html#ab5e8261127ffa4f6a6888411195ecfc9">LOGIT_ADD_LOGGER</a></div><div class="ttdeci">#define LOGIT_ADD_LOGGER(logger_type, logger_args, formatter_type, formatter_args)</div><div class="ttdoc">Macro for adding a logger with a specific formatter.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00564">LogMacros.hpp:564</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_ab5e8261127ffa4f6a6888411195ecfc9"><div class="ttname"><a href="LogMacros_8hpp.html#ab5e8261127ffa4f6a6888411195ecfc9">LOGIT_ADD_LOGGER</a></div><div class="ttdeci">#define LOGIT_ADD_LOGGER(logger_type, logger_args, formatter_type, formatter_args)</div><div class="ttdoc">Macro for adding a logger with a specific formatter.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00683">LogMacros.hpp:683</a></div></div>
 <div class="ttc" id="aclasslogit_1_1ConsoleLogger_html"><div class="ttname"><a href="classlogit_1_1ConsoleLogger.html">logit::ConsoleLogger</a></div><div class="ttdoc">Logger that outputs log messages to the console with optional color coding.</div><div class="ttdef"><b>Definition</b> <a href="ConsoleLogger_8hpp_source.html#l00025">ConsoleLogger.hpp:25</a></div></div>
 <div class="ttc" id="aclasslogit_1_1Logger_html_a9eb54527ed964e7f9adc4a62bc1d157d"><div class="ttname"><a href="classlogit_1_1Logger.html#a9eb54527ed964e7f9adc4a62bc1d157d">logit::Logger::add_logger</a></div><div class="ttdeci">void add_logger(std::unique_ptr&lt; ILogger &gt; logger, std::unique_ptr&lt; ILogFormatter &gt; formatter, const bool &amp;single_mode=false)</div><div class="ttdoc">Adds a logger and its corresponding formatter.</div><div class="ttdef"><b>Definition</b> <a href="Logger_8hpp_source.html#l00047">Logger.hpp:47</a></div></div>
 <div class="ttc" id="aclasslogit_1_1Logger_html_ac212f0bc0118797f4b8069db59d175d2"><div class="ttname"><a href="classlogit_1_1Logger.html#ac212f0bc0118797f4b8069db59d175d2">logit::Logger::get_instance</a></div><div class="ttdeci">static Logger &amp; get_instance()</div><div class="ttdoc">Retrieves the singleton instance of Logger.</div><div class="ttdef"><b>Definition</b> <a href="Logger_8hpp_source.html#l00026">Logger.hpp:26</a></div></div>
 <div class="ttc" id="aclasslogit_1_1SimpleLogFormatter_html"><div class="ttname"><a href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a></div><div class="ttdoc">A simple log formatter that formats log messages based on a user-defined pattern.</div><div class="ttdef"><b>Definition</b> <a href="SimpleLogFormatter_8hpp_source.html#l00017">SimpleLogFormatter.hpp:17</a></div></div>
 </div><!-- fragment --><p>Alternatively, you can use the <code>LOGIT_ADD_CONSOLE</code> macro for an even simpler setup:</p>
 <div class="fragment"><div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#a7c0b1f97f50fa14493a1642614d1c2ca">LOGIT_ADD_CONSOLE</a>(<span class="stringliteral">&quot;[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$&quot;</span>, <span class="keyword">true</span>);</div>
-<div class="ttc" id="aLogMacros_8hpp_html_a7c0b1f97f50fa14493a1642614d1c2ca"><div class="ttname"><a href="LogMacros_8hpp.html#a7c0b1f97f50fa14493a1642614d1c2ca">LOGIT_ADD_CONSOLE</a></div><div class="ttdeci">#define LOGIT_ADD_CONSOLE(pattern, async)</div><div class="ttdoc">Macro for adding a console logger with a specific pattern and mode.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00587">LogMacros.hpp:587</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a7c0b1f97f50fa14493a1642614d1c2ca"><div class="ttname"><a href="LogMacros_8hpp.html#a7c0b1f97f50fa14493a1642614d1c2ca">LOGIT_ADD_CONSOLE</a></div><div class="ttdeci">#define LOGIT_ADD_CONSOLE(pattern, async)</div><div class="ttdoc">Macro for adding a console logger with a specific pattern and mode.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00706">LogMacros.hpp:706</a></div></div>
 </div><!-- fragment --><p>This example format will produce log messages like:</p>
 <pre class="fragment">[2024-10-04 12:45:30.123] [main.cpp:45] [main] [thread:1400] [INFO] This is a log message
 </pre><p>You can adjust the format string by changing or rearranging the format flags according to your needs. For example, if you prefer short log levels and don't need thread information, you could use:</p>
@@ -278,32 +278,48 @@ Available TRACE-level macros:</h3>
 <li><b>Basic logging</b>:<ul>
 <li><code>LOG_T(...)</code>: Logs a TRACE-level message.</li>
 <li><code>LOG_T0()</code>: Logs a TRACE-level message without arguments.</li>
-<li><code>LOG_T_NOARGS()</code>: Logs a TRACE-level message with no arguments.</li>
+<li><code>LOG_0T()</code>: Alias for <code>LOG_T0()</code>.</li>
+<li><code>LOG_0_T()</code>: Alias for <code>LOG_T0()</code>.</li>
+<li><code>LOG_T_NOARGS()</code>: Alias for <code>LOG_T0()</code>.</li>
+<li><code>LOG_NOARGS_T()</code>: Alias for <code>LOG_T0()</code>.</li>
 </ul>
 </li>
 <li><b>Formatted logging</b>:<ul>
 <li><code>LOG_TF(fmt, ...)</code>: Logs a formatted TRACE-level message using format strings.</li>
+<li><code>LOG_FT(fmt, ...)</code>: Alias for <code>LOG_TF(fmt, ...)</code>.</li>
 <li><code>LOG_T_PRINT(...)</code>: Logs a TRACE-level message by printing each argument.</li>
-<li><code>LOG_T_PRINTF(fmt, ...)</code>: Logs a formatted TRACE-level message using <code>printf</code>-style formatting.</li>
+<li><code>LOG_PRINT_T(...)</code>: Alias for <code>LOG_T_PRINT(...)</code>.</li>
+<li><code>LOG_T_PRINTF(fmt, ...)</code>: Logs a formatted TRACE-level message using printf-style formatting.</li>
+<li><code>LOG_PRINTF_T(fmt, ...)</code>: Alias for <code>LOG_T_PRINTF(fmt, ...)</code>.</li>
 <li><code>LOG_TP(...)</code>: Alias for <code>LOG_T_PRINT(...)</code>.</li>
+<li><code>LOG_PT(...)</code>: Alias for <code>LOG_T_PRINT(...)</code>.</li>
 <li><code>LOG_TPF(fmt, ...)</code>: Alias for <code>LOG_T_PRINTF(fmt, ...)</code>.</li>
+<li><code>LOG_PFT(fmt, ...)</code>: Alias for <code>LOG_T_PRINTF(fmt, ...)</code>.</li>
 </ul>
 </li>
 <li><b>Alternative TRACE-level macros</b>:<ul>
 <li><code>LOG_TRACE(...)</code>: Logs a TRACE-level message (same as <code>LOG_T(...)</code>).</li>
 <li><code>LOG_TRACE0()</code>: Logs a TRACE-level message without arguments (same as <code>LOG_T0()</code>).</li>
+<li><code>LOG_0TRACE()</code>: Alias for <code>LOG_TRACE0()</code>.</li>
+<li><code>LOG_0_TRACE()</code>: Alias for <code>LOG_TRACE0()</code>.</li>
 <li><code>LOG_TRACE_NOARGS()</code>: Logs a TRACE-level message with no arguments (same as <code>LOG_T_NOARGS()</code>).</li>
+<li><code>LOG_NOARGS_TRACE()</code>: Alias for <code>LOG_TRACE_NOARGS()</code>.</li>
 <li><code>LOG_TRACEF(fmt, ...)</code>: Logs a formatted TRACE-level message (same as <code>LOG_TF(fmt, ...)</code>).</li>
+<li><code>LOG_FTRACE(fmt, ...)</code>: Alias for <code>LOG_TRACEF(fmt, ...)</code>.</li>
 <li><code>LOG_TRACE_PRINT(...)</code>: Logs a TRACE-level message by printing each argument (same as <code>LOG_T_PRINT(...)</code>).</li>
-<li><code>LOG_TRACE_PRINTF(fmt, ...)</code>: Logs a formatted TRACE-level message using <code>printf</code>-style formatting (same as <code>LOG_T_PRINTF(fmt, ...)</code>).</li>
+<li><code>LOG_PRINT_TRACE(...)</code>: Alias for <code>LOG_TRACE_PRINT(...)</code>.</li>
+<li><code>LOG_TRACE_PRINTF(fmt, ...)</code>: Logs a formatted TRACE-level message using printf-style formatting (same as <code>LOG_T_PRINTF(fmt, ...)</code>).</li>
+<li><code>LOG_PRINTF_TRACE(fmt, ...)</code>: Alias for <code>LOG_TRACE_PRINTF(fmt, ...)</code>.</li>
 </ul>
 </li>
 </ul>
-<div class="fragment"><div class="line">LOG_T(<span class="stringliteral">&quot;Trace message using short macro&quot;</span>);</div>
-<div class="line">LOG_TF(<span class="stringliteral">&quot;%.4d&quot;</span>, 999);</div>
-<div class="line">LOG_T_PRINT(<span class="stringliteral">&quot;Printing trace message with multiple variables: &quot;</span>, var1, var2);</div>
-<div class="line">LOG_TRACE(<span class="stringliteral">&quot;Trace message (alias for LOG_T)&quot;</span>);</div>
-<div class="line">LOG_TRACE_PRINTF(<span class="stringliteral">&quot;Formatted trace: value = %d&quot;</span>, value);</div>
+<p>These macros provide flexibility and convenience when logging messages at the TRACE level. They allow you to choose between different logging styles, such as standard logging, formatted logging, and printing each argument separately.</p>
+<p>Note**: Similar macros are available for other log levels—INFO (<code>LOG_I</code>, <code>LOG_INFO</code>), DEBUG (<code>LOG_D</code>, <code>LOG_DEBUG</code>), WARN (<code>LOG_W</code>, <code>LOG_WARN</code>), ERROR (<code>LOG_E</code>, <code>LOG_ERROR</code>), and FATAL (<code>LOG_F</code>, <code>LOG_FATAL</code>). The naming conventions are consistent across levels, you only need to replace the level letter or word in the macro name.</p>
+<div class="fragment"><div class="line">LOG_T(<span class="stringliteral">&quot;Trace message using short macro&quot;</span>); </div>
+<div class="line">LOG_FT(<span class="stringliteral">&quot;%.4d&quot;</span>, 999); </div>
+<div class="line">LOG_PRINT_T(<span class="stringliteral">&quot;Printing trace message with multiple variables: &quot;</span>, var1, var2); </div>
+<div class="line">LOG_TRACE(<span class="stringliteral">&quot;Trace message (alias for LOG_T)&quot;</span>); </div>
+<div class="line">LOG_PRINTF_TRACE(<span class="stringliteral">&quot;Formatted trace: value = %d&quot;</span>, value); </div>
 </div><!-- fragment --><h1><a class="anchor" id="config_macros"></a>
 Configuration Macros</h1>
 <p>LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:</p>
