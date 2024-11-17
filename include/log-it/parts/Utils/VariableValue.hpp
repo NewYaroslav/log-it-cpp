@@ -34,6 +34,7 @@ namespace logit {
             CHAR_VAL,
             FLOAT_VAL,
             DOUBLE_VAL,
+            LONG_DOUBLE_VAL,
             STRING_VAL,
             EXCEPTION_VAL,
             ENUM_VAL,
@@ -53,81 +54,88 @@ namespace logit {
             char       char_value;
             float      float_value;
             double     double_value;
+            long double long_double_value;
         } pod_value; ///< Union to store POD types.
 
         std::string string_value; ///< Variable to store string, exception messages, and enums.
 
         // Constructors for each type.
-        VariableValue(const std::string& name, int8_t value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::INT8_VAL) {
-            pod_value.int8_value = value;
-        }
-
-        VariableValue(const std::string& name, uint8_t value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UINT8_VAL) {
-            pod_value.uint8_value = value;
-        }
-
-        VariableValue(const std::string& name, int16_t value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::INT16_VAL) {
-            pod_value.int16_value = value;
-        }
-
-        VariableValue(const std::string& name, uint16_t value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UINT16_VAL) {
-            pod_value.uint16_value = value;
-        }
-
-        VariableValue(const std::string& name, int32_t value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::INT32_VAL) {
-            pod_value.int32_value = value;
-        }
-
-        VariableValue(const std::string& name, uint32_t value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UINT32_VAL) {
-            pod_value.uint32_value = value;
-        }
-
-        VariableValue(const std::string& name, int64_t value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::INT64_VAL) {
-            pod_value.int64_value = value;
-        }
-
-        VariableValue(const std::string& name, uint64_t value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UINT64_VAL) {
-            pod_value.uint64_value = value;
-        }
-
-        VariableValue(const std::string& name, bool value)
+        template <typename T>
+        VariableValue(const std::string& name, T value,
+                      typename std::enable_if<std::is_same<T, bool>::value>::type* = nullptr)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::BOOL_VAL) {
             pod_value.bool_value = value;
         }
 
-        VariableValue(const std::string& name, char value)
+        template <typename T>
+        VariableValue(const std::string& name, T value,
+                      typename std::enable_if<std::is_same<T, char>::value>::type* = nullptr)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::CHAR_VAL) {
             pod_value.char_value = value;
         }
 
-        VariableValue(const std::string& name, float value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::FLOAT_VAL) {
-            pod_value.float_value = value;
-        }
-
-        VariableValue(const std::string& name, double value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::DOUBLE_VAL) {
-            pod_value.double_value = value;
-        }
-
-        VariableValue(const std::string& name, const std::string& value)
+        explicit VariableValue(const std::string& name, const std::string& value)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::STRING_VAL), string_value(value) {
         }
 
-        VariableValue(const std::string& name, const char* value)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::STRING_VAL), string_value(value) {
+        explicit VariableValue(const std::string& name, const char* value) :
+            VariableValue(name, std::string(value)) {}
+
+        template <typename T>
+        VariableValue(const std::string& name, const T& value,
+                      typename std::enable_if<std::is_base_of<std::exception, T>::value>::type* = nullptr)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::EXCEPTION_VAL), string_value(value.what()) {
         }
 
-        VariableValue(const std::string& name, const std::exception& ex)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::EXCEPTION_VAL), string_value(ex.what()) {
+        template <typename T>
+        VariableValue(const std::string& name, T value,
+            typename std::enable_if<std::is_floating_point<T>::value>::type* = nullptr)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UNKNOWN_VAL) {
+            if (std::is_same<T, float>::value) {
+                type = ValueType::FLOAT_VAL;
+                pod_value.float_value = value;
+            } else if (std::is_same<T, double>::value) {
+                type = ValueType::DOUBLE_VAL;
+                pod_value.double_value = value;
+            } else if (std::is_same<T, long double>::value) {
+                type = ValueType::LONG_DOUBLE_VAL;
+                pod_value.long_double_value = value;
+            }
+        }
+
+        template <typename T>
+        VariableValue(const std::string& name, T value,
+            typename std::enable_if<std::is_integral<T>::value>::type* = nullptr)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UNKNOWN_VAL) {
+            if (std::is_signed<T>::value) {
+                if (sizeof(T) <= sizeof(int8_t)) {
+                    type = ValueType::INT8_VAL;
+                    pod_value.int8_value = static_cast<int8_t>(value);
+                } else if (sizeof(T) <= sizeof(int16_t)) {
+                    type = ValueType::INT16_VAL;
+                    pod_value.int16_value = static_cast<int16_t>(value);
+                } else if (sizeof(T) <= sizeof(int32_t)) {
+                    type = ValueType::INT32_VAL;
+                    pod_value.int32_value = static_cast<int32_t>(value);
+                } else {
+                    type = ValueType::INT64_VAL;
+                    pod_value.int64_value = static_cast<int64_t>(value);
+                }
+            } else {
+                if (sizeof(T) <= sizeof(uint8_t)) {
+                    type = ValueType::UINT8_VAL;
+                    pod_value.uint8_value = static_cast<uint8_t>(value);
+                } else if (sizeof(T) <= sizeof(uint16_t)) {
+                    type = ValueType::UINT16_VAL;
+                    pod_value.uint16_value = static_cast<uint16_t>(value);
+                } else if (sizeof(T) <= sizeof(uint32_t)) {
+                    type = ValueType::UINT32_VAL;
+                    pod_value.uint32_value = static_cast<uint32_t>(value);
+                } else {
+                    type = ValueType::UINT64_VAL;
+                    pod_value.uint64_value = static_cast<uint64_t>(value);
+                }
+            }
         }
 
         /// \brief Constructor for enumerations.
@@ -183,6 +191,7 @@ namespace logit {
                 case ValueType::CHAR_VAL:    return std::string(1, pod_value.char_value);
                 case ValueType::FLOAT_VAL:   return std::to_string(pod_value.float_value);
                 case ValueType::DOUBLE_VAL:  return std::to_string(pod_value.double_value);
+                case ValueType::LONG_DOUBLE_VAL: return std::to_string(static_cast<double>(pod_value.long_double_value));
                 case ValueType::STRING_VAL:
                 case ValueType::EXCEPTION_VAL:
                 case ValueType::ENUM_VAL:
@@ -209,6 +218,7 @@ namespace logit {
                 case ValueType::CHAR_VAL:    return format(fmt, pod_value.char_value);
                 case ValueType::FLOAT_VAL:   return format(fmt, pod_value.float_value);
                 case ValueType::DOUBLE_VAL:  return format(fmt, pod_value.double_value);
+                case ValueType::LONG_DOUBLE_VAL: return format(fmt, static_cast<double>(pod_value.long_double_value));
                 case ValueType::STRING_VAL:
                 case ValueType::EXCEPTION_VAL:
                 case ValueType::ENUM_VAL:
@@ -255,6 +265,7 @@ namespace logit {
                 case ValueType::CHAR_VAL:
                 case ValueType::FLOAT_VAL:
                 case ValueType::DOUBLE_VAL:
+                case ValueType::LONG_DOUBLE_VAL:
                     return true;
                 default:
                     return false;

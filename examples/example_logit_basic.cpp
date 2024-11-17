@@ -39,6 +39,7 @@ int main() {
     // Demonstrating formatted logging for homogeneous variables
     LOGIT_FORMAT_INFO("%.2f", someFloat, 654.321f);     // Logging two float values
     LOGIT_FORMAT_INFO("%.4d", someInt, 999);            // Logging two int values
+    LOGIT_FORMAT_INFO("%.2f", 747.000L);                // Logging long double value
 
     // Stream-based logging
     LOGIT_STREAM_INFO() << "Stream logging: float=" << someFloat << ", int=" << someInt << ", color=" << color;

@@ -371,7 +371,6 @@ namespace logit {
         /// \param pattern The pattern string to compile.
         /// \return A vector of format instructions.
         static std::vector<FormatInstruction> compile(const std::string& pattern) {
-            std::cout << "-1" << std::endl;
             using FormatType = FormatInstruction::FormatType;
             std::vector<FormatInstruction> instructions;
             std::string buffer;
