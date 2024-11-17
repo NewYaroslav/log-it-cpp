@@ -5,11 +5,21 @@
 /// \brief Structure for storing variables of various types.
 
 #include "format.hpp"
+#include <time_shield_cpp/time_shield.hpp>
 #include <string>
 #include <iostream>
 #include <cstdint>
 #include <type_traits>
 #include <exception>
+#include <iomanip> // std::put_time
+#include <chrono>
+#include <sstream>
+#include <memory>
+#if __cplusplus >= 201703L
+#include <filesystem>
+#include <optional>
+#include <variant>
+#endif
 
 namespace logit {
 
@@ -20,26 +30,34 @@ namespace logit {
         bool is_literal;        ///< Flag indicating if the variable is a literal.
 
         /// \enum ValueType
-        /// \brief Enumeration of possible value types.
+        /// \brief Enumeration of possible value types for VariableValue.
         enum class ValueType {
-            INT8_VAL,
-            UINT8_VAL,
-            INT16_VAL,
-            UINT16_VAL,
-            INT32_VAL,
-            UINT32_VAL,
-            INT64_VAL,
-            UINT64_VAL,
-            BOOL_VAL,
-            CHAR_VAL,
-            FLOAT_VAL,
-            DOUBLE_VAL,
-            LONG_DOUBLE_VAL,
-            STRING_VAL,
-            EXCEPTION_VAL,
-            ENUM_VAL,
-            UNKNOWN_VAL
-        } type;
+            INT8_VAL,           ///< Value of type `int8_t` (signed 8-bit integer).
+            UINT8_VAL,          ///< Value of type `uint8_t` (unsigned 8-bit integer).
+            INT16_VAL,          ///< Value of type `int16_t` (signed 16-bit integer).
+            UINT16_VAL,         ///< Value of type `uint16_t` (unsigned 16-bit integer).
+            INT32_VAL,          ///< Value of type `int32_t` (signed 32-bit integer).
+            UINT32_VAL,         ///< Value of type `uint32_t` (unsigned 32-bit integer).
+            INT64_VAL,          ///< Value of type `int64_t` (signed 64-bit integer).
+            UINT64_VAL,         ///< Value of type `uint64_t` (unsigned 64-bit integer).
+            BOOL_VAL,           ///< Value of type `bool`.
+            CHAR_VAL,           ///< Value of type `char` (single character).
+            FLOAT_VAL,          ///< Value of type `float` (single-precision floating point).
+            DOUBLE_VAL,         ///< Value of type `double` (double-precision floating point).
+            LONG_DOUBLE_VAL,    ///< Value of type `long double` (extended-precision floating point).
+            DURATION_VAL,       ///< Value of type `std::chrono::duration` (time duration).
+            TIME_POINT_VAL,     ///< Value of type `std::chrono::time_point` (specific point in time).
+            STRING_VAL,         ///< Value of type `std::string` (dynamic-length string).
+            EXCEPTION_VAL,      ///< Value representing an exception (derived from `std::exception`).
+            ERROR_CODE_VAL,     ///< Value of type `std::error_code` (system error code).
+            ENUM_VAL,           ///< Value of any enumeration type (converted to string or integral value).
+            PATH_VAL,           ///< Value of type `std::filesystem::path` (filesystem path).
+            POINTER_VAL,        ///< Value of type `void*` (raw pointer).
+            SMART_POINTER_VAL,  ///< Value of type `std::shared_ptr` or `std::unique_ptr` (smart pointers).
+            VARIANT_VAL,        ///< Value of type `std::variant` (type-safe union).
+            OPTIONAL_VAL,       ///< Value of type `std::optional` (optional value holder).
+            UNKNOWN_VAL         ///< Unknown or unsupported value type.
+        } type;                 ///< Specifies the type of the stored value in the VariableValue structure.
 
         union {
             int8_t     int8_value;
@@ -57,7 +75,8 @@ namespace logit {
             long double long_double_value;
         } pod_value; ///< Union to store POD types.
 
-        std::string string_value; ///< Variable to store string, exception messages, and enums.
+        std::string string_value;           ///< Variable to store string, exception messages, and enums.
+        std::error_code error_code_value;   ///< Variable to store std::error_code.
 
         // Constructors for each type.
         template <typename T>
@@ -85,6 +104,10 @@ namespace logit {
         VariableValue(const std::string& name, const T& value,
                       typename std::enable_if<std::is_base_of<std::exception, T>::value>::type* = nullptr)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::EXCEPTION_VAL), string_value(value.what()) {
+        }
+
+        explicit VariableValue(const std::string& name, const std::error_code& ec)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::ERROR_CODE_VAL), error_code_value(ec) {
         }
 
         template <typename T>
@@ -145,12 +168,95 @@ namespace logit {
         template <typename EnumType>
         VariableValue(const std::string& name, EnumType value,
             typename std::enable_if<std::is_enum<EnumType>::value>::type* = 0)
-            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::ENUM_VAL), string_value(enum_to_string(value)) {
+            : name(name), is_literal(is_valid_literal_name(name)),
+              type(ValueType::ENUM_VAL), string_value(enum_to_string(value)) {
+        }
+
+        template <typename Rep, typename Period>
+        VariableValue(const std::string& name, const std::chrono::duration<Rep, Period>& duration)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::DURATION_VAL) {
+            string_value = std::to_string(duration.count()) + " " + duration_units<Period>();
+        }
+
+        template <typename Clock, typename Duration>
+        VariableValue(const std::string& name, const std::chrono::time_point<Clock, Duration>& time_point)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::TIME_POINT_VAL) {
+            auto ts_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_point.time_since_epoch());
+            string_value = time_shield::to_iso8601_utc_str_ms(ts_ms.count());
+        }
+
+#       if __cplusplus >= 201703L
+
+        explicit VariableValue(const std::string& name, const std::filesystem::path& path)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::PATH_VAL), string_value(path.string()) {
+        }
+
+        template <typename... Ts>
+        explicit VariableValue(const std::string& name, const std::variant<Ts...>& variant)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::VARIANT_VAL) {
+            string_value = std::visit([](const auto& value) -> std::string {
+                if constexpr (std::is_arithmetic_v<decltype(value)>) {
+                    return std::to_string(value);
+                } else if constexpr (std::is_same_v<decltype(value), std::string>) {
+                    return value;
+                } else {
+                    std::ostringstream oss;
+                    oss << value;
+                    return oss.str();
+                }
+            }, variant);
+        }
+
+        template <typename T>
+        explicit VariableValue(const std::string& name, const std::optional<T>& optional)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::OPTIONAL_VAL) {
+            if (optional) {
+                if constexpr (std::is_arithmetic_v<T>) {
+                    string_value = std::to_string(*optional);
+                } else if constexpr (std::is_same_v<T, std::string>) {
+                    string_value = *optional;
+                } else {
+                    std::ostringstream oss;
+                    oss << *optional;
+                    string_value = oss.str();
+                }
+            } else {
+                string_value = "nullopt";
+            }
+        }
+
+#       endif
+
+        explicit VariableValue(const std::string& name, void* ptr)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::POINTER_VAL) {
+            std::ostringstream oss;
+            oss << ptr;
+            string_value = oss.str();
+        }
+
+        template <typename T>
+        explicit VariableValue(const std::string& name, const std::shared_ptr<T>& ptr)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::SMART_POINTER_VAL) {
+            std::ostringstream oss;
+            if (ptr) oss << "shared_ptr@" << ptr.get();
+            else oss << "nullptr";
+            string_value = oss.str();
+        }
+
+        template <typename T>
+        explicit VariableValue(const std::string& name, const std::unique_ptr<T>& ptr)
+            : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::SMART_POINTER_VAL) {
+            std::ostringstream oss;
+            if (ptr) oss << "unique_ptr@" << ptr.get();
+            else oss << "nullptr";
+            string_value = oss.str();
         }
 
         /// \brief Copy constructor.
         VariableValue(const VariableValue& other)
-            : name(other.name), is_literal(other.is_literal), type(other.type), string_value(other.string_value) {
+            : name(other.name), is_literal(other.is_literal), type(other.type),
+              string_value(other.string_value),
+              error_code_value(other.error_code_value) {
             if (is_pod_type(type)) {
                 pod_value = other.pod_value;
             }
@@ -164,6 +270,7 @@ namespace logit {
             is_literal = other.is_literal;
             type = other.type;
             string_value = other.string_value;
+            error_code_value = other.error_code_value;
 
             if (is_pod_type(type)) {
                 pod_value = other.pod_value;
@@ -195,10 +302,19 @@ namespace logit {
                 case ValueType::STRING_VAL:
                 case ValueType::EXCEPTION_VAL:
                 case ValueType::ENUM_VAL:
+                case ValueType::PATH_VAL:
+                case ValueType::DURATION_VAL:
+                case ValueType::TIME_POINT_VAL:
+                case ValueType::POINTER_VAL:
+                case ValueType::SMART_POINTER_VAL:
+                case ValueType::VARIANT_VAL:
+                case ValueType::OPTIONAL_VAL:
                     return string_value;
-                default:
-                    return "unknown";
+                case ValueType::ERROR_CODE_VAL:
+                    return error_code_value.message() + " (" + std::to_string(error_code_value.value()) + ")";
+                default: break;
             }
+            return "unknown";
         }
 
         /// \brief Method to get the value as a formatted string.
@@ -222,10 +338,19 @@ namespace logit {
                 case ValueType::STRING_VAL:
                 case ValueType::EXCEPTION_VAL:
                 case ValueType::ENUM_VAL:
+                case ValueType::PATH_VAL:
+                case ValueType::DURATION_VAL:
+                case ValueType::TIME_POINT_VAL:
+                case ValueType::POINTER_VAL:
+                case ValueType::SMART_POINTER_VAL:
+                case ValueType::VARIANT_VAL:
+                case ValueType::OPTIONAL_VAL:
                     return format(fmt, string_value.c_str());
-                default:
-                    return "unknown";
+                case ValueType::ERROR_CODE_VAL:
+                    return format(fmt, error_code_value.message().c_str(), error_code_value.value());
+                default: break;
             }
+            return "unknown";
         }
 
     private:
@@ -271,7 +396,29 @@ namespace logit {
                     return false;
             }
         }
-    };
+
+        /// \brief Helper function to get the unit of the duration.
+        /// \tparam Period The period type of the duration.
+        /// \return A string representing the unit of the duration.
+        template <typename Period>
+        static std::string duration_units() {
+            if (std::is_same<Period, std::ratio<1>>::value) {
+                return "s"; // seconds
+            } else if (std::is_same<Period, std::milli>::value) {
+                return "ms"; // milliseconds
+            } else if (std::is_same<Period, std::micro>::value) {
+                return "us"; // microseconds
+            } else if (std::is_same<Period, std::nano>::value) {
+                return "ns"; // nanoseconds
+            } else if (std::is_same<Period, std::ratio<60>>::value) {
+                return "min"; // minutes
+            } else if (std::is_same<Period, std::ratio<3600>>::value) {
+                return "h"; // hours
+            } else {
+                return "custom"; // Custom units
+            }
+        }
+    }; // VariableValue
 
 } // namespace logit
 

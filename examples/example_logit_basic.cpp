@@ -1,3 +1,6 @@
+/// \file logging_example.cpp
+/// \brief Demonstrates the usage of the LogIt library with various data types and scenarios.
+
 #define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp"
 
 #include <iostream>
@@ -16,6 +19,28 @@ enum COLORS {
     CYAN,
     WHITE,
 };
+
+// Custom error category for demonstration
+class CustomErrorCategory : public std::error_category {
+public:
+    const char* name() const noexcept override {
+        return u8"CustomErrorCategory";
+    }
+
+    std::string message(int ev) const override {
+        switch (ev) {
+            case 1: return u8"Custom error: Invalid operation";
+            case 2: return u8"Custom error: Resource not found";
+            default: return u8"Custom error: Unknown error";
+        }
+    }
+};
+
+// Singleton instance of custom error category
+const std::error_category& custom_error_category() {
+    static CustomErrorCategory instance;
+    return instance;
+}
 
 int main() {
     std::cout << "Starting logging example..." << std::endl;
@@ -37,9 +62,9 @@ int main() {
     LOGIT_FATAL("Fatal error! Immediate attention required!");
 
     // Demonstrating formatted logging for homogeneous variables
-    LOGIT_FORMAT_INFO("%.2f", someFloat, 654.321f);     // Logging two float values
-    LOGIT_FORMAT_INFO("%.4d", someInt, 999);            // Logging two int values
-    LOGIT_FORMAT_INFO("%.2f", 747.000L);                // Logging long double value
+    LOGIT_FORMAT_INFO("%.2f", someFloat, 654.321f);     // Two float values
+    LOGIT_FORMAT_INFO("%.4d", someInt, 999);            // Two int values
+    LOGIT_FORMAT_INFO("%.2f", 747.000L);                // Long double value
 
     // Stream-based logging
     LOGIT_STREAM_INFO() << "Stream logging: float=" << someFloat << ", int=" << someInt << ", color=" << color;
@@ -48,17 +73,73 @@ int main() {
     LOGIT_STREAM_TRACE_TO(2) << "Logging to unique file logger with a trace message. Color: " << color;
     LOGIT_PRINT_INFO("Unique log was written to file: ", LOGIT_GET_LAST_FILE_NAME(2));
 
+    // Logging exceptions
     try {
         // Simulate an exception
         throw std::runtime_error("An example runtime error");
     } catch (const std::exception& ex) {
         // Log the exception using the logger
         LOGIT_FATAL(ex);
-
-        // Optionally, use the VariableValue for detailed exception logging
-        logit::VariableValue exceptionVar("ExceptionCaught", ex);
-        LOGIT_STREAM_ERROR() << "Detailed exception logging: " << exceptionVar.to_string();
     }
+
+    // Logging std::error_code
+    std::error_code ec(1, custom_error_category());
+    LOGIT_ERROR(ec);
+    LOGIT_FORMAT_ERROR("error_code: (%s, %d)", ec);
+
+#   if __cplusplus >= 201703L
+    // Logging std::filesystem::path
+    std::filesystem::path log_path = "/var/log/example.log";
+    LOGIT_INFO(log_path);
+    LOGIT_PRINT_INFO("The log file path is: ", log_path);
+    LOGIT_FORMAT_INFO("%s", log_path);
+#   endif
+
+    // Logging std::chrono::duration
+    std::chrono::seconds        seconds(120);
+    std::chrono::milliseconds   milliseconds(500);
+    std::chrono::microseconds   microseconds(123456);
+    std::chrono::minutes        minutes(5);
+    std::chrono::hours          hours(2);
+
+    LOGIT_PRINT_TRACE("Seconds example: ", seconds);
+    LOGIT_TRACE(milliseconds, minutes, hours);
+    LOGIT_FORMAT_TRACE("%s", microseconds);
+
+    // Logging std::chrono::time_point
+    auto now = std::chrono::system_clock::now();
+    LOGIT_PRINT_INFO("TimePoint example: ", now);
+    LOGIT_INFO(now);
+
+    // Logging void*
+    void* ptr = &now;
+    LOGIT_PRINT_TRACE("Pointer example: ", ptr);
+    LOGIT_INFO(ptr);
+
+    // Logging smart pointers
+    auto shared = std::make_shared<int>(42);
+    LOGIT_PRINT_TRACE("Shared pointer example: ", shared);
+
+#   if __cplusplus >= 201402L
+    auto unique = std::make_unique<int>(84);
+#   else
+    std::unique_ptr<int> unique(new int(84));
+#   endif
+    LOGIT_PRINT_TRACE("Unique pointer example: ", unique);
+
+#   if __cplusplus >= 201703L
+    // Logging std::variant
+    std::variant<int, std::string> variant = "Hello, variant!";
+    LOGIT_PRINT_INFO("Variant example: ", variant);
+    variant = 123;
+    LOGIT_TRACE(variant);
+
+    // Logging std::optional
+    std::optional<std::string> optional = "Hello, optional!";
+    LOGIT_PRINT_INFO("Optional example: ", optional);
+    std::optional<std::string> optional_null;
+    LOGIT_ERROR(optional_null);
+#   endif
 
     // Ensure all loggers are flushed and cleaned up before exiting
     LOGIT_WAIT();

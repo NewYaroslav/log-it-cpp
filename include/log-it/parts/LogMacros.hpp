@@ -827,7 +827,7 @@
         std::unique_ptr<logit::UniqueFileLogger>(new logit::UniqueFileLogger(   \
             LOGIT_UNIQUE_FILE_LOGGER_PATH, true,                                \
             LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS)),                               \
-        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)))
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_UNIQUE_FILE_LOGGER_PATTERN)))
 
 /// \brief Macro for adding the default unique file logger in single_mode.
 /// This macro adds a `UniqueFileLogger` with default settings, which writes each log message to a new file.
@@ -840,7 +840,7 @@
         std::unique_ptr<logit::UniqueFileLogger>(new logit::UniqueFileLogger(    \
             LOGIT_UNIQUE_FILE_LOGGER_PATH, true,                                 \
             LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS)),                                \
-        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_UNIQUE_FILE_LOGGER_PATTERN)), \
         true)
 
 #endif // C++ version check

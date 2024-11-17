@@ -262,6 +262,14 @@ namespace logit {
                             switch (arg.type) {
                             case ValueType::STRING_VAL:
                             case ValueType::EXCEPTION_VAL:
+                            case ValueType::ERROR_CODE_VAL:
+                            case ValueType::ENUM_VAL:
+                            case ValueType::DURATION_VAL:
+                            case ValueType::TIME_POINT_VAL:
+                            case ValueType::POINTER_VAL:
+                            case ValueType::SMART_POINTER_VAL:
+                            case ValueType::VARIANT_VAL:
+                            case ValueType::OPTIONAL_VAL:
                                 temp_stream << arg.to_string(record.format.c_str());
                                 break;
                             default:
@@ -282,6 +290,7 @@ namespace logit {
                             switch (arg.type) {
                             case ValueType::STRING_VAL:
                             case ValueType::EXCEPTION_VAL:
+                            case ValueType::ERROR_CODE_VAL:
                                 temp_stream << arg.to_string();
                                 break;
                             case ValueType::ENUM_VAL:
@@ -291,6 +300,16 @@ namespace logit {
                                     break;
                                 }
                                 temp_stream << arg.to_string();
+                                break;
+                            case ValueType::PATH_VAL:
+                            case ValueType::DURATION_VAL:
+                            case ValueType::TIME_POINT_VAL:
+                            case ValueType::POINTER_VAL:
+                            case ValueType::SMART_POINTER_VAL:
+                            case ValueType::VARIANT_VAL:
+                            case ValueType::OPTIONAL_VAL:
+                                if (record.print_mode) temp_stream << arg.to_string();
+                                else temp_stream << arg.name << ": " << arg.to_string();
                                 break;
                             default:
                                 if (arg.is_literal) {
