@@ -15,5 +15,7 @@ var searchData=
   ['dependencies_12',['Step 3: Configure the Path for Dependencies',['../index.html#step3',1,'']]],
   ['directory_13',['directory',['../structlogit_1_1FileLogger_1_1Config.html#aad12918d2e97bca0c538349afb735b58',1,'logit::FileLogger::Config::directory'],['../structlogit_1_1UniqueFileLogger_1_1Config.html#a7e70d7d949523dca299609d2c429fa8a',1,'logit::UniqueFileLogger::Config::directory']]],
   ['double_5fval_14',['DOUBLE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4',1,'logit::VariableValue']]],
-  ['double_5fvalue_15',['double_value',['../structlogit_1_1VariableValue.html#a528ff52be2f52483ffecec4e08ebef23',1,'logit::VariableValue']]]
+  ['double_5fvalue_15',['double_value',['../structlogit_1_1VariableValue.html#a528ff52be2f52483ffecec4e08ebef23',1,'logit::VariableValue']]],
+  ['duration_5funits_16',['duration_units',['../structlogit_1_1VariableValue.html#a48711fe3cfd723a4ea9f9c3233086e1e',1,'logit::VariableValue']]],
+  ['duration_5fval_17',['DURATION_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a69d1ae3e7e14cdedc42556b0c4a51ca7',1,'logit::VariableValue']]]
 ];

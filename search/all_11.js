@@ -31,11 +31,12 @@ var searchData=
   ['mainpage_2edox_28',['mainpage.dox',['../mainpage_8dox.html',1,'']]],
   ['make_5frelative_29',['make_relative',['../namespacelogit.html#a468afe9332af7c19b13e6fa9e6cb0769',1,'logit']]],
   ['message_30',['Message',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a4c2a8fe7eaf24721cc7a9f0175115bd4',1,'logit::FormatInstruction']]],
-  ['message_20content_31',['Message Content',['../index.html#message_flags',1,'']]],
-  ['message_20formatting_20flags_32',['Log Message Formatting Flags',['../index.html#format_flags_sec',1,'']]],
-  ['millisecond_33',['Millisecond',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a988bbeeb80e7e0a6b4651aab5a76b413',1,'logit::FormatInstruction']]],
-  ['millisecondtimestamp_34',['MilliSecondTimeStamp',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a96f864c5c3e242514d34921998c95d25',1,'logit::FormatInstruction']]],
-  ['minute_35',['Minute',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a62902641c38f3a4a8eb3212454360e24',1,'logit::FormatInstruction']]],
-  ['month_36',['Month',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a7cbb885aa1164b390a0bc050a64e1812',1,'logit::FormatInstruction']]],
-  ['month_20names_37',['Weekday and Month Names',['../index.html#weekday_month_flags',1,'']]]
+  ['message_31',['message',['../classCustomErrorCategory.html#ab1f9c681c74a36e68ca71d31357c413f',1,'CustomErrorCategory']]],
+  ['message_20content_32',['Message Content',['../index.html#message_flags',1,'']]],
+  ['message_20formatting_20flags_33',['Log Message Formatting Flags',['../index.html#format_flags_sec',1,'']]],
+  ['millisecond_34',['Millisecond',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a988bbeeb80e7e0a6b4651aab5a76b413',1,'logit::FormatInstruction']]],
+  ['millisecondtimestamp_35',['MilliSecondTimeStamp',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a96f864c5c3e242514d34921998c95d25',1,'logit::FormatInstruction']]],
+  ['minute_36',['Minute',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a62902641c38f3a4a8eb3212454360e24',1,'logit::FormatInstruction']]],
+  ['month_37',['Month',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a7cbb885aa1164b390a0bc050a64e1812',1,'logit::FormatInstruction']]],
+  ['month_20names_38',['Weekday and Month Names',['../index.html#weekday_month_flags',1,'']]]
 ];

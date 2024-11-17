@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['year_0',['Year',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a537c66b24ef5c83b7382cdc3f34885f2',1,'logit::FormatInstruction']]],
-  ['yellow_1',['YELLOW',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50ae735a848bf82163a19236ead1c3ef2d2',1,'example_logit_basic.cpp']]],
-  ['yellow_2',['Yellow',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a51e6cd92b6c45f9affdc158ecca2b8b8',1,'logit']]]
+  ['uint16_5fval_0',['UINT16_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9adb47570540547954be1d416536f2f9c8',1,'logit::VariableValue']]],
+  ['uint32_5fval_1',['UINT32_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71',1,'logit::VariableValue']]],
+  ['uint64_5fval_2',['UINT64_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb',1,'logit::VariableValue']]],
+  ['uint8_5fval_3',['UINT8_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a7bd6884629a764a9f2ea9699abe9f4af',1,'logit::VariableValue']]],
+  ['unknown_5fval_4',['UNKNOWN_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9ade4c5dc187362fb24e97644857b77a7c',1,'logit::VariableValue']]]
 ];

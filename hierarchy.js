@@ -4,6 +4,9 @@ var hierarchy =
     [ "logit::FileLogger::Config", "structlogit_1_1FileLogger_1_1Config.html", null ],
     [ "logit::SimpleLogFormatter::Config", "structlogit_1_1SimpleLogFormatter_1_1Config.html", null ],
     [ "logit::UniqueFileLogger::Config", "structlogit_1_1UniqueFileLogger_1_1Config.html", null ],
+    [ "std::error_category", null, [
+      [ "CustomErrorCategory", "classCustomErrorCategory.html", null ]
+    ] ],
     [ "logit::FormatInstruction", "structlogit_1_1FormatInstruction.html", null ],
     [ "logit::ILogFormatter", "classlogit_1_1ILogFormatter.html", [
       [ "logit::SimpleLogFormatter", "classlogit_1_1SimpleLogFormatter.html", null ]

@@ -10,5 +10,6 @@ var searchData=
   ['dateiso8601_7',['DateISO8601',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a6c93c0dbbf53c2426805fe64d2d587f1',1,'logit::FormatInstruction']]],
   ['datetime_8',['DateTime',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a8cf10d2341ed01492506085688270c1e',1,'logit::FormatInstruction']]],
   ['day_9',['Day',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a03727ac48595a24daed975559c944a44',1,'logit::FormatInstruction']]],
-  ['double_5fval_10',['DOUBLE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4',1,'logit::VariableValue']]]
+  ['double_5fval_10',['DOUBLE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4',1,'logit::VariableValue']]],
+  ['duration_5fval_11',['DURATION_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a69d1ae3e7e14cdedc42556b0c4a51ca7',1,'logit::VariableValue']]]
 ];

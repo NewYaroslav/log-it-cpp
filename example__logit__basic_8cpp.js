@@ -1,5 +1,6 @@
 var example__logit__basic_8cpp =
 [
+    [ "CustomErrorCategory", "classCustomErrorCategory.html", "classCustomErrorCategory" ],
     [ "LOGIT_BASE_PATH", "example__logit__basic_8cpp.html#a3bf179993f836ab365df8a1888cd027d", null ],
     [ "COLORS", "example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50", [
       [ "NC", "example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a3dbd1016ea99d087d747530418b89a01", null ],
@@ -12,5 +13,6 @@ var example__logit__basic_8cpp =
       [ "CYAN", "example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50aafe71cad474c15ce63b300c470eef8cc", null ],
       [ "WHITE", "example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a283fc479650da98250635b9c3c0e7e50", null ]
     ] ],
+    [ "custom_error_category", "example__logit__basic_8cpp.html#a0822522f836470533dabb03c77664f11", null ],
     [ "main", "example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4", null ]
 ];

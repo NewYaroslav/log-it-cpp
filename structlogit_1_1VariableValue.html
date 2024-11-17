@@ -142,14 +142,24 @@ Public Types</h2></td></tr>
 , <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4">DOUBLE_VAL</a>
 , <br />
 &#160;&#160;<a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a8145bebde89b1b0d95e052f8b5b0fe26">LONG_DOUBLE_VAL</a>
+, <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a69d1ae3e7e14cdedc42556b0c4a51ca7">DURATION_VAL</a>
+, <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9aa1db3a2040708e3c6cc66e5374cfee18">TIME_POINT_VAL</a>
 , <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314">STRING_VAL</a>
-, <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9ae4f8fcd03b0d4eabea27a7c68a79408f">EXCEPTION_VAL</a>
+, <br />
+&#160;&#160;<a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9ae4f8fcd03b0d4eabea27a7c68a79408f">EXCEPTION_VAL</a>
+, <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9ae8db7ba64ea171aade9015b88e05f380">ERROR_CODE_VAL</a>
 , <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a27e2030757f7835e837edcf5a1bf0a6a">ENUM_VAL</a>
+, <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a69b582264c366059b11c48e8577a5a58">PATH_VAL</a>
+, <br />
+&#160;&#160;<a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c">POINTER_VAL</a>
+, <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a5cf84b2a7488a59b85dc806aa1563a9a">SMART_POINTER_VAL</a>
+, <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a5adf591eae7799264f420d2856a2c535">VARIANT_VAL</a>
+, <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9a37107d8e0690bf391b47c833378ae096">OPTIONAL_VAL</a>
 , <br />
 &#160;&#160;<a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9ade4c5dc187362fb24e97644857b77a7c">UNKNOWN_VAL</a>
 <br />
  }</td></tr>
-<tr class="memdesc:aadabf80a158fd1569ca3f761c673c6e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumeration of possible value types.  <a href="#aadabf80a158fd1569ca3f761c673c6e9">More...</a><br /></td></tr>
+<tr class="memdesc:aadabf80a158fd1569ca3f761c673c6e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumeration of possible value types for <a class="el" href="structlogit_1_1VariableValue.html" title="Structure for storing values of various types, including enumerations.">VariableValue</a>.  <a href="#aadabf80a158fd1569ca3f761c673c6e9">More...</a><br /></td></tr>
 <tr class="separator:aadabf80a158fd1569ca3f761c673c6e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -167,6 +177,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a448d8d769d671a4f870ed6d9f34ffab4" id="r_a448d8d769d671a4f870ed6d9f34ffab4"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a448d8d769d671a4f870ed6d9f34ffab4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a448d8d769d671a4f870ed6d9f34ffab4">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, const T &amp;value, typename std::enable_if&lt; std::is_base_of&lt; std::exception, T &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *=nullptr)</td></tr>
 <tr class="separator:a448d8d769d671a4f870ed6d9f34ffab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca3f5f829656d5e3fd7bdbbe1d0f2c0d" id="r_aca3f5f829656d5e3fd7bdbbe1d0f2c0d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca3f5f829656d5e3fd7bdbbe1d0f2c0d">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, const std::error_code &amp;ec)</td></tr>
+<tr class="separator:aca3f5f829656d5e3fd7bdbbe1d0f2c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef96c3471c808ae7e74c6ad38719b00d" id="r_aef96c3471c808ae7e74c6ad38719b00d"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aef96c3471c808ae7e74c6ad38719b00d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aef96c3471c808ae7e74c6ad38719b00d">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, T value, typename std::enable_if&lt; std::is_floating_point&lt; T &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *=nullptr)</td></tr>
 <tr class="separator:aef96c3471c808ae7e74c6ad38719b00d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,6 +189,20 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab88ceaa5e13b3de04e896cb4057c3b0e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab88ceaa5e13b3de04e896cb4057c3b0e">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, EnumType value, typename std::enable_if&lt; std::is_enum&lt; EnumType &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *=0)</td></tr>
 <tr class="memdesc:ab88ceaa5e13b3de04e896cb4057c3b0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for enumerations.  <br /></td></tr>
 <tr class="separator:ab88ceaa5e13b3de04e896cb4057c3b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b83f938b29bde60bfbbb278a153e992" id="r_a0b83f938b29bde60bfbbb278a153e992"><td class="memTemplParams" colspan="2">template&lt;typename Rep , typename Period &gt; </td></tr>
+<tr class="memitem:a0b83f938b29bde60bfbbb278a153e992"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0b83f938b29bde60bfbbb278a153e992">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, const std::chrono::duration&lt; Rep, Period &gt; &amp;duration)</td></tr>
+<tr class="separator:a0b83f938b29bde60bfbbb278a153e992"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48a926bb1355074f802536379fdeea86" id="r_a48a926bb1355074f802536379fdeea86"><td class="memTemplParams" colspan="2">template&lt;typename Clock , typename Duration &gt; </td></tr>
+<tr class="memitem:a48a926bb1355074f802536379fdeea86"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a48a926bb1355074f802536379fdeea86">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, const std::chrono::time_point&lt; Clock, Duration &gt; &amp;time_point)</td></tr>
+<tr class="separator:a48a926bb1355074f802536379fdeea86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc9b1cb27abb1bb3bfa12020ffc4cf3d" id="r_afc9b1cb27abb1bb3bfa12020ffc4cf3d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc9b1cb27abb1bb3bfa12020ffc4cf3d">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, void *ptr)</td></tr>
+<tr class="separator:afc9b1cb27abb1bb3bfa12020ffc4cf3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaaf3d8fcb95a5e3d4a60478dabbb17c5" id="r_aaaf3d8fcb95a5e3d4a60478dabbb17c5"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aaaf3d8fcb95a5e3d4a60478dabbb17c5"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aaaf3d8fcb95a5e3d4a60478dabbb17c5">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, const std::shared_ptr&lt; T &gt; &amp;ptr)</td></tr>
+<tr class="separator:aaaf3d8fcb95a5e3d4a60478dabbb17c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90c133df24cc3509f0bdb4e485f5d68f" id="r_a90c133df24cc3509f0bdb4e485f5d68f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a90c133df24cc3509f0bdb4e485f5d68f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a90c133df24cc3509f0bdb4e485f5d68f">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, const std::unique_ptr&lt; T &gt; &amp;ptr)</td></tr>
+<tr class="separator:a90c133df24cc3509f0bdb4e485f5d68f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9f698e4aa381157e6739fd77b983bbe" id="r_aa9f698e4aa381157e6739fd77b983bbe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9f698e4aa381157e6739fd77b983bbe">VariableValue</a> (const <a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a> &amp;other)</td></tr>
 <tr class="memdesc:aa9f698e4aa381157e6739fd77b983bbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor.  <br /></td></tr>
 <tr class="separator:aa9f698e4aa381157e6739fd77b983bbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,6 +228,7 @@ Public Attributes</h2></td></tr>
 <tr class="memdesc:a76916b5233ebe2c66703e01786211e3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flag indicating if the variable is a literal.  <br /></td></tr>
 <tr class="separator:a76916b5233ebe2c66703e01786211e3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a807667914a451032f7d2ce8ad912172b" id="r_a807667914a451032f7d2ce8ad912172b"><td class="memItemLeft" align="right" valign="top">enum <a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9">logit::VariableValue::ValueType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a807667914a451032f7d2ce8ad912172b">type</a></td></tr>
+<tr class="memdesc:a807667914a451032f7d2ce8ad912172b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the type of the stored value in the <a class="el" href="structlogit_1_1VariableValue.html" title="Structure for storing values of various types, including enumerations.">VariableValue</a> structure.  <br /></td></tr>
 <tr class="separator:a807667914a451032f7d2ce8ad912172b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab299360be24179ef5776869ee8e049b5" id="r_ab299360be24179ef5776869ee8e049b5"><td class="memItemLeft" >union {&#160;</td><td class="memItemRight" valign="bottom"></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,6 +264,9 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8aea95a0ccfc7a71d04ea6447f948173" id="r_a8aea95a0ccfc7a71d04ea6447f948173"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8aea95a0ccfc7a71d04ea6447f948173">string_value</a></td></tr>
 <tr class="memdesc:a8aea95a0ccfc7a71d04ea6447f948173"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variable to store string, exception messages, and enums.  <br /></td></tr>
 <tr class="separator:a8aea95a0ccfc7a71d04ea6447f948173"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1681ac65f8d743f5b26461b19f5fe9af" id="r_a1681ac65f8d743f5b26461b19f5fe9af"><td class="memItemLeft" align="right" valign="top">std::error_code&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1681ac65f8d743f5b26461b19f5fe9af">error_code_value</a></td></tr>
+<tr class="memdesc:a1681ac65f8d743f5b26461b19f5fe9af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variable to store std::error_code.  <br /></td></tr>
+<tr class="separator:a1681ac65f8d743f5b26461b19f5fe9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -253,11 +283,15 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:ace3b46f944f56822c728ba43b79a2201" id="r_ace3b46f944f56822c728ba43b79a2201"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace3b46f944f56822c728ba43b79a2201">is_pod_type</a> (<a class="el" href="#aadabf80a158fd1569ca3f761c673c6e9">ValueType</a> <a class="el" href="#a807667914a451032f7d2ce8ad912172b">type</a>)</td></tr>
 <tr class="memdesc:ace3b46f944f56822c728ba43b79a2201"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to determine if a ValueType represents a POD type.  <br /></td></tr>
 <tr class="separator:ace3b46f944f56822c728ba43b79a2201"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48711fe3cfd723a4ea9f9c3233086e1e" id="r_a48711fe3cfd723a4ea9f9c3233086e1e"><td class="memTemplParams" colspan="2">template&lt;typename Period &gt; </td></tr>
+<tr class="memitem:a48711fe3cfd723a4ea9f9c3233086e1e"><td class="memTemplItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a48711fe3cfd723a4ea9f9c3233086e1e">duration_units</a> ()</td></tr>
+<tr class="memdesc:a48711fe3cfd723a4ea9f9c3233086e1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to get the unit of the duration.  <br /></td></tr>
+<tr class="separator:a48711fe3cfd723a4ea9f9c3233086e1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Structure for storing values of various types, including enumerations. </p>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00018">18</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00028">28</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="aadabf80a158fd1569ca3f761c673c6e9" name="aadabf80a158fd1569ca3f761c673c6e9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aadabf80a158fd1569ca3f761c673c6e9">&#9670;&#160;</a></span>ValueType</h2>
@@ -279,34 +313,67 @@ Static Private Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Enumeration of possible value types. </p>
+<p>Enumeration of possible value types for <a class="el" href="structlogit_1_1VariableValue.html" title="Structure for storing values of various types, including enumerations.">VariableValue</a>. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9ad7c5654897c9f90129c42cfd32d28eda" name="aadabf80a158fd1569ca3f761c673c6e9ad7c5654897c9f90129c42cfd32d28eda"></a>INT8_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a7bd6884629a764a9f2ea9699abe9f4af" name="aadabf80a158fd1569ca3f761c673c6e9a7bd6884629a764a9f2ea9699abe9f4af"></a>UINT8_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a30e197f6196444b539d5f330e121047b" name="aadabf80a158fd1569ca3f761c673c6e9a30e197f6196444b539d5f330e121047b"></a>INT16_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9adb47570540547954be1d416536f2f9c8" name="aadabf80a158fd1569ca3f761c673c6e9adb47570540547954be1d416536f2f9c8"></a>UINT16_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a6d4625e504ad32dbf8d6b958dacd3b78" name="aadabf80a158fd1569ca3f761c673c6e9a6d4625e504ad32dbf8d6b958dacd3b78"></a>INT32_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71" name="aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71"></a>UINT32_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a605e14fd7caf8083a817b6b1ea1c5192" name="aadabf80a158fd1569ca3f761c673c6e9a605e14fd7caf8083a817b6b1ea1c5192"></a>INT64_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb" name="aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb"></a>UINT64_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a18a2d6e9a1599b238183d591eeec18b4" name="aadabf80a158fd1569ca3f761c673c6e9a18a2d6e9a1599b238183d591eeec18b4"></a>BOOL_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a32d7df287b8e64ba22bfcdc34bafa529" name="aadabf80a158fd1569ca3f761c673c6e9a32d7df287b8e64ba22bfcdc34bafa529"></a>CHAR_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a265e7d1ea834a4aa77f74bf45b66fe0a" name="aadabf80a158fd1569ca3f761c673c6e9a265e7d1ea834a4aa77f74bf45b66fe0a"></a>FLOAT_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4" name="aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4"></a>DOUBLE_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a8145bebde89b1b0d95e052f8b5b0fe26" name="aadabf80a158fd1569ca3f761c673c6e9a8145bebde89b1b0d95e052f8b5b0fe26"></a>LONG_DOUBLE_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314" name="aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314"></a>STRING_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9ae4f8fcd03b0d4eabea27a7c68a79408f" name="aadabf80a158fd1569ca3f761c673c6e9ae4f8fcd03b0d4eabea27a7c68a79408f"></a>EXCEPTION_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a27e2030757f7835e837edcf5a1bf0a6a" name="aadabf80a158fd1569ca3f761c673c6e9a27e2030757f7835e837edcf5a1bf0a6a"></a>ENUM_VAL&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9ade4c5dc187362fb24e97644857b77a7c" name="aadabf80a158fd1569ca3f761c673c6e9ade4c5dc187362fb24e97644857b77a7c"></a>UNKNOWN_VAL&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9ad7c5654897c9f90129c42cfd32d28eda" name="aadabf80a158fd1569ca3f761c673c6e9ad7c5654897c9f90129c42cfd32d28eda"></a>INT8_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>int8_t</code> (signed 8-bit integer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a7bd6884629a764a9f2ea9699abe9f4af" name="aadabf80a158fd1569ca3f761c673c6e9a7bd6884629a764a9f2ea9699abe9f4af"></a>UINT8_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>uint8_t</code> (unsigned 8-bit integer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a30e197f6196444b539d5f330e121047b" name="aadabf80a158fd1569ca3f761c673c6e9a30e197f6196444b539d5f330e121047b"></a>INT16_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>int16_t</code> (signed 16-bit integer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9adb47570540547954be1d416536f2f9c8" name="aadabf80a158fd1569ca3f761c673c6e9adb47570540547954be1d416536f2f9c8"></a>UINT16_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>uint16_t</code> (unsigned 16-bit integer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a6d4625e504ad32dbf8d6b958dacd3b78" name="aadabf80a158fd1569ca3f761c673c6e9a6d4625e504ad32dbf8d6b958dacd3b78"></a>INT32_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>int32_t</code> (signed 32-bit integer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71" name="aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71"></a>UINT32_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>uint32_t</code> (unsigned 32-bit integer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a605e14fd7caf8083a817b6b1ea1c5192" name="aadabf80a158fd1569ca3f761c673c6e9a605e14fd7caf8083a817b6b1ea1c5192"></a>INT64_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>int64_t</code> (signed 64-bit integer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb" name="aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb"></a>UINT64_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>uint64_t</code> (unsigned 64-bit integer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a18a2d6e9a1599b238183d591eeec18b4" name="aadabf80a158fd1569ca3f761c673c6e9a18a2d6e9a1599b238183d591eeec18b4"></a>BOOL_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>bool</code>. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a32d7df287b8e64ba22bfcdc34bafa529" name="aadabf80a158fd1569ca3f761c673c6e9a32d7df287b8e64ba22bfcdc34bafa529"></a>CHAR_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>char</code> (single character). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a265e7d1ea834a4aa77f74bf45b66fe0a" name="aadabf80a158fd1569ca3f761c673c6e9a265e7d1ea834a4aa77f74bf45b66fe0a"></a>FLOAT_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>float</code> (single-precision floating point). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4" name="aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4"></a>DOUBLE_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>double</code> (double-precision floating point). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a8145bebde89b1b0d95e052f8b5b0fe26" name="aadabf80a158fd1569ca3f761c673c6e9a8145bebde89b1b0d95e052f8b5b0fe26"></a>LONG_DOUBLE_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>long double</code> (extended-precision floating point). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a69d1ae3e7e14cdedc42556b0c4a51ca7" name="aadabf80a158fd1569ca3f761c673c6e9a69d1ae3e7e14cdedc42556b0c4a51ca7"></a>DURATION_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>std::chrono::duration</code> (time duration). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9aa1db3a2040708e3c6cc66e5374cfee18" name="aadabf80a158fd1569ca3f761c673c6e9aa1db3a2040708e3c6cc66e5374cfee18"></a>TIME_POINT_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>std::chrono::time_point</code> (specific point in time). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314" name="aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314"></a>STRING_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>std::string</code> (dynamic-length string). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9ae4f8fcd03b0d4eabea27a7c68a79408f" name="aadabf80a158fd1569ca3f761c673c6e9ae4f8fcd03b0d4eabea27a7c68a79408f"></a>EXCEPTION_VAL&#160;</td><td class="fielddoc"><p>Value representing an exception (derived from <code>std::exception</code>). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9ae8db7ba64ea171aade9015b88e05f380" name="aadabf80a158fd1569ca3f761c673c6e9ae8db7ba64ea171aade9015b88e05f380"></a>ERROR_CODE_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>std::error_code</code> (system error code). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a27e2030757f7835e837edcf5a1bf0a6a" name="aadabf80a158fd1569ca3f761c673c6e9a27e2030757f7835e837edcf5a1bf0a6a"></a>ENUM_VAL&#160;</td><td class="fielddoc"><p>Value of any enumeration type (converted to string or integral value). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a69b582264c366059b11c48e8577a5a58" name="aadabf80a158fd1569ca3f761c673c6e9a69b582264c366059b11c48e8577a5a58"></a>PATH_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>std::filesystem::path</code> (filesystem path). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c" name="aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c"></a>POINTER_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>void*</code> (raw pointer). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a5cf84b2a7488a59b85dc806aa1563a9a" name="aadabf80a158fd1569ca3f761c673c6e9a5cf84b2a7488a59b85dc806aa1563a9a"></a>SMART_POINTER_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>std::shared_ptr</code> or <code>std::unique_ptr</code> (smart pointers). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a5adf591eae7799264f420d2856a2c535" name="aadabf80a158fd1569ca3f761c673c6e9a5adf591eae7799264f420d2856a2c535"></a>VARIANT_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>std::variant</code> (type-safe union). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9a37107d8e0690bf391b47c833378ae096" name="aadabf80a158fd1569ca3f761c673c6e9a37107d8e0690bf391b47c833378ae096"></a>OPTIONAL_VAL&#160;</td><td class="fielddoc"><p>Value of type <code>std::optional</code> (optional value holder). </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aadabf80a158fd1569ca3f761c673c6e9ade4c5dc187362fb24e97644857b77a7c" name="aadabf80a158fd1569ca3f761c673c6e9ade4c5dc187362fb24e97644857b77a7c"></a>UNKNOWN_VAL&#160;</td><td class="fielddoc"><p>Unknown or unsupported value type. </p>
+</td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00024">24</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00034">34</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a6b24a24797e823787f6923c0ca019539" name="a6b24a24797e823787f6923c0ca019539"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b24a24797e823787f6923c0ca019539">&#9670;&#160;</a></span>VariableValue() <span class="overload">[1/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b24a24797e823787f6923c0ca019539">&#9670;&#160;</a></span>VariableValue() <span class="overload">[1/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -339,12 +406,12 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00064">64</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00083">83</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <a id="ae3a893e722ebf9ed95a1d6cc42f6fd99" name="ae3a893e722ebf9ed95a1d6cc42f6fd99"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3a893e722ebf9ed95a1d6cc42f6fd99">&#9670;&#160;</a></span>VariableValue() <span class="overload">[2/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3a893e722ebf9ed95a1d6cc42f6fd99">&#9670;&#160;</a></span>VariableValue() <span class="overload">[2/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -377,12 +444,12 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00071">71</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00090">90</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <a id="aa492acee509306a925aebc3a0ad44989" name="aa492acee509306a925aebc3a0ad44989"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa492acee509306a925aebc3a0ad44989">&#9670;&#160;</a></span>VariableValue() <span class="overload">[3/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa492acee509306a925aebc3a0ad44989">&#9670;&#160;</a></span>VariableValue() <span class="overload">[3/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -408,12 +475,12 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00077">77</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00096">96</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <a id="af51296b69f6b473734a8e49ce34e6b2a" name="af51296b69f6b473734a8e49ce34e6b2a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af51296b69f6b473734a8e49ce34e6b2a">&#9670;&#160;</a></span>VariableValue() <span class="overload">[4/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af51296b69f6b473734a8e49ce34e6b2a">&#9670;&#160;</a></span>VariableValue() <span class="overload">[4/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -439,12 +506,12 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00081">81</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00100">100</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a448d8d769d671a4f870ed6d9f34ffab4" name="a448d8d769d671a4f870ed6d9f34ffab4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a448d8d769d671a4f870ed6d9f34ffab4">&#9670;&#160;</a></span>VariableValue() <span class="overload">[5/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a448d8d769d671a4f870ed6d9f34ffab4">&#9670;&#160;</a></span>VariableValue() <span class="overload">[5/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -477,12 +544,43 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00085">85</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00104">104</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aca3f5f829656d5e3fd7bdbbe1d0f2c0d" name="aca3f5f829656d5e3fd7bdbbe1d0f2c0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca3f5f829656d5e3fd7bdbbe1d0f2c0d">&#9670;&#160;</a></span>VariableValue() <span class="overload">[6/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::VariableValue::VariableValue </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::error_code &amp;</td>          <td class="paramname"><span class="paramname"><em>ec</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00109">109</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <a id="aef96c3471c808ae7e74c6ad38719b00d" name="aef96c3471c808ae7e74c6ad38719b00d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef96c3471c808ae7e74c6ad38719b00d">&#9670;&#160;</a></span>VariableValue() <span class="overload">[6/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aef96c3471c808ae7e74c6ad38719b00d">&#9670;&#160;</a></span>VariableValue() <span class="overload">[7/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -515,12 +613,12 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00091">91</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00114">114</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a060792ecd61c5573594da28b2f11470d" name="a060792ecd61c5573594da28b2f11470d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a060792ecd61c5573594da28b2f11470d">&#9670;&#160;</a></span>VariableValue() <span class="overload">[7/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a060792ecd61c5573594da28b2f11470d">&#9670;&#160;</a></span>VariableValue() <span class="overload">[8/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -553,12 +651,12 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00107">107</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00130">130</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <a id="ab88ceaa5e13b3de04e896cb4057c3b0e" name="ab88ceaa5e13b3de04e896cb4057c3b0e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab88ceaa5e13b3de04e896cb4057c3b0e">&#9670;&#160;</a></span>VariableValue() <span class="overload">[8/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab88ceaa5e13b3de04e896cb4057c3b0e">&#9670;&#160;</a></span>VariableValue() <span class="overload">[9/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -606,12 +704,175 @@ template&lt;typename EnumType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00146">146</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00169">169</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a0b83f938b29bde60bfbbb278a153e992" name="a0b83f938b29bde60bfbbb278a153e992"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b83f938b29bde60bfbbb278a153e992">&#9670;&#160;</a></span>VariableValue() <span class="overload">[10/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Rep , typename Period &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::VariableValue::VariableValue </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::chrono::duration&lt; Rep, Period &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>duration</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00176">176</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a48a926bb1355074f802536379fdeea86" name="a48a926bb1355074f802536379fdeea86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48a926bb1355074f802536379fdeea86">&#9670;&#160;</a></span>VariableValue() <span class="overload">[11/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Clock , typename Duration &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::VariableValue::VariableValue </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::chrono::time_point&lt; Clock, Duration &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>time_point</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00182">182</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+
+</div>
+</div>
+<a id="afc9b1cb27abb1bb3bfa12020ffc4cf3d" name="afc9b1cb27abb1bb3bfa12020ffc4cf3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc9b1cb27abb1bb3bfa12020ffc4cf3d">&#9670;&#160;</a></span>VariableValue() <span class="overload">[12/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::VariableValue::VariableValue </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>ptr</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00230">230</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aaaf3d8fcb95a5e3d4a60478dabbb17c5" name="aaaf3d8fcb95a5e3d4a60478dabbb17c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaaf3d8fcb95a5e3d4a60478dabbb17c5">&#9670;&#160;</a></span>VariableValue() <span class="overload">[13/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::VariableValue::VariableValue </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::shared_ptr&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>ptr</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00238">238</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a90c133df24cc3509f0bdb4e485f5d68f" name="a90c133df24cc3509f0bdb4e485f5d68f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90c133df24cc3509f0bdb4e485f5d68f">&#9670;&#160;</a></span>VariableValue() <span class="overload">[14/15]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::VariableValue::VariableValue </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::unique_ptr&lt; T &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>ptr</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00247">247</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
 <a id="aa9f698e4aa381157e6739fd77b983bbe" name="aa9f698e4aa381157e6739fd77b983bbe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9f698e4aa381157e6739fd77b983bbe">&#9670;&#160;</a></span>VariableValue() <span class="overload">[9/9]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9f698e4aa381157e6739fd77b983bbe">&#9670;&#160;</a></span>VariableValue() <span class="overload">[15/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -635,7 +896,7 @@ template&lt;typename EnumType &gt; </div>
 
 <p>Copy constructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00152">152</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00256">256</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -667,6 +928,44 @@ template&lt;typename EnumType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a48711fe3cfd723a4ea9f9c3233086e1e" name="a48711fe3cfd723a4ea9f9c3233086e1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48711fe3cfd723a4ea9f9c3233086e1e">&#9670;&#160;</a></span>duration_units()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Period &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::string logit::VariableValue::duration_units </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Helper function to get the unit of the duration. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Period</td><td>The period type of the duration. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string representing the unit of the duration. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00404">404</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a3280ffb2c99ff6578751685bbb209027" name="a3280ffb2c99ff6578751685bbb209027"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3280ffb2c99ff6578751685bbb209027">&#9670;&#160;</a></span>enum_to_string()</h2>
 
@@ -707,7 +1006,7 @@ template&lt;typename EnumType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String representation of the enumeration. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00245">245</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00370">370</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -743,7 +1042,7 @@ template&lt;typename EnumType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the type is POD, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00254">254</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00379">379</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -779,7 +1078,7 @@ template&lt;typename EnumType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if valid, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00235">235</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00360">360</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -808,7 +1107,7 @@ template&lt;typename EnumType &gt; </div>
 
 <p>Assignment operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00160">160</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00266">266</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -838,7 +1137,7 @@ template&lt;typename EnumType &gt; </div>
 <p>Method to get the value as a string. </p>
 <dl class="section return"><dt>Returns</dt><dd>String representation of the value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00180">180</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00287">287</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -874,7 +1173,7 @@ template&lt;typename EnumType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Formatted string representation of the value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00207">207</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00323">323</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -891,7 +1190,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00053">53</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00071">71</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -907,7 +1206,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00054">54</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00072">72</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -923,7 +1222,25 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00056">56</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00074">74</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1681ac65f8d743f5b26461b19f5fe9af" name="a1681ac65f8d743f5b26461b19f5fe9af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1681ac65f8d743f5b26461b19f5fe9af">&#9670;&#160;</a></span>error_code_value</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::error_code logit::VariableValue::error_code_value</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Variable to store std::error_code. </p>
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00079">79</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -939,7 +1256,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00055">55</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00073">73</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -955,7 +1272,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00047">47</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00065">65</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -971,7 +1288,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00049">49</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00067">67</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -987,7 +1304,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00051">51</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00069">69</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1003,7 +1320,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00045">45</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00063">63</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1021,7 +1338,7 @@ template&lt;typename EnumType &gt; </div>
 
 <p>Flag indicating if the variable is a literal. </p>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00020">20</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00030">30</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1037,7 +1354,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00057">57</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00075">75</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1372,7 @@ template&lt;typename EnumType &gt; </div>
 
 <p>Variable name. </p>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00019">19</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00029">29</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1089,7 +1406,7 @@ template&lt;typename EnumType &gt; </div>
 
 <p>Variable to store string, exception messages, and enums. </p>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00060">60</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00078">78</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1105,6 +1422,8 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
+<p>Specifies the type of the stored value in the <a class="el" href="structlogit_1_1VariableValue.html" title="Structure for storing values of various types, including enumerations.">VariableValue</a> structure. </p>
+
 </div>
 </div>
 <a id="a75add3518fb55bb2b42daf5ea890bad8" name="a75add3518fb55bb2b42daf5ea890bad8"></a>
@@ -1119,7 +1438,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00048">48</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00066">66</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1135,7 +1454,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00050">50</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00068">68</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1151,7 +1470,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00052">52</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00070">70</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1167,7 +1486,7 @@ template&lt;typename EnumType &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00046">46</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00064">64</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>

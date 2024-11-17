@@ -15,5 +15,6 @@ var annotated_dup =
       [ "TaskExecutor", "classlogit_1_1TaskExecutor.html", "classlogit_1_1TaskExecutor" ],
       [ "UniqueFileLogger", "classlogit_1_1UniqueFileLogger.html", "classlogit_1_1UniqueFileLogger" ],
       [ "VariableValue", "structlogit_1_1VariableValue.html", "structlogit_1_1VariableValue" ]
-    ] ]
+    ] ],
+    [ "CustomErrorCategory", "classCustomErrorCategory.html", "classCustomErrorCategory" ]
 ];

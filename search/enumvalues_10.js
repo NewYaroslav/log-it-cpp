@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['uint16_5fval_0',['UINT16_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9adb47570540547954be1d416536f2f9c8',1,'logit::VariableValue']]],
-  ['uint32_5fval_1',['UINT32_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71',1,'logit::VariableValue']]],
-  ['uint64_5fval_2',['UINT64_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb',1,'logit::VariableValue']]],
-  ['uint8_5fval_3',['UINT8_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a7bd6884629a764a9f2ea9699abe9f4af',1,'logit::VariableValue']]],
-  ['unknown_5fval_4',['UNKNOWN_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9ade4c5dc187362fb24e97644857b77a7c',1,'logit::VariableValue']]]
+  ['second_0',['Second',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8ac22cf8376b1893dcfcef0649fe1a7d87',1,'logit::FormatInstruction']]],
+  ['shortdate_1',['ShortDate',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a7c5b7580e4269fd93b25519beb510f81',1,'logit::FormatInstruction']]],
+  ['shortloglevel_2',['ShortLogLevel',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a306cc46e7462190db3cf7f7ef77bfec6',1,'logit::FormatInstruction']]],
+  ['smart_5fpointer_5fval_3',['SMART_POINTER_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5cf84b2a7488a59b85dc806aa1563a9a',1,'logit::VariableValue']]],
+  ['sourcefileandline_4',['SourceFileAndLine',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a296ea9556c5506de526c0b57a30f8a94',1,'logit::FormatInstruction']]],
+  ['startcolor_5',['StartColor',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a2e2df0009302d308c0b5ecf2175d3a2b',1,'logit::FormatInstruction']]],
+  ['statictext_6',['StaticText',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a5a4a53af1586c31af3e320cb82e3ea15',1,'logit::FormatInstruction']]],
+  ['string_5fval_7',['STRING_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a38d6e7f2d14e9ff35064421d5af88314',1,'logit::VariableValue']]]
 ];
