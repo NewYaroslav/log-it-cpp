@@ -248,5 +248,7 @@ var searchData=
   ['logrecord_245',['LogRecord',['../structlogit_1_1LogRecord.html',1,'logit::LogRecord'],['../structlogit_1_1LogRecord.html#aa7156801307b366db8d887bde90dbd16',1,'logit::LogRecord::LogRecord()']]],
   ['logrecord_2ehpp_246',['LogRecord.hpp',['../LogRecord_8hpp.html',1,'']]],
   ['logstream_247',['LogStream',['../classlogit_1_1LogStream.html',1,'logit::LogStream'],['../classlogit_1_1LogStream.html#a263ea886aee9f2240b7abb60b5ca40b7',1,'logit::LogStream::LogStream()']]],
-  ['logstream_2ehpp_248',['LogStream.hpp',['../LogStream_8hpp.html',1,'']]]
+  ['logstream_2ehpp_248',['LogStream.hpp',['../LogStream_8hpp.html',1,'']]],
+  ['long_5fdouble_5fval_249',['LONG_DOUBLE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a8145bebde89b1b0d95e052f8b5b0fe26',1,'logit::VariableValue']]],
+  ['long_5fdouble_5fvalue_250',['long_double_value',['../structlogit_1_1VariableValue.html#a158877c821067242de79c53c46c209f1',1,'logit::VariableValue']]]
 ];

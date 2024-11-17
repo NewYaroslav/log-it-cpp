@@ -65,7 +65,7 @@ var NAVTREEINDEX =
 "LogMacros_8hpp.html#aefac7b13d1e651ba3746bf0031d81fa2",
 "classlogit_1_1SimpleLogFormatter.html#ab2b461fbd2110cc8e8ca4ea0a6b20288",
 "namespacelogit.html#a668cc1acca900bc9ad968b421d31bfa3",
-"structlogit_1_1VariableValue.html#a7971e4d1076412fc1a8a2620323f2c2f"
+"structlogit_1_1VariableValue.html#a8aea95a0ccfc7a71d04ea6447f948173"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
