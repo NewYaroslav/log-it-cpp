@@ -5,6 +5,7 @@ var searchData=
   ['white_2',['WHITE',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a283fc479650da98250635b9c3c0e7e50',1,'example_logit_basic.cpp']]],
   ['white_3',['White',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a25a81701fbfa4a1efdf660a950c1d006',1,'logit']]],
   ['width_4',['width',['../structlogit_1_1FormatInstruction.html#a0dfac7e47e27be071b72040f76674600',1,'logit::FormatInstruction']]],
-  ['worker_5ffunction_5',['worker_function',['../classlogit_1_1TaskExecutor.html#abe84b6674bbf1ae60c5527b5ea16a8fe',1,'logit::TaskExecutor']]],
-  ['write_5flog_6',['write_log',['../classlogit_1_1FileLogger.html#ac29847753726b074df6e4491f8db6779',1,'logit::FileLogger::write_log()'],['../classlogit_1_1UniqueFileLogger.html#af98af47d7610715810ddfb3406f80cb6',1,'logit::UniqueFileLogger::write_log()']]]
+  ['with_20macros_5',['Logging with Macros',['../index.html#macro_logging',1,'']]],
+  ['worker_5ffunction_6',['worker_function',['../classlogit_1_1TaskExecutor.html#abe84b6674bbf1ae60c5527b5ea16a8fe',1,'logit::TaskExecutor']]],
+  ['write_5flog_7',['write_log',['../classlogit_1_1FileLogger.html#ac29847753726b074df6e4491f8db6779',1,'logit::FileLogger::write_log()'],['../classlogit_1_1UniqueFileLogger.html#af98af47d7610715810ddfb3406f80cb6',1,'logit::UniqueFileLogger::write_log()']]]
 ];

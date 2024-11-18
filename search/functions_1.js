@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['compile_0',['compile',['../classlogit_1_1PatternCompiler.html#a26f3920483df82355bfb939abf76bc36',1,'logit::PatternCompiler']]],
+  ['compile_0',['compile',['../classlogit_1_1PatternCompiler.html#a804a70908de4ca659e0f88de3a85bd45',1,'logit::PatternCompiler']]],
   ['compile_5fpattern_1',['compile_pattern',['../classlogit_1_1SimpleLogFormatter.html#aa48d3d3a2d838d5403508e59d374c785',1,'logit::SimpleLogFormatter']]],
   ['consolelogger_2',['ConsoleLogger',['../classlogit_1_1ConsoleLogger.html#a0b14993cf1a3ac55c3d2a787d869b68a',1,'logit::ConsoleLogger::ConsoleLogger()'],['../classlogit_1_1ConsoleLogger.html#aa07605bba808de22345e8391c58207fd',1,'logit::ConsoleLogger::ConsoleLogger(const Config &amp;config)'],['../classlogit_1_1ConsoleLogger.html#a7136d700ecd05cc8f45b6d26c640670c',1,'logit::ConsoleLogger::ConsoleLogger(const bool async)']]],
   ['create_5fdirectories_3',['create_directories',['../namespacelogit.html#a9da0cf75aa075e53a59ed0b5ab0e68c9',1,'logit']]],

@@ -172,106 +172,109 @@ $(function(){initNavTree('example__logit__basic_8cpp_source.html',''); initResiz
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a36534e7071e78d9aa0762cbc38898282">LOGIT_ADD_FILE_LOGGER_DEFAULT</a>();</div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a991d97ec74c5a577e67bcea0a91b95c5">LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE</a>();</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="comment">// Log various levels of messages</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordtype">float</span> someFloat = 123.456f;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="keywordtype">int</span> someInt = 789;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <a class="code hl_enumeration" href="example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50">COLORS</a> color = <a class="code hl_enumvalue" href="example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50af80f9a890089d211842d59625e561f88">RED</a>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(<span class="stringliteral">&quot;This is an informational message&quot;</span>, someFloat, someInt);</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a72ad7987ca915277753feda0e1a6f95f">LOGIT_DEBUG_IF</a>(<span class="keyword">true</span>, <span class="stringliteral">&quot;This debug message is conditionally logged.&quot;</span>);</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3320dcc3a7dcfff39dd676f8f0bcedbb">LOGIT_WARN</a>(<span class="stringliteral">&quot;Warning: Something might go wrong here!&quot;</span>);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1c256f5e253f660dd39781546b4d730a">LOGIT_ERROR</a>(<span class="stringliteral">&quot;An error has occurred during processing with color&quot;</span>, color);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a35087d4275bebb9daa9c649bf49dbe49">LOGIT_FATAL</a>(<span class="stringliteral">&quot;Fatal error! Immediate attention required!&quot;</span>);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="comment">// Demonstrating formatted logging for homogeneous variables</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a542c10c7bec6cfd3c2768d9bf3613e7d">LOGIT_FORMAT_INFO</a>(<span class="stringliteral">&quot;%.2f&quot;</span>, someFloat, 654.321f);     <span class="comment">// Two float values</span></div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a542c10c7bec6cfd3c2768d9bf3613e7d">LOGIT_FORMAT_INFO</a>(<span class="stringliteral">&quot;%.4d&quot;</span>, someInt, 999);            <span class="comment">// Two int values</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a542c10c7bec6cfd3c2768d9bf3613e7d">LOGIT_FORMAT_INFO</a>(<span class="stringliteral">&quot;%.2f&quot;</span>, 747.000L);                <span class="comment">// Long double value</span></div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span> </div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="comment">// Stream-based logging</span></div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ab97083df153984a3845205c17c3db318">LOGIT_STREAM_INFO</a>() &lt;&lt; <span class="stringliteral">&quot;Stream logging: float=&quot;</span> &lt;&lt; someFloat &lt;&lt; <span class="stringliteral">&quot;, int=&quot;</span> &lt;&lt; someInt &lt;&lt; <span class="stringliteral">&quot;, color=&quot;</span> &lt;&lt; color;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="comment">// Writing to the unique file logger using the second logger (index 2)</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ac7ca61a21534937c649104374dd1912e">LOGIT_STREAM_TRACE_TO</a>(2) &lt;&lt; <span class="stringliteral">&quot;Logging to unique file logger with a trace message. Color: &quot;</span> &lt;&lt; color;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;Unique log was written to file: &quot;</span>, <a class="code hl_define" href="LogMacros_8hpp.html#aafde7f23f6befd4ddd242b7ea58f32b7">LOGIT_GET_LAST_FILE_NAME</a>(2));</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <span class="comment">// Logging exceptions</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">try</span> {</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <span class="comment">// Simulate an exception</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;An example runtime error&quot;</span>);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; ex) {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="comment">// Log the exception using the logger</span></div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <a class="code hl_define" href="LogMacros_8hpp.html#a35087d4275bebb9daa9c649bf49dbe49">LOGIT_FATAL</a>(ex);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>    }</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="comment">// Logging std::error_code</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    std::error_code ec(1, <a class="code hl_function" href="example__logit__basic_8cpp.html#a0822522f836470533dabb03c77664f11">custom_error_category</a>());</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1c256f5e253f660dd39781546b4d730a">LOGIT_ERROR</a>(ec);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a87cea410f734c15ca053b6aac5b8c405">LOGIT_FORMAT_ERROR</a>(<span class="stringliteral">&quot;error_code: (%s, %d)&quot;</span>, ec);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="preprocessor">#   if __cplusplus &gt;= 201703L</span></div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="comment">// Logging std::filesystem::path</span></div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    std::filesystem::path log_path = <span class="stringliteral">&quot;/var/log/example.log&quot;</span>;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(log_path);</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;The log file path is: &quot;</span>, log_path);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a542c10c7bec6cfd3c2768d9bf3613e7d">LOGIT_FORMAT_INFO</a>(<span class="stringliteral">&quot;%s&quot;</span>, log_path);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="preprocessor">#   endif</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>    <span class="comment">// Logging std::chrono::duration</span></div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    std::chrono::seconds        seconds(120);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    std::chrono::milliseconds   milliseconds(500);</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    std::chrono::microseconds   microseconds(123456);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::chrono::minutes        minutes(5);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    std::chrono::hours          hours(2);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3ccd51b4dd7f1082c23273c353ff80e7">LOGIT_PRINT_TRACE</a>(<span class="stringliteral">&quot;Seconds example: &quot;</span>, seconds);</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ac7605adf9af6c7667f1505fce4d60ec2">LOGIT_TRACE</a>(milliseconds, minutes, hours);</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a94a9a32d400b20d4518b802352829c26">LOGIT_FORMAT_TRACE</a>(<span class="stringliteral">&quot;%s&quot;</span>, microseconds);</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="comment">// Logging std::chrono::time_point</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    <span class="keyword">auto</span> now = std::chrono::system_clock::now();</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;TimePoint example: &quot;</span>, now);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(now);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="comment">// Logging void*</span></div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordtype">void</span>* ptr = &amp;now;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3ccd51b4dd7f1082c23273c353ff80e7">LOGIT_PRINT_TRACE</a>(<span class="stringliteral">&quot;Pointer example: &quot;</span>, ptr);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(ptr);</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="comment">// Logging smart pointers</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keyword">auto</span> shared = std::make_shared&lt;int&gt;(42);</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3ccd51b4dd7f1082c23273c353ff80e7">LOGIT_PRINT_TRACE</a>(<span class="stringliteral">&quot;Shared pointer example: &quot;</span>, shared);</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="preprocessor">#   if __cplusplus &gt;= 201402L</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">auto</span> unique = std::make_unique&lt;int&gt;(84);</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#   else</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    std::unique_ptr&lt;int&gt; unique(<span class="keyword">new</span> <span class="keywordtype">int</span>(84));</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#   endif</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3ccd51b4dd7f1082c23273c353ff80e7">LOGIT_PRINT_TRACE</a>(<span class="stringliteral">&quot;Unique pointer example: &quot;</span>, unique);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="preprocessor">#   if __cplusplus &gt;= 201703L</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="comment">// Logging std::variant</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    std::variant&lt;int, std::string&gt; variant = <span class="stringliteral">&quot;Hello, variant!&quot;</span>;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;Variant example: &quot;</span>, variant);</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    variant = 123;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ac7605adf9af6c7667f1505fce4d60ec2">LOGIT_TRACE</a>(variant);</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <span class="comment">// Logging std::optional</span></div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    std::optional&lt;std::string&gt; optional = <span class="stringliteral">&quot;Hello, optional!&quot;</span>;</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;Optional example: &quot;</span>, optional);</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    std::optional&lt;std::string&gt; optional_null;</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1c256f5e253f660dd39781546b4d730a">LOGIT_ERROR</a>(optional_null);</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span><span class="preprocessor">#   endif</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="comment">// Ensure all loggers are flushed and cleaned up before exiting</span></div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a12684b2496a4438b7a97301261c08f97">LOGIT_WAIT</a>();</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;Logging example completed.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>}</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a0dd94a3ac801e79b49be8a65ca5b43c7">LOGIT_TRACE0</a>();</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    <span class="comment">// Log various levels of messages</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keywordtype">float</span> someFloat = 123.456f;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keywordtype">int</span> someInt = 789;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <a class="code hl_enumeration" href="example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50">COLORS</a> color = <a class="code hl_enumvalue" href="example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50af80f9a890089d211842d59625e561f88">RED</a>;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(<span class="stringliteral">&quot;This is an informational message&quot;</span>, someFloat, someInt);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a72ad7987ca915277753feda0e1a6f95f">LOGIT_DEBUG_IF</a>(<span class="keyword">true</span>, <span class="stringliteral">&quot;This debug message is conditionally logged.&quot;</span>);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3320dcc3a7dcfff39dd676f8f0bcedbb">LOGIT_WARN</a>(<span class="stringliteral">&quot;Warning: Something might go wrong here!&quot;</span>);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <a class="code hl_define" href="LogMacros_8hpp.html#aef41edc865c4b68bdfc285c005e3f734">LOGIT_PRINT_ERROR</a>(<span class="stringliteral">&quot;An error has occurred during processing with color: &quot;</span>, color);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a35087d4275bebb9daa9c649bf49dbe49">LOGIT_FATAL</a>(<span class="stringliteral">&quot;Fatal error! Immediate attention required!&quot;</span>);</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="comment">// Demonstrating formatted logging for homogeneous variables</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a542c10c7bec6cfd3c2768d9bf3613e7d">LOGIT_FORMAT_INFO</a>(<span class="stringliteral">&quot;%.2f&quot;</span>, someFloat, 654.321f);     <span class="comment">// Two float values</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a542c10c7bec6cfd3c2768d9bf3613e7d">LOGIT_FORMAT_INFO</a>(<span class="stringliteral">&quot;%.4d&quot;</span>, someInt, 999);            <span class="comment">// Two int values</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a542c10c7bec6cfd3c2768d9bf3613e7d">LOGIT_FORMAT_INFO</a>(<span class="stringliteral">&quot;%.2f&quot;</span>, 747.000L);                <span class="comment">// Long double value</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="comment">// Stream-based logging</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ab97083df153984a3845205c17c3db318">LOGIT_STREAM_INFO</a>() &lt;&lt; <span class="stringliteral">&quot;Stream logging: float=&quot;</span> &lt;&lt; someFloat &lt;&lt; <span class="stringliteral">&quot;, int=&quot;</span> &lt;&lt; someInt &lt;&lt; <span class="stringliteral">&quot;, color=&quot;</span> &lt;&lt; color;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="comment">// Writing to the unique file logger using the second logger (index 2)</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ac7ca61a21534937c649104374dd1912e">LOGIT_STREAM_TRACE_TO</a>(2) &lt;&lt; <span class="stringliteral">&quot;Logging to unique file logger with a trace message. Color: &quot;</span> &lt;&lt; color;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;Unique log was written to file: &quot;</span>, <a class="code hl_define" href="LogMacros_8hpp.html#aafde7f23f6befd4ddd242b7ea58f32b7">LOGIT_GET_LAST_FILE_NAME</a>(2));</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    <span class="comment">// Logging exceptions</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordflow">try</span> {</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="comment">// Simulate an exception</span></div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;An example runtime error&quot;</span>);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    } <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; ex) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="comment">// Log the exception using the logger</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <a class="code hl_define" href="LogMacros_8hpp.html#a35087d4275bebb9daa9c649bf49dbe49">LOGIT_FATAL</a>(ex);</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    }</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="comment">// Logging std::error_code</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    std::error_code ec(1, <a class="code hl_function" href="example__logit__basic_8cpp.html#a0822522f836470533dabb03c77664f11">custom_error_category</a>());</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1c256f5e253f660dd39781546b4d730a">LOGIT_ERROR</a>(ec);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a87cea410f734c15ca053b6aac5b8c405">LOGIT_FORMAT_ERROR</a>(<span class="stringliteral">&quot;error_code: (%s, %d)&quot;</span>, ec);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">#   if __cplusplus &gt;= 201703L</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="comment">// Logging std::filesystem::path</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    std::filesystem::path log_path = <span class="stringliteral">&quot;/var/log/example.log&quot;</span>;</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(log_path);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;The log file path is: &quot;</span>, log_path);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a542c10c7bec6cfd3c2768d9bf3613e7d">LOGIT_FORMAT_INFO</a>(<span class="stringliteral">&quot;%s&quot;</span>, log_path);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">#   endif</span></div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="comment">// Logging std::chrono::duration</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    std::chrono::seconds        seconds(120);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    std::chrono::milliseconds   milliseconds(500);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    std::chrono::microseconds   microseconds(123456);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    std::chrono::minutes        minutes(5);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    std::chrono::hours          hours(2);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3ccd51b4dd7f1082c23273c353ff80e7">LOGIT_PRINT_TRACE</a>(<span class="stringliteral">&quot;Seconds example: &quot;</span>, seconds);</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ac7605adf9af6c7667f1505fce4d60ec2">LOGIT_TRACE</a>(milliseconds, minutes, hours);</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a94a9a32d400b20d4518b802352829c26">LOGIT_FORMAT_TRACE</a>(<span class="stringliteral">&quot;%s&quot;</span>, microseconds);</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    <span class="comment">// Logging std::chrono::time_point</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keyword">auto</span> now = std::chrono::system_clock::now();</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;TimePoint example: &quot;</span>, now);</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(now);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="comment">// Logging void*</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <span class="keywordtype">void</span>* ptr = &amp;now;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3ccd51b4dd7f1082c23273c353ff80e7">LOGIT_PRINT_TRACE</a>(<span class="stringliteral">&quot;Pointer example: &quot;</span>, ptr);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(ptr);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="comment">// Logging smart pointers</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keyword">auto</span> shared = std::make_shared&lt;int&gt;(42);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3ccd51b4dd7f1082c23273c353ff80e7">LOGIT_PRINT_TRACE</a>(<span class="stringliteral">&quot;Shared pointer example: &quot;</span>, shared);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#   if __cplusplus &gt;= 201402L</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keyword">auto</span> unique = std::make_unique&lt;int&gt;(84);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#   else</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    std::unique_ptr&lt;int&gt; unique(<span class="keyword">new</span> <span class="keywordtype">int</span>(84));</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="preprocessor">#   endif</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a3ccd51b4dd7f1082c23273c353ff80e7">LOGIT_PRINT_TRACE</a>(<span class="stringliteral">&quot;Unique pointer example: &quot;</span>, unique);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#   if __cplusplus &gt;= 201703L</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="comment">// Logging std::variant</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    std::variant&lt;int, std::string&gt; variant = <span class="stringliteral">&quot;Hello, variant!&quot;</span>;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;Variant example: &quot;</span>, variant);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    variant = 123;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ac7605adf9af6c7667f1505fce4d60ec2">LOGIT_TRACE</a>(variant);</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <span class="comment">// Logging std::optional</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>    std::optional&lt;std::string&gt; optional = <span class="stringliteral">&quot;Hello, optional!&quot;</span>;</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;Optional example: &quot;</span>, optional);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    std::optional&lt;std::string&gt; optional_null;</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a1c256f5e253f660dd39781546b4d730a">LOGIT_ERROR</a>(optional_null);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span><span class="preprocessor">#   endif</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="comment">// Ensure all loggers are flushed and cleaned up before exiting</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <a class="code hl_define" href="LogMacros_8hpp.html#a12684b2496a4438b7a97301261c08f97">LOGIT_WAIT</a>();</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;Logging example completed.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>}</div>
 </div>
 <div class="ttc" id="aLogIt_8hpp_html"><div class="ttname"><a href="LogIt_8hpp.html">LogIt.hpp</a></div><div class="ttdoc">Main header file for the LogIt++ library.</div></div>
 <div class="ttc" id="aLogMacros_8hpp_html_a0b84a7b443921e0390272d98960576e7"><div class="ttname"><a href="LogMacros_8hpp.html#a0b84a7b443921e0390272d98960576e7">LOGIT_ADD_CONSOLE_DEFAULT</a></div><div class="ttdeci">#define LOGIT_ADD_CONSOLE_DEFAULT()</div><div class="ttdoc">Macro for adding the default console logger. This logger uses the default format pattern and asynchro...</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00726">LogMacros.hpp:726</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a0dd94a3ac801e79b49be8a65ca5b43c7"><div class="ttname"><a href="LogMacros_8hpp.html#a0dd94a3ac801e79b49be8a65ca5b43c7">LOGIT_TRACE0</a></div><div class="ttdeci">#define LOGIT_TRACE0()</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00135">LogMacros.hpp:135</a></div></div>
 <div class="ttc" id="aLogMacros_8hpp_html_a12684b2496a4438b7a97301261c08f97"><div class="ttname"><a href="LogMacros_8hpp.html#a12684b2496a4438b7a97301261c08f97">LOGIT_WAIT</a></div><div class="ttdeci">#define LOGIT_WAIT()</div><div class="ttdoc">Macro for waiting for all asynchronous loggers to finish processing.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00894">LogMacros.hpp:894</a></div></div>
 <div class="ttc" id="aLogMacros_8hpp_html_a1c256f5e253f660dd39781546b4d730a"><div class="ttname"><a href="LogMacros_8hpp.html#a1c256f5e253f660dd39781546b4d730a">LOGIT_ERROR</a></div><div class="ttdeci">#define LOGIT_ERROR(...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00214">LogMacros.hpp:214</a></div></div>
 <div class="ttc" id="aLogMacros_8hpp_html_a1fb41700b3f6e73a90029bdf15f1877d"><div class="ttname"><a href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a></div><div class="ttdeci">#define LOGIT_INFO(...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00154">LogMacros.hpp:154</a></div></div>
@@ -289,6 +292,7 @@ $(function(){initNavTree('example__logit__basic_8cpp_source.html',''); initResiz
 <div class="ttc" id="aLogMacros_8hpp_html_ac7605adf9af6c7667f1505fce4d60ec2"><div class="ttname"><a href="LogMacros_8hpp.html#ac7605adf9af6c7667f1505fce4d60ec2">LOGIT_TRACE</a></div><div class="ttdeci">#define LOGIT_TRACE(...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00134">LogMacros.hpp:134</a></div></div>
 <div class="ttc" id="aLogMacros_8hpp_html_ac7ca61a21534937c649104374dd1912e"><div class="ttname"><a href="LogMacros_8hpp.html#ac7ca61a21534937c649104374dd1912e">LOGIT_STREAM_TRACE_TO</a></div><div class="ttdeci">#define LOGIT_STREAM_TRACE_TO(index)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00033">LogMacros.hpp:33</a></div></div>
 <div class="ttc" id="aLogMacros_8hpp_html_ad6d0c4cfef76b6b306fb591d9d7f1ddb"><div class="ttname"><a href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a></div><div class="ttdeci">#define LOGIT_PRINT_INFO(...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00160">LogMacros.hpp:160</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_aef41edc865c4b68bdfc285c005e3f734"><div class="ttname"><a href="LogMacros_8hpp.html#aef41edc865c4b68bdfc285c005e3f734">LOGIT_PRINT_ERROR</a></div><div class="ttdeci">#define LOGIT_PRINT_ERROR(...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00220">LogMacros.hpp:220</a></div></div>
 <div class="ttc" id="aclassCustomErrorCategory_html"><div class="ttname"><a href="classCustomErrorCategory.html">CustomErrorCategory</a></div><div class="ttdef"><b>Definition</b> <a href="#l00024">example_logit_basic.cpp:24</a></div></div>
 <div class="ttc" id="aclassCustomErrorCategory_html_a9fe259d274429e5256f240d9c3dadc32"><div class="ttname"><a href="classCustomErrorCategory.html#a9fe259d274429e5256f240d9c3dadc32">CustomErrorCategory::name</a></div><div class="ttdeci">const char * name() const noexcept override</div><div class="ttdef"><b>Definition</b> <a href="#l00026">example_logit_basic.cpp:26</a></div></div>
 <div class="ttc" id="aclassCustomErrorCategory_html_ab1f9c681c74a36e68ca71d31357c413f"><div class="ttname"><a href="classCustomErrorCategory.html#ab1f9c681c74a36e68ca71d31357c413f">CustomErrorCategory::message</a></div><div class="ttdeci">std::string message(int ev) const override</div><div class="ttdef"><b>Definition</b> <a href="#l00030">example_logit_basic.cpp:30</a></div></div>

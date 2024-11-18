@@ -124,6 +124,11 @@ $(function(){initNavTree('structlogit_1_1FormatInstruction.html',''); initResiza
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:a9a66c50ca010deee5b94a0dca9ef90a0" id="r_a9a66c50ca010deee5b94a0dca9ef90a0"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0">CompileContext</a> { <a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0a7a1920d61156abc05a60135aefe8bc67">Default</a>
+, <a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0a96b478a8849dce13336d625f3201b61d">NoArgsFallback</a>
+ }</td></tr>
+<tr class="memdesc:a9a66c50ca010deee5b94a0dca9ef90a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compilation context for handling special cases, such as when arguments are missing.  <a href="#a9a66c50ca010deee5b94a0dca9ef90a0">More...</a><br /></td></tr>
+<tr class="separator:a9a66c50ca010deee5b94a0dca9ef90a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a3644a7970741bbdd4750d30a8e4ad8" id="r_a6a3644a7970741bbdd4750d30a8e4ad8"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a> { <br />
 &#160;&#160;<a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8a5a4a53af1586c31af3e320cb82e3ea15">StaticText</a>
 , <a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8a537c66b24ef5c83b7382cdc3f34885f2">Year</a>
@@ -169,12 +174,12 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac27520674973ed3f8103693719fc222a" id="r_ac27520674973ed3f8103693719fc222a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac27520674973ed3f8103693719fc222a">FormatInstruction</a> (const std::string &amp;text, const bool &amp;<a class="el" href="#a3533ffecf52adc87e5ae551770f8c005">strip_ansi</a>)</td></tr>
-<tr class="memdesc:ac27520674973ed3f8103693719fc222a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for static text.  <br /></td></tr>
-<tr class="separator:ac27520674973ed3f8103693719fc222a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3faa501eacddb571d371a2a414db7cb6" id="r_a3faa501eacddb571d371a2a414db7cb6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3faa501eacddb571d371a2a414db7cb6">FormatInstruction</a> (const <a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a> &amp;<a class="el" href="#a02acd24128bb2dafba5b7edbefb21d7e">type</a>, const int &amp;<a class="el" href="#a0dfac7e47e27be071b72040f76674600">width</a>=0, const bool &amp;left=false, const bool &amp;center=false, const bool &amp;trunc=false, const bool &amp;<a class="el" href="#a3533ffecf52adc87e5ae551770f8c005">strip_ansi</a>=false)</td></tr>
-<tr class="memdesc:a3faa501eacddb571d371a2a414db7cb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for other types.  <br /></td></tr>
-<tr class="separator:a3faa501eacddb571d371a2a414db7cb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a833babb1833d2f5609bb7c3e801fe433" id="r_a833babb1833d2f5609bb7c3e801fe433"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a833babb1833d2f5609bb7c3e801fe433">FormatInstruction</a> (<a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0">CompileContext</a> <a class="el" href="#a7663e50eaa0cdb6b6757bbd348e80540">context</a>, const std::string &amp;text, bool <a class="el" href="#a3533ffecf52adc87e5ae551770f8c005">strip_ansi</a>)</td></tr>
+<tr class="memdesc:a833babb1833d2f5609bb7c3e801fe433"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for static text.  <br /></td></tr>
+<tr class="separator:a833babb1833d2f5609bb7c3e801fe433"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7da34c1ad77046177a5400a42112af8" id="r_ab7da34c1ad77046177a5400a42112af8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7da34c1ad77046177a5400a42112af8">FormatInstruction</a> (<a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0">CompileContext</a> <a class="el" href="#a7663e50eaa0cdb6b6757bbd348e80540">context</a>, <a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a> <a class="el" href="#a02acd24128bb2dafba5b7edbefb21d7e">type</a>, int <a class="el" href="#a0dfac7e47e27be071b72040f76674600">width</a>=0, bool left=false, bool center=false, bool trunc=false, bool <a class="el" href="#a3533ffecf52adc87e5ae551770f8c005">strip_ansi</a>=false)</td></tr>
+<tr class="memdesc:ab7da34c1ad77046177a5400a42112af8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for other types.  <br /></td></tr>
+<tr class="separator:ab7da34c1ad77046177a5400a42112af8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5965e36b6cd1a20461826c245e733c5d" id="r_a5965e36b6cd1a20461826c245e733c5d"><td class="memTemplParams" colspan="2">template&lt;class StreamType &gt; </td></tr>
 <tr class="memitem:a5965e36b6cd1a20461826c245e733c5d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a5965e36b6cd1a20461826c245e733c5d">apply</a> (StreamType &amp;oss, const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record, const time_shield::DateTimeStruct &amp;dt) const</td></tr>
 <tr class="memdesc:a5965e36b6cd1a20461826c245e733c5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply formatting considering alignment and width.  <br /></td></tr>
@@ -182,6 +187,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
+<tr class="memitem:a7663e50eaa0cdb6b6757bbd348e80540" id="r_a7663e50eaa0cdb6b6757bbd348e80540"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0">CompileContext</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7663e50eaa0cdb6b6757bbd348e80540">context</a></td></tr>
+<tr class="memdesc:a7663e50eaa0cdb6b6757bbd348e80540"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compilation context, e.g., default or handling no-argument cases.  <br /></td></tr>
+<tr class="separator:a7663e50eaa0cdb6b6757bbd348e80540"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02acd24128bb2dafba5b7edbefb21d7e" id="r_a02acd24128bb2dafba5b7edbefb21d7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a02acd24128bb2dafba5b7edbefb21d7e">type</a></td></tr>
 <tr class="memdesc:a02acd24128bb2dafba5b7edbefb21d7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the format instruction.  <br /></td></tr>
 <tr class="separator:a02acd24128bb2dafba5b7edbefb21d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,6 +223,38 @@ Private Member Functions</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00017">17</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a9a66c50ca010deee5b94a0dca9ef90a0" name="a9a66c50ca010deee5b94a0dca9ef90a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a66c50ca010deee5b94a0dca9ef90a0">&#9670;&#160;</a></span>CompileContext</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0">logit::FormatInstruction::CompileContext</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compilation context for handling special cases, such as when arguments are missing. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a9a66c50ca010deee5b94a0dca9ef90a0a7a1920d61156abc05a60135aefe8bc67" name="a9a66c50ca010deee5b94a0dca9ef90a0a7a1920d61156abc05a60135aefe8bc67"></a>Default&#160;</td><td class="fielddoc"><p>Standard behavior without modifications. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a9a66c50ca010deee5b94a0dca9ef90a0a96b478a8849dce13336d625f3201b61d" name="a9a66c50ca010deee5b94a0dca9ef90a0a96b478a8849dce13336d625f3201b61d"></a>NoArgsFallback&#160;</td><td class="fielddoc"><p>Handle a special pattern for cases with no arguments. </p>
+</td></tr>
+</table>
+
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00021">21</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a6a3644a7970741bbdd4750d30a8e4ad8" name="a6a3644a7970741bbdd4750d30a8e4ad8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6a3644a7970741bbdd4750d30a8e4ad8">&#9670;&#160;</a></span>FormatType</h2>
 
@@ -299,13 +339,13 @@ Private Member Functions</h2></td></tr>
 </td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00021">21</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00028">28</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ac27520674973ed3f8103693719fc222a" name="ac27520674973ed3f8103693719fc222a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac27520674973ed3f8103693719fc222a">&#9670;&#160;</a></span>FormatInstruction() <span class="overload">[1/2]</span></h2>
+<a id="a833babb1833d2f5609bb7c3e801fe433" name="a833babb1833d2f5609bb7c3e801fe433"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a833babb1833d2f5609bb7c3e801fe433">&#9670;&#160;</a></span>FormatInstruction() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -316,12 +356,17 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">logit::FormatInstruction::FormatInstruction </td>
           <td>(</td>
+          <td class="paramtype"><a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0">CompileContext</a></td>          <td class="paramname"><span class="paramname"><em>context</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>text</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>strip_ansi</em></span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>strip_ansi</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -334,18 +379,19 @@ Private Member Functions</h2></td></tr>
 <p>Constructor for static text. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">context</td><td>Compilation context for handling special cases. </td></tr>
     <tr><td class="paramname">text</td><td>The static text. </td></tr>
     <tr><td class="paramname">strip_ansi</td><td>If true, removes ANSI escape codes (e.g., colors). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00082">82</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00091">91</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a3faa501eacddb571d371a2a414db7cb6" name="a3faa501eacddb571d371a2a414db7cb6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3faa501eacddb571d371a2a414db7cb6">&#9670;&#160;</a></span>FormatInstruction() <span class="overload">[2/2]</span></h2>
+<a id="ab7da34c1ad77046177a5400a42112af8" name="ab7da34c1ad77046177a5400a42112af8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7da34c1ad77046177a5400a42112af8">&#9670;&#160;</a></span>FormatInstruction() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -356,32 +402,37 @@ Private Member Functions</h2></td></tr>
         <tr>
           <td class="memname">logit::FormatInstruction::FormatInstruction </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0">CompileContext</a></td>          <td class="paramname"><span class="paramname"><em>context</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>width</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
+          <td class="paramtype"><a class="el" href="#a6a3644a7970741bbdd4750d30a8e4ad8">FormatType</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>left</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>width</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>center</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>left</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>trunc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>center</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>strip_ansi</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>trunc</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>strip_ansi</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -394,6 +445,7 @@ Private Member Functions</h2></td></tr>
 <p>Constructor for other types. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
+    <tr><td class="paramname">context</td><td>Compilation context for handling special cases. </td></tr>
     <tr><td class="paramname">type</td><td>The format type. </td></tr>
     <tr><td class="paramname">width</td><td>The width for formatting. </td></tr>
     <tr><td class="paramname">left</td><td>Left alignment flag. </td></tr>
@@ -404,7 +456,7 @@ Private Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00093">93</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00106">106</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -459,7 +511,7 @@ template&lt;class StreamType &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00111">111</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00125">125</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -495,7 +547,7 @@ template&lt;class StreamType &gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A string with all ANSI escape codes removed. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00360">360</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00404">404</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -514,7 +566,25 @@ template&lt;class StreamType &gt; </div>
 
 <p>Center alignment flag. </p>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00075">75</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00083">83</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a7663e50eaa0cdb6b6757bbd348e80540" name="a7663e50eaa0cdb6b6757bbd348e80540"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7663e50eaa0cdb6b6757bbd348e80540">&#9670;&#160;</a></span>context</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#a9a66c50ca010deee5b94a0dca9ef90a0">CompileContext</a> logit::FormatInstruction::context</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Compilation context, e.g., default or handling no-argument cases. </p>
+
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00076">76</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -532,7 +602,7 @@ template&lt;class StreamType &gt; </div>
 
 <p>Left alignment flag. </p>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00074">74</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00082">82</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -550,7 +620,7 @@ template&lt;class StreamType &gt; </div>
 
 <p>Used only if type == StaticText. </p>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00070">70</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00078">78</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -568,7 +638,7 @@ template&lt;class StreamType &gt; </div>
 
 <p>Removes ANSI escape codes (e.g., colors) if true. </p>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00077">77</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00085">85</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -586,7 +656,7 @@ template&lt;class StreamType &gt; </div>
 
 <p>Truncation flag. </p>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00076">76</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00084">84</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -604,7 +674,7 @@ template&lt;class StreamType &gt; </div>
 
 <p>The type of the format instruction. </p>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00069">69</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00077">77</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>
@@ -622,7 +692,7 @@ template&lt;class StreamType &gt; </div>
 
 <p>Width for formatting. </p>
 
-<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00073">73</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PatternCompiler_8hpp_source.html#l00081">81</a> of file <a class="el" href="PatternCompiler_8hpp_source.html">PatternCompiler.hpp</a>.</p>
 
 </div>
 </div>

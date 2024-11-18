@@ -1,5 +1,9 @@
 var structlogit_1_1FormatInstruction =
 [
+    [ "CompileContext", "structlogit_1_1FormatInstruction.html#a9a66c50ca010deee5b94a0dca9ef90a0", [
+      [ "Default", "structlogit_1_1FormatInstruction.html#a9a66c50ca010deee5b94a0dca9ef90a0a7a1920d61156abc05a60135aefe8bc67", null ],
+      [ "NoArgsFallback", "structlogit_1_1FormatInstruction.html#a9a66c50ca010deee5b94a0dca9ef90a0a96b478a8849dce13336d625f3201b61d", null ]
+    ] ],
     [ "FormatType", "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8", [
       [ "StaticText", "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a5a4a53af1586c31af3e320cb82e3ea15", null ],
       [ "Year", "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a537c66b24ef5c83b7382cdc3f34885f2", null ],
@@ -32,11 +36,12 @@ var structlogit_1_1FormatInstruction =
       [ "EndColor", "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a3cf2c4f1030c2974a1b3028ed71b5783", null ],
       [ "Message", "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a4c2a8fe7eaf24721cc7a9f0175115bd4", null ]
     ] ],
-    [ "FormatInstruction", "structlogit_1_1FormatInstruction.html#ac27520674973ed3f8103693719fc222a", null ],
-    [ "FormatInstruction", "structlogit_1_1FormatInstruction.html#a3faa501eacddb571d371a2a414db7cb6", null ],
+    [ "FormatInstruction", "structlogit_1_1FormatInstruction.html#a833babb1833d2f5609bb7c3e801fe433", null ],
+    [ "FormatInstruction", "structlogit_1_1FormatInstruction.html#ab7da34c1ad77046177a5400a42112af8", null ],
     [ "apply", "structlogit_1_1FormatInstruction.html#a5965e36b6cd1a20461826c245e733c5d", null ],
     [ "remove_ansi_escape_codes", "structlogit_1_1FormatInstruction.html#acea0c9eb68183459fb6ba3caddf02b4e", null ],
     [ "center_align", "structlogit_1_1FormatInstruction.html#a51d02027ece52ac3283aa0329f23998d", null ],
+    [ "context", "structlogit_1_1FormatInstruction.html#a7663e50eaa0cdb6b6757bbd348e80540", null ],
     [ "left_align", "structlogit_1_1FormatInstruction.html#ac86749e4633d3c8790223948d2739727", null ],
     [ "static_text", "structlogit_1_1FormatInstruction.html#a1d7880701961d480a82b53de2962bdaa", null ],
     [ "strip_ansi", "structlogit_1_1FormatInstruction.html#a3533ffecf52adc87e5ae551770f8c005", null ],

@@ -145,8 +145,8 @@ Macros</h2></td></tr>
 <tr class="memitem:ad80a264403426b63d7ecc1d1429ae030" id="r_ad80a264403426b63d7ecc1d1429ae030"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad80a264403426b63d7ecc1d1429ae030">LOGIT_CURRENT_TIMESTAMP_MS</a>()</td></tr>
 <tr class="memdesc:ad80a264403426b63d7ecc1d1429ae030"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to get the current timestamp in milliseconds. If LOGIT_CURRENT_TIMESTAMP_MS is not defined, it uses <code>std::chrono</code> to return the current time in milliseconds.  <br /></td></tr>
 <tr class="separator:ad80a264403426b63d7ecc1d1429ae030"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae21dc36eb3e43139cacbd07c92bea9b9" id="r_ae21dc36eb3e43139cacbd07c92bea9b9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae21dc36eb3e43139cacbd07c92bea9b9">LOGIT_CONSOLE_PATTERN</a>&#160;&#160;&#160;&quot;%H:%M:%S.%e | %^%v%$&quot;</td></tr>
-<tr class="memdesc:ae21dc36eb3e43139cacbd07c92bea9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%v%$".  <br /></td></tr>
+<tr class="memitem:ae21dc36eb3e43139cacbd07c92bea9b9" id="r_ae21dc36eb3e43139cacbd07c92bea9b9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae21dc36eb3e43139cacbd07c92bea9b9">LOGIT_CONSOLE_PATTERN</a>&#160;&#160;&#160;&quot;%H:%M:%S.%e | %^%N([%50!g:%#])%v%$&quot;</td></tr>
+<tr class="memdesc:ae21dc36eb3e43139cacbd07c92bea9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$".  <br /></td></tr>
 <tr class="separator:ae21dc36eb3e43139cacbd07c92bea9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f7223e40eee5ab323ba83d779b471c9" id="r_a0f7223e40eee5ab323ba83d779b471c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f7223e40eee5ab323ba83d779b471c9">LOGIT_FILE_LOGGER_PATH</a>&#160;&#160;&#160;&quot;data/logs&quot;</td></tr>
 <tr class="memdesc:a0f7223e40eee5ab323ba83d779b471c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default directory path for log files. If <code>LOGIT_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs".  <br /></td></tr>
@@ -325,12 +325,12 @@ Macros</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LOGIT_CONSOLE_PATTERN&#160;&#160;&#160;&quot;%H:%M:%S.%e | %^%v%$&quot;</td>
+          <td class="memname">#define LOGIT_CONSOLE_PATTERN&#160;&#160;&#160;&quot;%H:%M:%S.%e | %^%N([%50!g:%#])%v%$&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%v%$". </p>
+<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$". </p>
 <p>This pattern controls the formatting of log messages sent to the console, including timestamp, message, and color. </p>
 
 <p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00064">64</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>

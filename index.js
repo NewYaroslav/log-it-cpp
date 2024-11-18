@@ -1,8 +1,21 @@
 var index =
 [
     [ "Introduction", "index.html#intro_sec", null ],
-    [ "Features", "index.html#features_sec", null ],
+    [ "Features", "index.html#features_sec", [
+      [ "Flexible Log Formatting", "index.html#flexible_formatting", null ],
+      [ "Logging with Macros", "index.html#macro_logging", null ],
+      [ "Support for Multiple Backends", "index.html#multiple_backends", null ],
+      [ "Asynchronous Logging", "index.html#async_logging", null ],
+      [ "Stream-Based Logging", "index.html#stream_logging", null ],
+      [ "Extensibility", "index.html#extensibility", null ]
+    ] ],
     [ "Usage", "index.html#usage_sec", null ],
+    [ "Customizing Log Formats", "index.html#log_formatting_sec", [
+      [ "Examples of Formatting Patterns", "index.html#pattern_example", [
+        [ "Example for Setting a Custom Console Logger Format", "index.html#autotoc_md0", null ],
+        [ "Example Using Macros for Simplicity", "index.html#autotoc_md1", null ]
+      ] ]
+    ] ],
     [ "Log Message Formatting Flags", "index.html#format_flags_sec", [
       [ "Date and Time Flags", "index.html#datetime_flags", null ],
       [ "Weekday and Month Names", "index.html#weekday_month_flags", null ],
@@ -11,7 +24,8 @@ var index =
       [ "Thread Information", "index.html#thread_flags", null ],
       [ "Color Formatting", "index.html#color_flags", null ],
       [ "Message Content", "index.html#message_flags", null ],
-      [ "Example Format", "index.html#example_format", null ]
+      [ "Alignment and Truncation", "index.html#alignment_truncation_flags", null ],
+      [ "Advanced Path Handling", "index.html#advanced_path_handling", null ]
     ] ],
     [ "Shortened Logging Macros", "index.html#short_macros", null ],
     [ "Configuration Macros", "index.html#config_macros", null ],

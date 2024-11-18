@@ -13,5 +13,6 @@ var searchData=
   ['uniquefilelogger_2ehpp_10',['UniqueFileLogger.hpp',['../UniqueFileLogger_8hpp.html',1,'']]],
   ['unknown_5fval_11',['UNKNOWN_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9ade4c5dc187362fb24e97644857b77a7c',1,'logit::VariableValue']]],
   ['usage_12',['Usage',['../index.html#usage_sec',1,'']]],
-  ['using_20fmt_20optional_13',['Step 4: Using fmt (Optional)',['../index.html#step4',1,'']]]
+  ['using_20fmt_20optional_13',['Step 4: Using fmt (Optional)',['../index.html#step4',1,'']]],
+  ['using_20macros_20for_20simplicity_14',['Example Using Macros for Simplicity',['../index.html#autotoc_md1',1,'']]]
 ];
