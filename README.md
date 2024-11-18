@@ -10,15 +10,86 @@
 The library combines the simplicity of macro-based logging similar to **IceCream-Cpp** and the configurability of logging backends and formats like **spdlog**. 
 LogIt++ is fully compatible with `C++11`.
 
+---
+
 ## Features
 
-- **Flexible Log Formatting**: Customize log message formats using patterns.
-- **Macro-Based Logging**: Easily log variables and messages using macros.
-- **Multiple Backends Support**: Configure loggers to output to console, files, servers, or databases.
-- **Asynchronous Logging**: Improve performance by logging in asynchronous mode.
-- **Stream-Based Logging**: Use stream operators for logging complex messages.
-- **Thread-Safe**: Designed to be used in multi-threaded applications.
-- **Extensible**: Create custom loggers and formatters to suit your needs.
+- **Flexible Log Formatting**: 
+
+Customize log message formats using patterns. You can redefine patterns via macros or specify them directly when adding a logger backend. Both standard format flags (`%H`, `%M`, `%S`, `%v`, etc.) and special ones like `%N([...])` for fallback logs without arguments are supported.
+
+```
+#define LOGIT_CONSOLE_PATTERN "%H:%M:%S.%e | %^%N([%!g:%#])%v%$"
+
+try {
+    throw std::runtime_error("An example runtime error");
+} catch (const std::exception& ex) {
+    LOGIT_FATAL(ex);
+}
+
+// Output:
+> 23:59:59.128 | An example runtime error
+```
+
+- **Macro-Based Logging**: 
+
+Easily log variables and messages using macros. Simply choose the appropriate macro and pass variables or arguments to it.
+
+```
+float someFloat = 123.456f;
+int someInt = 789;
+LOGIT_INFO(someFloat, someInt);
+
+auto now = std::chrono::system_clock::now();
+LOGIT_PRINT_INFO("TimePoint example: ", now);
+```
+
+- **Support for Multiple Backends**: 
+
+Easily configure loggers for console and file output. If necessary, add support for sending messages to servers or databases by creating custom backends.
+
+```
+// Adding three backends: console, file, and unique file loggers
+LOGIT_ADD_CONSOLE_DEFAULT();
+LOGIT_ADD_FILE_LOGGER_DEFAULT();
+LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE();
+```
+
+- **Asynchronous Logging**: 
+
+Improve application performance with asynchronous logging. All loggers handle messages in a separate thread by default.
+
+- **Stream-Based Logging**: 
+
+Use stream operators for complex messages.
+
+```
+LOGIT_STREAM_INFO() << "Stream-based info logging with short macro. Integer value: " << 123;
+```
+
+- **Extensibility**: 
+
+Create custom loggers and formatters to meet your specific requirements.
+
+```
+class CustomLogger : public logit::ILogger {
+public:
+    CustomLogger() = default;
+
+    /// brief Logs a message by formatting the log record and message.
+    /// \param record The log record containing event details.
+    /// \param message The formatted log message to log.
+    void log(const logit::LogRecord& record, const std::string& message) override {
+        // Implementation for sending logs...
+    }
+
+    ~CustomLogger() override = default;
+};
+
+LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
+```
+
+---
 
 ## Usage
 
@@ -72,60 +143,122 @@ int main() {
 
 For more usage examples, please refer to the `examples` folder in the repository, where you can find detailed demonstrations of various logging scenarios and configurations.
 
-## Log Message Formatting Flags
+---
 
-`LogIt++` supports customizable log message formatting using format flags. You can define how each log message should appear by including placeholders for different pieces of information such as the timestamp, log level, file name, function name, and message.
+## Log Format Customization
 
-Below is a list of supported format flags:
+`LogIt++` supports customizable log message formatting using patterns that define how each message should appear. You can specify patterns through macros or provide them when adding logger backends.
+
+### Format Example
+
+Example of setting a custom format for the console logger:
+
+```
+LOGIT_ADD_LOGGER(
+    logit::ConsoleLogger, (), 
+    logit::SimpleLogFormatter, 
+    ("%Y-%m-%d %H:%M:%S.%e [%l] %^%N(%g:%#)%v%$")
+);
+```
+
+Or specify the pattern using macros:
+
+```
+#define LOGIT_CONSOLE_PATTERN "%H:%M:%S.%e | %^%N([%!g:%#])%v%$"
+LOGIT_ADD_CONSOLE_DEFAULT();
+```
+
+The logger will automatically substitute the specified data into the template, for example:
+
+```
+23:59:59.128 | path/to/file.cpp:123 A sample log message
+```
+
+### Log Message Formatting Flags
+
+`LogIt++` supports customizable log message formatting using flags. You can define how each log message should appear by including placeholders for various data, such as timestamps, log levels, file names, function names, and messages.
+
+Below is a list of supported formatting flags:
 
 - *Date and Time Flags*:
 
-	- `%Y`: Year (e.g., 2024)
-	- `%m`: Month (01-12)
-	- `%d`: Day of the month (01-31)
-	- `%H`: Hour (00-23)
-	- `%M`: Minute (00-59)
-	- `%S`: Second (00-59)
-	- `%e`: Millisecond (000-999)
-	- `%C`: Two-digit year (e.g., 24 for 2024)
-	- `%c`: Full date and time (e.g., Mon Oct 4 12:45:30 2024)
-	- `%D`: Short date (e.g., 10/04/24)
-	- `%T`, `%X`: Time in ISO 8601 format (e.g., 12:45:30)
-	- `%F`: Date in ISO 8601 format (e.g., 2024-10-04)
-	- `%s`, `%E`: Unix timestamp in seconds
-	- `%ms`: Unix timestamp in milliseconds
-	- `%b`: Abbreviated month name (e.g., Jan)
-	- `%B`: Full month name (e.g., January)
-	- `%a`: Abbreviated weekday name (e.g., Mon)
-	- `%A`: Full weekday name (e.g., Monday)
-		
+    - `%Y`: Year (e.g., 2024)
+    - `%m`: Month (01-12)
+    - `%d`: Day of the month (01-31)
+    - `%H`: Hour (00-23)
+    - `%M`: Minute (00-59)
+    - `%S`: Second (00-59)
+    - `%e`: Millisecond (000-999)
+    - `%C`: Two-digit year (e.g., 24 for 2024)
+    - `%c`: Full date and time (e.g., Mon Oct 4 12:45:30 2024)
+    - `%D`: Short date (e.g., 10/04/24)
+    - `%T`, `%X`: Time in ISO 8601 format (e.g., 12:45:30)
+    - `%F`: Date in ISO 8601 format (e.g., 2024-10-04)
+    - `%s`, `%E`: Unix timestamp in seconds
+    - `%ms`: Unix timestamp in milliseconds
+    - `%b`: Abbreviated month name (e.g., Jan)
+    - `%B`: Full month name (e.g., January)
+    - `%a`: Abbreviated weekday name (e.g., Mon)
+    - `%A`: Full weekday name (e.g., Monday)
+
 - *Log Level Flags*:
 
-	- `%l`: Full log level (e.g., INFO, ERROR)
-	- `%L`: Short log level (e.g., I for INFO, E for ERROR)
-	
+    - `%l`: Full log level (e.g., INFO, ERROR)
+    - `%L`: Short log level (e.g., I for INFO, E for ERROR)
+    
 - *File and Function Flags*:
 
-	- `%f`: Base name of the source file
-	- `%g`: Full file path
-	- `%#`: Line number
-	- `%!`: Function name
-	
+    - `%f`, `%fn`, `%bs`: Base name of the source file
+    - `%g`, `%ffn`: Full file path
+    - `%#`: Line number
+    - `%!`: Function name
+    
 - *Thread Flags*:
 
-	- `%t`: Thread identifier
-	
+    - `%t`: Thread identifier
+    
 - *Color Flags*:
 
-	- `%^`: Start color formatting
-	- `%$`: End color formatting
-	- `%SC`: Start removing color codes (Strip Color)
-	- `%EC`: End removing color codes (End Color)
+    - `%^`: Start color formatting
+    - `%$`: End color formatting
+    - `%SC`: Start removing color codes (Strip Color)
+    - `%EC`: End removing color codes (End Color)
 
 - *Message Flags*:
 
-	- `%v`: The log message content
-	
+    - `%v`: The log message content
+    - `%N(...)`: Used as a fallback when no arguments are provided (*e.g., in `LOG_TRACE0()` calls*). The pattern specified in parentheses will be used. Example: `%N(%g:%#)` will add the file name and line number if no message is provided.
+
+### Alignment and Truncation Support
+
+`LogIt++` allows message text formatting with width, alignment, and truncation:
+
+- Alignment:
+    - Left: Use the `-` sign before the width number, e.g., `%-10v`.
+    - Center: Use the `=` sign before the width number, e.g., `%=10v`.
+    - Right (default): `%10v`.
+
+- Truncation:
+    - The `!` symbol after the width number specifies that text should be truncated if it exceeds the specified length. Example: `%10!v`.
+
+**Examples**:
+
+- `%10v` – Right-align the message to 10 characters.
+- `%-10v` – Left-align the message to 10 characters.
+- `%10!v` – Truncate the message to 10 characters with right alignment.
+- `%-10!v` – Truncate the message to 10 characters with left alignment.
+
+### Advanced Path Handling
+
+For file-related flags (`%f`, `%g`, `%@`), truncation ensures that the filename and the beginning of the path are preserved, replacing the middle portion with `...` if the width is smaller than the path length.
+
+**Example:**
+
+- Input: `/very/long/path/to/file.cpp`
+- Truncated to width=15: `/very...file.cpp`
+
+---
+
 ## Shortened Logging Macros
 
 LogIt++ provides shortened versions of logging macros when `LOGIT_SHORT_NAME` is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.
@@ -182,6 +315,8 @@ LOG_T_PRINT("Printing trace message with multiple variables: ", var1, var2);
 LOG_TRACE("Trace message (alias for LOG_T)");
 LOG_TRACE_PRINTF("Formatted trace: value = %d", value);
 ```
+
+---
 
 ## Configuration Macros
 
@@ -251,22 +386,7 @@ LogIt++ provides several macros that allow for customization and configuration. 
 
 - **LOGIT_USE_FMT_LIB**: Enables the use of the fmt library for string formatting.
 
-## Example Format
-
-To define a custom format for your log messages, you can use the following method:
-
-```cpp
-LOGIT_ADD_LOGGER(
-	logit::ConsoleLogger, (), 
-	logit::SimpleLogFormatter, 
-	("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
-
-// or...
-
-logit::Logger::get_instance().add_logger(
-	std::make_unique<logit::ConsoleLogger>(),
-	std::make_unique<logit::SimpleLogFormatter>("[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %^%v%$"));
-```
+---
 
 ## Custom Logger Backend and Formatter
 
@@ -330,6 +450,8 @@ public:
 };
 ```
 
+---
+
 ## Installation
 
 LogIt++ is a header-only library. To integrate it into your project, follow these steps:
@@ -358,10 +480,13 @@ LogIt++ supports the *fmt* library for advanced string formatting, which is also
 #define LOGIT_USE_FMT_LIB
 ```
 
+---
+
 ## Documentation
 
 Detailed documentation for LogIt++, including API reference and usage examples, can be found [here](https://newyaroslav.github.io/log-it-cpp/).
 
+---
 
 ## License
 This library is licensed under the MIT License. See the [LICENSE](https://github.com/NewYaroslav/log-it-cpp/blob/main/LICENSE) file in the repository for more details.

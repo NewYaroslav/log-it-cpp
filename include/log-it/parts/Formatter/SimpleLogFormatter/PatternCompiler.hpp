@@ -16,6 +16,13 @@ namespace logit {
     /// \brief Structure to store log formatting instructions.
     struct FormatInstruction {
 
+        /// \enum CompileContext
+        /// \brief Compilation context for handling special cases, such as when arguments are missing.
+        enum class CompileContext {
+            Default,            ///< Standard behavior without modifications.
+            NoArgsFallback      ///< Handle a special pattern for cases with no arguments.
+        };
+
         /// \enum FormatType
         /// \brief Possible types of instructions for log formatting.
         enum class FormatType {
@@ -66,24 +73,30 @@ namespace logit {
             Message                 ///< %v: Message
         };
 
-        FormatType type; ///< The type of the format instruction.
-        std::string static_text; ///< Used only if type == StaticText
+        CompileContext context;     ///< Compilation context, e.g., default or handling no-argument cases.
+        FormatType type;            ///< The type of the format instruction.
+        std::string static_text;    ///< Used only if type == StaticText
 
         // Fields for alignment and width
-        int width = 0;              ///< Width for formatting.
-        bool left_align = false;    ///< Left alignment flag.
-        bool center_align = false;  ///< Center alignment flag.
-        bool truncate = false;      ///< Truncation flag.
-        bool strip_ansi = false;    ///< Removes ANSI escape codes (e.g., colors) if true.
+        int width           = 0;        ///< Width for formatting.
+        bool left_align     = false;    ///< Left alignment flag.
+        bool center_align   = false;    ///< Center alignment flag.
+        bool truncate       = false;    ///< Truncation flag.
+        bool strip_ansi     = false;    ///< Removes ANSI escape codes (e.g., colors) if true.
 
         /// \brief Constructor for static text.
+        /// \param context Compilation context for handling special cases.
         /// \param text The static text.
         /// \param strip_ansi If true, removes ANSI escape codes (e.g., colors).
-        explicit FormatInstruction(const std::string& text, const bool& strip_ansi)
-            : type(FormatType::StaticText), static_text(text), strip_ansi(strip_ansi) {
+        explicit FormatInstruction(
+                CompileContext context,
+                const std::string& text,
+                bool strip_ansi)
+            : context(context), type(FormatType::StaticText), static_text(text), strip_ansi(strip_ansi) {
         };
 
         /// \brief Constructor for other types.
+        /// \param context Compilation context for handling special cases.
         /// \param type The format type.
         /// \param width The width for formatting.
         /// \param left Left alignment flag.
@@ -91,13 +104,14 @@ namespace logit {
         /// \param trunc Truncation flag.
         /// \param strip_ansi If true, removes ANSI escape codes (e.g., colors).
         explicit FormatInstruction(
-                const FormatType& type,
-                const int& width = 0,
-                const bool& left = false,
-                const bool& center = false,
-                const bool& trunc = false,
-                const bool& strip_ansi = false) :
-            type(type), width(width),
+                CompileContext context,
+                FormatType type,
+                int width = 0,
+                bool left = false,
+                bool center = false,
+                bool trunc = false,
+                bool strip_ansi = false) :
+            context(context), type(type), width(width),
             left_align(left), center_align(center),
             truncate(trunc), strip_ansi(strip_ansi) {
         };
@@ -112,6 +126,11 @@ namespace logit {
                 StreamType& oss,
                 const LogRecord& record,
                 const time_shield::DateTimeStruct& dt) const {
+
+            if (context == CompileContext::NoArgsFallback && (
+                !record.format.empty() ||
+                !record.args_array.empty())) return;
+
             std::ostringstream temp_stream;
             switch (type) {
                 // Text
@@ -330,7 +349,32 @@ namespace logit {
 
             // Truncate if required
             if (truncate && result.size() > static_cast<size_t>(width)) {
-                result = result.substr(0, width);
+                switch (type) {
+                // File and Function
+                case FormatType::FileName:
+                case FormatType::FullFileName:
+                case FormatType::SourceFileAndLine:
+                case FormatType::FunctionName: {
+                    const std::string placeholder = "..."; // Placeholder for omitted sections
+                    int placeholder_size = static_cast<int>(placeholder.size());
+
+                    // If the width is less than or equal to the placeholder size, return only the placeholder
+                    if (width <= placeholder_size) {
+                        result = placeholder.substr(0, width);
+                    } else {
+                        // Keep portions of the string from the beginning and end
+                        size_t keep_size = (width - placeholder_size) / 2; // Portion to keep from each side
+                        size_t keep_end = result.size() - keep_size;
+
+                         // Construct the result: start + placeholder + end
+                        result = result.substr(0, keep_size) + placeholder + result.substr(keep_end);
+                    }
+                    break;
+                }
+                default:
+                    // Standard truncation for other types
+                    result = result.substr(0, width);
+                };
             }
 
             // Apply alignment and width
@@ -385,11 +429,15 @@ namespace logit {
     /// \brief Compiler for log formatting patterns.
     class PatternCompiler {
     public:
+        using CompileContext = FormatInstruction::CompileContext;
 
         /// \brief Compiles a pattern string into a list of format instructions.
         /// \param pattern The pattern string to compile.
+        /// \param context Compilation context for handling special cases.
         /// \return A vector of format instructions.
-        static std::vector<FormatInstruction> compile(const std::string& pattern) {
+        static std::vector<FormatInstruction> compile(
+                const std::string& pattern,
+                CompileContext context = CompileContext::Default) {
             using FormatType = FormatInstruction::FormatType;
             std::vector<FormatInstruction> instructions;
             std::string buffer;
@@ -401,7 +449,7 @@ namespace logit {
 
                 if (c == '%') {
                     if (!buffer.empty()) {
-                        instructions.push_back(FormatInstruction(buffer, strip_ansi));
+                        instructions.push_back(FormatInstruction(context, buffer, strip_ansi));
                         buffer.clear();
                     }
 
@@ -438,24 +486,24 @@ namespace logit {
                         switch (next) {
                             // Date and Time
                             case 'Y':
-                                instructions.emplace_back(FormatType::Year, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::Year, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'm':
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 's') {
-                                    instructions.emplace_back(FormatType::MilliSecondTimeStamp, width, left_align, center_align, truncate, strip_ansi);
+                                    instructions.emplace_back(context, FormatType::MilliSecondTimeStamp, width, left_align, center_align, truncate, strip_ansi);
                                     ++i;  // Skip 's' after 'm'
                                     break;
                                 }
-                                instructions.emplace_back(FormatType::Month, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::Month, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'd':
-                                instructions.emplace_back(FormatType::Day, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::Day, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'H':
-                                instructions.emplace_back(FormatType::Hour, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::Hour, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'M':
-                                instructions.emplace_back(FormatType::Minute, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::Minute, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'S':
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 'C') {
@@ -463,7 +511,7 @@ namespace logit {
                                     ++i;  // Skip 'C' after 'S'
                                     break;
                                 }
-                                instructions.emplace_back(FormatType::Second, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::Second, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'e':
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 'c') {
@@ -471,23 +519,23 @@ namespace logit {
                                     ++i;  // Skip 'c' after 'e'
                                     break;
                                 }
-                                instructions.emplace_back(FormatType::Millisecond, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::Millisecond, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'C':
-                                instructions.emplace_back(FormatType::TwoDigitYear, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::TwoDigitYear, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'c':
-                                instructions.emplace_back(FormatType::DateTime, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::DateTime, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'D':
-                                instructions.emplace_back(FormatType::ShortDate, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::ShortDate, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'T':
                             case 'X':
-                                instructions.emplace_back(FormatType::TimeISO8601, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::TimeISO8601, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'F':
-                                instructions.emplace_back(FormatType::DateISO8601, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::DateISO8601, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 's':
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 'c') {
@@ -501,79 +549,94 @@ namespace logit {
                                     ++i;  // Skip 'C' after 'E'
                                     break;
                                 }
-                                instructions.emplace_back(FormatType::TimeStamp, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::TimeStamp, width, left_align, center_align, truncate, strip_ansi);
                                 break;
 
                             // Weekday and Month Names
                             case 'b':
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 's') {
-                                    instructions.emplace_back(FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);
+                                    instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);
                                     ++i;  // Skip 's' after 'b'
                                     break;
                                 }
-                                instructions.emplace_back(FormatType::AbbreviatedMonthName, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::AbbreviatedMonthName, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'B':
-                                instructions.emplace_back(FormatType::FullMonthName, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::FullMonthName, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'a':
-                                instructions.emplace_back(FormatType::AbbreviatedWeekdayName, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::AbbreviatedWeekdayName, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'A':
-                                instructions.emplace_back(FormatType::FullWeekdayName, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::FullWeekdayName, width, left_align, center_align, truncate, strip_ansi);
                                 break;
 
                             // Log Level
                             case 'l':
-                                instructions.emplace_back(FormatType::LogLevel, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::LogLevel, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'L':
-                                instructions.emplace_back(FormatType::ShortLogLevel, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::ShortLogLevel, width, left_align, center_align, truncate, strip_ansi);
                                 break;
 
                             // Thread
                             case 't':
-                                instructions.emplace_back(FormatType::ThreadId, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::ThreadId, width, left_align, center_align, truncate, strip_ansi);
                                 break;
 
                             // File and Function
                             case 'f':
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 'f' && (i + 2) < pattern.size() && pattern[i + 2] == 'n') {
-                                    instructions.emplace_back(FormatType::FullFileName, width, left_align, center_align, truncate, strip_ansi);
+                                    instructions.emplace_back(context, FormatType::FullFileName, width, left_align, center_align, truncate, strip_ansi);
                                     i += 2; // Skip 'fn' after 'f'
                                     break;
                                 }
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 'n') {
-                                    instructions.emplace_back(FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);
+                                    instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);
                                     ++i;  // Skip 'n' after 'f'
                                     break;
                                 }
-                                instructions.emplace_back(FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case 'g':
-                                instructions.emplace_back(FormatType::FullFileName, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::FullFileName, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case '@':
-                                instructions.emplace_back(FormatType::SourceFileAndLine, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::SourceFileAndLine, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case '#':
-                                instructions.emplace_back(FormatType::LineNumber, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::LineNumber, width, left_align, center_align, truncate, strip_ansi);
                                 break;
                             case '!':
-                                instructions.emplace_back(FormatType::FunctionName, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::FunctionName, width, left_align, center_align, truncate, strip_ansi);
                                 break;
 
                             // Color
                             case '^':
-                                instructions.emplace_back(FormatType::StartColor, 0, false, false, false, strip_ansi);
+                                instructions.emplace_back(context, FormatType::StartColor, 0, false, false, false, strip_ansi);
                                 break;
                             case '$':
-                                instructions.emplace_back(FormatType::EndColor, 0, false, false, false, strip_ansi);
+                                instructions.emplace_back(context, FormatType::EndColor, 0, false, false, false, strip_ansi);
                                 break;
 
                             // Message
                             case 'v':
-                                instructions.emplace_back(FormatType::Message, width, left_align, center_align, truncate, strip_ansi);
+                                instructions.emplace_back(context, FormatType::Message, width, left_align, center_align, truncate, strip_ansi);
+                                break;
+
+                            //
+                            case 'N':
+                                if ((i + 2) < pattern.size() && pattern[i + 1] == '(') {
+                                    size_t end = pattern.find(')', i + 2);
+                                    if (end == std::string::npos) {
+                                        ++i;
+                                        break;
+                                    }
+                                    std::string params = pattern.substr(i + 2, end - i - 2);
+                                    auto no_args_instructions = compile(params, CompileContext::NoArgsFallback);
+                                    instructions.insert(instructions.end(), no_args_instructions.begin(), no_args_instructions.end());
+                                    i = end;
+                                }
                                 break;
 
                             // Escape character or unknown
@@ -589,7 +652,7 @@ namespace logit {
             }
 
             if (!buffer.empty()) {
-                instructions.push_back(FormatInstruction(buffer, strip_ansi));
+                instructions.push_back(FormatInstruction(context, buffer, strip_ansi));
             }
             return instructions;
         }

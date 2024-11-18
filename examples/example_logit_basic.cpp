@@ -50,6 +50,8 @@ int main() {
     LOGIT_ADD_FILE_LOGGER_DEFAULT();
     LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE();
 
+    LOGIT_TRACE0();
+
     // Log various levels of messages
     float someFloat = 123.456f;
     int someInt = 789;
@@ -58,7 +60,7 @@ int main() {
     LOGIT_INFO("This is an informational message", someFloat, someInt);
     LOGIT_DEBUG_IF(true, "This debug message is conditionally logged.");
     LOGIT_WARN("Warning: Something might go wrong here!");
-    LOGIT_ERROR("An error has occurred during processing with color", color);
+    LOGIT_PRINT_ERROR("An error has occurred during processing with color: ", color);
     LOGIT_FATAL("Fatal error! Immediate attention required!");
 
     // Demonstrating formatted logging for homogeneous variables

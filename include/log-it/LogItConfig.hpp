@@ -57,11 +57,11 @@
 #endif
 
 /// \brief Defines the default log pattern for the console logger.
-/// If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to "%H:%M:%S.%e | %^%v%$".
+/// If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$".
 ///
 /// This pattern controls the formatting of log messages sent to the console, including timestamp, message, and color.
 #ifndef LOGIT_CONSOLE_PATTERN
-    #define LOGIT_CONSOLE_PATTERN "%H:%M:%S.%e | %^%v%$"
+    #define LOGIT_CONSOLE_PATTERN "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$"
 #endif
 
 /// \brief Defines the default directory path for log files.
