@@ -306,7 +306,7 @@ $(function(){initNavTree('FileLogger_8hpp_source.html',''); initResizable(true);
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span> </div>
 <div class="foldopen" id="foldopen00210" data-start="{" data-end="}">
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="classlogit_1_1FileLogger.html#a27975500ad9dcab5c08484f40eb2d7a1">  210</a></span>        std::string <a class="code hl_function" href="classlogit_1_1FileLogger.html#a27975500ad9dcab5c08484f40eb2d7a1">create_file_path</a>(<span class="keyword">const</span> int64_t&amp; date_ts)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            std::string date_str = time_shield::to_iso8601_date_str(date_ts);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            std::string date_str = time_shield::to_iso8601_date(date_ts);</div>
 <div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <span class="keywordflow">return</span> <a class="code hl_function" href="classlogit_1_1FileLogger.html#ac0b006c3adb9bc8884427448b2e93cb9">get_directory_path</a>() + <span class="stringliteral">&quot;/&quot;</span> + date_str + <span class="stringliteral">&quot;.log&quot;</span>;</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        }</div>
 </div>
