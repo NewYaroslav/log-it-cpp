@@ -208,7 +208,7 @@ namespace logit {
         /// \param date_ts The timestamp representing the date for the log file.
         /// \return The path to the log file.
         std::string create_file_path(const int64_t& date_ts) const {
-            std::string date_str = time_shield::to_iso8601_date_str(date_ts);
+            std::string date_str = time_shield::to_iso8601_date(date_ts);
             return get_directory_path() + "/" + date_str + ".log";
         }
 

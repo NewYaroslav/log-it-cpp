@@ -193,9 +193,7 @@ namespace logit {
         VariableValue(const std::string& name, const std::chrono::time_point<Clock, Duration>& time_point)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::TIME_POINT_VAL) {
             auto ts_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_point.time_since_epoch());
-            // Human-Readable Format/Readable Date-Time Format 2024-11-20 12:34:56.789
-            auto dt = time_shield::to_date_time_ms<time_shield::DateTimeStruct>(ts_ms.count());
-            string_value = format("%lld-%.2d-%.2d %.2d:%.2d:%.2d.%.3d", dt.year, dt.mon, dt.day, dt.hour, dt.min, dt.sec, dt.ms);
+            string_value = time_shield::to_human_readable_ms(ts_ms.count());
         }
 
 #       if __cplusplus >= 201703L
