@@ -267,7 +267,7 @@ namespace logit {
         std::string format_timestamp(const int64_t& timestamp_ms) const {
             const auto dt = time_shield::to_date_time_ms<time_shield::DateTimeStruct>(timestamp_ms);
             char buffer[32] = {0};
-            snprintf(buffer, sizeof(buffer), "%lld-%.2d-%.2dT%.2d%.2d%.2d-%.3d", dt.year, dt.mon, dt.day, dt.hour, dt.min, dt.sec, dt.ms);
+            snprintf(buffer, sizeof(buffer), "%lld-%.2d-%.2d_%.2d-%.2d-%.2d-%.3d", dt.year, dt.mon, dt.day, dt.hour, dt.min, dt.sec, dt.ms);
             return std::string(buffer);
         }
 
@@ -326,7 +326,7 @@ namespace logit {
         /// \param filename The filename to check.
         /// \return True if the filename matches the pattern, false otherwise.
         bool is_valid_log_filename(const std::string& filename) const {
-            static const std::regex pattern(R"((\d{4}-\d{2}-\d{2}T\d{6}-\d{3})-[a-zA-Z0-9]{1,}\.log)");
+            static const std::regex pattern(R"((\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{3})-[a-zA-Z0-9]{1,}\.log)");
             return std::regex_match(filename, pattern);
         }
 

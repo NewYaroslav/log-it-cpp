@@ -14,6 +14,8 @@
     #define LOGIT_FUNCTION __func__
 #endif
 
+#define LOGIT_ENUM_TO_STR_CASE(value) case value: return #value;
+
 //------------------------------------------------------------------------------
 // Stream-based logging macros for various levels
 
@@ -656,7 +658,7 @@
         std::make_unique<logit::UniqueFileLogger>(  \
             LOGIT_UNIQUE_FILE_LOGGER_PATH, true,    \
             LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS),    \
-        std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN));
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_UNIQUE_FILE_LOGGER_PATTERN));
 
 /// \brief Macro for adding the default unique file logger in single_mode.
 /// This macro adds a `UniqueFileLogger` with default settings, which writes each log message to a new file.
@@ -669,7 +671,7 @@
         std::make_unique<logit::UniqueFileLogger>(                               \
             LOGIT_UNIQUE_FILE_LOGGER_PATH, true,                                 \
             LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS),                                 \
-        std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN),  \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_UNIQUE_FILE_LOGGER_PATTERN),  \
         true)
 
 #else // C++11 fallback

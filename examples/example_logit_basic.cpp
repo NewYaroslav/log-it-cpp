@@ -8,7 +8,7 @@
 #include <log-it/LogIt.hpp>
 
 // Example enumeration
-enum COLORS {
+enum class COLORS {
     NC = -1,
     BLACK,
     RED,
@@ -18,6 +18,30 @@ enum COLORS {
     MAGENTA,
     CYAN,
     WHITE,
+};
+
+std::ostream& operator<<(std::ostream& os, COLORS c) {
+    switch (c) {
+        case COLORS::RED: os << "RED"; break;
+        case COLORS::GREEN: os << "GREEN"; break;
+        case COLORS::BLUE: os << "BLUE"; break;
+        default: os << "UNKNOWN_COLOR"; break;
+    }
+    return os;
+}
+
+namespace logit {
+
+    template<>
+    std::string enum_to_string(COLORS value) {
+        switch (value) {
+            LOGIT_ENUM_TO_STR_CASE(COLORS::RED)
+            LOGIT_ENUM_TO_STR_CASE(COLORS::GREEN)
+            LOGIT_ENUM_TO_STR_CASE(COLORS::BLUE)
+            default: return "UNKNOWN_COLOR";
+        };
+    }
+
 };
 
 // Custom error category for demonstration
@@ -55,8 +79,10 @@ int main() {
     // Log various levels of messages
     float someFloat = 123.456f;
     int someInt = 789;
-    COLORS color = RED;
+    COLORS color = COLORS::RED;
 
+    LOGIT_INFO(color);
+    LOGIT_FORMAT_INFO("%s", color);
     LOGIT_INFO("This is an informational message", someFloat, someInt);
     LOGIT_DEBUG_IF(true, "This debug message is conditionally logged.");
     LOGIT_WARN("Warning: Something might go wrong here!");

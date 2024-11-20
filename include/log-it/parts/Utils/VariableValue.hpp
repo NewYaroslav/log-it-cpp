@@ -23,6 +23,17 @@
 
 namespace logit {
 
+    /// \brief Helper function to convert an enumeration to a string.
+    /// \tparam EnumType The enumeration type.
+    /// \param value The enumeration value.
+    /// \return String representation of the enumeration.
+    template <typename EnumType>
+    std::string enum_to_string(EnumType value) {
+        // Convert enum to underlying integral value and then to string.
+        typedef typename std::underlying_type<EnumType>::type UnderlyingType;
+        return std::to_string(static_cast<UnderlyingType>(value));
+    }
+
     /// \struct VariableValue
     /// \brief Structure for storing values of various types, including enumerations.
     struct VariableValue {
@@ -182,7 +193,9 @@ namespace logit {
         VariableValue(const std::string& name, const std::chrono::time_point<Clock, Duration>& time_point)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::TIME_POINT_VAL) {
             auto ts_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_point.time_since_epoch());
-            string_value = time_shield::to_iso8601_utc_str_ms(ts_ms.count());
+            // Human-Readable Format/Readable Date-Time Format 2024-11-20 12:34:56.789
+            auto dt = time_shield::to_date_time_ms<time_shield::DateTimeStruct>(ts_ms.count());
+            string_value = format("%lld-%.2d-%.2d %.2d:%.2d:%.2d.%.3d", dt.year, dt.mon, dt.day, dt.hour, dt.min, dt.sec, dt.ms);
         }
 
 #       if __cplusplus >= 201703L
@@ -360,17 +373,6 @@ namespace logit {
         static bool is_valid_literal_name(const std::string& name) {
             if (name.empty()) return false;
             return !std::isdigit(static_cast<unsigned char>(name[0]));
-        }
-
-        /// \brief Helper function to convert an enumeration to a string.
-        /// \tparam EnumType The enumeration type.
-        /// \param value The enumeration value.
-        /// \return String representation of the enumeration.
-        template <typename EnumType>
-        std::string enum_to_string(EnumType value) {
-            // Convert enum to underlying integral value and then to string.
-            typedef typename std::underlying_type<EnumType>::type UnderlyingType;
-            return std::to_string(static_cast<UnderlyingType>(value));
         }
 
         /// \brief Helper function to determine if a ValueType represents a POD type.

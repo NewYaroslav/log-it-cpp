@@ -314,7 +314,7 @@ namespace logit {
                                 break;
                             case ValueType::ENUM_VAL:
                                 if (arg.is_literal) {
-                                    if (record.print_mode) temp_stream << arg.name;
+                                    if (record.print_mode) temp_stream << arg.to_string();
                                     else temp_stream << arg.name << ": " << arg.to_string();
                                     break;
                                 }
