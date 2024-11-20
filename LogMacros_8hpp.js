@@ -57,6 +57,7 @@ var LogMacros_8hpp =
     [ "LOGIT_DEBUG0_TO", "LogMacros_8hpp.html#a0e19ec867520443c24dec0dffcafeb9b", null ],
     [ "LOGIT_DEBUG_IF", "LogMacros_8hpp.html#a72ad7987ca915277753feda0e1a6f95f", null ],
     [ "LOGIT_DEBUG_TO", "LogMacros_8hpp.html#a94c31add7c5546622fdc1bf621772912", null ],
+    [ "LOGIT_ENUM_TO_STR_CASE", "LogMacros_8hpp.html#a61b531d18255a118da9ca6ecd5a64ead", null ],
     [ "LOGIT_ERROR", "LogMacros_8hpp.html#a1c256f5e253f660dd39781546b4d730a", null ],
     [ "LOGIT_ERROR0", "LogMacros_8hpp.html#a72f3631fcdca5f9fbc91ff15e5a255eb", null ],
     [ "LOGIT_ERROR0_IF", "LogMacros_8hpp.html#af41d9e44ce13386655cb275c9cdb2f95", null ],

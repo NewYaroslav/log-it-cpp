@@ -1,7 +1,7 @@
 var searchData=
 [
   ['endcolor_0',['EndColor',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a3cf2c4f1030c2974a1b3028ed71b5783',1,'logit::FormatInstruction']]],
-  ['enum_5fto_5fstring_1',['enum_to_string',['../structlogit_1_1VariableValue.html#a3280ffb2c99ff6578751685bbb209027',1,'logit::VariableValue']]],
+  ['enum_5fto_5fstring_1',['enum_to_string',['../namespacelogit.html#a6f6ef213e30d00c16f8d7a2644655d64',1,'logit::enum_to_string(EnumType value)'],['../namespacelogit.html#aa55d937df9602e94ecf105a44d04ad86',1,'logit::enum_to_string(COLORS value)']]],
   ['enum_5fval_2',['ENUM_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a27e2030757f7835e837edcf5a1bf0a6a',1,'logit::VariableValue']]],
   ['enums_2ehpp_3',['Enums.hpp',['../Enums_8hpp.html',1,'']]],
   ['error_5fcode_5fval_4',['ERROR_CODE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9ae8db7ba64ea171aade9015b88e05f380',1,'logit::VariableValue']]],

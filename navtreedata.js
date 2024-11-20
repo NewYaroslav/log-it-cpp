@@ -63,10 +63,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "ConsoleLogger_8hpp.html",
-"LogMacros_8hpp.html#aefac7b13d1e651ba3746bf0031d81fa2",
-"classlogit_1_1SimpleLogFormatter.html#a7c0d969ae06d681672fc6f95b90af925",
-"index.html#usage_sec",
-"structlogit_1_1VariableValue.html#a1681ac65f8d743f5b26461b19f5fe9af"
+"LogMacros_8hpp.html#aef41edc865c4b68bdfc285c005e3f734",
+"classlogit_1_1SimpleLogFormatter.html#a7279f0da736edf9657e740418bb5accf",
+"index.html#intro_sec",
+"structlogit_1_1UniqueFileLogger_1_1ThreadLogInfo.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

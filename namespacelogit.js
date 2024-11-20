@@ -50,6 +50,8 @@ var namespacelogit =
     [ "args_to_array", "namespacelogit.html#ad2db70d1585274b64495732271ef3277", null ],
     [ "args_to_array", "namespacelogit.html#ac61cbb6336ea2c74d086799e21fab375", null ],
     [ "create_directories", "namespacelogit.html#a9da0cf75aa075e53a59ed0b5ab0e68c9", null ],
+    [ "enum_to_string", "namespacelogit.html#aa55d937df9602e94ecf105a44d04ad86", null ],
+    [ "enum_to_string", "namespacelogit.html#a6f6ef213e30d00c16f8d7a2644655d64", null ],
     [ "format", "namespacelogit.html#a2d42fce36e5265e7cfd666bd6f639460", null ],
     [ "format", "namespacelogit.html#a1ef002f27c855c24bf00abc966612511", null ],
     [ "get_exe_path", "namespacelogit.html#a05248803515ef4cb8d7b62ff79fa0d4e", null ],

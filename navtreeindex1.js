@@ -1,14 +1,15 @@
 var NAVTREEINDEX1 =
 {
-"LogMacros_8hpp.html#aefac7b13d1e651ba3746bf0031d81fa2":[3,0,2,0,0,5,68],
-"LogMacros_8hpp.html#af0bf58569ac353aeadbe8f9a4763e99e":[3,0,2,0,0,5,101],
-"LogMacros_8hpp.html#af0f81a236e5225497529788158a13b35":[3,0,2,0,0,5,110],
-"LogMacros_8hpp.html#af41d9e44ce13386655cb275c9cdb2f95":[3,0,2,0,0,5,59],
+"LogMacros_8hpp.html#aef41edc865c4b68bdfc285c005e3f734":[3,0,2,0,0,5,129],
+"LogMacros_8hpp.html#aefac7b13d1e651ba3746bf0031d81fa2":[3,0,2,0,0,5,69],
+"LogMacros_8hpp.html#af0bf58569ac353aeadbe8f9a4763e99e":[3,0,2,0,0,5,102],
+"LogMacros_8hpp.html#af0f81a236e5225497529788158a13b35":[3,0,2,0,0,5,111],
+"LogMacros_8hpp.html#af41d9e44ce13386655cb275c9cdb2f95":[3,0,2,0,0,5,60],
 "LogMacros_8hpp.html#af427d25dba4cb7751e62de360aa56b13":[3,0,2,0,0,5,46],
 "LogMacros_8hpp.html#af4b4ac808fdbbfcacf33de413963d09f":[3,0,2,0,0,5,35],
-"LogMacros_8hpp.html#af516be73e749d1ddb1c37ba5d877c1dd":[3,0,2,0,0,5,138],
+"LogMacros_8hpp.html#af516be73e749d1ddb1c37ba5d877c1dd":[3,0,2,0,0,5,139],
 "LogMacros_8hpp.html#af6e344fe108fa811f552bd1d91c061d0":[3,0,2,0,0,5,8],
-"LogMacros_8hpp.html#af7c7a30ec6960c3540c6e30c2629c036":[3,0,2,0,0,5,185],
+"LogMacros_8hpp.html#af7c7a30ec6960c3540c6e30c2629c036":[3,0,2,0,0,5,186],
 "LogMacros_8hpp.html#afd47fd2b20ff175156452aa666e4ed59":[3,0,2,0,0,5,12],
 "LogMacros_8hpp_source.html":[3,0,2,0,0,5],
 "LogRecord_8hpp.html":[3,0,2,0,0,2,2],
@@ -33,6 +34,7 @@ var NAVTREEINDEX1 =
 "UniqueFileLogger_8hpp_source.html":[3,0,2,0,0,1,3],
 "VariableValue_8hpp.html":[3,0,2,0,0,2,4],
 "VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38":[3,0,2,0,0,2,4,1],
+"VariableValue_8hpp.html#a6f6ef213e30d00c16f8d7a2644655d64":[3,0,2,0,0,2,4,2],
 "VariableValue_8hpp_source.html":[3,0,2,0,0,2,4],
 "annotated.html":[2,0],
 "argument__utils_8hpp.html":[3,0,2,0,0,2,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX1 =
 "classlogit_1_1SimpleLogFormatter.html#a568114bef3ae69e468b9dad89cb99023":[2,0,0,10,7],
 "classlogit_1_1SimpleLogFormatter.html#a7153fe9ddf8b45274e0b69d79a12f94b":[1,0,0,10,2],
 "classlogit_1_1SimpleLogFormatter.html#a7153fe9ddf8b45274e0b69d79a12f94b":[2,0,0,10,2],
-"classlogit_1_1SimpleLogFormatter.html#a7279f0da736edf9657e740418bb5accf":[1,0,0,10,6],
-"classlogit_1_1SimpleLogFormatter.html#a7279f0da736edf9657e740418bb5accf":[2,0,0,10,6],
-"classlogit_1_1SimpleLogFormatter.html#a7c0d969ae06d681672fc6f95b90af925":[1,0,0,10,8]
+"classlogit_1_1SimpleLogFormatter.html#a7279f0da736edf9657e740418bb5accf":[1,0,0,10,6]
 };

@@ -272,6 +272,13 @@ Functions</h2></td></tr>
 <tr class="memitem:a9da0cf75aa075e53a59ed0b5ab0e68c9" id="r_a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9da0cf75aa075e53a59ed0b5ab0e68c9">create_directories</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates directories recursively for the given path.  <br /></td></tr>
 <tr class="separator:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f6ef213e30d00c16f8d7a2644655d64" id="r_a6f6ef213e30d00c16f8d7a2644655d64"><td class="memTemplParams" colspan="2">template&lt;typename EnumType &gt; </td></tr>
+<tr class="memitem:a6f6ef213e30d00c16f8d7a2644655d64"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a6f6ef213e30d00c16f8d7a2644655d64">enum_to_string</a> (EnumType value)</td></tr>
+<tr class="memdesc:a6f6ef213e30d00c16f8d7a2644655d64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to convert an enumeration to a string.  <br /></td></tr>
+<tr class="separator:a6f6ef213e30d00c16f8d7a2644655d64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa55d937df9602e94ecf105a44d04ad86" id="r_aa55d937df9602e94ecf105a44d04ad86"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
+<tr class="memitem:aa55d937df9602e94ecf105a44d04ad86"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa55d937df9602e94ecf105a44d04ad86">enum_to_string</a> (<a class="el" href="example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50">COLORS</a> value)</td></tr>
+<tr class="separator:aa55d937df9602e94ecf105a44d04ad86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The primary namespace for the LogIt++ library. </p>
@@ -528,6 +535,63 @@ template&lt;typename T , typename... Ts&gt; </div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00336">336</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aa55d937df9602e94ecf105a44d04ad86" name="aa55d937df9602e94ecf105a44d04ad86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa55d937df9602e94ecf105a44d04ad86">&#9670;&#160;</a></span>enum_to_string() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string logit::enum_to_string </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50">COLORS</a></td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="example__logit__basic_8cpp_source.html#l00036">36</a> of file <a class="el" href="example__logit__basic_8cpp_source.html">example_logit_basic.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a6f6ef213e30d00c16f8d7a2644655d64" name="a6f6ef213e30d00c16f8d7a2644655d64"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f6ef213e30d00c16f8d7a2644655d64">&#9670;&#160;</a></span>enum_to_string() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename EnumType &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string logit::enum_to_string </td>
+          <td>(</td>
+          <td class="paramtype">EnumType</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Helper function to convert an enumeration to a string. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">EnumType</td><td>The enumeration type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>The enumeration value. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>String representation of the enumeration. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00031">31</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['red_0',['RED',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50af80f9a890089d211842d59625e561f88',1,'RED:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50af80f9a890089d211842d59625e561f88',1,'RED:&#160;example_logit_short_macros.cpp']]],
+  ['red_0',['RED',['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50af80f9a890089d211842d59625e561f88',1,'RED:&#160;example_logit_short_macros.cpp'],['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50aa2d9547b5d3dd9f05984475f7c926da0',1,'RED:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50aa2d9547b5d3dd9f05984475f7c926da0',1,'RED:&#160;example_logit_short_macros.cpp']]],
   ['red_1',['Red',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31aee38e4d5dd68c4e440825018d549cb47',1,'logit']]],
   ['remove_5fansi_5fescape_5fcodes_2',['remove_ansi_escape_codes',['../structlogit_1_1FormatInstruction.html#acea0c9eb68183459fb6ba3caddf02b4e',1,'logit::FormatInstruction']]],
   ['remove_5fold_5flogs_3',['remove_old_logs',['../classlogit_1_1FileLogger.html#a21b8741d411d770d6c208b74b0987336',1,'logit::FileLogger::remove_old_logs()'],['../classlogit_1_1UniqueFileLogger.html#ad7a74dbb7bc17d7468b2a11673bdbe8c',1,'logit::UniqueFileLogger::remove_old_logs()']]],

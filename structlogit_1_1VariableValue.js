@@ -44,7 +44,6 @@ var structlogit_1_1VariableValue =
     [ "VariableValue", "structlogit_1_1VariableValue.html#aa9f698e4aa381157e6739fd77b983bbe", null ],
     [ "~VariableValue", "structlogit_1_1VariableValue.html#a72bd26fb9c5d55a32289955e62587115", null ],
     [ "duration_units", "structlogit_1_1VariableValue.html#a48711fe3cfd723a4ea9f9c3233086e1e", null ],
-    [ "enum_to_string", "structlogit_1_1VariableValue.html#a3280ffb2c99ff6578751685bbb209027", null ],
     [ "is_pod_type", "structlogit_1_1VariableValue.html#ace3b46f944f56822c728ba43b79a2201", null ],
     [ "is_valid_literal_name", "structlogit_1_1VariableValue.html#ac6e0e6fad358fe22b5ea62a817586067", null ],
     [ "operator=", "structlogit_1_1VariableValue.html#a3c2642e81f29b8db75e9127ddc2af657", null ],

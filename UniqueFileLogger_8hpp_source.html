@@ -367,7 +367,7 @@ $(function(){initNavTree('UniqueFileLogger_8hpp_source.html',''); initResizable(
 <div class="line"><a id="l00267" name="l00267"></a><span class="lineno"><a class="line" href="classlogit_1_1UniqueFileLogger.html#ab76edc7d4c4f3e8eb8a6feba3845e529">  267</a></span>        std::string <a class="code hl_function" href="classlogit_1_1UniqueFileLogger.html#ab76edc7d4c4f3e8eb8a6feba3845e529">format_timestamp</a>(<span class="keyword">const</span> int64_t&amp; timestamp_ms)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            <span class="keyword">const</span> <span class="keyword">auto</span> dt = time_shield::to_date_time_ms&lt;time_shield::DateTimeStruct&gt;(timestamp_ms);</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            <span class="keywordtype">char</span> buffer[32] = {0};</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            snprintf(buffer, <span class="keyword">sizeof</span>(buffer), <span class="stringliteral">&quot;%lld-%.2d-%.2dT%.2d%.2d%.2d-%.3d&quot;</span>, dt.year, dt.mon, dt.day, dt.hour, dt.min, dt.sec, dt.ms);</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>            snprintf(buffer, <span class="keyword">sizeof</span>(buffer), <span class="stringliteral">&quot;%lld-%.2d-%.2d_%.2d-%.2d-%.2d-%.3d&quot;</span>, dt.year, dt.mon, dt.day, dt.hour, dt.min, dt.sec, dt.ms);</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>            <span class="keywordflow">return</span> std::string(buffer);</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>        }</div>
 </div>
@@ -425,7 +425,7 @@ $(function(){initNavTree('UniqueFileLogger_8hpp_source.html',''); initResizable(
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span> </div>
 <div class="foldopen" id="foldopen00328" data-start="{" data-end="}">
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno"><a class="line" href="classlogit_1_1UniqueFileLogger.html#afd3ab09953dfd555c7ba24857a04a094">  328</a></span>        <span class="keywordtype">bool</span> <a class="code hl_function" href="classlogit_1_1UniqueFileLogger.html#afd3ab09953dfd555c7ba24857a04a094">is_valid_log_filename</a>(<span class="keyword">const</span> std::string&amp; filename)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            <span class="keyword">static</span> <span class="keyword">const</span> std::regex pattern(R<span class="stringliteral">&quot;((\d{4}-\d{2}-\d{2}T\d{6}-\d{3})-[a-zA-Z0-9]{1,}\.log)&quot;);</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            <span class="keyword">static</span> <span class="keyword">const</span> std::regex pattern(R<span class="stringliteral">&quot;((\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{3})-[a-zA-Z0-9]{1,}\.log)&quot;);</span></div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span><span class="stringliteral">            </span><span class="keywordflow">return</span> std::regex_match(filename, pattern);</div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        }</div>
 </div>
