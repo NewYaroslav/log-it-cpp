@@ -33,9 +33,9 @@ var Enums_8hpp =
       [ "Cyan", "Enums_8hpp.html#aa63786fdda1bd7b89a591a13fd12bb31a023c239d2f2538f140a20e72c7b73f20", null ],
       [ "White", "Enums_8hpp.html#aa63786fdda1bd7b89a591a13fd12bb31a25a81701fbfa4a1efdf660a950c1d006", null ]
     ] ],
-    [ "get_log_level_color", "Enums_8hpp.html#a9fcfe36dabee292480566d9630849c8d", null ],
-    [ "to_c_str", "Enums_8hpp.html#a38a8aa550bd829a9d0de2e41423be06f", null ],
-    [ "to_c_str", "Enums_8hpp.html#aa19ab37fd839c19b2466fe888413f985", null ],
-    [ "to_string", "Enums_8hpp.html#a76be06ca3c8549418aac91a8f9578b58", null ],
-    [ "to_string", "Enums_8hpp.html#ae3cef80cd421fcd0e7acef8a75ccf61f", null ]
+    [ "get_log_level_color", "Enums_8hpp.html#a60f0324ca43457583e9a9b5aec809d4a", null ],
+    [ "to_c_str", "Enums_8hpp.html#ae8f7b5f181deb76b05f385cca096c718", null ],
+    [ "to_c_str", "Enums_8hpp.html#ad70b9fd6d27ebc73e4afce58bf2bfed6", null ],
+    [ "to_string", "Enums_8hpp.html#a1894d2761436e68074fe1b18b8d21947", null ],
+    [ "to_string", "Enums_8hpp.html#ac5ad16e3319e32ddda74d8ebe975d357", null ]
 ];

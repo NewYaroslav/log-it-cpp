@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['a_20custom_20console_20logger_20format_0',['Example for Setting a Custom Console Logger Format',['../index.html#autotoc_md0',1,'']]],
+  ['a_20custom_20console_20logger_20format_0',['Example for Setting a Custom Console Logger Format',['../index.html#autotoc_md3',1,'']]],
   ['abbreviatedmonthname_1',['AbbreviatedMonthName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a99f62b9939a80101815ca4080d1fe257',1,'logit::FormatInstruction']]],
   ['abbreviatedweekdayname_2',['AbbreviatedWeekdayName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a39db0b1ea1beaf9f5119bf84f1525b93',1,'logit::FormatInstruction']]],
-  ['add_5flogger_3',['add_logger',['../classlogit_1_1Logger.html#a9eb54527ed964e7f9adc4a62bc1d157d',1,'logit::Logger']]],
+  ['add_5flogger_3',['add_logger',['../classlogit_1_1Logger.html#a4e975699ce6b243f498cf05ec1d35b89',1,'logit::Logger']]],
   ['add_5ftask_4',['add_task',['../classlogit_1_1TaskExecutor.html#a264de76ad03e778d7d5f2f74df0073e3',1,'logit::TaskExecutor']]],
   ['advanced_20path_20handling_5',['Advanced Path Handling',['../index.html#advanced_path_handling',1,'']]],
   ['alignment_20and_20truncation_6',['Alignment and Truncation',['../index.html#alignment_truncation_flags',1,'']]],
@@ -21,5 +21,5 @@ var searchData=
   ['async_18',['async',['../structlogit_1_1ConsoleLogger_1_1Config.html#a0b1e6f055d48ec52f2549fffe0735255',1,'logit::ConsoleLogger::Config::async'],['../structlogit_1_1FileLogger_1_1Config.html#a7ed1376311c09df400755df8907e2317',1,'logit::FileLogger::Config::async'],['../structlogit_1_1UniqueFileLogger_1_1Config.html#ae3391a99bdce136dc44843853119c6d5',1,'logit::UniqueFileLogger::Config::async']]],
   ['asynchronous_20logging_19',['Asynchronous Logging',['../index.html#async_logging',1,'']]],
   ['auto_5fdelete_5fdays_20',['auto_delete_days',['../structlogit_1_1FileLogger_1_1Config.html#a796ec08314addbfc674c82bea43619b7',1,'logit::FileLogger::Config::auto_delete_days'],['../structlogit_1_1UniqueFileLogger_1_1Config.html#a05cef9944fbb97e85fb77012b8a92633',1,'logit::UniqueFileLogger::Config::auto_delete_days']]],
-  ['available_20trace_20level_20macros_3a_21',['Available TRACE-level macros:',['../index.html#autotoc_md2',1,'']]]
+  ['available_20trace_20level_20macros_3a_21',['Available TRACE-level macros:',['../index.html#autotoc_md5',1,'']]]
 ];

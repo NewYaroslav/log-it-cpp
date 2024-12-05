@@ -1,8 +1,9 @@
 var classlogit_1_1LogStream =
 [
-    [ "LogStream", "classlogit_1_1LogStream.html#a263ea886aee9f2240b7abb60b5ca40b7", null ],
+    [ "LogStream", "classlogit_1_1LogStream.html#aece3ca69cf687a2c396c49f9f3bce051", null ],
     [ "~LogStream", "classlogit_1_1LogStream.html#ae4ba165e9a3c0ab59165029f6532ca8b", null ],
     [ "operator<<", "classlogit_1_1LogStream.html#a199cea90a80f3386c73e262e36528abc", null ],
+    [ "operator<<", "classlogit_1_1LogStream.html#ae57de7f0308363d47ff56633a304d72e", null ],
     [ "m_file", "classlogit_1_1LogStream.html#ad8083a415e03386c5113e72cb0bb6913", null ],
     [ "m_function", "classlogit_1_1LogStream.html#add962bf2aab5a80969ae4fc1e06cb7ca", null ],
     [ "m_level", "classlogit_1_1LogStream.html#a499a3f686075ccadf3d4efa518618750", null ],

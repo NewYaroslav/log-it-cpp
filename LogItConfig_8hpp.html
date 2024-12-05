@@ -122,50 +122,56 @@ $(function(){initNavTree('LogItConfig_8hpp.html',''); initResizable(true); });
 Macros</h2></td></tr>
 <tr class="memitem:a88ccde7736a52e6ffc7f197e1e5b7baa" id="r_a88ccde7736a52e6ffc7f197e1e5b7baa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88ccde7736a52e6ffc7f197e1e5b7baa">_LOGIT_CONFIG_HPP_INCLUDED</a></td></tr>
 <tr class="separator:a88ccde7736a52e6ffc7f197e1e5b7baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bf179993f836ab365df8a1888cd027d" id="r_a3bf179993f836ab365df8a1888cd027d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3bf179993f836ab365df8a1888cd027d">LOGIT_BASE_PATH</a>&#160;&#160;&#160;{}</td></tr>
-<tr class="memdesc:a3bf179993f836ab365df8a1888cd027d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the base path used for log file paths. If <code>LOGIT_BASE_PATH</code> is not defined or is empty (<code>{}</code>), the full path from <code>__FILE__</code> will be used for log file paths.  <br /></td></tr>
-<tr class="separator:a3bf179993f836ab365df8a1888cd027d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a496ab9af419e4bccd182b25573387c08" id="r_a496ab9af419e4bccd182b25573387c08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a496ab9af419e4bccd182b25573387c08">LOGIT_DEFAULT_COLOR</a>&#160;&#160;&#160;TextColor::LightGray</td></tr>
-<tr class="memdesc:a496ab9af419e4bccd182b25573387c08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default color for console output. If LOGIT_DEFAULT_COLOR is not defined, defaults to <code>TextColor::LightGray</code>.  <br /></td></tr>
-<tr class="separator:a496ab9af419e4bccd182b25573387c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8237308da4156b0d57d2bd740f04bb86" id="r_a8237308da4156b0d57d2bd740f04bb86"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8237308da4156b0d57d2bd740f04bb86">LOGIT_COLOR_TRACE</a>&#160;&#160;&#160;TextColor::DarkGray</td></tr>
-<tr class="separator:a8237308da4156b0d57d2bd740f04bb86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16d0c5795c8966a9226aa476f61dd7f9" id="r_a16d0c5795c8966a9226aa476f61dd7f9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16d0c5795c8966a9226aa476f61dd7f9">LOGIT_COLOR_DEBUG</a>&#160;&#160;&#160;TextColor::Blue</td></tr>
-<tr class="separator:a16d0c5795c8966a9226aa476f61dd7f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abb833c30b2c234eb3b971bf8efa0975c" id="r_abb833c30b2c234eb3b971bf8efa0975c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb833c30b2c234eb3b971bf8efa0975c">LOGIT_COLOR_INFO</a>&#160;&#160;&#160;TextColor::Green</td></tr>
-<tr class="separator:abb833c30b2c234eb3b971bf8efa0975c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a901c2b4ba0cf5dd768cb227a4edc348e" id="r_a901c2b4ba0cf5dd768cb227a4edc348e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a901c2b4ba0cf5dd768cb227a4edc348e">LOGIT_COLOR_WARN</a>&#160;&#160;&#160;TextColor::Yellow</td></tr>
-<tr class="separator:a901c2b4ba0cf5dd768cb227a4edc348e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7955275557717995206d7f537547ab8" id="r_ab7955275557717995206d7f537547ab8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab7955275557717995206d7f537547ab8">LOGIT_COLOR_ERROR</a>&#160;&#160;&#160;TextColor::Red</td></tr>
-<tr class="separator:ab7955275557717995206d7f537547ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba01d57dfd847b2aaae1059a1893b075" id="r_aba01d57dfd847b2aaae1059a1893b075"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba01d57dfd847b2aaae1059a1893b075">LOGIT_COLOR_FATAL</a>&#160;&#160;&#160;TextColor::Magenta</td></tr>
-<tr class="separator:aba01d57dfd847b2aaae1059a1893b075"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4010311f751d0e30af97a8a35ad033eb" id="r_a4010311f751d0e30af97a8a35ad033eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4010311f751d0e30af97a8a35ad033eb">LOGIT_COLOR_DEFAULT</a>&#160;&#160;&#160;TextColor::White</td></tr>
-<tr class="separator:a4010311f751d0e30af97a8a35ad033eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad80a264403426b63d7ecc1d1429ae030" id="r_ad80a264403426b63d7ecc1d1429ae030"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad80a264403426b63d7ecc1d1429ae030">LOGIT_CURRENT_TIMESTAMP_MS</a>()</td></tr>
-<tr class="memdesc:ad80a264403426b63d7ecc1d1429ae030"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to get the current timestamp in milliseconds. If LOGIT_CURRENT_TIMESTAMP_MS is not defined, it uses <code>std::chrono</code> to return the current time in milliseconds.  <br /></td></tr>
-<tr class="separator:ad80a264403426b63d7ecc1d1429ae030"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae21dc36eb3e43139cacbd07c92bea9b9" id="r_ae21dc36eb3e43139cacbd07c92bea9b9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae21dc36eb3e43139cacbd07c92bea9b9">LOGIT_CONSOLE_PATTERN</a>&#160;&#160;&#160;&quot;%H:%M:%S.%e | %^%N([%50!g:%#])%v%$&quot;</td></tr>
-<tr class="memdesc:ae21dc36eb3e43139cacbd07c92bea9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$".  <br /></td></tr>
-<tr class="separator:ae21dc36eb3e43139cacbd07c92bea9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f7223e40eee5ab323ba83d779b471c9" id="r_a0f7223e40eee5ab323ba83d779b471c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f7223e40eee5ab323ba83d779b471c9">LOGIT_FILE_LOGGER_PATH</a>&#160;&#160;&#160;&quot;data/logs&quot;</td></tr>
-<tr class="memdesc:a0f7223e40eee5ab323ba83d779b471c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default directory path for log files. If <code>LOGIT_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs".  <br /></td></tr>
-<tr class="separator:a0f7223e40eee5ab323ba83d779b471c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3e134818fca6df9710fa145ea62044a" id="r_af3e134818fca6df9710fa145ea62044a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3e134818fca6df9710fa145ea62044a">LOGIT_UNIQUE_FILE_LOGGER_PATH</a>&#160;&#160;&#160;&quot;data/logs/unique_logs&quot;</td></tr>
-<tr class="memdesc:af3e134818fca6df9710fa145ea62044a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default directory path for unique log files. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs/unique_logs".  <br /></td></tr>
-<tr class="separator:af3e134818fca6df9710fa145ea62044a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4d42b8c5a8fe2468557178ce120780b" id="r_ab4d42b8c5a8fe2468557178ce120780b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4d42b8c5a8fe2468557178ce120780b">LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</a>&#160;&#160;&#160;30</td></tr>
-<tr class="memdesc:ab4d42b8c5a8fe2468557178ce120780b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the number of days after which old log files are deleted. If <code>LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</code> is not defined, it defaults to 30 days.  <br /></td></tr>
-<tr class="separator:ab4d42b8c5a8fe2468557178ce120780b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afeff518c76cf3749e91fdb8ad5e64bfa" id="r_afeff518c76cf3749e91fdb8ad5e64bfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afeff518c76cf3749e91fdb8ad5e64bfa">LOGIT_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v&quot;</td></tr>
-<tr class="memdesc:afeff518c76cf3749e91fdb8ad5e64bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v".  <br /></td></tr>
-<tr class="separator:afeff518c76cf3749e91fdb8ad5e64bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9084ea16f31554bdf35137910c027811" id="r_a9084ea16f31554bdf35137910c027811"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9084ea16f31554bdf35137910c027811">LOGIT_UNIQUE_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;%v&quot;</td></tr>
-<tr class="memdesc:a9084ea16f31554bdf35137910c027811"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for unique file-based loggers. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "%v".  <br /></td></tr>
-<tr class="separator:a9084ea16f31554bdf35137910c027811"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:addb32afd844c2d2ecbc0637289e509b6" id="r_addb32afd844c2d2ecbc0637289e509b6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#addb32afd844c2d2ecbc0637289e509b6">LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</a>&#160;&#160;&#160;8</td></tr>
-<tr class="memdesc:addb32afd844c2d2ecbc0637289e509b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default hash length for unique file names. If <code>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</code> is not defined, it defaults to 8.  <br /></td></tr>
-<tr class="separator:addb32afd844c2d2ecbc0637289e509b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3bf179993f836ab365df8a1888cd027d" id="r_ga3bf179993f836ab365df8a1888cd027d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#ga3bf179993f836ab365df8a1888cd027d">LOGIT_BASE_PATH</a>&#160;&#160;&#160;{}</td></tr>
+<tr class="memdesc:ga3bf179993f836ab365df8a1888cd027d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the base path used for log file paths. If <code>LOGIT_BASE_PATH</code> is not defined or is empty (<code>{}</code>), the full path from <code>__FILE__</code> will be used for log file paths.  <br /></td></tr>
+<tr class="separator:ga3bf179993f836ab365df8a1888cd027d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga496ab9af419e4bccd182b25573387c08" id="r_ga496ab9af419e4bccd182b25573387c08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#ga496ab9af419e4bccd182b25573387c08">LOGIT_DEFAULT_COLOR</a>&#160;&#160;&#160;TextColor::LightGray</td></tr>
+<tr class="memdesc:ga496ab9af419e4bccd182b25573387c08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default color for console output. If LOGIT_DEFAULT_COLOR is not defined, defaults to <code>TextColor::LightGray</code>.  <br /></td></tr>
+<tr class="separator:ga496ab9af419e4bccd182b25573387c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad80a264403426b63d7ecc1d1429ae030" id="r_gad80a264403426b63d7ecc1d1429ae030"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gad80a264403426b63d7ecc1d1429ae030">LOGIT_CURRENT_TIMESTAMP_MS</a>()</td></tr>
+<tr class="memdesc:gad80a264403426b63d7ecc1d1429ae030"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to get the current timestamp in milliseconds. If LOGIT_CURRENT_TIMESTAMP_MS is not defined, it uses <code>std::chrono</code> to return the current time in milliseconds.  <br /></td></tr>
+<tr class="separator:gad80a264403426b63d7ecc1d1429ae030"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Log Level Colors</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>Default colors for each log level. </p>
+</div></td></tr>
+<tr class="memitem:ga8237308da4156b0d57d2bd740f04bb86" id="r_ga8237308da4156b0d57d2bd740f04bb86"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#ga8237308da4156b0d57d2bd740f04bb86">LOGIT_COLOR_TRACE</a>&#160;&#160;&#160;TextColor::DarkGray</td></tr>
+<tr class="separator:ga8237308da4156b0d57d2bd740f04bb86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga16d0c5795c8966a9226aa476f61dd7f9" id="r_ga16d0c5795c8966a9226aa476f61dd7f9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#ga16d0c5795c8966a9226aa476f61dd7f9">LOGIT_COLOR_DEBUG</a>&#160;&#160;&#160;TextColor::Blue</td></tr>
+<tr class="separator:ga16d0c5795c8966a9226aa476f61dd7f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gabb833c30b2c234eb3b971bf8efa0975c" id="r_gabb833c30b2c234eb3b971bf8efa0975c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gabb833c30b2c234eb3b971bf8efa0975c">LOGIT_COLOR_INFO</a>&#160;&#160;&#160;TextColor::Green</td></tr>
+<tr class="separator:gabb833c30b2c234eb3b971bf8efa0975c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga901c2b4ba0cf5dd768cb227a4edc348e" id="r_ga901c2b4ba0cf5dd768cb227a4edc348e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#ga901c2b4ba0cf5dd768cb227a4edc348e">LOGIT_COLOR_WARN</a>&#160;&#160;&#160;TextColor::Yellow</td></tr>
+<tr class="separator:ga901c2b4ba0cf5dd768cb227a4edc348e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab7955275557717995206d7f537547ab8" id="r_gab7955275557717995206d7f537547ab8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gab7955275557717995206d7f537547ab8">LOGIT_COLOR_ERROR</a>&#160;&#160;&#160;TextColor::Red</td></tr>
+<tr class="separator:gab7955275557717995206d7f537547ab8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaba01d57dfd847b2aaae1059a1893b075" id="r_gaba01d57dfd847b2aaae1059a1893b075"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gaba01d57dfd847b2aaae1059a1893b075">LOGIT_COLOR_FATAL</a>&#160;&#160;&#160;TextColor::Magenta</td></tr>
+<tr class="separator:gaba01d57dfd847b2aaae1059a1893b075"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4010311f751d0e30af97a8a35ad033eb" id="r_ga4010311f751d0e30af97a8a35ad033eb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#ga4010311f751d0e30af97a8a35ad033eb">LOGIT_COLOR_DEFAULT</a>&#160;&#160;&#160;TextColor::White</td></tr>
+<tr class="separator:ga4010311f751d0e30af97a8a35ad033eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">File Logger Settings</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>Configuration macros for file-based loggers. </p>
+</div></td></tr>
+<tr class="memitem:gae21dc36eb3e43139cacbd07c92bea9b9" id="r_gae21dc36eb3e43139cacbd07c92bea9b9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gae21dc36eb3e43139cacbd07c92bea9b9">LOGIT_CONSOLE_PATTERN</a>&#160;&#160;&#160;&quot;%H:%M:%S.%e | %^%N([%50!g:%#])%v%$&quot;</td></tr>
+<tr class="memdesc:gae21dc36eb3e43139cacbd07c92bea9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$".  <br /></td></tr>
+<tr class="separator:gae21dc36eb3e43139cacbd07c92bea9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0f7223e40eee5ab323ba83d779b471c9" id="r_ga0f7223e40eee5ab323ba83d779b471c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#ga0f7223e40eee5ab323ba83d779b471c9">LOGIT_FILE_LOGGER_PATH</a>&#160;&#160;&#160;&quot;data/logs&quot;</td></tr>
+<tr class="memdesc:ga0f7223e40eee5ab323ba83d779b471c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default directory path for log files. If <code>LOGIT_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs".  <br /></td></tr>
+<tr class="separator:ga0f7223e40eee5ab323ba83d779b471c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaf3e134818fca6df9710fa145ea62044a" id="r_gaf3e134818fca6df9710fa145ea62044a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gaf3e134818fca6df9710fa145ea62044a">LOGIT_UNIQUE_FILE_LOGGER_PATH</a>&#160;&#160;&#160;&quot;data/logs/unique_logs&quot;</td></tr>
+<tr class="memdesc:gaf3e134818fca6df9710fa145ea62044a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default directory path for unique log files. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs/unique_logs".  <br /></td></tr>
+<tr class="separator:gaf3e134818fca6df9710fa145ea62044a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab4d42b8c5a8fe2468557178ce120780b" id="r_gab4d42b8c5a8fe2468557178ce120780b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gab4d42b8c5a8fe2468557178ce120780b">LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</a>&#160;&#160;&#160;30</td></tr>
+<tr class="memdesc:gab4d42b8c5a8fe2468557178ce120780b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the number of days after which old log files are deleted. If <code>LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</code> is not defined, it defaults to 30 days.  <br /></td></tr>
+<tr class="separator:gab4d42b8c5a8fe2468557178ce120780b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafeff518c76cf3749e91fdb8ad5e64bfa" id="r_gafeff518c76cf3749e91fdb8ad5e64bfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gafeff518c76cf3749e91fdb8ad5e64bfa">LOGIT_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v&quot;</td></tr>
+<tr class="memdesc:gafeff518c76cf3749e91fdb8ad5e64bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v".  <br /></td></tr>
+<tr class="separator:gafeff518c76cf3749e91fdb8ad5e64bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9084ea16f31554bdf35137910c027811" id="r_ga9084ea16f31554bdf35137910c027811"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#ga9084ea16f31554bdf35137910c027811">LOGIT_UNIQUE_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;%v&quot;</td></tr>
+<tr class="memdesc:ga9084ea16f31554bdf35137910c027811"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for unique file-based loggers. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "%v".  <br /></td></tr>
+<tr class="separator:ga9084ea16f31554bdf35137910c027811"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaddb32afd844c2d2ecbc0637289e509b6" id="r_gaddb32afd844c2d2ecbc0637289e509b6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__ConfigMacros.html#gaddb32afd844c2d2ecbc0637289e509b6">LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</a>&#160;&#160;&#160;8</td></tr>
+<tr class="memdesc:gaddb32afd844c2d2ecbc0637289e509b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default hash length for unique file names. If <code>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</code> is not defined, it defaults to 8.  <br /></td></tr>
+<tr class="separator:gaddb32afd844c2d2ecbc0637289e509b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Configuration macros for the LogIt logging system. </p>
@@ -185,310 +191,6 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00003">3</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a3bf179993f836ab365df8a1888cd027d" name="a3bf179993f836ab365df8a1888cd027d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bf179993f836ab365df8a1888cd027d">&#9670;&#160;</a></span>LOGIT_BASE_PATH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_BASE_PATH&#160;&#160;&#160;{}</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the base path used for log file paths. If <code>LOGIT_BASE_PATH</code> is not defined or is empty (<code>{}</code>), the full path from <code>__FILE__</code> will be used for log file paths. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00010">10</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a16d0c5795c8966a9226aa476f61dd7f9" name="a16d0c5795c8966a9226aa476f61dd7f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16d0c5795c8966a9226aa476f61dd7f9">&#9670;&#160;</a></span>LOGIT_COLOR_DEBUG</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_COLOR_DEBUG&#160;&#160;&#160;TextColor::Blue</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00026">26</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a4010311f751d0e30af97a8a35ad033eb" name="a4010311f751d0e30af97a8a35ad033eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4010311f751d0e30af97a8a35ad033eb">&#9670;&#160;</a></span>LOGIT_COLOR_DEFAULT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_COLOR_DEFAULT&#160;&#160;&#160;TextColor::White</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00046">46</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ab7955275557717995206d7f537547ab8" name="ab7955275557717995206d7f537547ab8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7955275557717995206d7f537547ab8">&#9670;&#160;</a></span>LOGIT_COLOR_ERROR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_COLOR_ERROR&#160;&#160;&#160;TextColor::Red</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00038">38</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="aba01d57dfd847b2aaae1059a1893b075" name="aba01d57dfd847b2aaae1059a1893b075"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba01d57dfd847b2aaae1059a1893b075">&#9670;&#160;</a></span>LOGIT_COLOR_FATAL</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_COLOR_FATAL&#160;&#160;&#160;TextColor::Magenta</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00042">42</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="abb833c30b2c234eb3b971bf8efa0975c" name="abb833c30b2c234eb3b971bf8efa0975c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb833c30b2c234eb3b971bf8efa0975c">&#9670;&#160;</a></span>LOGIT_COLOR_INFO</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_COLOR_INFO&#160;&#160;&#160;TextColor::Green</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00030">30</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a8237308da4156b0d57d2bd740f04bb86" name="a8237308da4156b0d57d2bd740f04bb86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8237308da4156b0d57d2bd740f04bb86">&#9670;&#160;</a></span>LOGIT_COLOR_TRACE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_COLOR_TRACE&#160;&#160;&#160;TextColor::DarkGray</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00022">22</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a901c2b4ba0cf5dd768cb227a4edc348e" name="a901c2b4ba0cf5dd768cb227a4edc348e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a901c2b4ba0cf5dd768cb227a4edc348e">&#9670;&#160;</a></span>LOGIT_COLOR_WARN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_COLOR_WARN&#160;&#160;&#160;TextColor::Yellow</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00034">34</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ae21dc36eb3e43139cacbd07c92bea9b9" name="ae21dc36eb3e43139cacbd07c92bea9b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae21dc36eb3e43139cacbd07c92bea9b9">&#9670;&#160;</a></span>LOGIT_CONSOLE_PATTERN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_CONSOLE_PATTERN&#160;&#160;&#160;&quot;%H:%M:%S.%e | %^%N([%50!g:%#])%v%$&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$". </p>
-<p>This pattern controls the formatting of log messages sent to the console, including timestamp, message, and color. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00064">64</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ad80a264403426b63d7ecc1d1429ae030" name="ad80a264403426b63d7ecc1d1429ae030"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad80a264403426b63d7ecc1d1429ae030">&#9670;&#160;</a></span>LOGIT_CURRENT_TIMESTAMP_MS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_CURRENT_TIMESTAMP_MS</td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">        (std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;( \</div>
-<div class="line">        std::chrono::system_clock::now().time_since_epoch()).count())</div>
-</div><!-- fragment -->
-<p>Macro to get the current timestamp in milliseconds. If LOGIT_CURRENT_TIMESTAMP_MS is not defined, it uses <code>std::chrono</code> to return the current time in milliseconds. </p>
-<p>This macro can be overridden to provide a custom method for generating timestamps if needed. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00054">54</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a496ab9af419e4bccd182b25573387c08" name="a496ab9af419e4bccd182b25573387c08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a496ab9af419e4bccd182b25573387c08">&#9670;&#160;</a></span>LOGIT_DEFAULT_COLOR</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_DEFAULT_COLOR&#160;&#160;&#160;TextColor::LightGray</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the default color for console output. If LOGIT_DEFAULT_COLOR is not defined, defaults to <code>TextColor::LightGray</code>. </p>
-<p>This macro allows setting a default console text color for log messages. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00018">18</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="ab4d42b8c5a8fe2468557178ce120780b" name="ab4d42b8c5a8fe2468557178ce120780b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4d42b8c5a8fe2468557178ce120780b">&#9670;&#160;</a></span>LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS&#160;&#160;&#160;30</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the number of days after which old log files are deleted. If <code>LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</code> is not defined, it defaults to 30 days. </p>
-<p>This macro controls the log file retention policy by specifying the maximum age of log files. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00090">90</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a0f7223e40eee5ab323ba83d779b471c9" name="a0f7223e40eee5ab323ba83d779b471c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0f7223e40eee5ab323ba83d779b471c9">&#9670;&#160;</a></span>LOGIT_FILE_LOGGER_PATH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_FILE_LOGGER_PATH&#160;&#160;&#160;&quot;data/logs&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the default directory path for log files. If <code>LOGIT_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs". </p>
-<p>This macro specifies the directory where regular log files will be stored. The default path is relative to the application's execution directory. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00073">73</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="afeff518c76cf3749e91fdb8ad5e64bfa" name="afeff518c76cf3749e91fdb8ad5e64bfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afeff518c76cf3749e91fdb8ad5e64bfa">&#9670;&#160;</a></span>LOGIT_FILE_LOGGER_PATTERN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_FILE_LOGGER_PATTERN&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v". </p>
-<p>This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00099">99</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="addb32afd844c2d2ecbc0637289e509b6" name="addb32afd844c2d2ecbc0637289e509b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#addb32afd844c2d2ecbc0637289e509b6">&#9670;&#160;</a></span>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH&#160;&#160;&#160;8</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the default hash length for unique file names. If <code>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</code> is not defined, it defaults to 8. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00111">111</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="af3e134818fca6df9710fa145ea62044a" name="af3e134818fca6df9710fa145ea62044a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3e134818fca6df9710fa145ea62044a">&#9670;&#160;</a></span>LOGIT_UNIQUE_FILE_LOGGER_PATH</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_UNIQUE_FILE_LOGGER_PATH&#160;&#160;&#160;&quot;data/logs/unique_logs&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the default directory path for unique log files. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs/unique_logs". </p>
-<p>This macro specifies the directory where unique log files, created by <code>UniqueFileLogger</code>, will be stored. Each log message will generate a new file in this directory. </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00082">82</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a9084ea16f31554bdf35137910c027811" name="a9084ea16f31554bdf35137910c027811"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9084ea16f31554bdf35137910c027811">&#9670;&#160;</a></span>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define LOGIT_UNIQUE_FILE_LOGGER_PATTERN&#160;&#160;&#160;&quot;%v&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Defines the default log pattern for unique file-based loggers. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "%v". </p>
-
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00105">105</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
 
 </div>
 </div>

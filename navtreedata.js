@@ -26,6 +26,7 @@ var NAVTREE =
 [
   [ "LogIt++", "index.html", [
     [ "LogIt++ Library", "index.html", "index" ],
+    [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
@@ -63,10 +64,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "ConsoleLogger_8hpp.html",
-"LogMacros_8hpp.html#aef41edc865c4b68bdfc285c005e3f734",
-"classlogit_1_1SimpleLogFormatter.html#a7279f0da736edf9657e740418bb5accf",
-"index.html#intro_sec",
-"structlogit_1_1UniqueFileLogger_1_1ThreadLogInfo.html"
+"classlogit_1_1SimpleLogFormatter.html#a7153fe9ddf8b45274e0b69d79a12f94b",
+"group__LoggingMacros.html#ga26ef864fc85c84bee2d8c262b7f8b7b2",
+"namespacelogit.html#ac61cbb6336ea2c74d086799e21fab375",
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

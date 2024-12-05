@@ -1,6 +1,6 @@
 var structlogit_1_1LogRecord =
 [
-    [ "LogRecord", "structlogit_1_1LogRecord.html#aa7156801307b366db8d887bde90dbd16", null ],
+    [ "LogRecord", "structlogit_1_1LogRecord.html#a903b0588c244c88fe61a1d5bde2e15b6", null ],
     [ "arg_names", "structlogit_1_1LogRecord.html#ad41f7c5f150fa9af6b6850efd83da678", null ],
     [ "args_array", "structlogit_1_1LogRecord.html#aafa2dbe0b4bdcfb8007524aecc018fa4", null ],
     [ "file", "structlogit_1_1LogRecord.html#a97d0a57c3ef0b4484dd2a1f3b3008e0e", null ],

@@ -113,11 +113,11 @@ $(function(){initNavTree('classlogit_1_1UniqueFileLogger.html',''); initResizabl
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classlogit_1_1UniqueFileLogger-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">logit::UniqueFileLogger Class Reference</div></div>
+  <div class="headertitle"><div class="title">logit::UniqueFileLogger Class Reference<div class="ingroups"><a class="el" href="group__LogBackends.html">Logging Backends</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a> that writes each log message to a unique file with date-time and hash in the filename.  
+<p>Writes each log message to a unique file with automatic cleanup.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>&gt;</code></p>
@@ -244,10 +244,15 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a8f308b2a7cc9f16a9dae779f138642f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a> that writes each log message to a unique file with date-time and hash in the filename. </p>
-<p>The <code><a class="el" href="classlogit_1_1UniqueFileLogger.html" title="Logger that writes each log message to a unique file with date-time and hash in the filename.">UniqueFileLogger</a></code> writes each log message to a separate file. The filename consists of the date, time, and a fixed-length hash to ensure uniqueness. It also deletes log files older than a specified number of days. </p>
+<div class="textblock"><p>Writes each log message to a unique file with automatic cleanup. </p>
+<p>This logger generates a unique file for each log message. The filename includes a timestamp and a hash to ensure uniqueness. It also deletes old log files after a specified number of days.</p>
+<p><b>Key Features:</b></p><ul>
+<li>Unique file generation for each log message.</li>
+<li>Automatic deletion of old files.</li>
+<li>Synchronous or asynchronous operation. </li>
+</ul>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00032">32</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00038">38</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a55be631d8dc98d787b0f7173d75fb293" name="a55be631d8dc98d787b0f7173d75fb293"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a55be631d8dc98d787b0f7173d75fb293">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[1/3]</span></h2>
@@ -274,7 +279,7 @@ Private Attributes</h2></td></tr>
 
 <p>Default constructor that uses default configuration. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00045">45</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00051">51</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -309,7 +314,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00051">51</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00057">57</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -361,7 +366,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00060">60</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00066">66</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -388,7 +393,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00072">72</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00078">78</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -425,7 +430,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The unique file path. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00258">258</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00264">264</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -455,7 +460,7 @@ Private Attributes</h2></td></tr>
 <p>Gets the current timestamp in milliseconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current timestamp in milliseconds. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00343">343</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00349">349</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -491,7 +496,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The formatted timestamp string. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00267">267</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00273">273</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -527,7 +532,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The hash string. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00277">277</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00283">283</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -557,7 +562,7 @@ Private Attributes</h2></td></tr>
 <p>Gets the full path to the logging directory. </p>
 <dl class="section return"><dt>Returns</dt><dd>The path to the logging directory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00236">236</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00242">242</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -595,7 +600,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a056e646557ab900f90b6bcd5610ebc61">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00169">169</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00175">175</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -633,7 +638,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a19b45738a45bb1bc669897717a5f6ad7">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00156">156</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00162">162</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -664,7 +669,7 @@ Private Attributes</h2></td></tr>
 <p>This method waits until all pending log messages for the calling thread have been processed. It then returns the name of the last file that the calling thread wrote a log message to.</p>
 <dl class="section return"><dt>Returns</dt><dd>The last log file name for the calling thread, or an empty string if none exists. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00353">353</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00359">359</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -695,7 +700,7 @@ Private Attributes</h2></td></tr>
 <p>This method waits until all pending log messages for the calling thread have been processed. It then returns the path of the last file that the calling thread wrote a log message to.</p>
 <dl class="section return"><dt>Returns</dt><dd>The last log file path for the calling thread, or an empty string if none exists. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00373">373</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00379">379</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -725,7 +730,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the timestamp of the last log. </p>
 <dl class="section return"><dt>Returns</dt><dd>The timestamp of the last log in milliseconds. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00389">389</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00395">395</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -763,7 +768,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a38824613573247d24bb7d998955990a0">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00141">141</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00147">147</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -793,7 +798,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the time elapsed since the last log. </p>
 <dl class="section return"><dt>Returns</dt><dd>The time in milliseconds since the last log was written. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00395">395</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00401">401</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -829,7 +834,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The timestamp in milliseconds. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00336">336</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00342">342</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -858,7 +863,7 @@ Private Attributes</h2></td></tr>
 
 <p>Initializes the logging directory. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00230">230</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00236">236</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -894,7 +899,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the filename matches the pattern, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00328">328</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00334">334</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -937,7 +942,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a1daaecd92439997aeaf9087874ff882f">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00083">83</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00089">89</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -966,7 +971,7 @@ Private Attributes</h2></td></tr>
 
 <p>Removes old log files based on the auto-delete days configuration. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00294">294</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00300">300</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -995,7 +1000,7 @@ Private Attributes</h2></td></tr>
 
 <p>Starts the logging process by initializing the directory and removing old logs. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00214">214</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00220">220</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1024,7 +1029,7 @@ Private Attributes</h2></td></tr>
 
 <p>Stops the logging process by waiting for tasks. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00225">225</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00231">231</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1055,7 +1060,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a392e5820b55b8576c2aa5b12ff1f0b69">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00180">180</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00186">186</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1096,7 +1101,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The name of the file the message was written to. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00244">244</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00250">250</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1123,7 +1128,7 @@ Private Attributes</h2></td></tr>
 
 <p>Configuration for the unique file logger. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00187">187</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00193">193</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1149,7 +1154,7 @@ Private Attributes</h2></td></tr>
 
 <p>Timestamp of the last log. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00210">210</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00216">216</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1175,7 +1180,7 @@ Private Attributes</h2></td></tr>
 
 <p>Mutex to protect file operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00186">186</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00192">192</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1201,7 +1206,7 @@ Private Attributes</h2></td></tr>
 
 <p>Condition variable to wait for pending logs to finish. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00207">207</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00213">213</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1227,7 +1232,7 @@ Private Attributes</h2></td></tr>
 
 <p>Map to store log information per thread. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00208">208</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00214">214</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1253,7 +1258,7 @@ Private Attributes</h2></td></tr>
 
 <p>Mutex to protect access to thread log information. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00206">206</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00212">212</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>

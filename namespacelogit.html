@@ -112,7 +112,7 @@ $(function(){initNavTree('namespacelogit.html',''); initResizable(true); });
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
-  <div class="headertitle"><div class="title">logit Namespace Reference</div></div>
+  <div class="headertitle"><div class="title">logit Namespace Reference<div class="ingroups"><a class="el" href="group__LogBackends.html">Logging Backends</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -122,10 +122,10 @@ $(function(){initNavTree('namespacelogit.html',''); initResizable(true); });
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogit_1_1ConsoleLogger.html">ConsoleLogger</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a> that outputs log messages to the console with optional color coding.  <a href="classlogit_1_1ConsoleLogger.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outputs log messages to the console with optional ANSI color support.  <a href="classlogit_1_1ConsoleLogger.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogit_1_1FileLogger.html">FileLogger</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a> that outputs log messages to files with date-based rotation and old file deletion.  <a href="classlogit_1_1FileLogger.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs messages to files with date-based rotation and automatic deletion of old logs.  <a href="classlogit_1_1FileLogger.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlogit_1_1FormatInstruction.html">FormatInstruction</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure to store log formatting instructions.  <a href="structlogit_1_1FormatInstruction.html#details">More...</a><br /></td></tr>
@@ -158,7 +158,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A thread-safe task executor that processes tasks in a dedicated worker thread.  <a href="classlogit_1_1TaskExecutor.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogit_1_1UniqueFileLogger.html">UniqueFileLogger</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a> that writes each log message to a unique file with date-time and hash in the filename.  <a href="classlogit_1_1UniqueFileLogger.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes each log message to a unique file with automatic cleanup.  <a href="classlogit_1_1UniqueFileLogger.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure for storing values of various types, including enumerations.  <a href="structlogit_1_1VariableValue.html#details">More...</a><br /></td></tr>
@@ -217,21 +217,21 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a38a8aa550bd829a9d0de2e41423be06f" id="r_a38a8aa550bd829a9d0de2e41423be06f"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38a8aa550bd829a9d0de2e41423be06f">to_c_str</a> (const <a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> &amp;level, const int &amp;mode=0)</td></tr>
-<tr class="memdesc:a38a8aa550bd829a9d0de2e41423be06f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert LogLevel to a C-style string representation.  <br /></td></tr>
-<tr class="separator:a38a8aa550bd829a9d0de2e41423be06f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76be06ca3c8549418aac91a8f9578b58" id="r_a76be06ca3c8549418aac91a8f9578b58"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76be06ca3c8549418aac91a8f9578b58">to_string</a> (const <a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> &amp;level, const int &amp;mode=0)</td></tr>
-<tr class="memdesc:a76be06ca3c8549418aac91a8f9578b58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert LogLevel to a std::string representation.  <br /></td></tr>
-<tr class="separator:a76be06ca3c8549418aac91a8f9578b58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa19ab37fd839c19b2466fe888413f985" id="r_aa19ab37fd839c19b2466fe888413f985"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa19ab37fd839c19b2466fe888413f985">to_c_str</a> (const <a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> &amp;color)</td></tr>
-<tr class="memdesc:aa19ab37fd839c19b2466fe888413f985"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert TextColor to a C-style string (ANSI escape codes).  <br /></td></tr>
-<tr class="separator:aa19ab37fd839c19b2466fe888413f985"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae3cef80cd421fcd0e7acef8a75ccf61f" id="r_ae3cef80cd421fcd0e7acef8a75ccf61f"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3cef80cd421fcd0e7acef8a75ccf61f">to_string</a> (const <a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> &amp;color)</td></tr>
-<tr class="memdesc:ae3cef80cd421fcd0e7acef8a75ccf61f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert TextColor to a std::string (ANSI escape codes).  <br /></td></tr>
-<tr class="separator:ae3cef80cd421fcd0e7acef8a75ccf61f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9fcfe36dabee292480566d9630849c8d" id="r_a9fcfe36dabee292480566d9630849c8d"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9fcfe36dabee292480566d9630849c8d">get_log_level_color</a> (const <a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> &amp;log_level)</td></tr>
-<tr class="memdesc:a9fcfe36dabee292480566d9630849c8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ANSI color code associated with a log level.  <br /></td></tr>
-<tr class="separator:a9fcfe36dabee292480566d9630849c8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8f7b5f181deb76b05f385cca096c718" id="r_ae8f7b5f181deb76b05f385cca096c718"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8f7b5f181deb76b05f385cca096c718">to_c_str</a> (<a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> level, int mode=0)</td></tr>
+<tr class="memdesc:ae8f7b5f181deb76b05f385cca096c718"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert LogLevel to a C-style string representation.  <br /></td></tr>
+<tr class="separator:ae8f7b5f181deb76b05f385cca096c718"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1894d2761436e68074fe1b18b8d21947" id="r_a1894d2761436e68074fe1b18b8d21947"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1894d2761436e68074fe1b18b8d21947">to_string</a> (<a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> level, int mode=0)</td></tr>
+<tr class="memdesc:a1894d2761436e68074fe1b18b8d21947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert LogLevel to a std::string representation.  <br /></td></tr>
+<tr class="separator:a1894d2761436e68074fe1b18b8d21947"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad70b9fd6d27ebc73e4afce58bf2bfed6" id="r_ad70b9fd6d27ebc73e4afce58bf2bfed6"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad70b9fd6d27ebc73e4afce58bf2bfed6">to_c_str</a> (<a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> color)</td></tr>
+<tr class="memdesc:ad70b9fd6d27ebc73e4afce58bf2bfed6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert TextColor to a C-style string (ANSI escape codes).  <br /></td></tr>
+<tr class="separator:ad70b9fd6d27ebc73e4afce58bf2bfed6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5ad16e3319e32ddda74d8ebe975d357" id="r_ac5ad16e3319e32ddda74d8ebe975d357"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5ad16e3319e32ddda74d8ebe975d357">to_string</a> (<a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> color)</td></tr>
+<tr class="memdesc:ac5ad16e3319e32ddda74d8ebe975d357"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert TextColor to a std::string (ANSI escape codes).  <br /></td></tr>
+<tr class="separator:ac5ad16e3319e32ddda74d8ebe975d357"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60f0324ca43457583e9a9b5aec809d4a" id="r_a60f0324ca43457583e9a9b5aec809d4a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60f0324ca43457583e9a9b5aec809d4a">get_log_level_color</a> (<a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> log_level)</td></tr>
+<tr class="memdesc:a60f0324ca43457583e9a9b5aec809d4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ANSI color code associated with a log level.  <br /></td></tr>
+<tr class="separator:a60f0324ca43457583e9a9b5aec809d4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2db70d1585274b64495732271ef3277" id="r_ad2db70d1585274b64495732271ef3277"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2db70d1585274b64495732271ef3277">args_to_array</a> (std::vector&lt; std::string &gt;::const_iterator name_iter)</td></tr>
 <tr class="memdesc:ad2db70d1585274b64495732271ef3277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base case of recursion for argument conversion — when there are no more arguments.  <br /></td></tr>
 <tr class="separator:ad2db70d1585274b64495732271ef3277"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -758,8 +758,8 @@ template&lt;typename EnumType &gt; </div>
 
 </div>
 </div>
-<a id="a9fcfe36dabee292480566d9630849c8d" name="a9fcfe36dabee292480566d9630849c8d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9fcfe36dabee292480566d9630849c8d">&#9670;&#160;</a></span>get_log_level_color()</h2>
+<a id="a60f0324ca43457583e9a9b5aec809d4a" name="a60f0324ca43457583e9a9b5aec809d4a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a60f0324ca43457583e9a9b5aec809d4a">&#9670;&#160;</a></span>get_log_level_color()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -770,7 +770,7 @@ template&lt;typename EnumType &gt; </div>
         <tr>
           <td class="memname">std::string logit::get_log_level_color </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>log_level</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>log_level</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -960,8 +960,8 @@ template&lt;typename EnumType &gt; </div>
 
 </div>
 </div>
-<a id="a38a8aa550bd829a9d0de2e41423be06f" name="a38a8aa550bd829a9d0de2e41423be06f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a38a8aa550bd829a9d0de2e41423be06f">&#9670;&#160;</a></span>to_c_str() <span class="overload">[1/2]</span></h2>
+<a id="ae8f7b5f181deb76b05f385cca096c718" name="ae8f7b5f181deb76b05f385cca096c718"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8f7b5f181deb76b05f385cca096c718">&#9670;&#160;</a></span>to_c_str() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -972,12 +972,12 @@ template&lt;typename EnumType &gt; </div>
         <tr>
           <td class="memname">const char * logit::to_c_str </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1001,8 +1001,8 @@ template&lt;typename EnumType &gt; </div>
 
 </div>
 </div>
-<a id="aa19ab37fd839c19b2466fe888413f985" name="aa19ab37fd839c19b2466fe888413f985"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa19ab37fd839c19b2466fe888413f985">&#9670;&#160;</a></span>to_c_str() <span class="overload">[2/2]</span></h2>
+<a id="ad70b9fd6d27ebc73e4afce58bf2bfed6" name="ad70b9fd6d27ebc73e4afce58bf2bfed6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad70b9fd6d27ebc73e4afce58bf2bfed6">&#9670;&#160;</a></span>to_c_str() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1013,7 +1013,7 @@ template&lt;typename EnumType &gt; </div>
         <tr>
           <td class="memname">const char * logit::to_c_str </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a></td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -1037,8 +1037,8 @@ template&lt;typename EnumType &gt; </div>
 
 </div>
 </div>
-<a id="a76be06ca3c8549418aac91a8f9578b58" name="a76be06ca3c8549418aac91a8f9578b58"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76be06ca3c8549418aac91a8f9578b58">&#9670;&#160;</a></span>to_string() <span class="overload">[1/2]</span></h2>
+<a id="a1894d2761436e68074fe1b18b8d21947" name="a1894d2761436e68074fe1b18b8d21947"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1894d2761436e68074fe1b18b8d21947">&#9670;&#160;</a></span>to_string() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1049,12 +1049,12 @@ template&lt;typename EnumType &gt; </div>
         <tr>
           <td class="memname">std::string logit::to_string </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval">0</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1078,8 +1078,8 @@ template&lt;typename EnumType &gt; </div>
 
 </div>
 </div>
-<a id="ae3cef80cd421fcd0e7acef8a75ccf61f" name="ae3cef80cd421fcd0e7acef8a75ccf61f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3cef80cd421fcd0e7acef8a75ccf61f">&#9670;&#160;</a></span>to_string() <span class="overload">[2/2]</span></h2>
+<a id="ac5ad16e3319e32ddda74d8ebe975d357" name="ac5ad16e3319e32ddda74d8ebe975d357"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5ad16e3319e32ddda74d8ebe975d357">&#9670;&#160;</a></span>to_string() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1090,7 +1090,7 @@ template&lt;typename EnumType &gt; </div>
         <tr>
           <td class="memname">std::string logit::to_string </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a></td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

@@ -57,14 +57,14 @@ var namespacelogit =
     [ "get_exe_path", "namespacelogit.html#a05248803515ef4cb8d7b62ff79fa0d4e", null ],
     [ "get_file_name", "namespacelogit.html#aa4e7991e430f7cc50b60d6b37ec26cd3", null ],
     [ "get_list_files", "namespacelogit.html#a0ba53ba88f1916d46b8da7847f734d67", null ],
-    [ "get_log_level_color", "namespacelogit.html#a9fcfe36dabee292480566d9630849c8d", null ],
+    [ "get_log_level_color", "namespacelogit.html#a60f0324ca43457583e9a9b5aec809d4a", null ],
     [ "is_closing_template", "namespacelogit.html#a946607b03a4a180f3624b2c8739e4d45", null ],
     [ "is_file", "namespacelogit.html#a5a3ad31d527c2646fee808a9072a0df2", null ],
     [ "make_relative", "namespacelogit.html#a468afe9332af7c19b13e6fa9e6cb0769", null ],
     [ "split_arguments", "namespacelogit.html#a3b99c712385aa258b8ba4b70d2c4786d", null ],
     [ "split_path", "namespacelogit.html#a668cc1acca900bc9ad968b421d31bfa3", null ],
-    [ "to_c_str", "namespacelogit.html#a38a8aa550bd829a9d0de2e41423be06f", null ],
-    [ "to_c_str", "namespacelogit.html#aa19ab37fd839c19b2466fe888413f985", null ],
-    [ "to_string", "namespacelogit.html#a76be06ca3c8549418aac91a8f9578b58", null ],
-    [ "to_string", "namespacelogit.html#ae3cef80cd421fcd0e7acef8a75ccf61f", null ]
+    [ "to_c_str", "namespacelogit.html#ae8f7b5f181deb76b05f385cca096c718", null ],
+    [ "to_c_str", "namespacelogit.html#ad70b9fd6d27ebc73e4afce58bf2bfed6", null ],
+    [ "to_string", "namespacelogit.html#a1894d2761436e68074fe1b18b8d21947", null ],
+    [ "to_string", "namespacelogit.html#ac5ad16e3319e32ddda74d8ebe975d357", null ]
 ];
