@@ -36,15 +36,15 @@ namespace logit {
         /// \param logger_index Logger index (-1 for all loggers).
         /// \param print_mode Flag indicating if the log should print arguments in a raw format (true) or use formatted output (false).
         LogRecord(
-            const LogLevel& log_level,
-            const int64_t& timestamp_ms,
+            LogLevel log_level,
+            int64_t timestamp_ms,
             const std::string& file,
-            const int& line,
+            int line,
             const std::string& function,
             const std::string& format,
             const std::string& arg_names,
-            const int& logger_index,
-            const bool& print_mode) :
+            int logger_index,
+            bool print_mode) :
                 log_level(log_level),
                 timestamp_ms(timestamp_ms),
                 file(file),

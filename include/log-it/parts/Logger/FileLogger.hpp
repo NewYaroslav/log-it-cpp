@@ -18,12 +18,16 @@
 namespace logit {
 
     /// \class FileLogger
-    /// \brief Logger that outputs log messages to files with date-based rotation and old file deletion.
+    /// \ingroup LogBackends
+    /// \brief Logs messages to files with date-based rotation and automatic deletion of old logs.
     ///
-    /// The `FileLogger` provides synchronous or asynchronous logging to files.
-    /// It writes logs to files named by date in a configurable directory.
-    /// When the UTC day changes, it creates a new log file.
-    /// It also deletes log files older than a specified number of days.
+    /// This logger writes logs to files organized by date. It supports asynchronous logging
+    /// and manages old files based on a configurable retention period.
+    ///
+    /// **Key Features:**
+    /// - Date-based file rotation.
+    /// - Automatic cleanup of old files.
+    /// - Synchronous or asynchronous operation.
     class FileLogger : public ILogger {
     public:
 

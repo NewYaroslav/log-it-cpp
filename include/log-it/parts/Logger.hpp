@@ -47,9 +47,56 @@ namespace logit {
         void add_logger(
                 std::unique_ptr<ILogger> logger,
                 std::unique_ptr<ILogFormatter> formatter,
-                const bool& single_mode = false) {
+                bool single_mode = false) {
             std::lock_guard<std::mutex> lock(m_mutex);
-            m_loggers.push_back(LoggerStrategy{std::move(logger), std::move(formatter), single_mode});
+            m_loggers.push_back(
+                LoggerStrategy{std::move(logger),
+                std::move(formatter),
+                single_mode,
+                true // Loggers are enabled by default
+            });
+        }
+
+        /// \brief Enables or disables a logger by index.
+        /// \param logger_index The index of the logger to modify.
+        /// \param enabled True to enable the logger, false to disable it.
+        void set_logger_enabled(int logger_index, bool enabled) {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+                m_loggers[logger_index].enabled = enabled;
+            }
+        }
+
+        /// \brief Checks whether a logger is enabled.
+        /// \param logger_index The index of the logger to check.
+        /// \return True if the logger is enabled, false otherwise.
+        bool is_logger_enabled(int logger_index) const {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+                return m_loggers[logger_index].enabled;
+            }
+            return false;
+        }
+
+        /// \brief Sets the single-mode flag for a logger.
+        /// \param logger_index The index of the logger.
+        /// \param single_mode True to set the logger to single mode, false otherwise.
+        void set_logger_single_mode(int logger_index, bool single_mode) {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+                m_loggers[logger_index].single_mode = single_mode;
+            }
+        }
+
+        /// \brief Checks whether a logger is in single mode.
+        /// \param logger_index The index of the logger.
+        /// \return True if the logger is in single mode, false otherwise.
+        bool is_logger_single_mode(int logger_index) const {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+                return m_loggers[logger_index].single_mode;
+            }
+            return false;
         }
 
         /// \brief Logs a `LogRecord` using all added loggers and formatters.
@@ -76,7 +123,7 @@ namespace logit {
         /// \param logger_index The index of the logger.
         /// \param param The logger parameter to retrieve.
         /// \return A string representing the requested parameter, or an empty string if the parameter is unsupported.
-        std::string get_string_param(const int& logger_index, const LoggerParam& param) const {
+        std::string get_string_param(int logger_index, const LoggerParam& param) const {
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 const auto& strategy = m_loggers[logger_index];
                 return strategy.logger->get_string_param(param);
@@ -88,7 +135,7 @@ namespace logit {
         /// \param logger_index The index of the logger.
         /// \param param The logger parameter to retrieve.
         /// \return An integer representing the requested parameter, or 0 if the parameter is unsupported.
-        int64_t get_int_param(const int& logger_index, const LoggerParam& param) const {
+        int64_t get_int_param(int logger_index, const LoggerParam& param) const {
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 const auto& strategy = m_loggers[logger_index];
                 return strategy.logger->get_int_param(param);
@@ -100,7 +147,7 @@ namespace logit {
         /// \param logger_index The index of the logger.
         /// \param param The logger parameter to retrieve.
         /// \return A double representing the requested parameter, or 0.0 if the parameter is unsupported.
-        double get_float_param(const int& logger_index, const LoggerParam& param) const {
+        double get_float_param(int logger_index, const LoggerParam& param) const {
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 const auto& strategy = m_loggers[logger_index];
                 return strategy.logger->get_float_param(param);
@@ -146,10 +193,11 @@ namespace logit {
             std::unique_ptr<ILogger> logger;            ///< The logger instance.
             std::unique_ptr<ILogFormatter> formatter;   ///< The formatter instance.
             bool single_mode;                           ///< Flag indicating if the logger is in single mode.
+            bool enabled;                               ///< Flag indicating if the logger is enabled.
         };
 
         std::vector<LoggerStrategy> m_loggers;  ///< Container for logger-formatter pairs.
-        std::mutex m_mutex;                     ///< Mutex for thread safety during logging operations.
+        mutable std::mutex m_mutex;             ///< Mutex for thread safety during logging operations.
 
         /// \brief Logs a record with the given arguments.
         /// \tparam Ts Types of the arguments.

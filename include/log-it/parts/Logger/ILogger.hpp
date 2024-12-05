@@ -6,6 +6,20 @@
 
 #include "../Utils/LogRecord.hpp"
 
+/// \defgroup LogBackends Logging Backends
+/// \brief A collection of backends for the LogIt logging system.
+///
+/// This group includes various logger implementations that define how
+/// log messages are processed and stored, such as console output, file logging,
+/// and unique file logging.
+///
+/// ### Backends Included:
+/// - ConsoleLogger: Outputs logs to the console with optional color coding.
+/// - FileLogger: Logs messages to files with date-based rotation and old file deletion.
+/// - UniqueFileLogger: Writes each log message to a unique file with automatic cleanup.
+///
+/// \{
+
 namespace logit {
 
     /// \interface ILogger
@@ -49,5 +63,7 @@ namespace logit {
     }; // ILogger
 
 }; // namespace logit
+
+/// \}
 
 #endif // _LOGIT_ILOGGER_HPP_INCLUDED

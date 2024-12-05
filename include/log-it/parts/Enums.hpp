@@ -54,7 +54,7 @@ namespace logit {
     /// \param level The log level.
     /// \param mode The output mode (0 for full name, 1 for abbreviation).
     /// \return C-style string representing the log level.
-    inline const char* to_c_str(const LogLevel& level, const int& mode = 0) {
+    inline const char* to_c_str(LogLevel level, int mode = 0) {
         static const std::array<const char*, 6> data_str_0 = {
             "TRACE",
             "DEBUG",
@@ -86,14 +86,14 @@ namespace logit {
     /// \param level The log level.
     /// \param mode The output mode (0 for full name, 1 for abbreviation).
     /// \return std::string representing the log level.
-    inline std::string to_string(const LogLevel& level, const int& mode = 0) {
+    inline std::string to_string(LogLevel level, int mode = 0) {
         return std::string(to_c_str(level, mode));
     }
 
     /// \brief Convert TextColor to a C-style string (ANSI escape codes).
     /// \param color The text color.
     /// \return C-style string representing the ANSI escape code for the color.
-    inline const char* to_c_str(const TextColor& color) {
+    inline const char* to_c_str(TextColor color) {
         static const std::array<const char*, 16> ansi_codes = {
             "\033[30m",   // Black
             "\033[31m",   // DarkRed
@@ -121,14 +121,14 @@ namespace logit {
     /// \param color The text color.
     /// \return std::string representing the ANSI escape code for the color.
     /// \brief Преобразование TextColor в строку (ANSI escape codes)
-    inline std::string to_string(const TextColor& color) {
+    inline std::string to_string(TextColor color) {
         return std::string(to_c_str(color));
     }
 
     /// \brief Get the ANSI color code associated with a log level.
     /// \param log_level The log level.
     /// \return ANSI escape code string representing the color for the log level.
-    inline std::string get_log_level_color(const LogLevel& log_level) {
+    inline std::string get_log_level_color(LogLevel log_level) {
         switch (log_level) {
             case LogLevel::LOG_LVL_TRACE:
                 return to_string(LOGIT_COLOR_TRACE);

@@ -17,11 +17,16 @@
 namespace logit {
 
     /// \class ConsoleLogger
-    /// \brief Logger that outputs log messages to the console with optional color coding.
+    /// \ingroup LogBackends
+    /// \brief Outputs log messages to the console with optional ANSI color support.
     ///
-    /// The `ConsoleLogger` provides synchronous or asynchronous logging to the console,
-    /// with optional support for colored output based on ANSI codes. For Windows, it
-    /// includes logic to handle ANSI color codes.
+    /// This logger supports synchronous and asynchronous logging. It also handles
+    /// platform-specific differences in handling colored console output.
+    ///
+    /// **Key Features:**
+    /// - Cross-platform color support (ANSI on Linux/macOS, Windows-specific handling).
+    /// - Thread-safe logging.
+    /// - Synchronous or asynchronous operation.
     class ConsoleLogger : public ILogger {
     public:
 

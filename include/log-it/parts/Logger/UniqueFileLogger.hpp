@@ -24,11 +24,17 @@
 namespace logit {
 
     /// \class UniqueFileLogger
-    /// \brief Logger that writes each log message to a unique file with date-time and hash in the filename.
+    /// \ingroup LogBackends
+    /// \brief Writes each log message to a unique file with automatic cleanup.
     ///
-    /// The `UniqueFileLogger` writes each log message to a separate file.
-    /// The filename consists of the date, time, and a fixed-length hash to ensure uniqueness.
-    /// It also deletes log files older than a specified number of days.
+    /// This logger generates a unique file for each log message. The filename includes
+    /// a timestamp and a hash to ensure uniqueness. It also deletes old log files
+    /// after a specified number of days.
+    ///
+    /// **Key Features:**
+    /// - Unique file generation for each log message.
+    /// - Automatic deletion of old files.
+    /// - Synchronous or asynchronous operation.
     class UniqueFileLogger : public ILogger {
     public:
 

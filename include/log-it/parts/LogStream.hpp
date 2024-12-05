@@ -25,11 +25,11 @@ namespace logit {
         /// \param function Function name.
         /// \param logger_index Logger index to use.
         LogStream(
-            const LogLevel& level,
+            LogLevel level,
             const std::string& file,
-            const int& line,
+            int line,
             const std::string& function,
-            const int& logger_index)
+            int logger_index)
             : m_level(level), m_file(file), m_line(line), m_function(function),
             m_logger_index(logger_index) {
         }
@@ -57,6 +57,12 @@ namespace logit {
         template <typename T>
         LogStream& operator<<(const T& value) {
             m_stream << value;
+            return *this;
+        }
+
+        // Перегрузка оператора << для манипуляторов (например, std::endl)
+        LogStream& operator<<(std::ostream& (*manip)(std::ostream&)) {
+            m_stream << manip; // Применяем манипулятор к внутреннему потоку
             return *this;
         }
 

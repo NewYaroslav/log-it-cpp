@@ -4,6 +4,42 @@
 /// \file LogMacros.hpp
 /// \brief Provides various logging macros for different log levels and options.
 
+/// \defgroup LoggingMacros Logging Macros
+/// \brief A collection of macros for streamlined logging operations.
+///
+/// This group includes macros for logging messages at various levels, adding loggers,
+/// managing log settings, and controlling loggers.
+///
+/// ### Examples:
+///
+/// **Basic Logging**
+/// ```cpp
+/// LOGIT_INFO("This is an informational message");
+/// LOGIT_WARN("This is a warning message");
+/// LOGIT_ERROR("This is an error message");
+/// ```
+///
+/// **Stream-Based Logging**
+/// ```cpp
+/// LOGIT_STREAM_INFO() << "Info level stream logging: value=" << 42;
+/// LOGIT_STREAM_TRACE_TO(2) << "Trace to unique logger at index 2";
+/// ```
+///
+/// **Conditional Logging**
+/// ```cpp
+/// int x = 42;
+/// LOGIT_DEBUG_IF(x > 0, "x is positive: ", x);
+/// ```
+///
+/// **Logger Management**
+/// ```cpp
+/// LOGIT_SET_LOGGER_ENABLED(1, false); // Disable logger at index 1
+/// if (LOGIT_IS_LOGGER_ENABLED(1)) {
+///     LOGIT_INFO("Logger 1 is enabled");
+/// }
+/// ```
+/// \{
+
 //------------------------------------------------------------------------------
 // Function name macro for different compilers
 #if defined(__GNUC__)
@@ -19,9 +55,15 @@
 //------------------------------------------------------------------------------
 // Stream-based logging macros for various levels
 
+/// \name Stream-Based Logging
+/// Macros for logging using a stream-like syntax.
+/// \{
+
+/// \brief Begin a log stream for the specified log level.
 #define LOGIT_STREAM(level) \
     logit::LogStream(level, logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__, LOGIT_FUNCTION, -1)
 
+/// \brief Begin a log stream for the specified log level, targeting a specific logger.
 #define LOGIT_STREAM_WITH_INDEX(level, index) \
     logit::LogStream(level, logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__, LOGIT_FUNCTION, index)
 
@@ -57,6 +99,8 @@
 #define LOG_S_FATAL_TO(index)   LOGIT_STREAM_FATAL_TO(index)
 
 #endif // LOGIT_SHORT_NAME
+
+/// \}
 
 //------------------------------------------------------------------------------
 // Macros for logging without arguments
@@ -254,6 +298,10 @@
 
 //------------------------------------------------------------------------------
 // Conditional logging macros (logging based on a condition)
+
+/// \name Conditional Logging
+/// Macros for logging based on conditions.
+/// \{
 
 // TRACE level conditional macros
 #define LOGIT_TRACE_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, {}, #__VA_ARGS__, __VA_ARGS__)
@@ -505,6 +553,8 @@
 #define LOG_PRINTF_FATAL(fmt, ...)      LOGIT_PRINTF_FATAL(fmt, __VA_ARGS__)
 
 #endif // LOGIT_SHORT_NAME
+
+/// \}
 
 //------------------------------------------------------------------------------
 // Macros for adding and configuring various loggers
@@ -847,6 +897,10 @@
 
 #endif // C++ version check
 
+/// \name Logger Management
+/// Macros for managing loggers.
+/// \{
+
 /// \brief Macro for retrieving a string parameter from a logger.
 /// \param logger_index The index of the logger.
 /// \param param The logger parameter to retrieve.
@@ -892,9 +946,37 @@
 #define LOGIT_GET_TIME_SINCE_LAST_LOG(logger_index) \
     logit::Logger::get_instance().get_float_param(logger_index, logit::LoggerParam::TimeSinceLastLog)
 
+/// \brief Enables or disables a logger by index.
+/// \param logger_index The index of the logger.
+/// \param enabled True to enable the logger, false to disable it.
+#define LOGIT_SET_LOGGER_ENABLED(logger_index, enabled) \
+    logit::Logger::get_instance().set_logger_enabled(logger_index, enabled)
+
+/// \brief Checks whether a logger is enabled.
+/// \param logger_index The index of the logger.
+/// \return True if the logger is enabled, false otherwise.
+#define LOGIT_IS_LOGGER_ENABLED(logger_index) \
+    logit::Logger::get_instance().is_logger_enabled(logger_index)
+
+/// \brief Sets the single-mode flag for a logger.
+/// \param logger_index The index of the logger.
+/// \param single_mode True to set the logger to single mode, false otherwise.
+#define LOGIT_SET_SINGLE_MODE(logger_index, single_mode) \
+    logit::Logger::get_instance().set_logger_single_mode(logger_index, single_mode)
+
+/// \brief Checks whether a logger is in single mode.
+/// \param logger_index The index of the logger.
+/// \return True if the logger is in single mode, false otherwise.
+#define LOGIT_IS_SINGLE_MODE(logger_index) \
+    logit::Logger::get_instance().is_logger_single_mode(logger_index)
+
+/// \}
+
 /// \brief Macro for waiting for all asynchronous loggers to finish processing.
 #define LOGIT_WAIT()    logit::Logger::get_instance().wait();
 
 //------------------------------------------------------------------------------
+
+/// \}
 
 #endif // _LOGIT_LOG_MACROS_HPP_INCLUDED

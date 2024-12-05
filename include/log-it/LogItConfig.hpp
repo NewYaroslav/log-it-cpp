@@ -4,6 +4,26 @@
 /// \file LogItConfig.hpp
 /// \brief Configuration macros for the LogIt logging system.
 
+/// \defgroup ConfigMacros Configuration Macros
+/// \brief A set of macros used to configure the LogIt logging system.
+///
+/// These macros control various aspects of the logging behavior, including
+/// paths, patterns, colors, timestamps, and retention policies.
+///
+/// ### Examples:
+///
+/// **Customizing Log File Paths**
+/// ```cpp
+/// #define LOGIT_FILE_LOGGER_PATH "/custom/log/directory"
+/// ```
+///
+/// **Customizing Console Output Colors**
+/// ```cpp
+/// #define LOGIT_COLOR_WARN TextColor::Orange
+/// ```
+///
+/// \{
+
 /// \brief Defines the base path used for log file paths.
 /// If `LOGIT_BASE_PATH` is not defined or is empty (`{}`), the full path from `__FILE__` will be used for log file paths.
 #ifndef LOGIT_BASE_PATH
@@ -18,6 +38,9 @@
     #define LOGIT_DEFAULT_COLOR TextColor::LightGray
 #endif
 
+/// \name Log Level Colors
+/// Default colors for each log level.
+/// \{
 #ifndef LOGIT_COLOR_TRACE
     #define LOGIT_COLOR_TRACE   TextColor::DarkGray
 #endif
@@ -45,6 +68,7 @@
 #ifndef LOGIT_COLOR_DEFAULT
     #define LOGIT_COLOR_DEFAULT TextColor::White
 #endif
+/// \}
 
 /// \brief Macro to get the current timestamp in milliseconds.
 /// If LOGIT_CURRENT_TIMESTAMP_MS is not defined, it uses `std::chrono` to return the current time in milliseconds.
@@ -55,6 +79,10 @@
         (std::chrono::duration_cast<std::chrono::milliseconds>( \
         std::chrono::system_clock::now().time_since_epoch()).count())
 #endif
+
+/// \name File Logger Settings
+/// Configuration macros for file-based loggers.
+/// \{
 
 /// \brief Defines the default log pattern for the console logger.
 /// If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$".
@@ -92,11 +120,11 @@
 
 /// \brief Defines the default log pattern for file-based loggers.
 /// If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to
-/// "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v".
+/// "[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v".
 ///
 /// This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information.
 #ifndef LOGIT_FILE_LOGGER_PATTERN
-    #define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v"
+    #define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v"
 #endif
 
 /// \brief Defines the default log pattern for unique file-based loggers.
@@ -110,5 +138,9 @@
 #ifndef LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH
     #define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 8
 #endif
+
+/// \}
+
+/// \}
 
 #endif // _LOGIT_CONFIG_HPP_INCLUDED
