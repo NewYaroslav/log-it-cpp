@@ -14,12 +14,12 @@
 ///
 /// **Customizing Log File Paths**
 /// ```cpp
-/// #define LOGIT_FILE_LOGGER_PATH "/custom/log/directory"
+/// #define LOGIT_FILE_LOGGER_PATH "custom/log/directory"
 /// ```
 ///
 /// **Customizing Console Output Colors**
 /// ```cpp
-/// #define LOGIT_COLOR_WARN TextColor::Orange
+/// #define LOGIT_COLOR_WARN logit::TextColor::Yellow
 /// ```
 ///
 /// \{
@@ -31,42 +31,42 @@
 #endif
 
 /// \brief Defines the default color for console output.
-/// If LOGIT_DEFAULT_COLOR is not defined, defaults to `TextColor::LightGray`.
+/// If LOGIT_DEFAULT_COLOR is not defined, defaults to `logit::TextColor::LightGray`.
 ///
 /// This macro allows setting a default console text color for log messages.
 #ifndef LOGIT_DEFAULT_COLOR
-    #define LOGIT_DEFAULT_COLOR TextColor::LightGray
+    #define LOGIT_DEFAULT_COLOR logit::TextColor::LightGray
 #endif
 
 /// \name Log Level Colors
 /// Default colors for each log level.
 /// \{
 #ifndef LOGIT_COLOR_TRACE
-    #define LOGIT_COLOR_TRACE   TextColor::DarkGray
+    #define LOGIT_COLOR_TRACE   logit::TextColor::DarkGray
 #endif
 
 #ifndef LOGIT_COLOR_DEBUG
-    #define LOGIT_COLOR_DEBUG   TextColor::Blue
+    #define LOGIT_COLOR_DEBUG   logit::TextColor::Blue
 #endif
 
 #ifndef LOGIT_COLOR_INFO
-    #define LOGIT_COLOR_INFO    TextColor::Green
+    #define LOGIT_COLOR_INFO    logit::TextColor::Green
 #endif
 
 #ifndef LOGIT_COLOR_WARN
-    #define LOGIT_COLOR_WARN    TextColor::Yellow
+    #define LOGIT_COLOR_WARN    logit::TextColor::Yellow
 #endif
 
 #ifndef LOGIT_COLOR_ERROR
-    #define LOGIT_COLOR_ERROR   TextColor::Red
+    #define LOGIT_COLOR_ERROR   logit::TextColor::Red
 #endif
 
 #ifndef LOGIT_COLOR_FATAL
-    #define LOGIT_COLOR_FATAL   TextColor::Magenta
+    #define LOGIT_COLOR_FATAL   logit::TextColor::Magenta
 #endif
 
 #ifndef LOGIT_COLOR_DEFAULT
-    #define LOGIT_COLOR_DEFAULT TextColor::White
+    #define LOGIT_COLOR_DEFAULT logit::TextColor::White
 #endif
 /// \}
 
