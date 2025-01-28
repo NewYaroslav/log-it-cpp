@@ -110,11 +110,13 @@ namespace logit {
             // Log to the specific logger if the index is valid
             if (record.logger_index >= 0 && record.logger_index < static_cast<int>(m_loggers.size())) {
                 const auto& strategy = m_loggers[record.logger_index];
+                if (!strategy.enabled) return;
                 strategy.logger->log(record, strategy.formatter->format(record));
                 return;
             }
             for (const auto& strategy : m_loggers) {
                 if (strategy.single_mode) continue;
+                if (!strategy.enabled) continue;
                 strategy.logger->log(record, strategy.formatter->format(record));
             }
         }
