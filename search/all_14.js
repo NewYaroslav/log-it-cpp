@@ -10,7 +10,7 @@ var searchData=
   ['patterncompiler_2ehpp_7',['PatternCompiler.hpp',['../PatternCompiler_8hpp.html',1,'']]],
   ['patterns_8',['Examples of Formatting Patterns',['../index.html#pattern_example',1,'']]],
   ['pending_5flogs_9',['pending_logs',['../structlogit_1_1UniqueFileLogger_1_1ThreadLogInfo.html#a8ad8de686335b1e5760ec431989d872d',1,'logit::UniqueFileLogger::ThreadLogInfo']]],
-  ['pod_5fvalue_10',['pod_value',['../structlogit_1_1VariableValue.html#ab299360be24179ef5776869ee8e049b5',1,'logit::VariableValue']]],
+  ['pod_5fvalue_10',['pod_value',['../structlogit_1_1VariableValue.html#a866740028ec5ce7c1a46a74c2466b54a',1,'logit::VariableValue']]],
   ['pointer_5fval_11',['POINTER_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c',1,'logit::VariableValue']]],
   ['print_12',['print',['../classlogit_1_1Logger.html#af9ae40695451f21281d47cd2cfeac199',1,'logit::Logger']]],
   ['print_5fmode_13',['print_mode',['../structlogit_1_1LogRecord.html#ae8ec54cad6862e74aa9b079c7232c83b',1,'logit::LogRecord']]],

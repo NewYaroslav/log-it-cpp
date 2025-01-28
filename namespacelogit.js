@@ -53,7 +53,6 @@ var namespacelogit =
     [ "enum_to_string", "namespacelogit.html#aa55d937df9602e94ecf105a44d04ad86", null ],
     [ "enum_to_string", "namespacelogit.html#a6f6ef213e30d00c16f8d7a2644655d64", null ],
     [ "format", "namespacelogit.html#a2d42fce36e5265e7cfd666bd6f639460", null ],
-    [ "format", "namespacelogit.html#a1ef002f27c855c24bf00abc966612511", null ],
     [ "get_exe_path", "namespacelogit.html#a05248803515ef4cb8d7b62ff79fa0d4e", null ],
     [ "get_file_name", "namespacelogit.html#aa4e7991e430f7cc50b60d6b37ec26cd3", null ],
     [ "get_list_files", "namespacelogit.html#a0ba53ba88f1916d46b8da7847f734d67", null ],

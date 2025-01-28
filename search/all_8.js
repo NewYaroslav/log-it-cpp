@@ -30,6 +30,6 @@ var searchData=
   ['custom_5ferror_5fcategory_27',['custom_error_category',['../example__logit__basic_8cpp.html#a0822522f836470533dabb03c77664f11',1,'example_logit_basic.cpp']]],
   ['customerrorcategory_28',['CustomErrorCategory',['../classCustomErrorCategory.html',1,'']]],
   ['customizing_20log_20formats_29',['Customizing Log Formats',['../index.html#log_formatting_sec',1,'']]],
-  ['cyan_30',['CYAN',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a344dd8cd533280795b9db82ef0c92749',1,'CYAN:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a344dd8cd533280795b9db82ef0c92749',1,'CYAN:&#160;example_logit_short_macros.cpp']]],
+  ['cyan_30',['CYAN',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a344dd8cd533280795b9db82ef0c92749',1,'CYAN:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a344dd8cd533280795b9db82ef0c92749',1,'CYAN:&#160;example_logit_basic.cpp']]],
   ['cyan_31',['Cyan',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a023c239d2f2538f140a20e72c7b73f20',1,'logit']]]
 ];
