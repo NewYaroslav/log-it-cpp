@@ -1,5 +1,13 @@
 var NAVTREEINDEX3 =
 {
+"structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8":[3,0,0,2,1],
+"structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a03727ac48595a24daed975559c944a44":[2,0,0,2,1,3],
+"structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a03727ac48595a24daed975559c944a44":[3,0,0,2,1,3],
+"structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a079f7ad26fdccf8507371966161a7fe5":[2,0,0,2,1,18],
+"structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a079f7ad26fdccf8507371966161a7fe5":[3,0,0,2,1,18],
+"structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a0a87878e34978e388b8cdaff2b730a12":[2,0,0,2,1,13],
+"structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a0a87878e34978e388b8cdaff2b730a12":[3,0,0,2,1,13],
+"structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a1e621df39e053ff6bc7db7bb1c616cc1":[2,0,0,2,1,21],
 "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a1e621df39e053ff6bc7db7bb1c616cc1":[3,0,0,2,1,21],
 "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a296ea9556c5506de526c0b57a30f8a94":[2,0,0,2,1,23],
 "structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a296ea9556c5506de526c0b57a30f8a94":[3,0,0,2,1,23],
@@ -241,13 +249,5 @@ var NAVTREEINDEX3 =
 "structlogit_1_1VariableValue.html#ab88ceaa5e13b3de04e896cb4057c3b0e":[2,0,0,13,9],
 "structlogit_1_1VariableValue.html#ab88ceaa5e13b3de04e896cb4057c3b0e":[3,0,0,13,9],
 "structlogit_1_1VariableValue.html#ab99997d39329337385ef913e75774857":[2,0,0,13,39],
-"structlogit_1_1VariableValue.html#ab99997d39329337385ef913e75774857":[3,0,0,13,39],
-"structlogit_1_1VariableValue.html#ac6e0e6fad358fe22b5ea62a817586067":[2,0,0,13,19],
-"structlogit_1_1VariableValue.html#ac6e0e6fad358fe22b5ea62a817586067":[3,0,0,13,19],
-"structlogit_1_1VariableValue.html#aca3f5f829656d5e3fd7bdbbe1d0f2c0d":[2,0,0,13,6],
-"structlogit_1_1VariableValue.html#aca3f5f829656d5e3fd7bdbbe1d0f2c0d":[3,0,0,13,6],
-"structlogit_1_1VariableValue.html#ace3b46f944f56822c728ba43b79a2201":[2,0,0,13,18],
-"structlogit_1_1VariableValue.html#ace3b46f944f56822c728ba43b79a2201":[3,0,0,13,18],
-"structlogit_1_1VariableValue.html#ace994beb0b40eb5152a483e6ad48842d":[2,0,0,13,24],
-"structlogit_1_1VariableValue.html#ace994beb0b40eb5152a483e6ad48842d":[3,0,0,13,24]
+"structlogit_1_1VariableValue.html#ab99997d39329337385ef913e75774857":[3,0,0,13,39]
 };

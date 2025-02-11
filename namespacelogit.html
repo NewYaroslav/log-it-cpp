@@ -232,6 +232,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a60f0324ca43457583e9a9b5aec809d4a" id="r_a60f0324ca43457583e9a9b5aec809d4a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60f0324ca43457583e9a9b5aec809d4a">get_log_level_color</a> (<a class="el" href="#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> log_level)</td></tr>
 <tr class="memdesc:a60f0324ca43457583e9a9b5aec809d4a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ANSI color code associated with a log level.  <br /></td></tr>
 <tr class="separator:a60f0324ca43457583e9a9b5aec809d4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad4223e1a453b7f28aabf9795d68b3a7" id="r_aad4223e1a453b7f28aabf9795d68b3a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad4223e1a453b7f28aabf9795d68b3a7">test_log_depth_3</a> ()</td></tr>
+<tr class="memdesc:aad4223e1a453b7f28aabf9795d68b3a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs test messages to verify path shortening at depth level 3.  <br /></td></tr>
+<tr class="separator:aad4223e1a453b7f28aabf9795d68b3a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc8dc91e6b62dc56cdbfa56f4c0568ba" id="r_adc8dc91e6b62dc56cdbfa56f4c0568ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc8dc91e6b62dc56cdbfa56f4c0568ba">test_log_depth_2</a> ()</td></tr>
+<tr class="memdesc:adc8dc91e6b62dc56cdbfa56f4c0568ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs test messages to verify path shortening at depth level 2.  <br /></td></tr>
+<tr class="separator:adc8dc91e6b62dc56cdbfa56f4c0568ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6da1870420ec61ebb0fed37d08dc3114" id="r_a6da1870420ec61ebb0fed37d08dc3114"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6da1870420ec61ebb0fed37d08dc3114">test_log_depth_1</a> ()</td></tr>
+<tr class="memdesc:a6da1870420ec61ebb0fed37d08dc3114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs test messages to verify path shortening at depth level 1.  <br /></td></tr>
+<tr class="separator:a6da1870420ec61ebb0fed37d08dc3114"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad2db70d1585274b64495732271ef3277" id="r_ad2db70d1585274b64495732271ef3277"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2db70d1585274b64495732271ef3277">args_to_array</a> (std::vector&lt; std::string &gt;::const_iterator name_iter)</td></tr>
 <tr class="memdesc:ad2db70d1585274b64495732271ef3277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base case of recursion for argument conversion — when there are no more arguments.  <br /></td></tr>
 <tr class="separator:ad2db70d1585274b64495732271ef3277"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -552,7 +561,7 @@ template&lt;&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="example__logit__basic_8cpp_source.html#l00036">36</a> of file <a class="el" href="example__logit__basic_8cpp_source.html">example_logit_basic.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="example__logit__basic_8cpp_source.html#l00037">37</a> of file <a class="el" href="example__logit__basic_8cpp_source.html">example_logit_basic.cpp</a>.</p>
 
 </div>
 </div>
@@ -912,6 +921,69 @@ template&lt;typename EnumType&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structlogit_1_1PathComponents.html" title="Structure to hold the root and components of a path.">PathComponents</a> object containing the root and components of the path. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00229">229</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a6da1870420ec61ebb0fed37d08dc3114" name="a6da1870420ec61ebb0fed37d08dc3114"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6da1870420ec61ebb0fed37d08dc3114">&#9670;&#160;</a></span>test_log_depth_1()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::test_log_depth_1 </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Logs test messages to verify path shortening at depth level 1. </p>
+
+<p class="definition">Definition at line <a class="el" href="test__log__depth__1_8hpp_source.html#l00011">11</a> of file <a class="el" href="test__log__depth__1_8hpp_source.html">test_log_depth_1.hpp</a>.</p>
+
+</div>
+</div>
+<a id="adc8dc91e6b62dc56cdbfa56f4c0568ba" name="adc8dc91e6b62dc56cdbfa56f4c0568ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc8dc91e6b62dc56cdbfa56f4c0568ba">&#9670;&#160;</a></span>test_log_depth_2()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::test_log_depth_2 </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Logs test messages to verify path shortening at depth level 2. </p>
+
+<p class="definition">Definition at line <a class="el" href="test__log__depth__2_8hpp_source.html#l00011">11</a> of file <a class="el" href="test__log__depth__2_8hpp_source.html">test_log_depth_2.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aad4223e1a453b7f28aabf9795d68b3a7" name="aad4223e1a453b7f28aabf9795d68b3a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad4223e1a453b7f28aabf9795d68b3a7">&#9670;&#160;</a></span>test_log_depth_3()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::test_log_depth_3 </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Logs test messages to verify path shortening at depth level 3. </p>
+
+<p class="definition">Definition at line <a class="el" href="test__log__depth__3_8hpp_source.html#l00011">11</a> of file <a class="el" href="test__log__depth__3_8hpp_source.html">test_log_depth_3.hpp</a>.</p>
 
 </div>
 </div>

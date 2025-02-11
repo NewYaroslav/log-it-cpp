@@ -150,7 +150,7 @@ Macros</h2></td></tr>
 <tr><td class="ititle" colspan="2"><p>Configuration macros for file-based loggers. </p>
 </td></tr>
 <tr class="memitem:gae21dc36eb3e43139cacbd07c92bea9b9" id="r_gae21dc36eb3e43139cacbd07c92bea9b9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gae21dc36eb3e43139cacbd07c92bea9b9">LOGIT_CONSOLE_PATTERN</a>&#160;&#160;&#160;&quot;%H:%M:%S.%e | %^%N([%50!g:%#])%v%$&quot;</td></tr>
-<tr class="memdesc:gae21dc36eb3e43139cacbd07c92bea9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$".  <br /></td></tr>
+<tr class="memdesc:gae21dc36eb3e43139cacbd07c92bea9b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to <code>%H:%M:%S.%e | %^N([%50!g:%#])%v%$</code>.  <br /></td></tr>
 <tr class="separator:gae21dc36eb3e43139cacbd07c92bea9b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0f7223e40eee5ab323ba83d779b471c9" id="r_ga0f7223e40eee5ab323ba83d779b471c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga0f7223e40eee5ab323ba83d779b471c9">LOGIT_FILE_LOGGER_PATH</a>&#160;&#160;&#160;&quot;data/logs&quot;</td></tr>
 <tr class="memdesc:ga0f7223e40eee5ab323ba83d779b471c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default directory path for log files. If <code>LOGIT_FILE_LOGGER_PATH</code> is not defined, it defaults to "data/logs".  <br /></td></tr>
@@ -161,8 +161,8 @@ Macros</h2></td></tr>
 <tr class="memitem:gab4d42b8c5a8fe2468557178ce120780b" id="r_gab4d42b8c5a8fe2468557178ce120780b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gab4d42b8c5a8fe2468557178ce120780b">LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</a>&#160;&#160;&#160;30</td></tr>
 <tr class="memdesc:gab4d42b8c5a8fe2468557178ce120780b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the number of days after which old log files are deleted. If <code>LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS</code> is not defined, it defaults to 30 days.  <br /></td></tr>
 <tr class="separator:gab4d42b8c5a8fe2468557178ce120780b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafeff518c76cf3749e91fdb8ad5e64bfa" id="r_gafeff518c76cf3749e91fdb8ad5e64bfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafeff518c76cf3749e91fdb8ad5e64bfa">LOGIT_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v&quot;</td></tr>
-<tr class="memdesc:gafeff518c76cf3749e91fdb8ad5e64bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v".  <br /></td></tr>
+<tr class="memitem:gafeff518c76cf3749e91fdb8ad5e64bfa" id="r_gafeff518c76cf3749e91fdb8ad5e64bfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafeff518c76cf3749e91fdb8ad5e64bfa">LOGIT_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%-5l] [%60!@] [thread:%t] %SC%v&quot;</td></tr>
+<tr class="memdesc:gafeff518c76cf3749e91fdb8ad5e64bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to <code>[%Y-%m-%d %H:%M:%S.%e] [%-5l] [%60!@] [thread:%t] %SC%v</code>.  <br /></td></tr>
 <tr class="separator:gafeff518c76cf3749e91fdb8ad5e64bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9084ea16f31554bdf35137910c027811" id="r_ga9084ea16f31554bdf35137910c027811"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga9084ea16f31554bdf35137910c027811">LOGIT_UNIQUE_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;%v&quot;</td></tr>
 <tr class="memdesc:ga9084ea16f31554bdf35137910c027811"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for unique file-based loggers. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "%v".  <br /></td></tr>
@@ -321,7 +321,7 @@ Examples:</h3>
       </table>
 </div><div class="memdoc">
 
-<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$". </p>
+<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to <code>%H:%M:%S.%e | %^N([%50!g:%#])%v%$</code>. </p>
 <p>This pattern controls the formatting of log messages sent to the console, including timestamp, message, and color. </p>
 
 <p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00092">92</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
@@ -416,15 +416,15 @@ Examples:</h3>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LOGIT_FILE_LOGGER_PATTERN&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v&quot;</td>
+          <td class="memname">#define LOGIT_FILE_LOGGER_PATTERN&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%-5l] [%60!@] [thread:%t] %SC%v&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v". </p>
+<p>Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to <code>[%Y-%m-%d %H:%M:%S.%e] [%-5l] [%60!@] [thread:%t] %SC%v</code>. </p>
 <p>This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00127">127</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00126">126</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
 
 </div>
 </div>
@@ -442,7 +442,7 @@ Examples:</h3>
 
 <p>Defines the default hash length for unique file names. If <code>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</code> is not defined, it defaults to 8. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00139">139</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00138">138</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
 
 </div>
 </div>
@@ -479,7 +479,7 @@ Examples:</h3>
 
 <p>Defines the default log pattern for unique file-based loggers. If <code>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "%v". </p>
 
-<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00133">133</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00132">132</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
 
 </div>
 </div>

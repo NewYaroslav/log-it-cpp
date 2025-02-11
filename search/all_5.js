@@ -19,6 +19,9 @@ var searchData=
   ['_5flogit_5fpattern_5fcompiler_5fhpp_5fincluded_16',['_LOGIT_PATTERN_COMPILER_HPP_INCLUDED',['../PatternCompiler_8hpp.html#a09c36d68103a38d8362bd754e70af6d3',1,'PatternCompiler.hpp']]],
   ['_5flogit_5fsimple_5flog_5fformatter_5fhpp_5fincluded_17',['_LOGIT_SIMPLE_LOG_FORMATTER_HPP_INCLUDED',['../SimpleLogFormatter_8hpp.html#a8cdbd02aa55e762aec5c00e4950f04b3',1,'SimpleLogFormatter.hpp']]],
   ['_5flogit_5ftask_5fexecutor_5fhpp_5fincluded_18',['_LOGIT_TASK_EXECUTOR_HPP_INCLUDED',['../TaskExecutor_8hpp.html#af16f5f37b58f4ed8090b1becc90212da',1,'TaskExecutor.hpp']]],
-  ['_5flogit_5fvariable_5fvalue_5fhpp_5fincluded_19',['_LOGIT_VARIABLE_VALUE_HPP_INCLUDED',['../VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38',1,'VariableValue.hpp']]],
-  ['_5fwarn_20',['_WARN',['../example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9aeb7992b6336dd0c633ac33c97dabd900',1,'example_logit_customized.cpp']]]
+  ['_5flogit_5ftest_5flog_5fdepth_5f1_5fhpp_5fincluded_19',['_LOGIT_TEST_LOG_DEPTH_1_HPP_INCLUDED',['../test__log__depth__1_8hpp.html#a5db1ab77d3434541aba834a415522851',1,'test_log_depth_1.hpp']]],
+  ['_5flogit_5ftest_5flog_5fdepth_5f2_5fhpp_5fincluded_20',['_LOGIT_TEST_LOG_DEPTH_2_HPP_INCLUDED',['../test__log__depth__2_8hpp.html#aa4b23f9594c84ffff80fd886629a4c4a',1,'test_log_depth_2.hpp']]],
+  ['_5flogit_5ftest_5flog_5fdepth_5f3_5fhpp_5fincluded_21',['_LOGIT_TEST_LOG_DEPTH_3_HPP_INCLUDED',['../test__log__depth__3_8hpp.html#aaafb46f4eb6b637a6142125fe45f739e',1,'test_log_depth_3.hpp']]],
+  ['_5flogit_5fvariable_5fvalue_5fhpp_5fincluded_22',['_LOGIT_VARIABLE_VALUE_HPP_INCLUDED',['../VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38',1,'VariableValue.hpp']]],
+  ['_5fwarn_23',['_WARN',['../example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9aeb7992b6336dd0c633ac33c97dabd900',1,'example_logit_customized.cpp']]]
 ];

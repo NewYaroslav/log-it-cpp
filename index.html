@@ -227,7 +227,7 @@ Usage</h1>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aLogIt_8hpp_html"><div class="ttname"><a href="LogIt_8hpp.html">LogIt.hpp</a></div><div class="ttdoc">Main header file for the LogIt++ library.</div></div>
-<div class="ttc" id="aexample__logit__basic_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> <a href="example__logit__basic_8cpp_source.html#l00069">example_logit_basic.cpp:69</a></div></div>
+<div class="ttc" id="aexample__logit__basic_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> <a href="example__logit__basic_8cpp_source.html#l00070">example_logit_basic.cpp:70</a></div></div>
 <div class="ttc" id="agroup__LoggingMacros_html_ga12684b2496a4438b7a97301261c08f97"><div class="ttname"><a href="group__LoggingMacros.html#ga12684b2496a4438b7a97301261c08f97">LOGIT_WAIT</a></div><div class="ttdeci">#define LOGIT_WAIT()</div><div class="ttdoc">Macro for waiting for all asynchronous loggers to finish processing.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00976">LogMacros.hpp:976</a></div></div>
 <div class="ttc" id="agroup__LoggingMacros_html_ga17ef9ac072ae417ecfd4fff7c1aa79ac"><div class="ttname"><a href="group__LoggingMacros.html#ga17ef9ac072ae417ecfd4fff7c1aa79ac">LOGIT_INFO_IF</a></div><div class="ttdeci">#define LOGIT_INFO_IF(condition,...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00317">LogMacros.hpp:317</a></div></div>
 <div class="ttc" id="agroup__LoggingMacros_html_ga658290ef063a518a1b8919c415c79d5e"><div class="ttname"><a href="group__LoggingMacros.html#ga658290ef063a518a1b8919c415c79d5e">LOGIT_STREAM_WARN</a></div><div class="ttdeci">#define LOGIT_STREAM_WARN()</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00073">LogMacros.hpp:73</a></div></div>
@@ -437,7 +437,7 @@ Configuration Macros</h1>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_CONSOLE_PATTERN</b>:</li>
 </ul>
-<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to <code>%H:%M:%S.%e | %^%v%$</code>.</p>
+<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to <code>%H:%M:%S.%e | %^N([%50!g:%#])%v%$</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// Customize the console log message pattern.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_CONSOLE_PATTERN &quot;%H:%M:%S.%e | %v&quot;</span></div>
 </div><!-- fragment --><ul>
@@ -455,7 +455,7 @@ Configuration Macros</h1>
 </div><!-- fragment --><ul>
 <li><b>LOGIT_FILE_LOGGER_PATTERN</b>:</li>
 </ul>
-<p>Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to <code>[%Y-%m-%d %H:%M:%S.%e] [%ffn:%#] [%!] [thread:%t] [%l] %SC%v</code>.</p>
+<p>Defines the default log pattern for file-based loggers. If <code>LOGIT_FILE_LOGGER_PATTERN</code> is not defined, it defaults to <code>[%Y-%m-%d %H:%M:%S.%e] [%-5l] [%60!@] [thread:%t] %SC%v</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// Customize the log file message pattern.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_FILE_LOGGER_PATTERN &quot;[%Y-%m-%d %H:%M:%S.%e] [%l] %v&quot;</span></div>
 </div><!-- fragment --><ul>
