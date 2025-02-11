@@ -85,7 +85,7 @@
 /// \{
 
 /// \brief Defines the default log pattern for the console logger.
-/// If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to "%H:%M:%S.%e | %^%N([%50!g:%#])%v%$".
+/// If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%%H:%%M:%%S.%%e | %^%N([%50!g:%#])%%v%$`.
 ///
 /// This pattern controls the formatting of log messages sent to the console, including timestamp, message, and color.
 #ifndef LOGIT_CONSOLE_PATTERN
@@ -119,12 +119,11 @@
 #endif
 
 /// \brief Defines the default log pattern for file-based loggers.
-/// If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to
-/// "[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v".
+/// If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%%Y-%%m-%%d %%H:%%M:%%S.%%e] [%-5l] [%60!@] [thread:%%t] %%SC%%v`.
 ///
 /// This pattern controls the formatting of log messages written to log files, including timestamp, filename, line number, function, and thread information.
 #ifndef LOGIT_FILE_LOGGER_PATTERN
-    #define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%g:%#] [%!] [thread:%t] [%l] %SC%v"
+    #define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%-5l] [%60!@] [thread:%t] %SC%v"
 #endif
 
 /// \brief Defines the default log pattern for unique file-based loggers.

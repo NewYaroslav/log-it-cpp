@@ -6,6 +6,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <log-it/LogIt.hpp>
+#include <log-it/parts/Test/loggers/file/file/file/test_log_depth_3.hpp>
 
 // Example enumeration
 enum class COLORS {
@@ -73,6 +74,8 @@ int main() {
     LOGIT_ADD_CONSOLE_DEFAULT();
     LOGIT_ADD_FILE_LOGGER_DEFAULT();
     LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE();
+
+    logit::test_log_depth_3();
 
     LOGIT_TRACE0();
 

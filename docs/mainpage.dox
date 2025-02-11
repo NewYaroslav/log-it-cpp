@@ -352,7 +352,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_CONSOLE_PATTERN**:
-\brief Defines the default log pattern for the console logger. If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%%H:%%M:%%S.%%e | %^%%v%$`.
+\brief Defines the default log pattern for the console logger. If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%%H:%%M:%%S.%%e | %^%N([%50!g:%#])%%v%$`.
 
 \code{.cpp}
 // Customize the console log message pattern.
@@ -376,7 +376,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_FILE_LOGGER_PATTERN**:
-\brief Defines the default log pattern for file-based loggers. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%%Y-%%m-%%d %%H:%%M:%%S.%%e] [%%ffn:%#] [%!] [thread:%%t] [%%l] %%SC%%v`.
+\brief Defines the default log pattern for file-based loggers. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%%Y-%%m-%%d %%H:%%M:%%S.%%e] [%-5l] [%60!@] [thread:%%t] %%SC%%v`.
 
 \code{.cpp}
 // Customize the log file message pattern.

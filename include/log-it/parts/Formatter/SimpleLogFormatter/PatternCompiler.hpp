@@ -365,6 +365,14 @@ namespace logit {
                         // Keep portions of the string from the beginning and end
                         size_t keep_size = (width - placeholder_size) / 2; // Portion to keep from each side
                         size_t keep_end = result.size() - keep_size;
+                        int line_size = 2 * keep_size + placeholder.size();
+
+                        while (line_size < width) {
+                            if (keep_end > 0) {
+                                --keep_end;
+                                ++line_size;
+                            } else break;
+                        }
 
                          // Construct the result: start + placeholder + end
                         result = result.substr(0, keep_size) + placeholder + result.substr(keep_end);
