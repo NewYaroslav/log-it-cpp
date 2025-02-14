@@ -141,11 +141,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a26ae46f8748ff5c313a3acc5fc6f7690"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables a logger by index.  <br /></td></tr>
 <tr class="separator:a26ae46f8748ff5c313a3acc5fc6f7690"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb95835f5427fe2f1e9b1bac0e251a82" id="r_abb95835f5427fe2f1e9b1bac0e251a82"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb95835f5427fe2f1e9b1bac0e251a82">is_logger_enabled</a> (int logger_index) const</td></tr>
-<tr class="memdesc:abb95835f5427fe2f1e9b1bac0e251a82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether a logger is enabled.  <br /></td></tr>
+<tr class="memdesc:abb95835f5427fe2f1e9b1bac0e251a82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a logger is enabled.  <br /></td></tr>
 <tr class="separator:abb95835f5427fe2f1e9b1bac0e251a82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3699b4c8c9a735cb6b58dbe3f8323f79" id="r_a3699b4c8c9a735cb6b58dbe3f8323f79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3699b4c8c9a735cb6b58dbe3f8323f79">set_logger_single_mode</a> (int logger_index, bool single_mode)</td></tr>
 <tr class="memdesc:a3699b4c8c9a735cb6b58dbe3f8323f79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the single-mode flag for a logger.  <br /></td></tr>
 <tr class="separator:a3699b4c8c9a735cb6b58dbe3f8323f79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a39a265a9277b66d938ec8e602a3beb65" id="r_a39a265a9277b66d938ec8e602a3beb65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39a265a9277b66d938ec8e602a3beb65">set_timestamp_offset</a> (int logger_index, int64_t offset_ms)</td></tr>
+<tr class="memdesc:a39a265a9277b66d938ec8e602a3beb65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the timestamp offset for a specific logger.  <br /></td></tr>
+<tr class="separator:a39a265a9277b66d938ec8e602a3beb65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a961e203d243f8abd1b9043b1ca917c73" id="r_a961e203d243f8abd1b9043b1ca917c73"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a961e203d243f8abd1b9043b1ca917c73">is_logger_single_mode</a> (int logger_index) const</td></tr>
 <tr class="memdesc:a961e203d243f8abd1b9043b1ca917c73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether a logger is in single mode.  <br /></td></tr>
 <tr class="separator:a961e203d243f8abd1b9043b1ca917c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -165,10 +168,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aaf04f9a4dbd3b7089aa9d4f0faceb651"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aaf04f9a4dbd3b7089aa9d4f0faceb651">log_and_return</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record, Ts &amp;&amp;... args) -&gt; decltype(std::forward_as_tuple(std::forward&lt; Ts &gt;(args)...))</td></tr>
 <tr class="memdesc:aaf04f9a4dbd3b7089aa9d4f0faceb651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs the message and returns a tuple of arguments.  <br /></td></tr>
 <tr class="separator:aaf04f9a4dbd3b7089aa9d4f0faceb651"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cfaa9dd1db03bc6ac0e1c198f42a058" id="r_a7cfaa9dd1db03bc6ac0e1c198f42a058"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a7cfaa9dd1db03bc6ac0e1c198f42a058"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a7cfaa9dd1db03bc6ac0e1c198f42a058">log_and_return</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record, T &amp;&amp;arg) -&gt; decltype(arg)</td></tr>
-<tr class="memdesc:a7cfaa9dd1db03bc6ac0e1c198f42a058"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs the message and returns a single argument.  <br /></td></tr>
-<tr class="separator:a7cfaa9dd1db03bc6ac0e1c198f42a058"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ad4dc28ddb150aa4d7fb0a4074211b6" id="r_a0ad4dc28ddb150aa4d7fb0a4074211b6"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a0ad4dc28ddb150aa4d7fb0a4074211b6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a0ad4dc28ddb150aa4d7fb0a4074211b6">log_and_return</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record, T &amp;&amp;args) -&gt; decltype(args)</td></tr>
+<tr class="memdesc:a0ad4dc28ddb150aa4d7fb0a4074211b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs the message and returns a tuple of arguments.  <br /></td></tr>
+<tr class="separator:a0ad4dc28ddb150aa4d7fb0a4074211b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a94daa3e08b410190a8ff42f06da07e" id="r_a0a94daa3e08b410190a8ff42f06da07e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a94daa3e08b410190a8ff42f06da07e">log_and_return</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record) -&gt; std::tuple&lt;&gt;</td></tr>
 <tr class="memdesc:a0a94daa3e08b410190a8ff42f06da07e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message without arguments and returns an empty tuple.  <br /></td></tr>
 <tr class="separator:a0a94daa3e08b410190a8ff42f06da07e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -209,7 +212,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Singleton class that manages multiple loggers and formatters. </p>
-<p>The <code><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a></code> class allows adding multiple logger and formatter pairs (strategies) and provides methods to log messages using these strategies. It supports both synchronous and asynchronous logging. The class is thread-safe. </p>
+<p>The <code><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a></code> class allows adding multiple logger and formatter pairs. It provides methods to log messages using these strategies and supports both synchronous and asynchronous logging. The class is thread-safe. </p>
 
 <p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00021">21</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -261,7 +264,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00222">222</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00234">234</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -351,14 +354,14 @@ Private Attributes</h2></td></tr>
 <p>Adds a logger and its corresponding formatter. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logger</td><td>A unique pointer to the logger instance. </td></tr>
-    <tr><td class="paramname">formatter</td><td>A unique pointer to the formatter instance. </td></tr>
+    <tr><td class="paramname">logger</td><td>Unique pointer to a logger instance. </td></tr>
+    <tr><td class="paramname">formatter</td><td>Unique pointer to a formatter instance. </td></tr>
     <tr><td class="paramname">single_mode</td><td>If true, this logger will only be invoked by specific log macros (e.g., LOGIT_TRACE_TO) that explicitly target it using the logger's index. It will not process logs from general log macros (e.g., LOGIT_TRACE). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00047">47</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00046">46</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -392,14 +395,14 @@ Private Attributes</h2></td></tr>
 <p>Retrieves a floating-point parameter from the logger. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logger_index</td><td>The index of the logger. </td></tr>
-    <tr><td class="paramname">param</td><td>The logger parameter to retrieve. </td></tr>
+    <tr><td class="paramname">logger_index</td><td>Index of the logger. </td></tr>
+    <tr><td class="paramname">param</td><td><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a> parameter to retrieve. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A double representing the requested parameter, or 0.0 if the parameter is unsupported. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The requested parameter as a double, or 0.0 if unsupported. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00152">152</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00161">161</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -463,14 +466,14 @@ Private Attributes</h2></td></tr>
 <p>Retrieves an integer parameter from the logger. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logger_index</td><td>The index of the logger. </td></tr>
-    <tr><td class="paramname">param</td><td>The logger parameter to retrieve. </td></tr>
+    <tr><td class="paramname">logger_index</td><td>Index of the logger. </td></tr>
+    <tr><td class="paramname">param</td><td><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a> parameter to retrieve. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>An integer representing the requested parameter, or 0 if the parameter is unsupported. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The requested parameter as an integer, or 0 if unsupported. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00140">140</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00149">149</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -504,14 +507,14 @@ Private Attributes</h2></td></tr>
 <p>Retrieves a string parameter from the logger. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logger_index</td><td>The index of the logger. </td></tr>
-    <tr><td class="paramname">param</td><td>The logger parameter to retrieve. </td></tr>
+    <tr><td class="paramname">logger_index</td><td>Index of the logger. </td></tr>
+    <tr><td class="paramname">param</td><td><a class="el" href="classlogit_1_1Logger.html" title="Singleton class that manages multiple loggers and formatters.">Logger</a> parameter to retrieve. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A string representing the requested parameter, or an empty string if the parameter is unsupported. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The requested parameter as a string, or an empty string if unsupported. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00128">128</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00137">137</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -538,16 +541,16 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Checks whether a logger is enabled. </p>
+<p>Checks if a logger is enabled. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logger_index</td><td>The index of the logger to check. </td></tr>
+    <tr><td class="paramname">logger_index</td><td>Index of the logger. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the logger is enabled, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00073">73</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00072">72</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -577,13 +580,13 @@ Private Attributes</h2></td></tr>
 <p>Checks whether a logger is in single mode. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logger_index</td><td>The index of the logger. </td></tr>
+    <tr><td class="paramname">logger_index</td><td>Index of the logger. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the logger is in single mode, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00094">94</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00103">103</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -614,12 +617,12 @@ Private Attributes</h2></td></tr>
 <p>The <code><a class="el" href="#a366dcaa3bec5f7e1faab9b865584822a" title="Logs a LogRecord using all added loggers and formatters.">log()</a></code> method formats the log message using each logger's corresponding formatter and sends the formatted message to each logger.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">record</td><td>The log record to be logged. </td></tr>
+    <tr><td class="paramname">record</td><td>Log record to be logged. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00108">108</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00117">117</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -649,18 +652,18 @@ Private Attributes</h2></td></tr>
 <p>Logs a message without arguments and returns an empty tuple. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">record</td><td>The log record. </td></tr>
+    <tr><td class="paramname">record</td><td>Log record. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An empty tuple. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00185">185</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00197">197</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
-<a id="a7cfaa9dd1db03bc6ac0e1c198f42a058" name="a7cfaa9dd1db03bc6ac0e1c198f42a058"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cfaa9dd1db03bc6ac0e1c198f42a058">&#9670;&#160;</a></span>log_and_return() <span class="overload">[2/3]</span></h2>
+<a id="a0ad4dc28ddb150aa4d7fb0a4074211b6" name="a0ad4dc28ddb150aa4d7fb0a4074211b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ad4dc28ddb150aa4d7fb0a4074211b6">&#9670;&#160;</a></span>log_and_return() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -678,7 +681,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">T &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>arg</em></span>&#160;) -&gt; decltype(arg) </td>
+          <td class="paramtype">T &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>args</em></span>&#160;) -&gt; decltype(args) </td>
         </tr>
       </table>
   </td>
@@ -688,23 +691,24 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Logs the message and returns a single argument. </p>
+<p>Logs the message and returns a tuple of arguments. </p>
+<p>This function logs the provided arguments and returns them as a tuple.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">T</td><td>Type of the argument. </td></tr>
+    <tr><td class="paramname">Ts</td><td>Types of the arguments. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">record</td><td>The log record. </td></tr>
-    <tr><td class="paramname">arg</td><td>The argument to be logged. </td></tr>
+    <tr><td class="paramname">record</td><td>Log record. </td></tr>
+    <tr><td class="paramname">args</td><td>Arguments to be logged. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The logged argument. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A tuple containing the logged arguments. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00177">177</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00189">189</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -746,14 +750,14 @@ template&lt;typename... Ts&gt; </div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">record</td><td>The log record. </td></tr>
-    <tr><td class="paramname">args</td><td>The arguments to be logged. </td></tr>
+    <tr><td class="paramname">record</td><td>Log record. </td></tr>
+    <tr><td class="paramname">args</td><td>Arguments to be logged. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A tuple containing the arguments. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00166">166</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00175">175</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -851,7 +855,7 @@ template&lt;typename... Ts&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00209">209</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00221">221</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -885,13 +889,13 @@ template&lt;typename... Ts&gt; </div>
 <p>Enables or disables a logger by index. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logger_index</td><td>The index of the logger to modify. </td></tr>
-    <tr><td class="paramname">enabled</td><td>True to enable the logger, false to disable it. </td></tr>
+    <tr><td class="paramname">logger_index</td><td>Index of the logger. </td></tr>
+    <tr><td class="paramname">enabled</td><td>True to enable, false to disable. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00063">63</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00062">62</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -925,13 +929,53 @@ template&lt;typename... Ts&gt; </div>
 <p>Sets the single-mode flag for a logger. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">logger_index</td><td>The index of the logger. </td></tr>
+    <tr><td class="paramname">logger_index</td><td>Index of the logger to modify. </td></tr>
     <tr><td class="paramname">single_mode</td><td>True to set the logger to single mode, false otherwise. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00084">84</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00083">83</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a39a265a9277b66d938ec8e602a3beb65" name="a39a265a9277b66d938ec8e602a3beb65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39a265a9277b66d938ec8e602a3beb65">&#9670;&#160;</a></span>set_timestamp_offset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::Logger::set_timestamp_offset </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>logger_index</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int64_t</td>          <td class="paramname"><span class="paramname"><em>offset_ms</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the timestamp offset for a specific logger. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">logger_index</td><td>Index of the logger to modify. </td></tr>
+    <tr><td class="paramname">offset_ms</td><td>Offset in milliseconds. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00093">93</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -959,9 +1003,9 @@ template&lt;typename... Ts&gt; </div>
 </div><div class="memdoc">
 
 <p>Waits for all asynchronous loggers to finish processing. </p>
-<p>This method ensures that all log messages are fully processed before continuing. It calls the <code><a class="el" href="#a3084c4bb7dc11831dac3dfa1d5633103" title="Waits for all asynchronous loggers to finish processing.">wait()</a></code> function of each logger. </p>
+<p>Ensures that all log messages are fully processed before continuing. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00035">35</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00034">34</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -988,7 +1032,7 @@ template&lt;typename... Ts&gt; </div>
 
 <p>Container for logger-formatter pairs. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00201">201</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00213">213</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1014,7 +1058,7 @@ template&lt;typename... Ts&gt; </div>
 
 <p>Mutex for thread safety during logging operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00202">202</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00214">214</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>

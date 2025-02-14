@@ -1,5 +1,14 @@
 var NAVTREEINDEX4 =
 {
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9ae4f8fcd03b0d4eabea27a7c68a79408f":[3,0,0,13,0,16],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9ae8db7ba64ea171aade9015b88e05f380":[2,0,0,13,0,17],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9ae8db7ba64ea171aade9015b88e05f380":[3,0,0,13,0,17],
+"structlogit_1_1VariableValue.html#ab472e9c282c57ed9ef77ded999374b16":[2,0,0,13,30],
+"structlogit_1_1VariableValue.html#ab472e9c282c57ed9ef77ded999374b16":[3,0,0,13,30],
+"structlogit_1_1VariableValue.html#ab88ceaa5e13b3de04e896cb4057c3b0e":[2,0,0,13,9],
+"structlogit_1_1VariableValue.html#ab88ceaa5e13b3de04e896cb4057c3b0e":[3,0,0,13,9],
+"structlogit_1_1VariableValue.html#ab99997d39329337385ef913e75774857":[2,0,0,13,39],
+"structlogit_1_1VariableValue.html#ab99997d39329337385ef913e75774857":[3,0,0,13,39],
 "structlogit_1_1VariableValue.html#ac6e0e6fad358fe22b5ea62a817586067":[2,0,0,13,19],
 "structlogit_1_1VariableValue.html#ac6e0e6fad358fe22b5ea62a817586067":[3,0,0,13,19],
 "structlogit_1_1VariableValue.html#aca3f5f829656d5e3fd7bdbbe1d0f2c0d":[2,0,0,13,6],

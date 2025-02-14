@@ -132,6 +132,9 @@ Inheritance diagram for logit::ILogFormatter:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2c3401af20fafec7d37fafa1e8e084f3" id="r_a2c3401af20fafec7d37fafa1e8e084f3"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c3401af20fafec7d37fafa1e8e084f3">~ILogFormatter</a> ()=default</td></tr>
 <tr class="separator:a2c3401af20fafec7d37fafa1e8e084f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa1b2041f08d8f4c3c1673d79d5b28e9" id="r_afa1b2041f08d8f4c3c1673d79d5b28e9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa1b2041f08d8f4c3c1673d79d5b28e9">set_timestamp_offset</a> (int64_t offset_ms)=0</td></tr>
+<tr class="memdesc:afa1b2041f08d8f4c3c1673d79d5b28e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the timestamp offset for log formatting.  <br /></td></tr>
+<tr class="separator:afa1b2041f08d8f4c3c1673d79d5b28e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae513f0253954fd91a0cbbec91fe2d333" id="r_ae513f0253954fd91a0cbbec91fe2d333"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae513f0253954fd91a0cbbec91fe2d333">format</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record) const =0</td></tr>
 <tr class="memdesc:ae513f0253954fd91a0cbbec91fe2d333"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a log record into a string.  <br /></td></tr>
 <tr class="separator:ae513f0253954fd91a0cbbec91fe2d333"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,6 +205,42 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>A string representing the formatted log message. </dd></dl>
 
 <p>Implemented in <a class="el" href="classlogit_1_1SimpleLogFormatter.html#ad92e97e6274ff28d0620cb8f643f841c">logit::SimpleLogFormatter</a>.</p>
+
+</div>
+</div>
+<a id="afa1b2041f08d8f4c3c1673d79d5b28e9" name="afa1b2041f08d8f4c3c1673d79d5b28e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa1b2041f08d8f4c3c1673d79d5b28e9">&#9670;&#160;</a></span>set_timestamp_offset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void logit::ILogFormatter::set_timestamp_offset </td>
+          <td>(</td>
+          <td class="paramtype">int64_t</td>          <td class="paramname"><span class="paramname"><em>offset_ms</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the timestamp offset for log formatting. </p>
+<p>This function allows setting a timezone offset in milliseconds, which will be used for adjusting timestamps in formatted log messages.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">offset_ms</td><td>Timezone offset in milliseconds. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classlogit_1_1SimpleLogFormatter.html#a8537bca0caaec144f32e715a6f45f182">logit::SimpleLogFormatter</a>.</p>
 
 </div>
 </div>

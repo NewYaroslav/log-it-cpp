@@ -148,6 +148,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7c0d969ae06d681672fc6f95b90af925" id="r_a7c0d969ae06d681672fc6f95b90af925"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c0d969ae06d681672fc6f95b90af925">set_pattern</a> (const std::string &amp;pattern, bool json_format=false)</td></tr>
 <tr class="memdesc:a7c0d969ae06d681672fc6f95b90af925"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets a custom pattern for log formatting or switches to JSON formatting.  <br /></td></tr>
 <tr class="separator:a7c0d969ae06d681672fc6f95b90af925"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8537bca0caaec144f32e715a6f45f182" id="r_a8537bca0caaec144f32e715a6f45f182"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8537bca0caaec144f32e715a6f45f182">set_timestamp_offset</a> (int64_t offset_ms) override</td></tr>
+<tr class="memdesc:a8537bca0caaec144f32e715a6f45f182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the timestamp offset for log formatting.  <br /></td></tr>
+<tr class="separator:a8537bca0caaec144f32e715a6f45f182"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad92e97e6274ff28d0620cb8f643f841c" id="r_ad92e97e6274ff28d0620cb8f643f841c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad92e97e6274ff28d0620cb8f643f841c">format</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record) const override</td></tr>
 <tr class="memdesc:ad92e97e6274ff28d0620cb8f643f841c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a log record according to the current pattern or as a JSON string.  <br /></td></tr>
 <tr class="separator:ad92e97e6274ff28d0620cb8f643f841c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,6 +184,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a25081384d09bcfb0ce01457789183656" id="r_a25081384d09bcfb0ce01457789183656"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structlogit_1_1FormatInstruction.html">FormatInstruction</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25081384d09bcfb0ce01457789183656">m_compiled_instructions</a></td></tr>
 <tr class="memdesc:a25081384d09bcfb0ce01457789183656"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compiled instructions from the format pattern.  <br /></td></tr>
 <tr class="separator:a25081384d09bcfb0ce01457789183656"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad56612615021665caac2185f23617652" id="r_ad56612615021665caac2185f23617652"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad56612615021665caac2185f23617652">m_offset_ms</a> = ATOMIC_VAR_INIT(0)</td></tr>
+<tr class="memdesc:ad56612615021665caac2185f23617652"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timestamp offset in milliseconds.  <br /></td></tr>
+<tr class="separator:ad56612615021665caac2185f23617652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A simple log formatter that formats log messages based on a user-defined pattern. </p>
@@ -284,7 +290,7 @@ Private Attributes</h2></td></tr>
 <p>Compiles the log format pattern into instructions. </p>
 <p>This method compiles the format string into a series of instructions that are applied when formatting log messages. </p>
 
-<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00074">74</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00085">85</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
 
 </div>
 </div>
@@ -321,7 +327,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A properly escaped JSON string. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00131">131</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00142">142</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
 
 </div>
 </div>
@@ -360,7 +366,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogFormatter.html#ae513f0253954fd91a0cbbec91fe2d333">logit::ILogFormatter</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00058">58</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00068">68</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
 
 </div>
 </div>
@@ -397,7 +403,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A JSON string representing the log message. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00100">100</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00111">111</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
 
 </div>
 </div>
@@ -434,7 +440,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A formatted string representing the log message. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00085">85</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00096">96</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
 
 </div>
 </div>
@@ -479,6 +485,44 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a8537bca0caaec144f32e715a6f45f182" name="a8537bca0caaec144f32e715a6f45f182"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8537bca0caaec144f32e715a6f45f182">&#9670;&#160;</a></span>set_timestamp_offset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::SimpleLogFormatter::set_timestamp_offset </td>
+          <td>(</td>
+          <td class="paramtype">int64_t</td>          <td class="paramname"><span class="paramname"><em>offset_ms</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the timestamp offset for log formatting. </p>
+<p>This function allows setting a timezone offset in milliseconds, which will be used for adjusting timestamps in formatted log messages.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">offset_ms</td><td>Timezone offset in milliseconds. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classlogit_1_1ILogFormatter.html#afa1b2041f08d8f4c3c1673d79d5b28e9">logit::ILogFormatter</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00057">57</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a4b6491b11f255ecb7236bd843207f1f7" name="a4b6491b11f255ecb7236bd843207f1f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4b6491b11f255ecb7236bd843207f1f7">&#9670;&#160;</a></span>thread_id_to_string()</h2>
 
@@ -512,7 +556,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A string representation of the thread ID. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00160">160</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00171">171</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
 
 </div>
 </div>
@@ -539,7 +583,7 @@ Private Attributes</h2></td></tr>
 
 <p>Compiled instructions from the format pattern. </p>
 
-<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00068">68</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00078">78</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
 
 </div>
 </div>
@@ -565,7 +609,33 @@ Private Attributes</h2></td></tr>
 
 <p>Formatter configuration holding the log format pattern. </p>
 
-<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00067">67</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00077">77</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ad56612615021665caac2185f23617652" name="ad56612615021665caac2185f23617652"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad56612615021665caac2185f23617652">&#9670;&#160;</a></span>m_offset_ms</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::atomic&lt;int64_t&gt; logit::SimpleLogFormatter::m_offset_ms = ATOMIC_VAR_INIT(0)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Timestamp offset in milliseconds. </p>
+
+<p class="definition">Definition at line <a class="el" href="SimpleLogFormatter_8hpp_source.html#l00079">79</a> of file <a class="el" href="SimpleLogFormatter_8hpp_source.html">SimpleLogFormatter.hpp</a>.</p>
 
 </div>
 </div>
