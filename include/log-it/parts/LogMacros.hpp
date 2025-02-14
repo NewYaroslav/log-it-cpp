@@ -901,72 +901,78 @@
 /// Macros for managing loggers.
 /// \{
 
-/// \brief Macro for retrieving a string parameter from a logger.
-/// \param logger_index The index of the logger.
-/// \param param The logger parameter to retrieve.
-/// \return A string representing the requested parameter.
+/// \brief Retrieves a string parameter from a logger.
+/// \param logger_index Index of the logger.
+/// \param param Parameter to retrieve.
+/// \return Requested parameter as a string.
 #define LOGIT_GET_STRING_PARAM(logger_index, param) \
     logit::Logger::get_instance().get_string_param(logger_index, param)
 
-/// \brief Macro for retrieving an integer parameter from a logger.
-/// \param logger_index The index of the logger.
-/// \param param The logger parameter to retrieve.
-/// \return An integer representing the requested parameter.
+/// \brief Retrieves an integer parameter from a logger.
+/// \param logger_index Index of the logger.
+/// \param param Parameter to retrieve.
+/// \return Requested parameter as an integer.
 #define LOGIT_GET_INT_PARAM(logger_index, param) \
     logit::Logger::get_instance().get_int_param(logger_index, param)
 
-/// \brief Macro for retrieving a floating-point parameter from a logger.
-/// \param logger_index The index of the logger.
-/// \param param The logger parameter to retrieve.
-/// \return A double representing the requested parameter.
+/// \brief Retrieves a floating-point parameter from a logger.
+/// \param logger_index Index of the logger.
+/// \param param Parameter to retrieve.
+/// \return Requested parameter as a double.
 #define LOGIT_GET_FLOAT_PARAM(logger_index, param) \
     logit::Logger::get_instance().get_float_param(logger_index, param)
 
-/// \brief Macro for retrieving the last log file name from a specific logger.
-/// \param logger_index The index of the logger.
-/// \return The name of the last file written to.
+/// \brief Retrieves the last log file name from a specific logger.
+/// \param logger_index Index of the logger.
+/// \return Last file name written to.
 #define LOGIT_GET_LAST_FILE_NAME(logger_index) \
     logit::Logger::get_instance().get_string_param(logger_index, logit::LoggerParam::LastFileName)
 
-/// \brief Macro for retrieving the last log file path from a specific logger.
-/// \param logger_index The index of the logger.
-/// \return The full path of the last file written to.
+/// \brief Retrieves the last log file path from a specific logger.
+/// \param logger_index Index of the logger.
+/// \return Full path of the last file written to.
 #define LOGIT_GET_LAST_FILE_PATH(logger_index) \
     logit::Logger::get_instance().get_string_param(logger_index, logit::LoggerParam::LastFilePath)
 
-/// \brief Macro for retrieving the timestamp of the last log from a specific logger.
-/// \param logger_index The index of the logger.
-/// \return The timestamp of the last log.
+/// \brief Retrieves the timestamp of the last log from a specific logger.
+/// \param logger_index Index of the logger.
+/// \return Timestamp of the last log.
 #define LOGIT_GET_LAST_LOG_TIMESTAMP(logger_index) \
     logit::Logger::get_instance().get_int_param(logger_index, logit::LoggerParam::LastLogTimestamp)
 
-/// \brief Macro for retrieving the time since the last log from a specific logger.
-/// \param logger_index The index of the logger.
-/// \return The time elapsed since the last log in seconds.
+/// \brief Retrieves the time since the last log from a specific logger.
+/// \param logger_index Index of the logger.
+/// \return Time elapsed since the last log in seconds.
 #define LOGIT_GET_TIME_SINCE_LAST_LOG(logger_index) \
     logit::Logger::get_instance().get_float_param(logger_index, logit::LoggerParam::TimeSinceLastLog)
 
-/// \brief Enables or disables a logger by index.
-/// \param logger_index The index of the logger.
-/// \param enabled True to enable the logger, false to disable it.
+/// \brief Enables or disables a logger.
+/// \param logger_index Index of the logger.
+/// \param enabled True to enable, false to disable.
 #define LOGIT_SET_LOGGER_ENABLED(logger_index, enabled) \
     logit::Logger::get_instance().set_logger_enabled(logger_index, enabled)
 
-/// \brief Checks whether a logger is enabled.
-/// \param logger_index The index of the logger.
-/// \return True if the logger is enabled, false otherwise.
+/// \brief Checks if a logger is enabled.
+/// \param logger_index Index of the logger.
+/// \return True if enabled, false otherwise.
 #define LOGIT_IS_LOGGER_ENABLED(logger_index) \
     logit::Logger::get_instance().is_logger_enabled(logger_index)
 
-/// \brief Sets the single-mode flag for a logger.
-/// \param logger_index The index of the logger.
-/// \param single_mode True to set the logger to single mode, false otherwise.
+/// \brief Sets single-mode for a specific logger.
+/// \param logger_index Index of the logger.
+/// \param single_mode True to enable single mode, false otherwise.
 #define LOGIT_SET_SINGLE_MODE(logger_index, single_mode) \
     logit::Logger::get_instance().set_logger_single_mode(logger_index, single_mode)
 
-/// \brief Checks whether a logger is in single mode.
-/// \param logger_index The index of the logger.
-/// \return True if the logger is in single mode, false otherwise.
+/// \brief Sets the timestamp offset for a specific logger.
+/// \param logger_index Index of the logger.
+/// \param offset_ms Offset in milliseconds.
+#define LOGIT_SET_TIME_OFFSET(logger_index, offset_ms) \
+    logit::Logger::get_instance().set_timestamp_offset(logger_index, offset_ms)
+
+/// \brief Checks if a logger is in single mode.
+/// \param logger_index Index of the logger.
+/// \return True if in single mode, false otherwise.
 #define LOGIT_IS_SINGLE_MODE(logger_index) \
     logit::Logger::get_instance().is_logger_single_mode(logger_index)
 

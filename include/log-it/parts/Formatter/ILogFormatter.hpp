@@ -17,6 +17,14 @@ namespace logit {
     public:
         virtual ~ILogFormatter() = default;
 
+        /// \brief Sets the timestamp offset for log formatting.
+        ///
+        /// This function allows setting a timezone offset in milliseconds, which will be used
+        /// for adjusting timestamps in formatted log messages.
+        ///
+        /// \param offset_ms Timezone offset in milliseconds.
+        virtual void set_timestamp_offset(int64_t offset_ms) = 0;
+
         /// \brief Formats a log record into a string.
         ///
         /// This pure virtual function must be implemented by any class deriving from `ILogFormatter`.

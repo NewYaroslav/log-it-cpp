@@ -48,6 +48,16 @@ namespace logit {
             compile_pattern();
         }
 
+        /// \brief Sets the timestamp offset for log formatting.
+        ///
+        /// This function allows setting a timezone offset in milliseconds, which will be used
+        /// for adjusting timestamps in formatted log messages.
+        ///
+        /// \param offset_ms Timezone offset in milliseconds.
+        void set_timestamp_offset(int64_t offset_ms) override {
+            m_offset_ms = offset_ms;
+        }
+
         /// \brief Formats a log record according to the current pattern or as a JSON string.
         ///
         /// This method formats the log message either by applying the compiled pattern instructions or
@@ -66,6 +76,7 @@ namespace logit {
     private:
         Config m_config;                                        ///< Formatter configuration holding the log format pattern.
         std::vector<FormatInstruction> m_compiled_instructions; ///< Compiled instructions from the format pattern.
+        std::atomic<int64_t> m_offset_ms = ATOMIC_VAR_INIT(0);  ///< Timestamp offset in milliseconds.
 
         /// \brief Compiles the log format pattern into instructions.
         ///
@@ -83,7 +94,7 @@ namespace logit {
         /// \param record The log record containing log information.
         /// \return A formatted string representing the log message.
         std::string format_as_pattern(const LogRecord& record) const {
-            auto dt = time_shield::to_date_time_ms<time_shield::DateTimeStruct>(record.timestamp_ms);
+            auto dt = time_shield::to_date_time_ms<time_shield::DateTimeStruct>(record.timestamp_ms + m_offset_ms);
             std::ostringstream oss;
             for (const auto& instruction : m_compiled_instructions) {
                 instruction.apply(oss, record, dt);
