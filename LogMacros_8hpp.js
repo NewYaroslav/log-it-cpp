@@ -167,6 +167,7 @@ var LogMacros_8hpp =
     [ "LOGIT_SET_LOGGER_ENABLED", "group__LoggingMacros.html#gaf744ecef490aed85ecaf8c43ce568067", null ],
     [ "LOGIT_SET_SINGLE_MODE", "group__LoggingMacros.html#gabac30523df5b00f6a08d1a0ca00a05b3", null ],
     [ "LOGIT_SET_TIME_OFFSET", "group__LoggingMacros.html#ga842ef1f7a95f5d28725b046d490987ea", null ],
+    [ "LOGIT_SHUTDOWN", "group__LoggingMacros.html#ga29574bf5e7f89ce7ce5d84bc638aa5cc", null ],
     [ "LOGIT_STREAM", "group__LoggingMacros.html#ga599ac268ab56ce5ea484256db167edfc", null ],
     [ "LOGIT_STREAM_DEBUG", "group__LoggingMacros.html#ga95b78b86a2221614596f90896114519e", null ],
     [ "LOGIT_STREAM_DEBUG_TO", "group__LoggingMacros.html#gaee8c9210a4e563dddb254498fea01677", null ],

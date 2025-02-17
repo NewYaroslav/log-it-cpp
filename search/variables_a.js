@@ -18,10 +18,11 @@ var searchData=
   ['m_5fpending_5flogs_5fcv_15',['m_pending_logs_cv',['../classlogit_1_1UniqueFileLogger.html#a42488857596a0e952ab1bb3b32136cf1',1,'logit::UniqueFileLogger']]],
   ['m_5fqueue_5fcondition_16',['m_queue_condition',['../classlogit_1_1TaskExecutor.html#adfe82b7987640219085d4a3f8aff3f0a',1,'logit::TaskExecutor']]],
   ['m_5fqueue_5fmutex_17',['m_queue_mutex',['../classlogit_1_1TaskExecutor.html#a35776ba379faad1313ff4cf4d987c9a0',1,'logit::TaskExecutor']]],
-  ['m_5fstop_5fflag_18',['m_stop_flag',['../classlogit_1_1TaskExecutor.html#a48a4ec5da683f9806a8ce3962540c754',1,'logit::TaskExecutor']]],
-  ['m_5fstream_19',['m_stream',['../classlogit_1_1LogStream.html#ac279ad8749c5ef2ffafb1df51861e6dd',1,'logit::LogStream']]],
-  ['m_5ftasks_5fqueue_20',['m_tasks_queue',['../classlogit_1_1TaskExecutor.html#a53c41a85bb105c70e6f5b879897d46ef',1,'logit::TaskExecutor']]],
-  ['m_5fthread_5flog_5finfo_21',['m_thread_log_info',['../classlogit_1_1UniqueFileLogger.html#a46d2a7bd77db687022d3cfb1866707a1',1,'logit::UniqueFileLogger']]],
-  ['m_5fthread_5flog_5finfo_5fmutex_22',['m_thread_log_info_mutex',['../classlogit_1_1UniqueFileLogger.html#ae2bff072a4144569868d338dc85806cf',1,'logit::UniqueFileLogger']]],
-  ['m_5fworker_5fthread_23',['m_worker_thread',['../classlogit_1_1TaskExecutor.html#aaacb830e722cd9f074cc4fa611811c05',1,'logit::TaskExecutor']]]
+  ['m_5fshutdown_18',['m_shutdown',['../classlogit_1_1Logger.html#aa26a0f9acca5f4b4812e438d9c82ed20',1,'logit::Logger']]],
+  ['m_5fstop_5fflag_19',['m_stop_flag',['../classlogit_1_1TaskExecutor.html#a48a4ec5da683f9806a8ce3962540c754',1,'logit::TaskExecutor']]],
+  ['m_5fstream_20',['m_stream',['../classlogit_1_1LogStream.html#ac279ad8749c5ef2ffafb1df51861e6dd',1,'logit::LogStream']]],
+  ['m_5ftasks_5fqueue_21',['m_tasks_queue',['../classlogit_1_1TaskExecutor.html#a53c41a85bb105c70e6f5b879897d46ef',1,'logit::TaskExecutor']]],
+  ['m_5fthread_5flog_5finfo_22',['m_thread_log_info',['../classlogit_1_1UniqueFileLogger.html#a46d2a7bd77db687022d3cfb1866707a1',1,'logit::UniqueFileLogger']]],
+  ['m_5fthread_5flog_5finfo_5fmutex_23',['m_thread_log_info_mutex',['../classlogit_1_1UniqueFileLogger.html#ae2bff072a4144569868d338dc85806cf',1,'logit::UniqueFileLogger']]],
+  ['m_5fworker_5fthread_24',['m_worker_thread',['../classlogit_1_1TaskExecutor.html#aaacb830e722cd9f074cc4fa611811c05',1,'logit::TaskExecutor']]]
 ];

@@ -8,6 +8,7 @@ var classlogit_1_1TaskExecutor =
     [ "get_instance", "classlogit_1_1TaskExecutor.html#ad8c2157b95313d9b7afb0b943b94d5c5", null ],
     [ "operator=", "classlogit_1_1TaskExecutor.html#aa6cd9be85a799c74216bdab7f5e56f07", null ],
     [ "operator=", "classlogit_1_1TaskExecutor.html#a63a22ff243f765b89bf1ba5e4530aefd", null ],
+    [ "shutdown", "classlogit_1_1TaskExecutor.html#a4059ffcc991c60863981a27868c79dd6", null ],
     [ "wait", "classlogit_1_1TaskExecutor.html#aa42756ad05f6fd6fc110d280b1a324b3", null ],
     [ "worker_function", "classlogit_1_1TaskExecutor.html#abe84b6674bbf1ae60c5527b5ea16a8fe", null ],
     [ "m_queue_condition", "classlogit_1_1TaskExecutor.html#adfe82b7987640219085d4a3f8aff3f0a", null ],

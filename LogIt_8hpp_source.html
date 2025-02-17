@@ -115,25 +115,31 @@ $(function(){initNavTree('LogIt_8hpp_source.html',''); initResizable(true); });
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno"><a class="line" href="LogIt_8hpp.html#abb76b4488538667d0b9da8f38bbe7ae5">    3</a></span><span class="preprocessor">#define _LOGIT_HPP_INCLUDED</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="LogItConfig_8hpp.html">LogItConfig.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="Logger_8hpp.html">parts/Logger.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="LogStream_8hpp.html">parts/LogStream.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="LogMacros_8hpp.html">parts/LogMacros.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="SimpleLogFormatter_8hpp.html">parts/Formatter/SimpleLogFormatter.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="ConsoleLogger_8hpp.html">parts/Logger/ConsoleLogger.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="FileLogger_8hpp.html">parts/Logger/FileLogger.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="UniqueFileLogger_8hpp.html">parts/Logger/UniqueFileLogger.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacelogit.html">logit</a> {};</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_HPP_INCLUDED</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="Enums_8hpp.html">parts/Enums.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="Utils_8hpp.html">parts/Utils.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="TaskExecutor_8hpp.html">parts/TaskExecutor.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="Logger_8hpp.html">parts/Logger.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="LogStream_8hpp.html">parts/LogStream.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="LogMacros_8hpp.html">parts/LogMacros.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="SimpleLogFormatter_8hpp.html">parts/Formatter/SimpleLogFormatter.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="ConsoleLogger_8hpp.html">parts/Logger/ConsoleLogger.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="FileLogger_8hpp.html">parts/Logger/FileLogger.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="UniqueFileLogger_8hpp.html">parts/Logger/UniqueFileLogger.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacelogit.html">logit</a> {};</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_HPP_INCLUDED</span></div>
 <div class="ttc" id="aConsoleLogger_8hpp_html"><div class="ttname"><a href="ConsoleLogger_8hpp.html">ConsoleLogger.hpp</a></div><div class="ttdoc">Console logger implementation that outputs logs to the console with color support.</div></div>
+<div class="ttc" id="aEnums_8hpp_html"><div class="ttname"><a href="Enums_8hpp.html">Enums.hpp</a></div><div class="ttdoc">Enumerations and utility functions for logging levels and text colors.</div></div>
 <div class="ttc" id="aFileLogger_8hpp_html"><div class="ttname"><a href="FileLogger_8hpp.html">FileLogger.hpp</a></div><div class="ttdoc">File logger implementation that outputs logs to files with rotation and deletion of old logs.</div></div>
 <div class="ttc" id="aLogItConfig_8hpp_html"><div class="ttname"><a href="LogItConfig_8hpp.html">LogItConfig.hpp</a></div><div class="ttdoc">Configuration macros for the LogIt logging system.</div></div>
 <div class="ttc" id="aLogMacros_8hpp_html"><div class="ttname"><a href="LogMacros_8hpp.html">LogMacros.hpp</a></div><div class="ttdoc">Provides various logging macros for different log levels and options.</div></div>
 <div class="ttc" id="aLogStream_8hpp_html"><div class="ttname"><a href="LogStream_8hpp.html">LogStream.hpp</a></div><div class="ttdoc">Defines the LogStream class for stream-like logging functionality.</div></div>
 <div class="ttc" id="aLogger_8hpp_html"><div class="ttname"><a href="Logger_8hpp.html">Logger.hpp</a></div><div class="ttdoc">Defines the Logger class for managing multiple loggers and formatters.</div></div>
 <div class="ttc" id="aSimpleLogFormatter_8hpp_html"><div class="ttname"><a href="SimpleLogFormatter_8hpp.html">SimpleLogFormatter.hpp</a></div><div class="ttdoc">Defines the SimpleLogFormatter class for formatting log messages according to a specified pattern or ...</div></div>
+<div class="ttc" id="aTaskExecutor_8hpp_html"><div class="ttname"><a href="TaskExecutor_8hpp.html">TaskExecutor.hpp</a></div><div class="ttdoc">Defines the TaskExecutor class, which manages task execution in a separate thread.</div></div>
 <div class="ttc" id="aUniqueFileLogger_8hpp_html"><div class="ttname"><a href="UniqueFileLogger_8hpp.html">UniqueFileLogger.hpp</a></div><div class="ttdoc">Logger that writes each log message to a unique file with auto-deletion of old logs.</div></div>
+<div class="ttc" id="aUtils_8hpp_html"><div class="ttname"><a href="Utils_8hpp.html">Utils.hpp</a></div></div>
 <div class="ttc" id="anamespacelogit_html"><div class="ttname"><a href="namespacelogit.html">logit</a></div><div class="ttdoc">The primary namespace for the LogIt++ library.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

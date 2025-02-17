@@ -137,7 +137,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for loggers that handle log message output.  <a href="classlogit_1_1ILogger.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogit_1_1Logger.html">Logger</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Singleton class that manages multiple loggers and formatters.  <a href="classlogit_1_1Logger.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Singleton class managing multiple loggers and formatters.  <a href="classlogit_1_1Logger.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores log metadata and content.  <a href="structlogit_1_1LogRecord.html#details">More...</a><br /></td></tr>
@@ -257,9 +257,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a2d42fce36e5265e7cfd666bd6f639460" id="r_a2d42fce36e5265e7cfd666bd6f639460"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d42fce36e5265e7cfd666bd6f639460">format</a> (const char *fmt,...)</td></tr>
 <tr class="memdesc:a2d42fce36e5265e7cfd666bd6f639460"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a string according to the specified format.  <br /></td></tr>
 <tr class="separator:a2d42fce36e5265e7cfd666bd6f639460"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05248803515ef4cb8d7b62ff79fa0d4e" id="r_a05248803515ef4cb8d7b62ff79fa0d4e"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a05248803515ef4cb8d7b62ff79fa0d4e">get_exe_path</a> ()</td></tr>
-<tr class="memdesc:a05248803515ef4cb8d7b62ff79fa0d4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the directory of the executable file.  <br /></td></tr>
-<tr class="separator:a05248803515ef4cb8d7b62ff79fa0d4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7d326ac6dced6cb044446eb1a1df45c" id="r_ae7d326ac6dced6cb044446eb1a1df45c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae7d326ac6dced6cb044446eb1a1df45c">get_exec_dir</a> ()</td></tr>
+<tr class="memdesc:ae7d326ac6dced6cb044446eb1a1df45c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the directory of the executable file.  <br /></td></tr>
+<tr class="separator:ae7d326ac6dced6cb044446eb1a1df45c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ba53ba88f1916d46b8da7847f734d67" id="r_a0ba53ba88f1916d46b8da7847f734d67"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ba53ba88f1916d46b8da7847f734d67">get_list_files</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a0ba53ba88f1916d46b8da7847f734d67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursively retrieves a list of all files in a directory.  <br /></td></tr>
 <tr class="separator:a0ba53ba88f1916d46b8da7847f734d67"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,7 +301,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00039">39</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00038">38</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -459,7 +459,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An empty vector, as there are no more arguments to process. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00016">16</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00015">15</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -507,7 +507,7 @@ template&lt;typename T, typename... Ts&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector of tuples containing argument names and values. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00028">28</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00027">27</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -644,14 +644,14 @@ template&lt;typename EnumType&gt; </div>
 
 </div>
 </div>
-<a id="a05248803515ef4cb8d7b62ff79fa0d4e" name="a05248803515ef4cb8d7b62ff79fa0d4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a05248803515ef4cb8d7b62ff79fa0d4e">&#9670;&#160;</a></span>get_exe_path()</h2>
+<a id="ae7d326ac6dced6cb044446eb1a1df45c" name="ae7d326ac6dced6cb044446eb1a1df45c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7d326ac6dced6cb044446eb1a1df45c">&#9670;&#160;</a></span>get_exec_dir()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::string logit::get_exe_path </td>
+          <td class="memname">std::string logit::get_exec_dir </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -787,7 +787,7 @@ template&lt;typename EnumType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if the '&gt;' character closes a template argument list, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00045">45</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00044">44</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -892,7 +892,7 @@ template&lt;typename EnumType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A vector of strings with individual argument names. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00063">63</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00062">62</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
 
 </div>
 </div>

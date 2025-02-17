@@ -8,5 +8,6 @@ var dir_f13316705ed44cc497b969d59eba4a26 =
     [ "Logger.hpp", "Logger_8hpp.html", "Logger_8hpp" ],
     [ "LogMacros.hpp", "LogMacros_8hpp.html", "LogMacros_8hpp" ],
     [ "LogStream.hpp", "LogStream_8hpp.html", "LogStream_8hpp" ],
-    [ "TaskExecutor.hpp", "TaskExecutor_8hpp.html", "TaskExecutor_8hpp" ]
+    [ "TaskExecutor.hpp", "TaskExecutor_8hpp.html", "TaskExecutor_8hpp" ],
+    [ "Utils.hpp", "Utils_8hpp.html", "Utils_8hpp" ]
 ];

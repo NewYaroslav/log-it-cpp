@@ -1,7 +1,7 @@
 var classlogit_1_1Logger =
 [
     [ "LoggerStrategy", "structlogit_1_1Logger_1_1LoggerStrategy.html", "structlogit_1_1Logger_1_1LoggerStrategy" ],
-    [ "Logger", "classlogit_1_1Logger.html#a00c64472e9ea1b16a06e9f3e7a944fc9", null ],
+    [ "Logger", "classlogit_1_1Logger.html#add155fc2fe41d02fc07a65fd514e7d8a", null ],
     [ "~Logger", "classlogit_1_1Logger.html#ac0f2ccc392e9a895e1a3ac9b1c79c01f", null ],
     [ "Logger", "classlogit_1_1Logger.html#a5e1b78ec258a758b582542b10acf5182", null ],
     [ "Logger", "classlogit_1_1Logger.html#ad7168d096af07ba08168ff46e87d81e6", null ],
@@ -16,13 +16,16 @@ var classlogit_1_1Logger =
     [ "log_and_return", "classlogit_1_1Logger.html#a0a94daa3e08b410190a8ff42f06da07e", null ],
     [ "log_and_return", "classlogit_1_1Logger.html#a0ad4dc28ddb150aa4d7fb0a4074211b6", null ],
     [ "log_and_return", "classlogit_1_1Logger.html#aaf04f9a4dbd3b7089aa9d4f0faceb651", null ],
+    [ "on_exit_handler", "classlogit_1_1Logger.html#aba08f203435bb262e029f554dc180f36", null ],
     [ "operator=", "classlogit_1_1Logger.html#a5be1e4fe455bcdadee4fa88866a99f7e", null ],
     [ "operator=", "classlogit_1_1Logger.html#ac6f33c7d76748f2056584f02c99b3565", null ],
     [ "print", "classlogit_1_1Logger.html#af9ae40695451f21281d47cd2cfeac199", null ],
     [ "set_logger_enabled", "classlogit_1_1Logger.html#a26ae46f8748ff5c313a3acc5fc6f7690", null ],
     [ "set_logger_single_mode", "classlogit_1_1Logger.html#a3699b4c8c9a735cb6b58dbe3f8323f79", null ],
     [ "set_timestamp_offset", "classlogit_1_1Logger.html#a39a265a9277b66d938ec8e602a3beb65", null ],
+    [ "shutdown", "classlogit_1_1Logger.html#a6298b1402c15a2c930e047b911915c15", null ],
     [ "wait", "classlogit_1_1Logger.html#a3084c4bb7dc11831dac3dfa1d5633103", null ],
     [ "m_loggers", "classlogit_1_1Logger.html#a6d081c4f00026e0017cf34488b7e4c13", null ],
-    [ "m_mutex", "classlogit_1_1Logger.html#a81950257180f091313839ef6cfab463e", null ]
+    [ "m_mutex", "classlogit_1_1Logger.html#a81950257180f091313839ef6cfab463e", null ],
+    [ "m_shutdown", "classlogit_1_1Logger.html#aa26a0f9acca5f4b4812e438d9c82ed20", null ]
 ];
