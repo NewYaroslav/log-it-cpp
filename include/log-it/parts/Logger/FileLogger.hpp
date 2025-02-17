@@ -4,9 +4,6 @@
 /// \brief File logger implementation that outputs logs to files with rotation and deletion of old logs.
 
 #include "ILogger.hpp"
-#include "../TaskExecutor.hpp"
-#include "../LogMacros.hpp"
-#include "../Utils/path_utils.hpp"
 #include <iostream>
 #include <fstream>
 #include <mutex>
@@ -188,7 +185,11 @@ namespace logit {
         /// \brief Gets the full path to the logging directory.
         /// \return The path to the logging directory.
         std::string get_directory_path() const {
-            return get_exe_path() + "/" + m_config.directory;
+#           if defined(_WIN32) || defined(_WIN64)
+            return get_exec_dir() + "\\" + m_config.directory;
+#           else
+            return get_exec_dir() + "/" + m_config.directory;
+#           endif
         }
 
         /// \brief Opens a new log file based on the provided date timestamp.
@@ -202,7 +203,11 @@ namespace logit {
             m_file_path = create_file_path(date_ts);
             m_file_name = get_file_name(m_file_path);
             lock.unlock();
+#           if defined(_WIN32) || defined(_WIN64)
+            m_file.open(utf8_to_ansi(m_file_path), std::ios_base::app);
+#           else
             m_file.open(m_file_path, std::ios_base::app);
+#           endif
             if (!m_file.is_open()) {
                 throw std::runtime_error("Failed to open log file: " + m_file_path);
             }
@@ -246,7 +251,11 @@ namespace logit {
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_date_ts = get_date_ts_from_filename(filename);
                     if (file_date_ts < threshold_ts) {
+#                       if defined(_WIN32) || defined(_WIN64)
+                        fs::remove(fs::path(utf8_to_ansi(entry.path().string())));
+#                       else
                         fs::remove(entry.path());
+#                       endif
                     }
                 }
             }
@@ -258,7 +267,11 @@ namespace logit {
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_date_ts = get_date_ts_from_filename(filename);
                     if (file_date_ts < threshold_ts) {
+#                       if defined(_WIN32) || defined(_WIN64)
+                        remove(utf8_to_ansi(file_path).c_str());
+#                       else
                         remove(file_path.c_str());
+#                       endif
                     }
                 }
             }
@@ -318,7 +331,6 @@ namespace logit {
         int64_t get_time_since_last_log() const {
             return LOGIT_CURRENT_TIMESTAMP_MS() - m_last_log_ts;
         }
-
     }; // FileLogger
 
 }; // namespace logit

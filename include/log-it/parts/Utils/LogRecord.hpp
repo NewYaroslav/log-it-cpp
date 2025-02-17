@@ -4,8 +4,6 @@
 /// \file LogRecord.hpp
 /// \brief Contains the definition of the LogRecord structure for storing log data.
 
-#include "argument_utils.hpp"
-#include "../Enums.hpp"
 #include <thread>
 
 namespace logit {

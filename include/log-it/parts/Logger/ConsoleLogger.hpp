@@ -5,8 +5,6 @@
 /// \brief Console logger implementation that outputs logs to the console with color support.
 
 #include "ILogger.hpp"
-#include "../TaskExecutor.hpp"
-#include "../LogMacros.hpp"
 #include <iostream>
 #if defined(__MINGW32__) || defined(_WIN32)
 #include <windows.h>

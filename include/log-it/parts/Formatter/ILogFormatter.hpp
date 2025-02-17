@@ -4,8 +4,6 @@
 /// \file ILogFormatter.hpp
 /// \brief Defines the interface for log formatters used in the logging system.
 
-#include "../Utils/LogRecord.hpp"
-
 namespace logit {
 
     /// \interface ILogFormatter

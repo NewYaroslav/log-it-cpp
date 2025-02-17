@@ -13,28 +13,19 @@
 namespace logit {
 
     /// \class Logger
-    /// \brief Singleton class that manages multiple loggers and formatters.
+    /// \brief Singleton class managing multiple loggers and formatters.
     ///
-    /// The `Logger` class allows adding multiple logger and formatter pairs.
-    /// It provides methods to log messages using these strategies and supports
-    /// both synchronous and asynchronous logging. The class is thread-safe.
+    /// Allows adding multiple logger and formatter pairs.
+    /// Provides methods to log messages using these strategies and supports
+    /// both synchronous and asynchronous logging. Class is thread-safe.
     class Logger {
     public:
 
-        /// \brief Retrieves the singleton instance of `Logger`.
-        /// \return A reference to the single instance of the `Logger` class.
+        /// \brief Retrieves singleton instance of Logger.
+        /// \return Reference to singleton Logger instance.
         static Logger& get_instance() {
-            static Logger instance;
-            return instance;
-        }
-
-        /// \brief Waits for all asynchronous loggers to finish processing.
-        ///
-        /// Ensures that all log messages are fully processed before continuing.
-        void wait() {
-            for (const auto& strategy : m_loggers) {
-                strategy.logger->wait();
-            }
+            static Logger* instance = new Logger();
+            return *instance;
         }
 
         /// \brief Adds a logger and its corresponding formatter.
@@ -47,6 +38,7 @@ namespace logit {
                 std::unique_ptr<ILogger> logger,
                 std::unique_ptr<ILogFormatter> formatter,
                 bool single_mode = false) {
+            if (m_shutdown) return;
             std::lock_guard<std::mutex> lock(m_mutex);
             m_loggers.push_back(
                 LoggerStrategy{std::move(logger),
@@ -57,9 +49,10 @@ namespace logit {
         }
 
         /// \brief Enables or disables a logger by index.
-        /// \param logger_index Index of the logger.
+        /// \param logger_index Index of logger.
         /// \param enabled True to enable, false to disable.
         void set_logger_enabled(int logger_index, bool enabled) {
+            if (m_shutdown) return;
             std::lock_guard<std::mutex> lock(m_mutex);
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 m_loggers[logger_index].enabled = enabled;
@@ -67,8 +60,8 @@ namespace logit {
         }
 
         /// \brief Checks if a logger is enabled.
-        /// \param logger_index Index of the logger.
-        /// \return True if the logger is enabled, false otherwise.
+        /// \param logger_index Index of logger.
+        /// \return True if logger is enabled, false otherwise.
         bool is_logger_enabled(int logger_index) const {
             std::lock_guard<std::mutex> lock(m_mutex);
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
@@ -77,20 +70,22 @@ namespace logit {
             return false;
         }
 
-        /// \brief Sets the single-mode flag for a logger.
-        /// \param logger_index Index of the logger to modify.
-        /// \param single_mode True to set the logger to single mode, false otherwise.
+        /// \brief Sets single-mode flag for a logger.
+        /// \param logger_index Index of logger to modify.
+        /// \param single_mode True to enable single mode, false to disable.
         void set_logger_single_mode(int logger_index, bool single_mode) {
+            if (m_shutdown) return;
             std::lock_guard<std::mutex> lock(m_mutex);
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 m_loggers[logger_index].single_mode = single_mode;
             }
         }
 
-        /// \brief Sets the timestamp offset for a specific logger.
-        /// \param logger_index Index of the logger to modify.
+        /// \brief Sets timestamp offset for a specific logger.
+        /// \param logger_index Index of logger to modify.
         /// \param offset_ms Offset in milliseconds.
         void set_timestamp_offset(int logger_index, int64_t offset_ms) {
+            if (m_shutdown) return;
             std::lock_guard<std::mutex> lock(m_mutex);
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 m_loggers[logger_index].formatter->set_timestamp_offset(offset_ms);
@@ -98,9 +93,10 @@ namespace logit {
         }
 
         /// \brief Checks whether a logger is in single mode.
-        /// \param logger_index Index of the logger.
-        /// \return True if the logger is in single mode, false otherwise.
+        /// \param logger_index Index of logger.
+        /// \return True if logger is in single mode, false otherwise.
         bool is_logger_single_mode(int logger_index) const {
+            if (m_shutdown) return false;
             std::lock_guard<std::mutex> lock(m_mutex);
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 return m_loggers[logger_index].single_mode;
@@ -108,13 +104,13 @@ namespace logit {
             return false;
         }
 
-        /// \brief Logs a `LogRecord` using all added loggers and formatters.
+        /// \brief Logs a LogRecord using added loggers and formatters.
         ///
-        /// The `log()` method formats the log message using each logger's corresponding formatter
-        /// and sends the formatted message to each logger.
-        ///
+        /// Formats the log message using each logger's corresponding formatter and sends
+        /// the formatted message to the logger.
         /// \param record Log record to be logged.
         void log(const LogRecord& record) {
+            if (m_shutdown) return;
             std::lock_guard<std::mutex> lock(m_mutex);
             // Log to the specific logger if the index is valid
             if (record.logger_index >= 0 && record.logger_index < static_cast<int>(m_loggers.size())) {
@@ -130,11 +126,12 @@ namespace logit {
             }
         }
 
-        /// \brief Retrieves a string parameter from the logger.
-        /// \param logger_index Index of the logger.
+        /// \brief Retrieves a string parameter from a logger.
+        /// \param logger_index Index of logger.
         /// \param param Logger parameter to retrieve.
-        /// \return The requested parameter as a string, or an empty string if unsupported.
+        /// \return Requested parameter as a string, or empty string if unsupported.
         std::string get_string_param(int logger_index, const LoggerParam& param) const {
+            if (m_shutdown) return std::string();
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 const auto& strategy = m_loggers[logger_index];
                 return strategy.logger->get_string_param(param);
@@ -142,11 +139,12 @@ namespace logit {
             return std::string();
         }
 
-        /// \brief Retrieves an integer parameter from the logger.
-        /// \param logger_index Index of the logger.
+        /// \brief Retrieves an integer parameter from a logger.
+        /// \param logger_index Index of logger.
         /// \param param Logger parameter to retrieve.
-        /// \return The requested parameter as an integer, or 0 if unsupported.
+        /// \return Requested parameter as an integer, or 0 if unsupported.
         int64_t get_int_param(int logger_index, const LoggerParam& param) const {
+            if (m_shutdown) return 0;
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 const auto& strategy = m_loggers[logger_index];
                 return strategy.logger->get_int_param(param);
@@ -154,11 +152,12 @@ namespace logit {
             return 0;
         }
 
-        /// \brief Retrieves a floating-point parameter from the logger.
-        /// \param logger_index Index of the logger.
+        /// \brief Retrieves a floating-point parameter from a logger.
+        /// \param logger_index Index of logger.
         /// \param param Logger parameter to retrieve.
-        /// \return The requested parameter as a double, or 0.0 if unsupported.
+        /// \return Requested parameter as a double, or 0.0 if unsupported.
         double get_float_param(int logger_index, const LoggerParam& param) const {
+            if (m_shutdown) return 0.0;
             if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
                 const auto& strategy = m_loggers[logger_index];
                 return strategy.logger->get_float_param(param);
@@ -166,37 +165,56 @@ namespace logit {
             return 0.0;
         }
 
-        /// \brief Logs the message and returns a tuple of arguments.
-        /// \tparam Ts Types of the arguments.
+        /// \brief Logs message and returns tuple of arguments.
+        /// \tparam Ts Types of arguments.
         /// \param record Log record.
         /// \param args Arguments to be logged.
-        /// \return A tuple containing the arguments.
+        /// \return Tuple containing logged arguments.
         template <typename... Ts>
         auto log_and_return(const LogRecord& record, Ts&&... args) -> decltype(std::forward_as_tuple(std::forward<Ts>(args)...)) {
             this->print(record, args...);
             return std::forward_as_tuple(std::forward<Ts>(args)...);
         }
 
-        /// \brief Logs the message and returns a tuple of arguments.
+        /// \brief Logs message and returns argument.
         ///
-        /// This function logs the provided arguments and returns them as a tuple.
-        ///
-        /// \tparam Ts Types of the arguments.
+        /// Logs provided argument and returns it.
+        /// \tparam T Type of argument.
         /// \param record Log record.
-        /// \param args Arguments to be logged.
-        /// \return A tuple containing the logged arguments.
+        /// \param args Argument to be logged.
+        /// \return Logged argument.
         template <typename T>
         auto log_and_return(const LogRecord& record, T&& args) -> decltype(args) {
             this->print(record, args);
             return std::forward<decltype(args)>(args);
         }
 
-        /// \brief Logs a message without arguments and returns an empty tuple.
+        /// \brief Logs message without arguments and returns empty tuple.
         /// \param record Log record.
-        /// \return An empty tuple.
+        /// \return Empty tuple.
         auto log_and_return(const LogRecord& record) -> std::tuple<> {
             this->print(record);
             return {};
+        }
+
+        /// \brief Waits for all asynchronous loggers to finish processing.
+        ///
+        /// Ensures that all log messages are fully processed before continuing.
+        void wait() {
+            for (const auto& strategy : m_loggers) {
+                strategy.logger->wait();
+            }
+        }
+
+        /// \brief Shuts down logger system.
+        ///
+        /// Disables further logging, waits for asynchronous tasks to complete,
+        /// and shuts down TaskExecutor.
+        void shutdown() {
+            if (m_shutdown) return;
+            m_shutdown = true;
+            wait();
+            TaskExecutor::get_instance().shutdown();
         }
 
     private:
@@ -210,13 +228,14 @@ namespace logit {
             bool enabled;                               ///< Flag indicating if the logger is enabled.
         };
 
-        std::vector<LoggerStrategy> m_loggers;  ///< Container for logger-formatter pairs.
-        mutable std::mutex m_mutex;             ///< Mutex for thread safety during logging operations.
+        std::vector<LoggerStrategy> m_loggers;        ///< Container for logger-formatter pairs.
+        mutable std::mutex m_mutex;                   ///< Mutex for thread safety during logging operations.
+        std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false); ///< Flag indicating if shutdown was requested.
 
-        /// \brief Logs a record with the given arguments.
-        /// \tparam Ts Types of the arguments.
-        /// \param record The log record.
-        /// \param args The arguments to be logged.
+        /// \brief Logs a record with given arguments.
+        /// \tparam Ts Types of arguments.
+        /// \param record Log record.
+        /// \param args Arguments to be logged.
         template <typename... Ts>
         void print(const LogRecord& record, Ts const&... args) {
             if (sizeof...(Ts) == 0) {
@@ -229,10 +248,12 @@ namespace logit {
             log(mutable_record);
         }
 
-        Logger() = default;
+        Logger() {
+            std::atexit(Logger::on_exit_handler);
+        }
 
         ~Logger() {
-            wait();
+            shutdown();
         }
 
         // Deleting copy and move constructors and assignment operators to enforce singleton.
@@ -240,6 +261,12 @@ namespace logit {
         Logger& operator=(const Logger&) = delete;
         Logger(Logger&&) = delete;
         Logger& operator=(Logger&&) = delete;
+
+        /// \brief Atexit shutdown handler for Logger and TaskExecutor.
+        /// \details Called automatically at program exit.
+        static void on_exit_handler() {
+            Logger::get_instance().shutdown();
+        }
     };
 
 }; // namespace logit

@@ -4,9 +4,6 @@
 /// \brief Logger that writes each log message to a unique file with auto-deletion of old logs.
 
 #include "ILogger.hpp"
-#include "../TaskExecutor.hpp"
-#include "../LogMacros.hpp"
-#include "../Utils/path_utils.hpp"
 #include <iostream>
 #include <fstream>
 #include <mutex>
@@ -240,7 +237,7 @@ namespace logit {
         /// \brief Gets the full path to the logging directory.
         /// \return The path to the logging directory.
         std::string get_directory_path() const {
-            return get_exe_path() + "/" + m_config.directory;
+            return get_exec_dir() + "/" + m_config.directory;
         }
 
         /// \brief Writes a log message to a unique file.
@@ -249,7 +246,11 @@ namespace logit {
         /// \return The name of the file the message was written to.
         std::string write_log(const std::string& message, const int64_t& timestamp_ms) {
             std::string file_path = create_unique_file_path(timestamp_ms);
+#           if defined(_WIN32) || defined(_WIN64)
+            std::ofstream file(utf8_to_ansi(file_path), std::ios_base::binary);
+#           else
             std::ofstream file(file_path, std::ios_base::binary);
+#           endif
             if (!file.is_open()) {
                 throw std::runtime_error("Failed to open log file: " + file_path);
             }
@@ -310,7 +311,11 @@ namespace logit {
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_ts = get_timestamp_from_filename(filename);
                     if (file_ts < threshold_ts) {
+#                       if defined(_WIN32) || defined(_WIN64)
+                        fs::remove(fs::path(utf8_to_ansi(entry.path().string())));
+#                       else
                         fs::remove(entry.path());
+#                       endif
                     }
                 }
             }
@@ -321,7 +326,11 @@ namespace logit {
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_ts = get_timestamp_from_filename(filename);
                     if (file_ts < threshold_ts) {
+#                       if defined(_WIN32) || defined(_WIN64)
+                        remove(utf8_to_ansi(file_path).c_str());
+#                       else
                         remove(file_path.c_str());
+#                       endif
                     }
                 }
             }

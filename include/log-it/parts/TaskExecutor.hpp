@@ -22,14 +22,15 @@ namespace logit {
         /// \brief Get the singleton instance of the TaskExecutor.
         /// \return A reference to the single instance of `TaskExecutor`.
         static TaskExecutor& get_instance() {
-            static TaskExecutor instance;
-            return instance;
+            static TaskExecutor* instance = new TaskExecutor();
+            return *instance;
         }
 
         /// \brief Adds a task to the queue in a thread-safe manner.
         /// \param task A function or lambda with no arguments to be executed asynchronously.
         void add_task(std::function<void()> task) {
             std::unique_lock<std::mutex> lock(m_queue_mutex);
+            if (m_stop_flag) return;
             m_tasks_queue.push(std::move(task));
             lock.unlock();
             m_queue_condition.notify_one();
@@ -37,12 +38,25 @@ namespace logit {
 
         /// \brief Waits for all tasks in the queue to be processed.
         void wait() {
+            m_queue_condition.notify_one();
             for (;;) {
                 std::unique_lock<std::mutex> lock(m_queue_mutex);
-                if (m_tasks_queue.empty()) return;
+                if (m_tasks_queue.empty() || m_stop_flag) break;
                 lock.unlock();
                 std::this_thread::yield();
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            }
+        }
+
+        /// \brief Shuts down the TaskExecutor by stopping the worker thread.
+        /// \details This method signals the worker thread to stop and then joins it.
+        void shutdown() {
+            std::unique_lock<std::mutex> lock(m_queue_mutex);
+            m_stop_flag = true;
+            lock.unlock();
+            m_queue_condition.notify_one();
+            if (m_worker_thread.joinable()) {
+                m_worker_thread.join();
             }
         }
 
@@ -62,7 +76,7 @@ namespace logit {
                     return !m_tasks_queue.empty() || m_stop_flag;
                 });
                 if (m_stop_flag && m_tasks_queue.empty()) {
-                    return;
+                    break;
                 }
                 task = std::move(m_tasks_queue.front());
                 m_tasks_queue.pop();
@@ -78,13 +92,7 @@ namespace logit {
 
         /// \brief Destructor that stops the worker thread and cleans up resources.
         ~TaskExecutor() {
-            std::unique_lock<std::mutex> lock(m_queue_mutex);
-            m_stop_flag = true;
-            lock.unlock();
-            m_queue_condition.notify_one();
-            if (m_worker_thread.joinable()) {
-                m_worker_thread.join();
-            }
+            shutdown();
         }
 
         // Delete copy constructor and assignment operators to enforce singleton usage.

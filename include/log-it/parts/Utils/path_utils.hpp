@@ -34,7 +34,7 @@ namespace logit {
 
     /// \brief Retrieves the directory of the executable file.
     /// \return A string containing the directory path of the executable.
-    std::string get_exe_path() {
+    std::string get_exec_dir() {
 #       ifdef _WIN32
         std::vector<wchar_t> buffer(MAX_PATH);
         HMODULE hModule = GetModuleHandle(NULL);
@@ -80,7 +80,7 @@ namespace logit {
         }
 
         return exe_path;
-#   endif
+#       endif
     }
 
     /// \brief Recursively retrieves a list of all files in a directory.

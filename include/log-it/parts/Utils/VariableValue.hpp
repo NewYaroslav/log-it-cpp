@@ -4,7 +4,7 @@
 /// \file VariableValue.hpp
 /// \brief Structure for storing variables of various types.
 
-#include "format.hpp"
+//#include "format.hpp"
 #include <time_shield_cpp/time_shield.hpp>
 #include <string>
 #include <iostream>
@@ -333,7 +333,7 @@ namespace logit {
         /// \return Formatted string representation of the value.
         std::string to_string(const char* fmt) const {
             switch (type) {
-                case ValueType::INT8_VAL:    return format(fmt, pod_value.int8_value);
+                case ValueType::INT8_VAL:    return logit::format(fmt, pod_value.int8_value);
                 case ValueType::UINT8_VAL:   return format(fmt, pod_value.uint8_value);
                 case ValueType::INT16_VAL:   return format(fmt, pod_value.int16_value);
                 case ValueType::UINT16_VAL:  return format(fmt, pod_value.uint16_value);

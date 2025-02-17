@@ -5,6 +5,9 @@
 /// \brief Main header file for the LogIt++ library.
 
 #include "LogItConfig.hpp"
+#include "parts/Enums.hpp"
+#include "parts/Utils.hpp"
+#include "parts/TaskExecutor.hpp"
 #include "parts/Logger.hpp"
 #include "parts/LogStream.hpp"
 #include "parts/LogMacros.hpp"

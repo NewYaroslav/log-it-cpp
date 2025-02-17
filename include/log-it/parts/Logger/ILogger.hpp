@@ -4,8 +4,6 @@
 /// \file ILogger.hpp
 /// \brief Defines the interface for loggers used in the logging system.
 
-#include "../Utils/LogRecord.hpp"
-
 /// \defgroup LogBackends Logging Backends
 /// \brief A collection of backends for the LogIt logging system.
 ///
