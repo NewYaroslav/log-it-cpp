@@ -56,7 +56,7 @@ int main() {
     LOG_E_PRINTF("Formatted error log: value=%d", 100);          // Error formatted log
 
     // Ensure all logs are flushed before exiting
-    LOGIT_WAIT();
+    LOGIT_SHUTDOWN();
 
     std::cout << "Logging example with short macros completed." << std::endl;
     return 0;

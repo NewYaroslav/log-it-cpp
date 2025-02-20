@@ -49,7 +49,7 @@ int main() {
     }
 
     // Wait for all logs to flush
-    LOGIT_WAIT();
+    LOGIT_SHUTDOWN();
 
     std::cout << "Customized logging example completed." << std::endl;
     return 0;

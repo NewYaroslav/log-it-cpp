@@ -73,7 +73,7 @@ int main() {
     }
 
     // Ensure all logs are flushed before exiting
-    LOGIT_WAIT();
+    LOGIT_SHUTDOWN();
 
     std::cout << "Logging example with custom backend completed." << std::endl;
     return 0;

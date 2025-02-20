@@ -104,6 +104,9 @@ int main() {
     LOGIT_STREAM_TRACE_TO(2) << "Logging to unique file logger with a trace message. Color: " << color;
     LOGIT_PRINT_INFO("Unique log was written to file: ", LOGIT_GET_LAST_FILE_NAME(2));
 
+    // Wait for all logs to flush
+    LOGIT_WAIT();
+
     // Logging exceptions
     try {
         // Simulate an exception
@@ -173,7 +176,7 @@ int main() {
 #   endif
 
     // Ensure all loggers are flushed and cleaned up before exiting
-    LOGIT_WAIT();
+    LOGIT_SHUTDOWN();
 
     std::cout << "Logging example completed." << std::endl;
     return 0;
