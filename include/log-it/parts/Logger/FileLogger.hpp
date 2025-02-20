@@ -228,11 +228,11 @@ namespace logit {
             const int64_t message_date_ts = time_shield::start_of_day(time_shield::ms_to_sec(timestamp_ms));
             if (message_date_ts != m_current_date_ts) {
                 open_log_file(message_date_ts);
-                remove_old_logs();
             }
             if (m_file.is_open()) {
                 m_file << message << std::endl;
             }
+            remove_old_logs();
         }
 
         /// \brief Removes old log files based on the auto-delete days configuration.

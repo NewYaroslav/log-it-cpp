@@ -88,20 +88,37 @@ namespace logit {
             m_last_log_ts = record.timestamp_ms;
             if (!m_config.async) {
                 std::lock_guard<std::mutex> lock(m_mutex);
+                std::string file_path;
                 try {
-                    std::string file_path = write_log(message, record.timestamp_ms);
+                    file_path = write_log(message, record.timestamp_ms);
+                } catch (const std::exception& e) {
+                    file_path.clear();
+                    std::cerr << "Log error: " << e.what() << std::endl;
+                }
 
-                    std::unique_lock<std::mutex> info_lock(m_thread_log_info_mutex);
-                    auto it = m_thread_log_info.find(thread_id);
-                    if (it == m_thread_log_info.end()) {
+                std::unique_lock<std::mutex> info_lock(m_thread_log_info_mutex);
+                auto it = m_thread_log_info.find(thread_id);
+                if (it == m_thread_log_info.end()) {
+                    if (!file_path.empty()) {
                         m_thread_log_info[thread_id] = {0, file_path, get_file_name(file_path)};
-                        return;
+                    } else {
+                        m_thread_log_info[thread_id] = {0, "Not available", "Not available"};
                     }
+                    return;
+                }
+
+                if (!file_path.empty()) {
                     it->second.last_file_path = file_path;
                     it->second.last_file_name = get_file_name(file_path);
-                    m_pending_logs_cv.notify_all();
-                    info_lock.unlock();
+                } else {
+                    it->second.last_file_path = "Not available";
+                    it->second.last_file_name = "Not available";
+                }
 
+                m_pending_logs_cv.notify_all();
+                info_lock.unlock();
+
+                try {
                     remove_old_logs();
                 } catch (const std::exception& e) {
                     std::cerr << "Log error: " << e.what() << std::endl;
@@ -116,21 +133,33 @@ namespace logit {
             auto timestamp_ms = record.timestamp_ms;
             TaskExecutor::get_instance().add_task([this, message, timestamp_ms, thread_id]() {
                 std::lock_guard<std::mutex> lock(m_mutex);
+                std::string file_path;
                 try {
-                    std::string file_path = write_log(message, timestamp_ms);
-                    std::unique_lock<std::mutex> info_lock(m_thread_log_info_mutex);
-                    auto it = m_thread_log_info.find(thread_id);
-                    if (it == m_thread_log_info.end()) return;
+                    file_path = write_log(message, timestamp_ms);
+                } catch (const std::exception& e) {
+                    file_path.clear();
+                    std::cerr << "Async log error: " << e.what() << std::endl;
+                }
 
+                std::unique_lock<std::mutex> info_lock(m_thread_log_info_mutex);
+                auto it = m_thread_log_info.find(thread_id);
+                if (it == m_thread_log_info.end()) return;
+
+                if (!file_path.empty()) {
                     it->second.last_file_path = file_path;
                     it->second.last_file_name = get_file_name(file_path);
-                    it->second.pending_logs--;
+                } else {
+                    it->second.last_file_path = "Not available";
+                    it->second.last_file_name = "Not available";
+                }
+                it->second.pending_logs--;
 
-                    if (it->second.pending_logs == 0) {
-                        m_pending_logs_cv.notify_all();
-                    }
-                    info_lock.unlock();
+                if (it->second.pending_logs == 0) {
+                    m_pending_logs_cv.notify_all();
+                }
+                info_lock.unlock();
 
+                try {
                     remove_old_logs();
                 } catch (const std::exception& e) {
                     std::cerr << "Async log error: " << e.what() << std::endl;
