@@ -185,7 +185,7 @@ namespace logit {
         /// \brief Gets the full path to the logging directory.
         /// \return The path to the logging directory.
         std::string get_directory_path() const {
-#           if defined(_WIN32) || defined(_WIN64)
+#           if defined(_WIN32)
             return get_exec_dir() + "\\" + m_config.directory;
 #           else
             return get_exec_dir() + "/" + m_config.directory;
@@ -203,7 +203,7 @@ namespace logit {
             m_file_path = create_file_path(date_ts);
             m_file_name = get_file_name(m_file_path);
             lock.unlock();
-#           if defined(_WIN32) || defined(_WIN64)
+#           if defined(_WIN32)
             m_file.open(utf8_to_ansi(m_file_path), std::ios_base::app);
 #           else
             m_file.open(m_file_path, std::ios_base::app);
@@ -239,7 +239,12 @@ namespace logit {
         void remove_old_logs() {
             const int64_t threshold_ts = m_current_date_ts - (time_shield::SEC_PER_DAY * m_config.auto_delete_days);
 #           if __cplusplus >= 201703L
+#           ifdef _WIN32
+            fs::path dir_path = fs::u8path(get_directory_path());
+#           else
             fs::path dir_path(get_directory_path());
+#           endif
+
             if (!fs::exists(dir_path) ||
                 !fs::is_directory(dir_path)) {
                 return;
@@ -251,11 +256,7 @@ namespace logit {
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_date_ts = get_date_ts_from_filename(filename);
                     if (file_date_ts < threshold_ts) {
-#                       if defined(_WIN32) || defined(_WIN64)
-                        fs::remove(fs::path(utf8_to_ansi(entry.path().string())));
-#                       else
                         fs::remove(entry.path());
-#                       endif
                     }
                 }
             }
@@ -267,7 +268,7 @@ namespace logit {
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_date_ts = get_date_ts_from_filename(filename);
                     if (file_date_ts < threshold_ts) {
-#                       if defined(_WIN32) || defined(_WIN64)
+#                       if defined(_WIN32)
                         remove(utf8_to_ansi(file_path).c_str());
 #                       else
                         remove(file_path.c_str());

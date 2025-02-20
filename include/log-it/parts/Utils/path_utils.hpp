@@ -84,84 +84,81 @@ namespace logit {
     }
 
     /// \brief Recursively retrieves a list of all files in a directory.
-    /// \param path The directory path to search.
-    /// \return A vector of strings containing the full paths of all files found.
+    /// \param path The directory path to search (UTF-8 encoded).
+    /// \return A vector of strings (UTF-8) containing the full paths of all files found.
     std::vector<std::string> get_list_files(const std::string& path) {
         std::vector<std::string> list_files;
-        std::string search_path = path;
+#       ifdef _WIN32
+        // Используем wide-версии функций для корректной работы с русскими символами.
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring wsearch_path;
 
-        // Handle empty path by using current working directory
+        // Если путь пустой, используем текущую директорию.
+        if (path.empty()) {
+            wchar_t buffer[MAX_PATH];
+            GetCurrentDirectoryW(MAX_PATH, buffer);
+            wsearch_path = buffer;
+        } else {
+            wsearch_path = converter.from_bytes(path);
+        }
+
+        // Обеспечиваем наличие завершающего разделителя.
+        if (!wsearch_path.empty()) {
+            wchar_t last_char = wsearch_path.back();
+            if (last_char != L'\\' && last_char != L'/') {
+                wsearch_path.push_back(L'\\');
+            }
+        }
+
+        // Формируем шаблон поиска.
+        std::wstring pattern = wsearch_path + L"*";
+        WIN32_FIND_DATAW fd;
+        HANDLE hFind = FindFirstFileW(pattern.c_str(), &fd);
+        if (hFind != INVALID_HANDLE_VALUE) {
+            do {
+                if (wcscmp(fd.cFileName, L".") == 0 || wcscmp(fd.cFileName, L"..") == 0)
+                    continue;
+
+                std::wstring wfull_path = wsearch_path + fd.cFileName;
+
+                if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                    // Рекурсивно обрабатываем поддиректории.
+                    std::vector<std::string> sub_files = get_list_files(converter.to_bytes(wfull_path));
+                    list_files.insert(list_files.end(), sub_files.begin(), sub_files.end());
+                } else {
+                    // Добавляем найденный файл.
+                    list_files.push_back(converter.to_bytes(wfull_path));
+                }
+            } while (FindNextFileW(hFind, &fd));
+            FindClose(hFind);
+        }
+#       else
+        // Реализация для POSIX-систем.
+        std::string search_path = path;
         if (search_path.empty()) {
-#           ifdef _WIN32
-            char buffer[MAX_PATH];
-            GetCurrentDirectoryA(MAX_PATH, buffer);
-            search_path = buffer;
-#           else
             char buffer[PATH_MAX];
             if (getcwd(buffer, PATH_MAX)) {
                 search_path = buffer;
             }
-#           endif
         }
-
-        // Ensure the path ends with the appropriate separator
-#       ifdef _WIN32
-        char path_separator = '\\';
-#       else
-        char path_separator = '/';
-#       endif
-
+        // Обеспечиваем наличие завершающего разделителя.
         if (search_path.back() != '/' && search_path.back() != '\\') {
-            search_path += path_separator;
+            search_path.push_back('/');
         }
-
-#       ifdef _WIN32
-        std::string pattern = search_path + "*";
-        WIN32_FIND_DATAA fd;
-        HANDLE hFind = FindFirstFileA(pattern.c_str(), &fd);
-
-        if (hFind != INVALID_HANDLE_VALUE) {
-            do {
-                std::string file_name = fd.cFileName;
-
-                if (file_name == "." || file_name == "..") {
-                    continue;
-                }
-
-                std::string full_path = search_path + file_name;
-
-                if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    // Recurse into subdirectories
-                    std::vector<std::string> sub_files = get_list_files(full_path);
-                    list_files.insert(list_files.end(), sub_files.begin(), sub_files.end());
-                } else {
-                    // Add files to the list
-                    list_files.push_back(full_path);
-                }
-            } while (FindNextFileA(hFind, &fd));
-            FindClose(hFind);
-        }
-#       else
         DIR* dir = opendir(search_path.c_str());
         if (dir) {
             struct dirent* entry;
             while ((entry = readdir(dir)) != nullptr) {
                 std::string file_name = entry->d_name;
-
-                if (file_name == "." || file_name == "..") {
+                if (file_name == "." || file_name == "..")
                     continue;
-                }
-
                 std::string full_path = search_path + file_name;
                 struct stat statbuf;
-
                 if (stat(full_path.c_str(), &statbuf) == 0) {
                     if (S_ISDIR(statbuf.st_mode)) {
-                        // Recurse into subdirectories
                         std::vector<std::string> sub_files = get_list_files(full_path);
                         list_files.insert(list_files.end(), sub_files.begin(), sub_files.end());
                     } else if (S_ISREG(statbuf.st_mode)) {
-                        // Add files to the list
                         list_files.push_back(full_path);
                     }
                 }
@@ -205,7 +202,14 @@ namespace logit {
     /// \param path The directory path to create.
     /// \throws std::runtime_error if the directories cannot be created.
     void create_directories(const std::string& path) {
+#       ifdef _WIN32
+        // Convert UTF-8 string to wide string for Windows
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring wide_path = converter.from_bytes(path);
+        std::filesystem::path dir(wide_path);
+#       else
         std::filesystem::path dir(path);
+#       endif
         if (!std::filesystem::exists(dir)) {
             std::error_code ec;
             if (!std::filesystem::create_directories(dir, ec)) {
@@ -352,23 +356,12 @@ namespace logit {
             }
             current_path += components[i];
 
-            /*
-            if (i) current_path += components[i] + "/";
-            else if (i == 0 &&
-                    (components[i] == "/" ||
-                     components[i] == "~/")) {
-                current_path += components[i];
-            } else {
-                current_path += components[i] + "/";
-            }
-            */
-
             // Skip special components
             if (components[i] == ".." ||
                 components[i] == "/" ||
                 components[i] == "~/") continue;
 #           ifdef _WIN32
-            int ret = _mkdir(current_path.c_str());
+            int ret = _mkdir(utf8_to_ansi(current_path).c_str());
 #           else
             int ret = mkdir(current_path.c_str(), 0755);
 #           endif

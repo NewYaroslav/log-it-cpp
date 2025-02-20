@@ -275,7 +275,7 @@ namespace logit {
         /// \return The name of the file the message was written to.
         std::string write_log(const std::string& message, const int64_t& timestamp_ms) {
             std::string file_path = create_unique_file_path(timestamp_ms);
-#           if defined(_WIN32) || defined(_WIN64)
+#           if defined(_WIN32)
             std::ofstream file(utf8_to_ansi(file_path), std::ios_base::binary);
 #           else
             std::ofstream file(file_path, std::ios_base::binary);
@@ -328,23 +328,28 @@ namespace logit {
 
         /// \brief Removes old log files based on the auto-delete days configuration.
         void remove_old_logs() {
-            const int64_t threshold_ts = time_shield::ms_to_sec(current_timestamp_ms()) - (m_config.auto_delete_days * time_shield::SEC_PER_DAY);
+            const int64_t threshold_ts =
+                time_shield::ms_to_sec(current_timestamp_ms()) -
+                (m_config.auto_delete_days * time_shield::SEC_PER_DAY);
 #           if __cplusplus >= 201703L
+
+#           if defined(_WIN32)
+            fs::path dir_path = fs::u8path(get_directory_path());
+#           else
             fs::path dir_path(get_directory_path());
+#           endif
+
             if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {
                 return;
             }
+
             for (const auto& entry : fs::directory_iterator(dir_path)) {
                 if (!fs::is_regular_file(entry.status())) continue;
                 std::string filename = entry.path().filename().string();
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_ts = get_timestamp_from_filename(filename);
                     if (file_ts < threshold_ts) {
-#                       if defined(_WIN32) || defined(_WIN64)
-                        fs::remove(fs::path(utf8_to_ansi(entry.path().string())));
-#                       else
                         fs::remove(entry.path());
-#                       endif
                     }
                 }
             }
@@ -355,7 +360,7 @@ namespace logit {
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_ts = get_timestamp_from_filename(filename);
                     if (file_ts < threshold_ts) {
-#                       if defined(_WIN32) || defined(_WIN64)
+#                       if defined(_WIN32)
                         remove(utf8_to_ansi(file_path).c_str());
 #                       else
                         remove(file_path.c_str());

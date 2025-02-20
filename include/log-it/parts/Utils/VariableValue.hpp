@@ -4,7 +4,6 @@
 /// \file VariableValue.hpp
 /// \brief Structure for storing variables of various types.
 
-//#include "format.hpp"
 #include <time_shield_cpp/time_shield.hpp>
 #include <string>
 #include <iostream>

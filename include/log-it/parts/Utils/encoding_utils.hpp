@@ -3,7 +3,7 @@
 /// \file encoding_utils.hpp
 /// \brief Utilities for working with character encodings and string transformations.
 
-#if defined(_WIN32) || defined(_WIN64)
+#if defined(_WIN32)
 #include <windows.h>
 
 namespace logit {

@@ -6,7 +6,7 @@
 
 #include "ILogger.hpp"
 #include <iostream>
-#if defined(__MINGW32__) || defined(_WIN32)
+#if defined(_WIN32)
 #include <windows.h>
 #endif
 #include <mutex>
@@ -94,7 +94,7 @@ namespace logit {
             lock.unlock();
             TaskExecutor::get_instance().add_task([this, message](){
                 std::lock_guard<std::mutex> lock(m_mutex);
-#               if defined(__MINGW32__) || defined(_WIN32)
+#               if defined(_WIN32)
                 // For Windows, parse the message for ANSI color codes and apply them
                 handle_ansi_colors_windows(message);
 #               else
@@ -161,7 +161,7 @@ namespace logit {
         Config             m_config;    ///< Configuration for the console logger.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
 
-#       if defined(__MINGW32__) || defined(_WIN32)
+#       if defined(_WIN32)
 
         // Windows console colors
         enum class WinColor {
@@ -280,7 +280,7 @@ namespace logit {
 
         /// \brief Resets the console text color to the default.
         void reset_color() {
-#           if defined(__MINGW32__) || defined(_WIN32)
+#           if defined(_WIN32)
             handle_ansi_colors_windows(std::string());
 #           else
             std::cout << to_string(m_config.default_color);
