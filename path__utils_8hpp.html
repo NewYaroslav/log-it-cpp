@@ -110,23 +110,15 @@ $(function(){initNavTree('path__utils_8hpp.html',''); initResizable(true); });
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">path_utils.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Utility functions for path manipulation, including relative path computation.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;string&gt;</code><br />
-<code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;cctype&gt;</code><br />
-<code>#include &lt;stdexcept&gt;</code><br />
-<code>#include &lt;unistd.h&gt;</code><br />
-<code>#include &lt;limits.h&gt;</code><br />
-<code>#include &lt;dirent.h&gt;</code><br />
-<code>#include &lt;sys/stat.h&gt;</code><br />
-<code>#include &lt;errno.h&gt;</code><br />
-</div>
+
 <p><a href="path__utils_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
@@ -152,18 +144,23 @@ Functions</h2></td></tr>
 <tr class="memitem:aa4e7991e430f7cc50b60d6b37ec26cd3" id="r_aa4e7991e430f7cc50b60d6b37ec26cd3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelogit.html#aa4e7991e430f7cc50b60d6b37ec26cd3">logit::get_file_name</a> (const std::string &amp;file_path)</td></tr>
 <tr class="memdesc:aa4e7991e430f7cc50b60d6b37ec26cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the file name from a full file path.  <br /></td></tr>
 <tr class="separator:aa4e7991e430f7cc50b60d6b37ec26cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a468afe9332af7c19b13e6fa9e6cb0769" id="r_a468afe9332af7c19b13e6fa9e6cb0769"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelogit.html#a468afe9332af7c19b13e6fa9e6cb0769">logit::make_relative</a> (const std::string &amp;file_path, const std::string &amp;base_path)</td></tr>
+<tr class="memdesc:a468afe9332af7c19b13e6fa9e6cb0769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the relative path from base_path to file_path using C++17 std::filesystem.  <br /></td></tr>
+<tr class="separator:a468afe9332af7c19b13e6fa9e6cb0769"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9da0cf75aa075e53a59ed0b5ab0e68c9" id="r_a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelogit.html#a9da0cf75aa075e53a59ed0b5ab0e68c9">logit::create_directories</a> (const std::string &amp;path)</td></tr>
+<tr class="memdesc:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates directories recursively for the given path using C++17 std::filesystem.  <br /></td></tr>
+<tr class="separator:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a668cc1acca900bc9ad968b421d31bfa3" id="r_a668cc1acca900bc9ad968b421d31bfa3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structlogit_1_1PathComponents.html">PathComponents</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelogit.html#a668cc1acca900bc9ad968b421d31bfa3">logit::split_path</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a668cc1acca900bc9ad968b421d31bfa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits a path into its root and components.  <br /></td></tr>
 <tr class="separator:a668cc1acca900bc9ad968b421d31bfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a468afe9332af7c19b13e6fa9e6cb0769" id="r_a468afe9332af7c19b13e6fa9e6cb0769"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelogit.html#a468afe9332af7c19b13e6fa9e6cb0769">logit::make_relative</a> (const std::string &amp;file_path, const std::string &amp;base_path)</td></tr>
-<tr class="memdesc:a468afe9332af7c19b13e6fa9e6cb0769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the relative path from base_path to file_path.  <br /></td></tr>
-<tr class="separator:a468afe9332af7c19b13e6fa9e6cb0769"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a3ad31d527c2646fee808a9072a0df2" id="r_a5a3ad31d527c2646fee808a9072a0df2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelogit.html#a5a3ad31d527c2646fee808a9072a0df2">logit::is_file</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a5a3ad31d527c2646fee808a9072a0df2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path represents a file (by checking for an extension).  <br /></td></tr>
 <tr class="separator:a5a3ad31d527c2646fee808a9072a0df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9da0cf75aa075e53a59ed0b5ab0e68c9" id="r_a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelogit.html#a9da0cf75aa075e53a59ed0b5ab0e68c9">logit::create_directories</a> (const std::string &amp;path)</td></tr>
-<tr class="memdesc:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates directories recursively for the given path.  <br /></td></tr>
-<tr class="separator:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:aba989d2f4975a3c1dc3ec9ba2adc959f" id="r_aba989d2f4975a3c1dc3ec9ba2adc959f"><td class="memItemLeft" align="right" valign="top">namespace&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacelogit.html#aba989d2f4975a3c1dc3ec9ba2adc959f">logit::fs</a> = std::filesystem</td></tr>
+<tr class="separator:aba989d2f4975a3c1dc3ec9ba2adc959f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utility functions for path manipulation, including relative path computation. </p>

@@ -1,6 +1,6 @@
 var topics =
 [
-    [ "Configuration Macros", "group__ConfigMacros.html", "group__ConfigMacros" ],
+    [ "Configuration Macros", "group__ConfigMacros.html", null ],
     [ "Logging Backends", "group__LogBackends.html", "group__LogBackends" ],
-    [ "Logging Macros", "group__LoggingMacros.html", "group__LoggingMacros" ]
+    [ "Logging Macros", "group__LoggingMacros.html", null ]
 ];

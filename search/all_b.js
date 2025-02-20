@@ -30,10 +30,11 @@ var searchData=
   ['formatting_20flags_27',['Log Message Formatting Flags',['../index.html#format_flags_sec',1,'']]],
   ['formatting_20patterns_28',['Examples of Formatting Patterns',['../index.html#pattern_example',1,'']]],
   ['formattype_29',['FormatType',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8',1,'logit::FormatInstruction']]],
-  ['fullfilename_30',['FullFileName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a5dd58c36945c31f7cee0df93eac22a59',1,'logit::FormatInstruction']]],
-  ['fullmonthname_31',['FullMonthName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8abadf69b8a3db2598720dd7b3836c3027',1,'logit::FormatInstruction']]],
-  ['fullweekdayname_32',['FullWeekdayName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a079f7ad26fdccf8507371966161a7fe5',1,'logit::FormatInstruction']]],
-  ['function_33',['function',['../structlogit_1_1LogRecord.html#a0d893765b54e94a0350b254ddcc9c51b',1,'logit::LogRecord']]],
-  ['function_20information_34',['File and Function Information',['../index.html#file_function_flags',1,'']]],
-  ['functionname_35',['FunctionName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a485adff653e5456932b5d18b45e91b3d',1,'logit::FormatInstruction']]]
+  ['fs_30',['fs',['../namespacelogit.html#aba989d2f4975a3c1dc3ec9ba2adc959f',1,'logit']]],
+  ['fullfilename_31',['FullFileName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a5dd58c36945c31f7cee0df93eac22a59',1,'logit::FormatInstruction']]],
+  ['fullmonthname_32',['FullMonthName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8abadf69b8a3db2598720dd7b3836c3027',1,'logit::FormatInstruction']]],
+  ['fullweekdayname_33',['FullWeekdayName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a079f7ad26fdccf8507371966161a7fe5',1,'logit::FormatInstruction']]],
+  ['function_34',['function',['../structlogit_1_1LogRecord.html#a0d893765b54e94a0350b254ddcc9c51b',1,'logit::LogRecord']]],
+  ['function_20information_35',['File and Function Information',['../index.html#file_function_flags',1,'']]],
+  ['functionname_36',['FunctionName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a485adff653e5456932b5d18b45e91b3d',1,'logit::FormatInstruction']]]
 ];

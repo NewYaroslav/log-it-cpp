@@ -29,7 +29,7 @@ var searchData=
   ['macros_20for_20simplicity_26',['Example Using Macros for Simplicity',['../index.html#autotoc_md4',1,'']]],
   ['macros_3a_27',['Available TRACE-level macros:',['../index.html#autotoc_md5',1,'']]],
   ['magenta_28',['MAGENTA',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50ac634ffea7195608364671ac52ee59a61',1,'MAGENTA:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50ac634ffea7195608364671ac52ee59a61',1,'MAGENTA:&#160;example_logit_basic.cpp']]],
-  ['magenta_29',['Magenta',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31ab91cc2c1416fcca942b61c7ac5b1a9ac',1,'logit']]],
+  ['magenta_29',['Magenta',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0ab91cc2c1416fcca942b61c7ac5b1a9ac',1,'logit::ConsoleLogger::Magenta'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31ab91cc2c1416fcca942b61c7ac5b1a9ac',1,'logit::Magenta']]],
   ['main_30',['main',['../example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;example_logit_basic.cpp'],['../example__logit__custom__backend_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;example_logit_custom_backend.cpp'],['../example__logit__customized_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;example_logit_customized.cpp'],['../example__logit__short__macros_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;example_logit_short_macros.cpp']]],
   ['mainpage_2edox_31',['mainpage.dox',['../mainpage_8dox.html',1,'']]],
   ['make_5frelative_32',['make_relative',['../namespacelogit.html#a468afe9332af7c19b13e6fa9e6cb0769',1,'logit']]],

@@ -1,6 +1,5 @@
 var Enums_8hpp =
 [
-    [ "_LOGIT_ENUMS_HPP_INCLUDED", "Enums_8hpp.html#a9db8d98d8cb3dd3d2371426db2a3176c", null ],
     [ "logit::LoggerParam", "namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c", [
       [ "logit::LoggerParam::LastFileName", "namespacelogit.html#a9e415ea803231f2d81a3632b507dff2cadeb1095ea859c737af741d02fc94f96a", null ],
       [ "logit::LoggerParam::LastFilePath", "namespacelogit.html#a9e415ea803231f2d81a3632b507dff2cae7165331f77506419bdfc87d5a330dd4", null ],

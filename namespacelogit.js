@@ -68,5 +68,7 @@ var namespacelogit =
     [ "to_c_str", "namespacelogit.html#ae8f7b5f181deb76b05f385cca096c718", null ],
     [ "to_c_str", "namespacelogit.html#ad70b9fd6d27ebc73e4afce58bf2bfed6", null ],
     [ "to_string", "namespacelogit.html#a1894d2761436e68074fe1b18b8d21947", null ],
-    [ "to_string", "namespacelogit.html#ac5ad16e3319e32ddda74d8ebe975d357", null ]
+    [ "to_string", "namespacelogit.html#ac5ad16e3319e32ddda74d8ebe975d357", null ],
+    [ "utf8_to_ansi", "namespacelogit.html#a8e8e8cdec95a803085a376de67d605b6", null ],
+    [ "fs", "namespacelogit.html#aba989d2f4975a3c1dc3ec9ba2adc959f", null ]
 ];

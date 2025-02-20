@@ -30,6 +30,7 @@ var menudata={children:[
 {text:"Namespace Members",url:"namespacemembers.html",children:[
 {text:"All",url:"namespacemembers.html"},
 {text:"Functions",url:"namespacemembers_func.html"},
+{text:"Variables",url:"namespacemembers_vars.html"},
 {text:"Typedefs",url:"namespacemembers_type.html"},
 {text:"Enumerations",url:"namespacemembers_enum.html"}]}]},
 {text:"Classes",url:"annotated.html",children:[
@@ -67,6 +68,7 @@ var menudata={children:[
 {text:"e",url:"functions_func.html#index_e"},
 {text:"f",url:"functions_func.html#index_f"},
 {text:"g",url:"functions_func.html#index_g"},
+{text:"h",url:"functions_func.html#index_h"},
 {text:"i",url:"functions_func.html#index_i"},
 {text:"l",url:"functions_func.html#index_l"},
 {text:"m",url:"functions_func.html#index_m"},
@@ -104,23 +106,7 @@ var menudata={children:[
 {text:"Files",url:"files.html",children:[
 {text:"File List",url:"files.html"},
 {text:"File Members",url:"globals.html",children:[
-{text:"All",url:"globals.html",children:[
-{text:"_",url:"globals.html#index__5F"},
-{text:"b",url:"globals_b.html#index_b"},
-{text:"c",url:"globals_c.html#index_c"},
-{text:"g",url:"globals_g.html#index_g"},
-{text:"l",url:"globals_l.html#index_l"},
-{text:"m",url:"globals_m.html#index_m"},
-{text:"n",url:"globals_n.html#index_n"},
-{text:"o",url:"globals_o.html#index_o"},
-{text:"r",url:"globals_r.html#index_r"},
-{text:"u",url:"globals_u.html#index_u"},
-{text:"w",url:"globals_w.html#index_w"},
-{text:"y",url:"globals_y.html#index_y"}]},
+{text:"All",url:"globals.html"},
 {text:"Functions",url:"globals_func.html"},
 {text:"Enumerations",url:"globals_enum.html"},
-{text:"Enumerator",url:"globals_eval.html"},
-{text:"Macros",url:"globals_defs.html",children:[
-{text:"_",url:"globals_defs.html#index__5F"},
-{text:"l",url:"globals_defs_l.html#index_l"},
-{text:"u",url:"globals_defs_u.html#index_u"}]}]}]}]}
+{text:"Enumerator",url:"globals_eval.html"}]}]}]}

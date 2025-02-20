@@ -1,8 +1,5 @@
 var example__logit__short__macros_8cpp =
 [
-    [ "LOGIT_BASE_PATH", "example__logit__short__macros_8cpp.html#a3bf179993f836ab365df8a1888cd027d", null ],
-    [ "LOGIT_SHORT_NAME", "example__logit__short__macros_8cpp.html#aa8529159df35cfb87e80dbf0d3cc6733", null ],
-    [ "UNIQUE_LOGGER_ID", "example__logit__short__macros_8cpp.html#a43ef5cc9b062d3a7fc3d997744bffb9e", null ],
     [ "COLORS", "example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50", [
       [ "NC", "example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a90581d96b500fd2d3fd701a583409cb8", null ],
       [ "BLACK", "example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a08d0012388564e95c3b4a7407cf04965", null ],

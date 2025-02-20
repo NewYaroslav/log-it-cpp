@@ -32,6 +32,7 @@ var NAVTREE =
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ],
         [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
@@ -51,11 +52,10 @@ var NAVTREE =
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
-        [ "All", "globals.html", "globals_dup" ],
+        [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
-        [ "Enumerator", "globals_eval.html", null ],
-        [ "Macros", "globals_defs.html", "globals_defs" ]
+        [ "Enumerator", "globals_eval.html", null ]
       ] ]
     ] ]
   ] ]
@@ -64,10 +64,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "ConsoleLogger_8hpp.html",
-"classlogit_1_1TaskExecutor.html#a4023e7c1a2f54cb83e2c56a14aada505",
-"group__LoggingMacros.html#ga3baa3dc61ff5bfbffcdffa0cb49b8d47",
-"structlogit_1_1ConsoleLogger_1_1Config.html#a0b1e6f055d48ec52f2549fffe0735255",
-"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a6d4625e504ad32dbf8d6b958dacd3b78"
+"classlogit_1_1TaskExecutor.html#a264de76ad03e778d7d5f2f74df0073e3",
+"namespacelogit.html#aad4223e1a453b7f28aabf9795d68b3a7",
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

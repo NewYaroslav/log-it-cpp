@@ -111,7 +111,8 @@ $(function(){initNavTree('namespacelogit.html',''); initResizable(true); });
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">logit Namespace Reference<div class="ingroups"><a class="el" href="group__LogBackends.html">Logging Backends</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -254,6 +255,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a3b99c712385aa258b8ba4b70d2c4786d" id="r_a3b99c712385aa258b8ba4b70d2c4786d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b99c712385aa258b8ba4b70d2c4786d">split_arguments</a> (const std::string &amp;all_names)</td></tr>
 <tr class="memdesc:a3b99c712385aa258b8ba4b70d2c4786d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits a string of argument names into individual names, ignoring nested templates, parentheses, and quotes.  <br /></td></tr>
 <tr class="separator:a3b99c712385aa258b8ba4b70d2c4786d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e8e8cdec95a803085a376de67d605b6" id="r_a8e8e8cdec95a803085a376de67d605b6"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8e8e8cdec95a803085a376de67d605b6">utf8_to_ansi</a> (const std::string &amp;utf8)</td></tr>
+<tr class="memdesc:a8e8e8cdec95a803085a376de67d605b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a UTF-8 string to an ANSI string (Windows-specific).  <br /></td></tr>
+<tr class="separator:a8e8e8cdec95a803085a376de67d605b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d42fce36e5265e7cfd666bd6f639460" id="r_a2d42fce36e5265e7cfd666bd6f639460"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d42fce36e5265e7cfd666bd6f639460">format</a> (const char *fmt,...)</td></tr>
 <tr class="memdesc:a2d42fce36e5265e7cfd666bd6f639460"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats a string according to the specified format.  <br /></td></tr>
 <tr class="separator:a2d42fce36e5265e7cfd666bd6f639460"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,18 +270,18 @@ Functions</h2></td></tr>
 <tr class="memitem:aa4e7991e430f7cc50b60d6b37ec26cd3" id="r_aa4e7991e430f7cc50b60d6b37ec26cd3"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4e7991e430f7cc50b60d6b37ec26cd3">get_file_name</a> (const std::string &amp;file_path)</td></tr>
 <tr class="memdesc:aa4e7991e430f7cc50b60d6b37ec26cd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extracts the file name from a full file path.  <br /></td></tr>
 <tr class="separator:aa4e7991e430f7cc50b60d6b37ec26cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a468afe9332af7c19b13e6fa9e6cb0769" id="r_a468afe9332af7c19b13e6fa9e6cb0769"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a468afe9332af7c19b13e6fa9e6cb0769">make_relative</a> (const std::string &amp;file_path, const std::string &amp;base_path)</td></tr>
+<tr class="memdesc:a468afe9332af7c19b13e6fa9e6cb0769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the relative path from base_path to file_path using C++17 std::filesystem.  <br /></td></tr>
+<tr class="separator:a468afe9332af7c19b13e6fa9e6cb0769"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9da0cf75aa075e53a59ed0b5ab0e68c9" id="r_a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9da0cf75aa075e53a59ed0b5ab0e68c9">create_directories</a> (const std::string &amp;path)</td></tr>
+<tr class="memdesc:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates directories recursively for the given path using C++17 std::filesystem.  <br /></td></tr>
+<tr class="separator:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a668cc1acca900bc9ad968b421d31bfa3" id="r_a668cc1acca900bc9ad968b421d31bfa3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structlogit_1_1PathComponents.html">PathComponents</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a668cc1acca900bc9ad968b421d31bfa3">split_path</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a668cc1acca900bc9ad968b421d31bfa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits a path into its root and components.  <br /></td></tr>
 <tr class="separator:a668cc1acca900bc9ad968b421d31bfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a468afe9332af7c19b13e6fa9e6cb0769" id="r_a468afe9332af7c19b13e6fa9e6cb0769"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a468afe9332af7c19b13e6fa9e6cb0769">make_relative</a> (const std::string &amp;file_path, const std::string &amp;base_path)</td></tr>
-<tr class="memdesc:a468afe9332af7c19b13e6fa9e6cb0769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the relative path from base_path to file_path.  <br /></td></tr>
-<tr class="separator:a468afe9332af7c19b13e6fa9e6cb0769"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a3ad31d527c2646fee808a9072a0df2" id="r_a5a3ad31d527c2646fee808a9072a0df2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5a3ad31d527c2646fee808a9072a0df2">is_file</a> (const std::string &amp;path)</td></tr>
 <tr class="memdesc:a5a3ad31d527c2646fee808a9072a0df2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a path represents a file (by checking for an extension).  <br /></td></tr>
 <tr class="separator:a5a3ad31d527c2646fee808a9072a0df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9da0cf75aa075e53a59ed0b5ab0e68c9" id="r_a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9da0cf75aa075e53a59ed0b5ab0e68c9">create_directories</a> (const std::string &amp;path)</td></tr>
-<tr class="memdesc:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates directories recursively for the given path.  <br /></td></tr>
-<tr class="separator:a9da0cf75aa075e53a59ed0b5ab0e68c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f6ef213e30d00c16f8d7a2644655d64" id="r_a6f6ef213e30d00c16f8d7a2644655d64"><td class="memTemplParams" colspan="2">template&lt;typename EnumType&gt; </td></tr>
 <tr class="memitem:a6f6ef213e30d00c16f8d7a2644655d64"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a6f6ef213e30d00c16f8d7a2644655d64">enum_to_string</a> (EnumType value)</td></tr>
 <tr class="memdesc:a6f6ef213e30d00c16f8d7a2644655d64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to convert an enumeration to a string.  <br /></td></tr>
@@ -285,6 +289,11 @@ Functions</h2></td></tr>
 <tr class="memitem:aa55d937df9602e94ecf105a44d04ad86" id="r_aa55d937df9602e94ecf105a44d04ad86"><td class="memItemLeft" align="right" valign="top">template&lt;&gt; </td></tr>
 <tr class="memitem:aa55d937df9602e94ecf105a44d04ad86"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa55d937df9602e94ecf105a44d04ad86">enum_to_string</a> (<a class="el" href="example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50">COLORS</a> value)</td></tr>
 <tr class="separator:aa55d937df9602e94ecf105a44d04ad86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:aba989d2f4975a3c1dc3ec9ba2adc959f" id="r_aba989d2f4975a3c1dc3ec9ba2adc959f"><td class="memItemLeft" align="right" valign="top">namespace&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba989d2f4975a3c1dc3ec9ba2adc959f">fs</a> = std::filesystem</td></tr>
+<tr class="separator:aba989d2f4975a3c1dc3ec9ba2adc959f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The primary namespace for the LogIt++ library. </p>
@@ -526,7 +535,8 @@ template&lt;typename T, typename... Ts&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Creates directories recursively for the given path. </p>
+<p>Creates directories recursively for the given path using C++17 std::filesystem. </p>
+<p>Creates directories recursively for the given path.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">path</td><td>The directory path to create. </td></tr>
@@ -540,7 +550,7 @@ template&lt;typename T, typename... Ts&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00336">336</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00204">204</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -597,7 +607,7 @@ template&lt;typename EnumType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>String representation of the enumeration. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00031">31</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00030">30</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -690,7 +700,7 @@ template&lt;typename EnumType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The extracted file name, or the full string if no directory separator is found. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00178">178</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00175">175</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -712,11 +722,11 @@ template&lt;typename EnumType&gt; </div>
 <p>Recursively retrieves a list of all files in a directory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">path</td><td>The directory path to search. </td></tr>
+    <tr><td class="paramname">path</td><td>The directory path to search (UTF-8 encoded). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A vector of strings containing the full paths of all files found. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A vector of strings (UTF-8) containing the full paths of all files found. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00089">89</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
 
@@ -823,7 +833,7 @@ template&lt;typename EnumType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the path represents a file, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00327">327</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00331">331</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -832,6 +842,9 @@ template&lt;typename EnumType&gt; </div>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">std::string logit::make_relative </td>
@@ -844,9 +857,15 @@ template&lt;typename EnumType&gt; </div>
           <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>base_path</em></span>&#160;)</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>Computes the relative path from base_path to file_path. </p>
+<p>Computes the relative path from base_path to file_path using C++17 std::filesystem. </p>
+<p>Computes the relative path from base_path to file_path.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">file_path</td><td>The target file path. </td></tr>
@@ -856,7 +875,7 @@ template&lt;typename EnumType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A string representing the relative path from base_path to file_path. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00273">273</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00187">187</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -920,7 +939,7 @@ template&lt;typename EnumType&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="structlogit_1_1PathComponents.html" title="Structure to hold the root and components of a path.">PathComponents</a> object containing the root and components of the path. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00229">229</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00233">233</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
 
 </div>
 </div>
@@ -1139,6 +1158,51 @@ template&lt;typename EnumType&gt; </div>
 <p>Преобразование <a class="el" href="#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> в строку (ANSI escape codes) </p>
 
 <p class="definition">Definition at line <a class="el" href="Enums_8hpp_source.html#l00124">124</a> of file <a class="el" href="Enums_8hpp_source.html">Enums.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a8e8e8cdec95a803085a376de67d605b6" name="a8e8e8cdec95a803085a376de67d605b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8e8e8cdec95a803085a376de67d605b6">&#9670;&#160;</a></span>utf8_to_ansi()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string logit::utf8_to_ansi </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>utf8</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Converts a UTF-8 string to an ANSI string (Windows-specific). </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">utf8</td><td>The UTF-8 encoded string. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The converted ANSI string. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="encoding__utils_8hpp_source.html#l00014">14</a> of file <a class="el" href="encoding__utils_8hpp_source.html">encoding_utils.hpp</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="aba989d2f4975a3c1dc3ec9ba2adc959f" name="aba989d2f4975a3c1dc3ec9ba2adc959f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba989d2f4975a3c1dc3ec9ba2adc959f">&#9670;&#160;</a></span>fs</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">namespace logit::fs = std::filesystem</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="path__utils_8hpp_source.html#l00001">1</a> of file <a class="el" href="path__utils_8hpp_source.html">path_utils.hpp</a>.</p>
 
 </div>
 </div>
