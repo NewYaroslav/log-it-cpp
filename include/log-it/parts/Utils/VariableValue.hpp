@@ -1,10 +1,11 @@
 #pragma once
 #ifndef _LOGIT_VARIABLE_VALUE_HPP_INCLUDED
 #define _LOGIT_VARIABLE_VALUE_HPP_INCLUDED
+
 /// \file VariableValue.hpp
 /// \brief Structure for storing variables of various types.
 
-#include <time_shield_cpp/time_shield.hpp>
+#include <time_shield.hpp>
 #include <string>
 #include <iostream>
 #include <cstdint>

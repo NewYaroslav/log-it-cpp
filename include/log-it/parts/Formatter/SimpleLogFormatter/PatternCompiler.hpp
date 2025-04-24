@@ -1,10 +1,11 @@
 #pragma once
 #ifndef _LOGIT_PATTERN_COMPILER_HPP_INCLUDED
 #define _LOGIT_PATTERN_COMPILER_HPP_INCLUDED
+
 /// \file PatternCompiler.hpp
 /// \brief Header file for the pattern compiler used in log formatting.
 
-#include <time_shield_cpp/time_shield.hpp>
+#include <time_shield.hpp>
 #include <vector>
 #include <string>
 #include <sstream>
