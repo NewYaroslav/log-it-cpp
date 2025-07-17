@@ -1,4 +1,4 @@
-# При генерации Code::Blocks проекта с MinGW можно использовать так:
+# When generating a Code::Blocks project with MinGW, you can use:
 # cmake -G "CodeBlocks - MinGW Makefiles" -S . -B build-cb
 cmake_minimum_required(VERSION 3.18)
 project(time_shield LANGUAGES CXX)
@@ -16,32 +16,32 @@ if(NOT DEFINED CMAKE_CXX_STANDARD)
 endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Абсолютный путь к корню проекта (где CMakeLists.txt)
+# Absolute path to the project root (where CMakeLists.txt resides)
 get_filename_component(PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
 
-# Добавляем макрос LOGIT_BASE_PATH
+# Define the LOGIT_BASE_PATH macro
 add_compile_definitions(LOGIT_BASE_PATH="${PROJECT_ROOT}")
 
-# Пути к инклудам и библиотекам
+# Include and library paths
 set(PROJECT_INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/logit_cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/fmt/include
     ${CMAKE_CURRENT_SOURCE_DIR}/libs/time-shield-cpp/include/time_shield_cpp
 )
 
-# Заголовочные файлы из include/
+# Header files from include/
 file(GLOB_RECURSE PROJECT_HEADERS
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     include/*.hpp
 )
 
-# Создаём виртуальную цель для заголовков, чтобы отображались в IDE
+# Create a virtual target for headers so IDEs show them
 add_custom_target(project_headers SOURCES ${PROJECT_HEADERS})
 
-# Находим все .cpp файлы в examples/
+# Locate all .cpp files in examples/
 file(GLOB EXAMPLES_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} examples/*.cpp)
 
-# Для каждого создаём отдельную цель
+# Create a separate target for each example
 foreach(example_src ${EXAMPLES_SOURCES})
     get_filename_component(example_name ${example_src} NAME_WE)
 
@@ -57,7 +57,7 @@ foreach(example_src ${EXAMPLES_SOURCES})
     target_compile_definitions(${example_name} PRIVATE ${PROJECT_DEFINES})
     target_link_libraries(${example_name} PRIVATE ${PROJECT_LIBS})
 
-    # Добавляем заголовки как SOURCES (чтобы IDE показывала их)
+    # Add headers as SOURCES so IDEs display them
     set_source_files_properties(${PROJECT_HEADERS} PROPERTIES HEADER_FILE_ONLY ON)
     target_sources(${example_name} PRIVATE ${PROJECT_HEADERS})
     
