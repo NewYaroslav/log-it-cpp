@@ -97,7 +97,7 @@ Here’s a simple example demonstrating how to use LogIt++ in your application:
 
 ```cpp
 #define LOGIT_SHORT_NAME
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 
 int main() {
 	// Initialize the logger with default console output
@@ -397,7 +397,7 @@ You can extend LogIt++ by implementing your own loggers and formatters. Here’s
 ```cpp
 #include <fstream>
 #include <mutex>
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 
 class FileLogger : public logit::ILogger {
 public:
@@ -430,7 +430,7 @@ private:
 ### Custom Formatter Example
 
 ```cpp
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 #include <json/json.h>
 
 class JsonLogFormatter : public logit::ILogFormatter {
@@ -464,7 +464,7 @@ git clone --recurse-submodules https://github.com/NewYaroslav/log-it-cpp.git
 2. Include the LogIt++ headers in your project:
 
 ```cpp
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 ```
 
 3. Set up include paths for dependencies like time-shield-cpp.

@@ -1,6 +1,8 @@
 /*!
 \mainpage LogIt++ Library
 
+Version: VERSION_PLACEHOLDER
+
 \section intro_sec Introduction
 
 `LogIt++` is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. 
@@ -93,7 +95,7 @@ Here's a simple example demonstrating how to use LogIt++ in your application:
 
 \code{.cpp}
 #define LOGIT_SHORT_NAME
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 
 int main() {
     // Initialize the logger with default console output
@@ -436,7 +438,7 @@ To create a custom logger backend, you need to implement the `ILogger` interface
 \code{.cpp}
 #include <fstream>
 #include <mutex>
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 
 class FileLogger : public logit::ILogger {
 public:
@@ -490,7 +492,7 @@ logit::Logger::get_instance().add_logger(
 In addition to creating custom loggers, you can also create custom formatters by implementing the `ILogFormatter` interface. Here's an example of a simple formatter that outputs log messages in JSON format:
 
 \code{.cpp}
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 #include <json/json.h>  // Or your preferred JSON library
 
 class JsonLogFormatter : public logit::ILogFormatter {
@@ -561,7 +563,7 @@ git submodule update
 Since LogIt++ is a header-only library, you can simply include the main header in your project:
 
 \code{cpp}
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 \endcode
 
 This will give you access to the entire logging system.

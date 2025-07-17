@@ -92,7 +92,7 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 
 ```cpp
 #define LOGIT_SHORT_NAME
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 
 int main() {
 	// Инициализация логгера с выводом в консоль по умолчанию
@@ -393,7 +393,7 @@ LogIt++ предоставляет несколько макросов, кото
 ```cpp
 #include <fstream>
 #include <mutex>
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 
 class FileLogger : public logit::ILogger {
 public:
@@ -426,7 +426,7 @@ private:
 ### Пример пользовательского форматтера
 
 ```cpp
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 #include <json/json.h>
 
 class JsonLogFormatter : public logit::ILogFormatter {
@@ -460,7 +460,7 @@ git clone --recurse-submodules https://github.com/NewYaroslav/log-it-cpp.git
 2. Включите заголовочные файлы LogIt++ в ваш проект:
 
 ```cpp
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 ```
 
 3. Настройте пути к заголовочным файлам для зависимостей, таких как time-shield-cpp.
