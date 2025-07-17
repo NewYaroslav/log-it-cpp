@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LOGIT_LOG_STREAM_HPP_INCLUDED
 #define _LOGIT_LOG_STREAM_HPP_INCLUDED
+
 /// \file LogStream.hpp
 /// \brief Defines the LogStream class for stream-like logging functionality.
 

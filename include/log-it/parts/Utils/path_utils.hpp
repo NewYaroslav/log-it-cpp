@@ -1,5 +1,6 @@
 #ifndef _LOGIT_PATH_UTILS_HPP_INCLUDED
 #define _LOGIT_PATH_UTILS_HPP_INCLUDED
+
 /// \file path_utils.hpp
 /// \brief Utility functions for path manipulation, including relative path computation.
 
@@ -40,12 +41,12 @@ namespace logit {
         HMODULE hModule = GetModuleHandle(NULL);
 
         // Пробуем получить путь
-        DWORD size = GetModuleFileNameW(hModule, buffer.data(), buffer.size());
+        std::size_t size = static_cast<std::size_t>(GetModuleFileNameW(hModule, buffer.data(), static_cast<DWORD>(buffer.size())));
 
         // Если путь слишком длинный, увеличиваем буфер
         while (size == buffer.size() && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
             buffer.resize(buffer.size() * 2);  // Увеличиваем буфер в два раза
-            size = GetModuleFileNameW(hModule, buffer.data(), buffer.size());
+            size = static_cast<std::size_t>(GetModuleFileNameW(hModule, buffer.data(), static_cast<DWORD>(buffer.size())));
         }
 
         if (size == 0) {
@@ -173,9 +174,13 @@ namespace logit {
     /// \param file_path The full file path as a string.
     /// \return The extracted file name, or the full string if no directory separator is found.
     std::string get_file_name(const std::string& file_path) {
+#if     __cplusplus >= 201703L
+        return fs::u8path(full_path).filename().u8string();
+#       else
         size_t pos = file_path.find_last_of("/\\");
         if (pos == std::string::npos) return file_path;
         return file_path.substr(pos + 1);
+#       endif
     }
 
 #if __cplusplus >= 201703L
@@ -208,12 +213,12 @@ namespace logit {
         std::wstring wide_path = converter.from_bytes(path);
         std::filesystem::path dir(wide_path);
 #       else
-        std::filesystem::path dir(path);
+        std::filesystem::path dir = std::filesystem::u8path(path);
 #       endif
         if (!std::filesystem::exists(dir)) {
             std::error_code ec;
             if (!std::filesystem::create_directories(dir, ec)) {
-                throw std::runtime_error("Failed to create directories for path: " + path);
+                throw std::runtime_error("Failed to create directories for path: " + dir.u8string());
             }
         }
     }

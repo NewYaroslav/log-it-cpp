@@ -1,4 +1,4 @@
-#define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp"
+// #define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp" <- задается через Cmake
 
 // Customizing the logging settings
 #define LOGIT_CONSOLE_PATTERN "%Y-%m-%d %H:%M:%S [%L] %v"       // Custom pattern for console logs
@@ -12,11 +12,11 @@
 
 // Example enumeration
 enum LogLevel {
-    _DEBUG,
-    _INFO,
-    _WARN,
-    _ERROR,
-    _FATAL
+    L_DEBUG,
+    L_INFO,
+    L_WARN,
+    L_ERROR,
+    L_FATAL
 };
 
 int main() {
@@ -30,7 +30,7 @@ int main() {
     // Log various levels of messages
     float someFloat = 42.42f;
     int someInt = 100;
-    LogLevel level = _INFO;
+    LogLevel level = L_INFO;
 
     LOGIT_INFO("Logging an informational message with customized settings", someFloat, someInt, level);
     LOGIT_WARN("Warning: Potential issue with customized log settings!");

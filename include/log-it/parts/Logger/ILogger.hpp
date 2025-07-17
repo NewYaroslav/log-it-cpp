@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LOGIT_ILOGGER_HPP_INCLUDED
 #define _LOGIT_ILOGGER_HPP_INCLUDED
+
 /// \file ILogger.hpp
 /// \brief Defines the interface for loggers used in the logging system.
 

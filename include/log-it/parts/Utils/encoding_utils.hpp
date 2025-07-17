@@ -1,5 +1,6 @@
 #ifndef _LOGIT_ENCODING_UTILS_HPP_INCLUDED
 #define _LOGIT_ENCODING_UTILS_HPP_INCLUDED
+
 /// \file encoding_utils.hpp
 /// \brief Utilities for working with character encodings and string transformations.
 

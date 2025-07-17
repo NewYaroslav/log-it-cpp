@@ -1,5 +1,6 @@
 #ifndef _LOGIT_FILE_LOGGER_HPP_INCLUDED
 #define _LOGIT_FILE_LOGGER_HPP_INCLUDED
+
 /// \file FileLogger.hpp
 /// \brief File logger implementation that outputs logs to files with rotation and deletion of old logs.
 
@@ -11,6 +12,7 @@
 #include <regex>
 #include <queue>
 #include <functional>
+#include <time_shield/time_parser.hpp>
 
 namespace logit {
 
@@ -216,7 +218,7 @@ namespace logit {
         /// \brief Creates a file path for the log file based on the date timestamp.
         /// \param date_ts The timestamp representing the date for the log file.
         /// \return The path to the log file.
-        std::string create_file_path(const int64_t& date_ts) const {
+        std::string create_file_path(int64_t date_ts) const {
             std::string date_str = time_shield::to_iso8601_date(date_ts);
             return get_directory_path() + "/" + date_str + ".log";
         }

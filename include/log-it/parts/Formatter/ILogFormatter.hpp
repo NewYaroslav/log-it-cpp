@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LOGIT_ILOG_FORMATTER_HPP_INCLUDED
 #define _LOGIT_ILOG_FORMATTER_HPP_INCLUDED
+
 /// \file ILogFormatter.hpp
 /// \brief Defines the interface for log formatters used in the logging system.
 

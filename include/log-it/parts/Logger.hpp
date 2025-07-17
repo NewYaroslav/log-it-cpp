@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LOGIT_LOGGER_HPP_INCLUDED
 #define _LOGIT_LOGGER_HPP_INCLUDED
+
 /// \file Logger.hpp
 /// \brief Defines the Logger class for managing multiple loggers and formatters.
 
@@ -233,6 +234,13 @@ namespace logit {
         mutable std::mutex m_mutex;                   ///< Mutex for thread safety during logging operations.
         std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false); ///< Flag indicating if shutdown was requested.
 
+        void print(const LogRecord& record) {
+            log(record);
+        }
+        
+#pragma warning(push)
+#pragma warning(disable: 4127) // условное выражение — константа
+
         /// \brief Logs a record with given arguments.
         /// \tparam Ts Types of arguments.
         /// \param record Log record.
@@ -248,6 +256,8 @@ namespace logit {
             mutable_record.args_array = args_to_array(var_names.begin(), args...);
             log(mutable_record);
         }
+        
+#pragma warning(pop)
 
         Logger() {
             std::atexit(Logger::on_exit_handler);

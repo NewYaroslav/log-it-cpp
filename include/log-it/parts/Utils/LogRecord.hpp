@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LOGIT_LOG_RECORD_HPP_INCLUDED
 #define _LOGIT_LOG_RECORD_HPP_INCLUDED
+
 /// \file LogRecord.hpp
 /// \brief Contains the definition of the LogRecord structure for storing log data.
 

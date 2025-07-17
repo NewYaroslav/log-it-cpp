@@ -5,7 +5,7 @@
 /// \file PatternCompiler.hpp
 /// \brief Header file for the pattern compiler used in log formatting.
 
-#include <time_shield.hpp>
+#include <time_shield/time_conversions.hpp>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -366,7 +366,7 @@ namespace logit {
                         // Keep portions of the string from the beginning and end
                         size_t keep_size = (width - placeholder_size) / 2; // Portion to keep from each side
                         size_t keep_end = result.size() - keep_size;
-                        int line_size = 2 * keep_size + placeholder.size();
+                        int line_size = static_cast<int>(2 * keep_size + placeholder.size());
 
                         while (line_size < width) {
                             if (keep_end > 0) {
@@ -391,9 +391,10 @@ namespace logit {
                 if (left_align) {
                     // Left alignment
                     oss << std::left << std::setw(width) << result;
-                } else if (center_align) {
+                } else 
+                if (center_align) {
                     // Center alignment
-                    const int padding = (width - result.size()) / 2;
+                    const int padding = static_cast<int>((width - result.size()) / 2);
                     oss << std::string(padding, ' ') << result << std::string(width - padding - result.size(), ' ');
                 } else {
                     // Right alignment (default)

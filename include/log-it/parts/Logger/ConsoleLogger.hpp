@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LOGIT_CONSOLE_LOGGER_HPP_INCLUDED
 #define _LOGIT_CONSOLE_LOGGER_HPP_INCLUDED
+
 /// \file ConsoleLogger.hpp
 /// \brief Console logger implementation that outputs logs to the console with color support.
 

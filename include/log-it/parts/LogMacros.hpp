@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LOGIT_LOG_MACROS_HPP_INCLUDED
 #define _LOGIT_LOG_MACROS_HPP_INCLUDED
+
 /// \file LogMacros.hpp
 /// \brief Provides various logging macros for different log levels and options.
 

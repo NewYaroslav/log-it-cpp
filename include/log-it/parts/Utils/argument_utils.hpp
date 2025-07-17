@@ -1,6 +1,7 @@
 #pragma once
 #ifndef _LOGIT_ARGUMENT_UTILS_HPP_INCLUDED
 #define _LOGIT_ARGUMENT_UTILS_HPP_INCLUDED
+
 /// \file argument_utils.hpp
 /// \brief Functions for working with arguments and converting them to value arrays.
 

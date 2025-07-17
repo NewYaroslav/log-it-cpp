@@ -5,7 +5,7 @@
 /// \file VariableValue.hpp
 /// \brief Structure for storing variables of various types.
 
-#include <time_shield.hpp>
+#include <time_shield/time_formatting.hpp>
 #include <string>
 #include <iostream>
 #include <cstdint>
@@ -127,20 +127,24 @@ namespace logit {
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UNKNOWN_VAL) {
             if (std::is_same<T, float>::value) {
                 type = ValueType::FLOAT_VAL;
-                pod_value.float_value = value;
+                pod_value.float_value = static_cast<float>(value);
             } else if (std::is_same<T, double>::value) {
                 type = ValueType::DOUBLE_VAL;
-                pod_value.double_value = value;
+                pod_value.double_value = static_cast<double>(value);
             } else if (std::is_same<T, long double>::value) {
                 type = ValueType::LONG_DOUBLE_VAL;
-                pod_value.long_double_value = value;
+                pod_value.long_double_value = static_cast<long double>(value);
             }
         }
+        
+#pragma warning(push)
+#pragma warning(disable : 4127)
 
         template <typename T>
         VariableValue(const std::string& name, T value,
             typename std::enable_if<std::is_integral<T>::value>::type* = nullptr)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UNKNOWN_VAL) {
+            
             if (std::is_signed<T>::value) {
                 if (sizeof(T) <= sizeof(int8_t)) {
                     type = ValueType::INT8_VAL;
@@ -171,6 +175,8 @@ namespace logit {
                 }
             }
         }
+        
+#pragma warning(pop)
 
         /// \brief Constructor for enumerations.
         /// \tparam EnumType The enumeration type.
@@ -193,7 +199,7 @@ namespace logit {
         VariableValue(const std::string& name, const std::chrono::time_point<Clock, Duration>& time_point)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::TIME_POINT_VAL) {
             auto ts_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_point.time_since_epoch());
-            string_value = time_shield::to_human_readable_ms(ts_ms.count());
+            //string_value = time_shield::to_human_readable_ms(ts_ms.count());
         }
 
 #       if __cplusplus >= 201703L

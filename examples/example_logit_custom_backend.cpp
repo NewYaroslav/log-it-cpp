@@ -1,4 +1,4 @@
-#define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp"
+// #define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp" <- задается через Cmake
 
 #include <iostream>
 #include <sstream>
@@ -30,16 +30,19 @@ public:
     // Implementing other pure virtual methods
     std::string get_string_param(const logit::LoggerParam& param) const override {
         // Returning an empty string for this example, can be customized
+		(void)param;
         return "";
     }
 
     int64_t get_int_param(const logit::LoggerParam& param) const override {
         // Returning a default value, can be customized
+		(void)param;
         return 0;
     }
 
     double get_float_param(const logit::LoggerParam& param) const override {
         // Returning a default value, can be customized
+		(void)param;
         return 0.0;
     }
 

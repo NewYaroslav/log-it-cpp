@@ -1,4 +1,4 @@
-#define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp"
+// #define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp"  <- задается через Cmake
 #define LOGIT_SHORT_NAME // Enable short macros
 
 #include <iostream>

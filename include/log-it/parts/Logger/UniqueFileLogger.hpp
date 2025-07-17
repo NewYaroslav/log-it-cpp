@@ -1,5 +1,6 @@
 #ifndef _LOGIT_UNIQUE_FILE_LOGGER_HPP_INCLUDED
 #define _LOGIT_UNIQUE_FILE_LOGGER_HPP_INCLUDED
+
 /// \file UniqueFileLogger.hpp
 /// \brief Logger that writes each log message to a unique file with auto-deletion of old logs.
 

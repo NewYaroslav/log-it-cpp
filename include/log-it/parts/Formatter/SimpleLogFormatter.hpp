@@ -1,11 +1,13 @@
 #pragma once
 #ifndef _LOGIT_SIMPLE_LOG_FORMATTER_HPP_INCLUDED
 #define _LOGIT_SIMPLE_LOG_FORMATTER_HPP_INCLUDED
+
 /// \file SimpleLogFormatter.hpp
 /// \brief Defines the SimpleLogFormatter class for formatting log messages according to a specified pattern or JSON format.
 
 #include "ILogFormatter.hpp"
 #include "SimpleLogFormatter/PatternCompiler.hpp"
+#include <time_shield/time_conversions.hpp>
 
 namespace logit {
 
