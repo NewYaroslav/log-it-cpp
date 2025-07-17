@@ -40,12 +40,12 @@ namespace logit {
         std::vector<wchar_t> buffer(MAX_PATH);
         HMODULE hModule = GetModuleHandle(NULL);
 
-        // Пробуем получить путь
+        // Try to get the path
         std::size_t size = static_cast<std::size_t>(GetModuleFileNameW(hModule, buffer.data(), static_cast<DWORD>(buffer.size())));
 
-        // Если путь слишком длинный, увеличиваем буфер
+        // If the path is too long, increase the buffer size
         while (size == buffer.size() && GetLastError() == ERROR_INSUFFICIENT_BUFFER) {
-            buffer.resize(buffer.size() * 2);  // Увеличиваем буфер в два раза
+            buffer.resize(buffer.size() * 2);  // Double the buffer size
             size = static_cast<std::size_t>(GetModuleFileNameW(hModule, buffer.data(), static_cast<DWORD>(buffer.size())));
         }
 
@@ -55,13 +55,13 @@ namespace logit {
 
         std::wstring exe_path(buffer.begin(), buffer.begin() + size);
 
-        // Обрезаем путь до директории (удаляем имя файла, оставляем только путь к папке)
+        // Trim the path to the directory (remove the file name, keep only the folder path)
         size_t pos = exe_path.find_last_of(L"\\/");
         if (pos != std::wstring::npos) {
             exe_path = exe_path.substr(0, pos);
         }
 
-        // Преобразуем из std::wstring (UTF-16) в std::string (UTF-8)
+        // Convert from std::wstring (UTF-16) to std::string (UTF-8)
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         return converter.to_bytes(exe_path);
 #       else
@@ -74,7 +74,7 @@ namespace logit {
 
         std::string exe_path(result, count);
 
-        // Обрезаем путь до директории (удаляем имя файла, оставляем только путь к папке)
+        // Trim the path to the directory (remove the file name, keep only the folder path)
         size_t pos = exe_path.find_last_of("\\/");
         if (pos != std::string::npos) {
             exe_path = exe_path.substr(0, pos);
@@ -90,11 +90,11 @@ namespace logit {
     std::vector<std::string> get_list_files(const std::string& path) {
         std::vector<std::string> list_files;
 #       ifdef _WIN32
-        // Используем wide-версии функций для корректной работы с русскими символами.
+        // Use wide versions of functions to correctly handle non-ASCII characters.
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         std::wstring wsearch_path;
 
-        // Если путь пустой, используем текущую директорию.
+        // If the path is empty, use the current directory.
         if (path.empty()) {
             wchar_t buffer[MAX_PATH];
             GetCurrentDirectoryW(MAX_PATH, buffer);
@@ -103,7 +103,7 @@ namespace logit {
             wsearch_path = converter.from_bytes(path);
         }
 
-        // Обеспечиваем наличие завершающего разделителя.
+        // Ensure there is a trailing separator.
         if (!wsearch_path.empty()) {
             wchar_t last_char = wsearch_path.back();
             if (last_char != L'\\' && last_char != L'/') {
@@ -111,7 +111,7 @@ namespace logit {
             }
         }
 
-        // Формируем шаблон поиска.
+        // Create the search pattern.
         std::wstring pattern = wsearch_path + L"*";
         WIN32_FIND_DATAW fd;
         HANDLE hFind = FindFirstFileW(pattern.c_str(), &fd);
@@ -123,18 +123,18 @@ namespace logit {
                 std::wstring wfull_path = wsearch_path + fd.cFileName;
 
                 if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    // Рекурсивно обрабатываем поддиректории.
+                    // Recursively process subdirectories.
                     std::vector<std::string> sub_files = get_list_files(converter.to_bytes(wfull_path));
                     list_files.insert(list_files.end(), sub_files.begin(), sub_files.end());
                 } else {
-                    // Добавляем найденный файл.
+                    // Add the found file.
                     list_files.push_back(converter.to_bytes(wfull_path));
                 }
             } while (FindNextFileW(hFind, &fd));
             FindClose(hFind);
         }
 #       else
-        // Реализация для POSIX-систем.
+        // Implementation for POSIX systems.
         std::string search_path = path;
         if (search_path.empty()) {
             char buffer[PATH_MAX];
@@ -142,7 +142,7 @@ namespace logit {
                 search_path = buffer;
             }
         }
-        // Обеспечиваем наличие завершающего разделителя.
+        // Ensure there is a trailing separator.
         if (search_path.back() != '/' && search_path.back() != '\\') {
             search_path.push_back('/');
         }
@@ -174,8 +174,8 @@ namespace logit {
     /// \param file_path The full file path as a string.
     /// \return The extracted file name, or the full string if no directory separator is found.
     std::string get_file_name(const std::string& file_path) {
-#if     __cplusplus >= 201703L
-        return fs::u8path(full_path).filename().u8string();
+#       if __cplusplus >= 201703L
+        return fs::u8path(file_path).filename().u8string();
 #       else
         size_t pos = file_path.find_last_of("/\\");
         if (pos == std::string::npos) return file_path;

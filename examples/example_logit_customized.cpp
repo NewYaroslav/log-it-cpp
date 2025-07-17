@@ -1,4 +1,4 @@
-// #define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp" <- задается через Cmake
+// #define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp" <- set via CMake
 
 // Customizing the logging settings
 #define LOGIT_CONSOLE_PATTERN "%Y-%m-%d %H:%M:%S [%L] %v"       // Custom pattern for console logs

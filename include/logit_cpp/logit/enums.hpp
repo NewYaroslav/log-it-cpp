@@ -113,14 +113,13 @@ namespace logit {
             "\033[97m"    // White
         };
 
-        // Преобразуем TextColor в строку с ANSI кодом
+        // Convert TextColor to a string with an ANSI code
         return ansi_codes[static_cast<int>(color)];
     }
 
     /// \brief Convert TextColor to a std::string (ANSI escape codes).
     /// \param color The text color.
     /// \return std::string representing the ANSI escape code for the color.
-    /// \brief Преобразование TextColor в строку (ANSI escape codes)
     inline std::string to_string(TextColor color) {
         return std::string(to_c_str(color));
     }
