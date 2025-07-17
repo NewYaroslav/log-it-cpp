@@ -238,8 +238,10 @@ namespace logit {
             log(record);
         }
         
-#pragma warning(push)
-#pragma warning(disable: 4127) // условное выражение — константа
+#ifdef _MSC_VER
+#	pragma warning(push)
+#	pragma warning(disable: 4127) // условное выражение — константа
+#endif
 
         /// \brief Logs a record with given arguments.
         /// \tparam Ts Types of arguments.
@@ -257,7 +259,9 @@ namespace logit {
             log(mutable_record);
         }
         
-#pragma warning(pop)
+#ifdef _MSC_VER
+#	pragma warning(pop)
+#endif
 
         Logger() {
             std::atexit(Logger::on_exit_handler);

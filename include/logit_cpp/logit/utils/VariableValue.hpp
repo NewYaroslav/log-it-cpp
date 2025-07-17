@@ -137,8 +137,10 @@ namespace logit {
             }
         }
         
-#pragma warning(push)
-#pragma warning(disable : 4127)
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable : 4127)
+#endif
 
         template <typename T>
         VariableValue(const std::string& name, T value,
@@ -175,8 +177,10 @@ namespace logit {
                 }
             }
         }
-        
-#pragma warning(pop)
+       
+#ifdef _MSC_VER    
+#   pragma warning(pop)
+#endif
 
         /// \brief Constructor for enumerations.
         /// \tparam EnumType The enumeration type.
