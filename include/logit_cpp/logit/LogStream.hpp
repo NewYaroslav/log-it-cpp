@@ -7,7 +7,7 @@
 
 #include <sstream>
 #include "Logger.hpp"
-#include "Utils/path_utils.hpp"
+#include "utils/path_utils.hpp"
 
 namespace logit {
 

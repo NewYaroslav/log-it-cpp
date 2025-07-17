@@ -2,7 +2,7 @@
 #define LOGIT_SHORT_NAME // Enable short macros
 
 #include <iostream>
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 
 #define UNIQUE_LOGGER_ID 2
 

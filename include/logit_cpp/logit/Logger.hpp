@@ -5,8 +5,8 @@
 /// \file Logger.hpp
 /// \brief Defines the Logger class for managing multiple loggers and formatters.
 
-#include "Logger/ILogger.hpp"
-#include "Formatter/ILogFormatter.hpp"
+#include "loggers/ILogger.hpp"
+#include "formatter/ILogFormatter.hpp"
 #include <memory>
 #include <mutex>
 #include <sstream>

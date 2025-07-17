@@ -5,8 +5,8 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <log-it/LogIt.hpp>
-#include <log-it/parts/Test/loggers/file/file/file/test_log_depth_3.hpp>
+#include <LogIt.hpp>
+#include <logit/test/loggers/file/file/file/test_log_depth_3.hpp>
 
 // Example enumeration
 enum class COLORS {

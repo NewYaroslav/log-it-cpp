@@ -6,7 +6,7 @@
 #define LOGIT_UNIQUE_FILE_LOGGER_PATH "E:\\logs\\unique_logs"   // Custom path for unique file logger
 #define LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS 10                   // Auto-delete logs older than 10 days
 
-#include <log-it/LogIt.hpp>
+#include <LogIt.hpp>
 #include <iostream>
 #include <stdexcept>
 

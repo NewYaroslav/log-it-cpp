@@ -6,7 +6,7 @@
 /// \brief Defines the SimpleLogFormatter class for formatting log messages according to a specified pattern or JSON format.
 
 #include "ILogFormatter.hpp"
-#include "SimpleLogFormatter/PatternCompiler.hpp"
+#include "compiler/PatternCompiler.hpp"
 #include <time_shield/time_conversions.hpp>
 
 namespace logit {
