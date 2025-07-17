@@ -61,9 +61,9 @@ namespace logit {
             return *this;
         }
 
-        // Перегрузка оператора << для манипуляторов (например, std::endl)
+        // Overload of operator<< for manipulators (e.g., std::endl)
         LogStream& operator<<(std::ostream& (*manip)(std::ostream&)) {
-            m_stream << manip; // Применяем манипулятор к внутреннему потоку
+            m_stream << manip; // Apply the manipulator to the internal stream
             return *this;
         }
 

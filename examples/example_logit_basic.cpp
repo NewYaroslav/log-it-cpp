@@ -1,7 +1,7 @@
 /// \file logging_example.cpp
 /// \brief Demonstrates the usage of the LogIt library with various data types and scenarios.
 
-// #define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp"  <- задается через Cmake
+// #define LOGIT_BASE_PATH "E:\\_repoz\\log-it-cpp"  <- set via CMake
 
 #include <iostream>
 #include <stdexcept>

@@ -26,11 +26,11 @@ namespace logit {
     /// \return A vector of tuples containing argument names and values.
     template <typename T, typename... Ts>
     std::vector<VariableValue> args_to_array(std::vector<std::string>::const_iterator name_iter, const T& first_arg, const Ts&... args) {
-        // Создаем вектор и добавляем первый элемент (имя, значение)
+        // Create a vector and add the first element (name, value)
         std::vector<VariableValue> result;
         result.push_back(VariableValue(*name_iter, first_arg));
         name_iter++;
-        // Рекурсивно добавляем оставшиеся элементы
+        // Recursively add the remaining elements
         auto tail_result = args_to_array(name_iter, args...);
         result.insert(result.end(), tail_result.begin(), tail_result.end());
         return result;

@@ -156,9 +156,9 @@ namespace logit {
 
         /// \brief Starts the logging process by initializing the file and directory.
         void start_logging() {
-            // потоки ввода-вывода (например, std::cin, std::cout, std::cerr) могут быть закрыты до завершения программы.
-            // В этом случае вызовы функций, которые используют потоки ввода-вывода (например, конструктор std::regex),
-            // могут приводить к нежелательным поведениям, таким как зависание или ошибки сегментации.
+            // I/O streams (e.g., std::cin, std::cout, std::cerr) may be closed before the program exits.
+            // In this case, calls to functions that use I/O streams (for example, the std::regex constructor)
+            // can lead to undesirable behavior such as hangs or segmentation faults.
             is_valid_log_filename("2024-01-01.log");
             std::lock_guard<std::mutex> lock(m_mutex);
             try {
@@ -265,7 +265,7 @@ namespace logit {
 #           else
             std::vector<std::string> file_list = get_list_files(get_directory_path());
             for (const auto& file_path : file_list) {
-                // Извлекаем имя файла
+                // Extract the file name
                 std::string filename = file_path.substr(file_path.find_last_of("/\\") + 1);
                 if (is_valid_log_filename(filename)) {
                     const int64_t file_date_ts = get_date_ts_from_filename(filename);
