@@ -34,7 +34,7 @@ namespace logit {
         ///
         /// \param record The log record containing details about the log event.
         /// \param message The formatted log message.
-        virtual void log(const LogRecord&, const std::string&) = 0;
+        virtual void log(const LogRecord& record, const std::string& message) = 0;
 
         /// \brief Retrieves a string parameter from the logger.
         /// Derived classes should implement this to return specific string-based parameters.

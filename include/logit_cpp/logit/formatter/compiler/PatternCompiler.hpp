@@ -59,7 +59,7 @@ namespace logit {
             // File and Function
             FileName,               ///< %f, %fn, %bs: Basename of the source file
             FullFileName,           ///< %g, %ffn: Full file path
-            SourceFileAndLine,      ///< %@: Source file and line number
+            SourceFileAndLine,      ///< %\@: Source file and line number
             LineNumber,             ///< %#: Line number
             FunctionName,           ///< %!: Function name
 

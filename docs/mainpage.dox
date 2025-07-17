@@ -256,7 +256,7 @@ Example:
 
 `LogIt++` provides shortened versions of logging macros when `LOGIT_SHORT_NAME` is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.
 
-### Available TRACE-level macros:
+## Available TRACE-level macros:
   - **Basic logging**:
 
 	- `LOG_T(...)`: Logs a TRACE-level message.
@@ -296,9 +296,7 @@ Example:
 	
 These macros provide flexibility and convenience when logging messages at the TRACE level. They allow you to choose between different logging styles, such as standard logging, formatted logging, and printing each argument separately.
 
-#### Note: 
-
-Similar macros are available for other log levels — **INFO** (`LOG_I`, `LOG_INFO`), **DEBUG** (`LOG_D`, `LOG_DEBUG`), **WARN** (`LOG_W`, `LOG_WARN`), **ERROR** (`LOG_E`, `LOG_ERROR`), and **FATAL** (`LOG_F`, `LOG_FATAL`). The naming conventions are consistent across levels, you only need to replace the level letter or word in the macro name.
+**Note:** Similar macros are available for other log levels — **INFO** (`LOG_I`, `LOG_INFO`), **DEBUG** (`LOG_D`, `LOG_DEBUG`), **WARN** (`LOG_W`, `LOG_WARN`), **ERROR** (`LOG_E`, `LOG_ERROR`), and **FATAL** (`LOG_F`, `LOG_FATAL`). The naming conventions are consistent across levels; replace the level letter or word in the macro name.
 
 \code{.cpp} 
 LOG_T("Trace message using short macro"); 

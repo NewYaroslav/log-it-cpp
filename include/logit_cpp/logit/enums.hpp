@@ -1,7 +1,7 @@
 #pragma once
 #ifndef _LOGIT_ENUMS_HPP_INCLUDED
 #define _LOGIT_ENUMS_HPP_INCLUDED
-/// \file Enums.hpp
+/// \file enums.hpp
 /// \brief Enumerations and utility functions for logging levels and text colors.
 
 #include <array>
