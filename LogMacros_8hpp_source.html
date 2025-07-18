@@ -822,18 +822,24 @@ $(function(){initNavTree('LogMacros_8hpp_source.html',''); initResizable(true); 
 <div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span><span class="preprocessor">#define LOGIT_SET_TIME_OFFSET(logger_index, offset_ms) \</span></div>
 <div class="line"><a id="l00972" name="l00972"></a><span class="lineno">  972</span><span class="preprocessor">    logit::Logger::get_instance().set_timestamp_offset(logger_index, offset_ms)</span></div>
 <div class="line"><a id="l00973" name="l00973"></a><span class="lineno">  973</span></div>
-<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span><span class="preprocessor">#define LOGIT_IS_SINGLE_MODE(logger_index) \</span></div>
-<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span><span class="preprocessor">    logit::Logger::get_instance().is_logger_single_mode(logger_index)</span></div>
+<div class="line"><a id="l00977" name="l00977"></a><span class="lineno">  977</span><span class="preprocessor">#define LOGIT_SET_LOG_LEVEL_TO(logger_index, level) \</span></div>
+<div class="line"><a id="l00978" name="l00978"></a><span class="lineno">  978</span><span class="preprocessor">    logit::Logger::get_instance().set_log_level(logger_index, level)</span></div>
 <div class="line"><a id="l00979" name="l00979"></a><span class="lineno">  979</span></div>
-<div class="line"><a id="l00981" name="l00981"></a><span class="lineno">  981</span></div>
-<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span><span class="preprocessor">#define LOGIT_WAIT() logit::Logger::get_instance().wait();</span></div>
+<div class="line"><a id="l00982" name="l00982"></a><span class="lineno">  982</span><span class="preprocessor">#define LOGIT_SET_LOG_LEVEL(level) \</span></div>
+<div class="line"><a id="l00983" name="l00983"></a><span class="lineno">  983</span><span class="preprocessor">    logit::Logger::get_instance().set_log_level(level)</span></div>
 <div class="line"><a id="l00984" name="l00984"></a><span class="lineno">  984</span></div>
-<div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span><span class="preprocessor">#define LOGIT_SHUTDOWN() logit::Logger::get_instance().shutdown();</span></div>
-<div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span> </div>
-<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span><span class="comment">//------------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span></div>
-<div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span> </div>
-<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_LOG_MACROS_HPP_INCLUDED</span></div>
+<div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span><span class="preprocessor">#define LOGIT_IS_SINGLE_MODE(logger_index) \</span></div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span><span class="preprocessor">    logit::Logger::get_instance().is_logger_single_mode(logger_index)</span></div>
+<div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span></div>
+<div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span></div>
+<div class="line"><a id="l00994" name="l00994"></a><span class="lineno">  994</span><span class="preprocessor">#define LOGIT_WAIT() logit::Logger::get_instance().wait();</span></div>
+<div class="line"><a id="l00995" name="l00995"></a><span class="lineno">  995</span></div>
+<div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span><span class="preprocessor">#define LOGIT_SHUTDOWN() logit::Logger::get_instance().shutdown();</span></div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span> </div>
+<div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span><span class="comment">//------------------------------------------------------------------------------</span></div>
+<div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span></div>
+<div class="line"><a id="l01002" name="l01002"></a><span class="lineno"> 1002</span> </div>
+<div class="line"><a id="l01003" name="l01003"></a><span class="lineno"> 1003</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_LOG_MACROS_HPP_INCLUDED</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

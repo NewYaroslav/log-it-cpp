@@ -43,7 +43,7 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ]
@@ -64,9 +64,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "ConsoleLogger_8hpp.html",
-"classlogit_1_1SimpleLogFormatter.html#ab2b461fbd2110cc8e8ca4ea0a6b20288",
-"namespacelogit.html#a3b99c712385aa258b8ba4b70d2c4786d",
-"structlogit_1_1VariableValue.html#a75add3518fb55bb2b42daf5ea890bad8"
+"classlogit_1_1SimpleLogFormatter.html#a4b6491b11f255ecb7236bd843207f1f7",
+"index.html#alignment_truncation_flags",
+"structlogit_1_1UniqueFileLogger_1_1Config.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

@@ -148,6 +148,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a056e646557ab900f90b6bcd5610ebc61" id="r_a056e646557ab900f90b6bcd5610ebc61"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a056e646557ab900f90b6bcd5610ebc61">get_float_param</a> (const <a class="el" href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">LoggerParam</a> &amp;param) const =0</td></tr>
 <tr class="memdesc:a056e646557ab900f90b6bcd5610ebc61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a floating-point parameter from the logger. Derived classes should implement this to return specific floating-point-based parameters.  <br /></td></tr>
 <tr class="separator:a056e646557ab900f90b6bcd5610ebc61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bda3af704a3232afeae73b9a2718914" id="r_a0bda3af704a3232afeae73b9a2718914"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bda3af704a3232afeae73b9a2718914">set_log_level</a> (<a class="el" href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> level)=0</td></tr>
+<tr class="memdesc:a0bda3af704a3232afeae73b9a2718914"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the minimal log level for this logger.  <br /></td></tr>
+<tr class="separator:a0bda3af704a3232afeae73b9a2718914"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af3962470018af253768db2a03792a309" id="r_af3962470018af253768db2a03792a309"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af3962470018af253768db2a03792a309">get_log_level</a> () const =0</td></tr>
+<tr class="memdesc:af3962470018af253768db2a03792a309"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the minimal log level for this logger.  <br /></td></tr>
+<tr class="separator:af3962470018af253768db2a03792a309"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a392e5820b55b8576c2aa5b12ff1f0b69" id="r_a392e5820b55b8576c2aa5b12ff1f0b69"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a392e5820b55b8576c2aa5b12ff1f0b69">wait</a> ()=0</td></tr>
 <tr class="memdesc:a392e5820b55b8576c2aa5b12ff1f0b69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for all asynchronous logging operations to complete.  <br /></td></tr>
 <tr class="separator:a392e5820b55b8576c2aa5b12ff1f0b69"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -155,7 +161,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for loggers that handle log message output. </p>
 
-<p class="definition">Definition at line <a class="el" href="ILogger_8hpp_source.html#l00026">26</a> of file <a class="el" href="ILogger_8hpp_source.html">ILogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ILogger_8hpp_source.html#l00027">27</a> of file <a class="el" href="ILogger_8hpp_source.html">ILogger.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7a261305932aebeaeffa26469b11f18f" name="a7a261305932aebeaeffa26469b11f18f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a261305932aebeaeffa26469b11f18f">&#9670;&#160;</a></span>~ILogger()</h2>
@@ -255,6 +261,36 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af3962470018af253768db2a03792a309" name="af3962470018af253768db2a03792a309"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3962470018af253768db2a03792a309">&#9670;&#160;</a></span>get_log_level()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> logit::ILogger::get_log_level </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the minimal log level for this logger. </p>
+<dl class="section return"><dt>Returns</dt><dd>Current minimal log level. </dd></dl>
+
+<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a11f8fd61070cc6b33ca1979a3d37d1ab">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#ae5a0e21591b65367c85f9a444851996f">logit::FileLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#ae5a0e21591b65367c85f9a444851996f">logit::FileLogger</a>, <a class="el" href="classlogit_1_1UniqueFileLogger.html#a69ad7244ea1567f326d232819afc1c15">logit::UniqueFileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#a69ad7244ea1567f326d232819afc1c15">logit::UniqueFileLogger</a>.</p>
+
+</div>
+</div>
 <a id="a38824613573247d24bb7d998955990a0" name="a38824613573247d24bb7d998955990a0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a38824613573247d24bb7d998955990a0">&#9670;&#160;</a></span>get_string_param()</h2>
 
@@ -329,6 +365,41 @@ Public Member Functions</h2></td></tr>
 </dl>
 
 <p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a0ac46bf736ebe95bfe874041a62e4ca9">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a50faf327bed520f616725f95628c9d46">logit::FileLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#aa5e7810b14753049557076b60d5316fe">logit::FileLogger</a>, <a class="el" href="classlogit_1_1UniqueFileLogger.html#a5ece7c3a3bd2619ceab736833a517ff7">logit::UniqueFileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#aa3cab9db73ce56f3404a7e47f95bf5fa">logit::UniqueFileLogger</a>.</p>
+
+</div>
+</div>
+<a id="a0bda3af704a3232afeae73b9a2718914" name="a0bda3af704a3232afeae73b9a2718914"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bda3af704a3232afeae73b9a2718914">&#9670;&#160;</a></span>set_log_level()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void logit::ILogger::set_log_level </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the minimal log level for this logger. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>Minimum log level. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a8d53309225c5cc0b8a502b6f68ac119a">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a4bb9be3f53a5b781890ed364836c9604">logit::FileLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#aa3743f2b3f349384760d8f873c027be9">logit::FileLogger</a>, <a class="el" href="classlogit_1_1UniqueFileLogger.html#aa3eac383f5a088920e2ae3c22d01e3d4">logit::UniqueFileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#af2fdfe3e6401a2292ad3cdda0fed6275">logit::UniqueFileLogger</a>.</p>
 
 </div>
 </div>

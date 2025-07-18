@@ -20,6 +20,8 @@ var classlogit_1_1FileLogger =
     [ "get_last_log_file_name", "classlogit_1_1FileLogger.html#a14e50baafdd9ce5a8a15580dade87085", null ],
     [ "get_last_log_file_path", "classlogit_1_1FileLogger.html#a3c03f0d96da6325266d6425a14c7e8bc", null ],
     [ "get_last_log_ts", "classlogit_1_1FileLogger.html#a9625d78609505518ba89f833a7e89f78", null ],
+    [ "get_log_level", "classlogit_1_1FileLogger.html#ae5a0e21591b65367c85f9a444851996f", null ],
+    [ "get_log_level", "classlogit_1_1FileLogger.html#ae5a0e21591b65367c85f9a444851996f", null ],
     [ "get_string_param", "classlogit_1_1FileLogger.html#a887f18e8f23de002dbfb7506a34a291b", null ],
     [ "get_string_param", "classlogit_1_1FileLogger.html#a89f5eb266db9c1f53fe180d450df6279", null ],
     [ "get_time_since_last_log", "classlogit_1_1FileLogger.html#a3a434fc9ce020ca58de14eb93250ec7c", null ],
@@ -29,6 +31,8 @@ var classlogit_1_1FileLogger =
     [ "log", "classlogit_1_1FileLogger.html#aa5e7810b14753049557076b60d5316fe", null ],
     [ "open_log_file", "classlogit_1_1FileLogger.html#abef1a66fa8f1fd1cde468cce8e82f8d8", null ],
     [ "remove_old_logs", "classlogit_1_1FileLogger.html#a21b8741d411d770d6c208b74b0987336", null ],
+    [ "set_log_level", "classlogit_1_1FileLogger.html#a4bb9be3f53a5b781890ed364836c9604", null ],
+    [ "set_log_level", "classlogit_1_1FileLogger.html#aa3743f2b3f349384760d8f873c027be9", null ],
     [ "start_logging", "classlogit_1_1FileLogger.html#a74899311ad281272ceb2f8f6e222f452", null ],
     [ "stop_logging", "classlogit_1_1FileLogger.html#a0dbec9e3d81aa7ad8e15c1b5d8c386c0", null ],
     [ "wait", "classlogit_1_1FileLogger.html#af054c0c426f5fd82c3eb8c6f1ce3f0bd", null ],
@@ -42,5 +46,6 @@ var classlogit_1_1FileLogger =
     [ "m_file_path", "classlogit_1_1FileLogger.html#a9e42489f5c08cdaed786e3864c8dc6c6", null ],
     [ "m_file_path_mutex", "classlogit_1_1FileLogger.html#a42fec0386ce1a2c7f5ce6a1965fea86a", null ],
     [ "m_last_log_ts", "classlogit_1_1FileLogger.html#a6c0a39788c312710309adb37fe353d9a", null ],
+    [ "m_log_level", "classlogit_1_1FileLogger.html#a08c9f43f2189013ef21517727fcc906d", null ],
     [ "m_mutex", "classlogit_1_1FileLogger.html#a04334c44630a07a66ce2d2bf931f4bac", null ]
 ];

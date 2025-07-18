@@ -147,6 +147,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a39a265a9277b66d938ec8e602a3beb65" id="r_a39a265a9277b66d938ec8e602a3beb65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39a265a9277b66d938ec8e602a3beb65">set_timestamp_offset</a> (int logger_index, int64_t offset_ms)</td></tr>
 <tr class="memdesc:a39a265a9277b66d938ec8e602a3beb65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets timestamp offset for a specific logger.  <br /></td></tr>
 <tr class="separator:a39a265a9277b66d938ec8e602a3beb65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a766ad8e1c086da9f63923988b42137ed" id="r_a766ad8e1c086da9f63923988b42137ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a766ad8e1c086da9f63923988b42137ed">set_log_level</a> (<a class="el" href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> level)</td></tr>
+<tr class="memdesc:a766ad8e1c086da9f63923988b42137ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets minimal log level for all loggers.  <br /></td></tr>
+<tr class="separator:a766ad8e1c086da9f63923988b42137ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62a663b7fa63490b2f49d32d514631f5" id="r_a62a663b7fa63490b2f49d32d514631f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62a663b7fa63490b2f49d32d514631f5">set_log_level</a> (int logger_index, <a class="el" href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a> level)</td></tr>
+<tr class="memdesc:a62a663b7fa63490b2f49d32d514631f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets minimal log level for a specific logger.  <br /></td></tr>
+<tr class="separator:a62a663b7fa63490b2f49d32d514631f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a961e203d243f8abd1b9043b1ca917c73" id="r_a961e203d243f8abd1b9043b1ca917c73"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a961e203d243f8abd1b9043b1ca917c73">is_logger_single_mode</a> (int logger_index) const</td></tr>
 <tr class="memdesc:a961e203d243f8abd1b9043b1ca917c73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether a logger is in single mode.  <br /></td></tr>
 <tr class="separator:a961e203d243f8abd1b9043b1ca917c73"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,7 +260,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00266">266</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00289">289</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -281,7 +287,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00270">270</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00293">293</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -419,7 +425,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Requested parameter as a double, or 0.0 if unsupported. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00161">161</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00184">184</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -490,7 +496,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Requested parameter as an integer, or 0 if unsupported. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00148">148</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00171">171</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -531,7 +537,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Requested parameter as a string, or empty string if unsupported. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00135">135</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00158">158</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -603,7 +609,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if logger is in single mode, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00100">100</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00121">121</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -638,7 +644,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00114">114</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00135">135</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -674,7 +680,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Empty tuple. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00197">197</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00220">220</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -723,7 +729,7 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Logged argument. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00189">189</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00212">212</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -772,7 +778,7 @@ template&lt;typename... Ts&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Tuple containing logged arguments. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00176">176</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00199">199</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -802,7 +808,7 @@ template&lt;typename... Ts&gt; </div>
 <p>Atexit shutdown handler for <a class="el" href="classlogit_1_1Logger.html" title="Singleton class managing multiple loggers and formatters.">Logger</a> and <a class="el" href="classlogit_1_1TaskExecutor.html" title="Simplified task executor for single-threaded environments.">TaskExecutor</a>. </p>
 <p>Called automatically at program exit. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00282">282</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00305">305</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -879,7 +885,7 @@ template&lt;typename... Ts&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00237">237</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00260">260</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -927,7 +933,82 @@ template&lt;typename... Ts&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00251">251</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00274">274</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a62a663b7fa63490b2f49d32d514631f5" name="a62a663b7fa63490b2f49d32d514631f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62a663b7fa63490b2f49d32d514631f5">&#9670;&#160;</a></span>set_log_level() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::Logger::set_log_level </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>logger_index</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets minimal log level for a specific logger. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">logger_index</td><td>Index of logger. </td></tr>
+    <tr><td class="paramname">level</td><td>Minimum log level. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00110">110</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a766ad8e1c086da9f63923988b42137ed" name="a766ad8e1c086da9f63923988b42137ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a766ad8e1c086da9f63923988b42137ed">&#9670;&#160;</a></span>set_log_level() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::Logger::set_log_level </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets minimal log level for all loggers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>Minimum log level. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00099">99</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1077,7 +1158,7 @@ template&lt;typename... Ts&gt; </div>
 <p>Shuts down logger system. </p>
 <p>Disables further logging, waits for asynchronous tasks to complete, and shuts down <a class="el" href="classlogit_1_1TaskExecutor.html" title="Simplified task executor for single-threaded environments.">TaskExecutor</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00215">215</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00238">238</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1107,7 +1188,7 @@ template&lt;typename... Ts&gt; </div>
 <p>Waits for all asynchronous loggers to finish processing. </p>
 <p>Ensures that all log messages are fully processed before continuing. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00205">205</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00228">228</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1134,7 +1215,7 @@ template&lt;typename... Ts&gt; </div>
 
 <p>Container for logger-formatter pairs. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00233">233</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00256">256</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1160,7 +1241,7 @@ template&lt;typename... Ts&gt; </div>
 
 <p>Mutex for thread safety during logging operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00234">234</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00257">257</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1186,7 +1267,7 @@ template&lt;typename... Ts&gt; </div>
 
 <p>Flag indicating if shutdown was requested. </p>
 
-<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00235">235</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Logger_8hpp_source.html#l00258">258</a> of file <a class="el" href="Logger_8hpp_source.html">Logger.hpp</a>.</p>
 
 </div>
 </div>
