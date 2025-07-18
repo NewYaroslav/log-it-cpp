@@ -15,13 +15,13 @@ jobs:
         with:
           submodules: "true"
           fetch-depth: 0
-      - name: Inject version into mainpage.md
+      - name: Inject version into mainpage.dox
         run: |
           TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "0.0.0-untagged")
           TAG=$(echo "$TAG" | sed 's/^v//')
           echo "Using version: $TAG"
-          test -f docs/mainpage.md || { echo "mainpage.md not found!"; exit 1; }
-          sed -i "0,/VERSION_PLACEHOLDER/s//$TAG/" docs/mainpage.md
+          test -f docs/mainpage.dox || { echo "mainpage.dox not found!"; exit 1; }
+          sed -i "0,/VERSION_PLACEHOLDER/s//$TAG/" docs/mainpage.dox
       - name: Generate Documentation
         uses: mattnotmitt/doxygen-action@edge
       - name: Publish generated content to GitHub Pages
