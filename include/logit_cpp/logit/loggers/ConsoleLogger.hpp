@@ -161,6 +161,16 @@ namespace logit {
             return 0.0;
         }
 
+        /// \brief Sets the minimal log level for this logger.
+        void set_log_level(LogLevel level) override {
+            m_log_level = static_cast<int>(level);
+        }
+
+        /// \brief Gets the minimal log level for this logger.
+        LogLevel get_log_level() const override {
+            return static_cast<LogLevel>(m_log_level.load());
+        }
+
         /// \brief Waits for all asynchronous tasks to complete.
         /// If asynchronous logging is enabled, waits for all pending log messages to be written.
         void wait() override {
@@ -179,6 +189,7 @@ namespace logit {
         mutable std::mutex m_mutex;     ///< Mutex to protect console output
         Config             m_config;    ///< Configuration for the console logger.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
+        std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
 
 #       if defined(_WIN32)
 

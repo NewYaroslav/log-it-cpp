@@ -971,6 +971,17 @@
 #define LOGIT_SET_TIME_OFFSET(logger_index, offset_ms) \
     logit::Logger::get_instance().set_timestamp_offset(logger_index, offset_ms)
 
+/// \brief Sets minimal log level for a specific logger.
+/// \param logger_index Index of logger.
+/// \param level Minimum log level.
+#define LOGIT_SET_LOG_LEVEL_TO(logger_index, level) \
+    logit::Logger::get_instance().set_log_level(logger_index, level)
+
+/// \brief Sets minimal log level for all loggers.
+/// \param level Minimum log level.
+#define LOGIT_SET_LOG_LEVEL(level) \
+    logit::Logger::get_instance().set_log_level(level)
+
 /// \brief Checks if a logger is in single mode.
 /// \param logger_index Index of logger.
 /// \return True if in single mode, false otherwise.

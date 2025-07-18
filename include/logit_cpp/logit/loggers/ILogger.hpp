@@ -21,6 +21,7 @@
 
 namespace logit {
 
+
     /// \interface ILogger
     /// \brief Interface for loggers that handle log message output.
     class ILogger {
@@ -53,6 +54,14 @@ namespace logit {
         /// \param param The parameter type to retrieve.
         /// \return A double representing the requested parameter.
         virtual double get_float_param(const LoggerParam& param) const = 0;
+
+        /// \brief Sets the minimal log level for this logger.
+        /// \param level Minimum log level.
+        virtual void set_log_level(LogLevel level) = 0;
+
+        /// \brief Gets the minimal log level for this logger.
+        /// \return Current minimal log level.
+        virtual LogLevel get_log_level() const = 0;
 
         /// \brief Waits for all asynchronous logging operations to complete.
         ///

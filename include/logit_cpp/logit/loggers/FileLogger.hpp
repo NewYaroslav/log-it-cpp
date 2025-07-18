@@ -34,10 +34,13 @@ namespace logit {
         std::string get_string_param(const LoggerParam&) const override { return {}; }
         int64_t get_int_param(const LoggerParam&) const override { return 0; }
         double get_float_param(const LoggerParam&) const override { return 0.0; }
+        void set_log_level(LogLevel) override {}
+        LogLevel get_log_level() const override { return LogLevel::LOG_LVL_TRACE; }
         void wait() override {}
 
     private:
         void warn() const { std::cerr << "FileLogger is not supported under Emscripten" << std::endl; }
+        std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
     };
 
 #else
@@ -164,6 +167,16 @@ namespace logit {
             return 0.0;
         }
 
+        /// \brief Sets the minimal log level for this logger.
+        void set_log_level(LogLevel level) override {
+            m_log_level = static_cast<int>(level);
+        }
+
+        /// \brief Gets the minimal log level for this logger.
+        LogLevel get_log_level() const override {
+            return static_cast<LogLevel>(m_log_level.load());
+        }
+
         /// \brief Waits for all asynchronous tasks to complete.
         void wait() override {
             if (!m_config.async) return;
@@ -179,6 +192,7 @@ namespace logit {
         std::string        m_file_name; ///< Name of the currently open log file.
         int64_t            m_current_date_ts = 0; ///< Timestamp of the current log file's date.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
+        std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
 
         /// \brief Starts the logging process by initializing the file and directory.
         void start_logging() {

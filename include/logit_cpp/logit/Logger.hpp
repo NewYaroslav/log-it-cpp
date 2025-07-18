@@ -94,6 +94,27 @@ namespace logit {
             }
         }
 
+        /// \brief Sets minimal log level for all loggers.
+        /// \param level Minimum log level.
+        void set_log_level(LogLevel level) {
+            if (m_shutdown) return;
+            std::lock_guard<std::mutex> lock(m_mutex);
+            for (auto& strategy : m_loggers) {
+                strategy.logger->set_log_level(level);
+            }
+        }
+
+        /// \brief Sets minimal log level for a specific logger.
+        /// \param logger_index Index of logger.
+        /// \param level Minimum log level.
+        void set_log_level(int logger_index, LogLevel level) {
+            if (m_shutdown) return;
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+                m_loggers[logger_index].logger->set_log_level(level);
+            }
+        }
+
         /// \brief Checks whether a logger is in single mode.
         /// \param logger_index Index of logger.
         /// \return True if logger is in single mode, false otherwise.
@@ -118,12 +139,14 @@ namespace logit {
             if (record.logger_index >= 0 && record.logger_index < static_cast<int>(m_loggers.size())) {
                 const auto& strategy = m_loggers[record.logger_index];
                 if (!strategy.enabled) return;
+                if (static_cast<int>(record.log_level) < static_cast<int>(strategy.logger->get_log_level())) return;
                 strategy.logger->log(record, strategy.formatter->format(record));
                 return;
             }
             for (const auto& strategy : m_loggers) {
                 if (strategy.single_mode) continue;
                 if (!strategy.enabled) continue;
+                if (static_cast<int>(record.log_level) < static_cast<int>(strategy.logger->get_log_level())) continue;
                 strategy.logger->log(record, strategy.formatter->format(record));
             }
         }
