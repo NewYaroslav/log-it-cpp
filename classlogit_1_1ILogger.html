@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -126,7 +126,9 @@ Inheritance diagram for logit::ILogger:</div>
   <map id="logit::ILogger_map" name="logit::ILogger_map">
 <area href="classlogit_1_1ConsoleLogger.html" title="Outputs log messages to the console with optional ANSI color support." alt="logit::ConsoleLogger" shape="rect" coords="0,56,140,80"/>
 <area href="classlogit_1_1FileLogger.html" title="Logs messages to files with date-based rotation and automatic deletion of old logs." alt="logit::FileLogger" shape="rect" coords="150,56,290,80"/>
-<area href="classlogit_1_1UniqueFileLogger.html" title="Writes each log message to a unique file with automatic cleanup." alt="logit::UniqueFileLogger" shape="rect" coords="300,56,440,80"/>
+<area href="classlogit_1_1FileLogger.html" title="Logs messages to files with date-based rotation and automatic deletion of old logs." alt="logit::FileLogger" shape="rect" coords="300,56,440,80"/>
+<area href="classlogit_1_1UniqueFileLogger.html" title="Writes each log message to a unique file with automatic cleanup." alt="logit::UniqueFileLogger" shape="rect" coords="450,56,590,80"/>
+<area href="classlogit_1_1UniqueFileLogger.html" title="Writes each log message to a unique file with automatic cleanup." alt="logit::UniqueFileLogger" shape="rect" coords="600,56,740,80"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -134,9 +136,9 @@ Inheritance diagram for logit::ILogger:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a7a261305932aebeaeffa26469b11f18f" id="r_a7a261305932aebeaeffa26469b11f18f"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a261305932aebeaeffa26469b11f18f">~ILogger</a> ()=default</td></tr>
 <tr class="separator:a7a261305932aebeaeffa26469b11f18f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1daaecd92439997aeaf9087874ff882f" id="r_a1daaecd92439997aeaf9087874ff882f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1daaecd92439997aeaf9087874ff882f">log</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;, const std::string &amp;)=0</td></tr>
-<tr class="memdesc:a1daaecd92439997aeaf9087874ff882f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message.  <br /></td></tr>
-<tr class="separator:a1daaecd92439997aeaf9087874ff882f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a311546f6633365365599eea2b23cc2bd" id="r_a311546f6633365365599eea2b23cc2bd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a311546f6633365365599eea2b23cc2bd">log</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record, const std::string &amp;message)=0</td></tr>
+<tr class="memdesc:a311546f6633365365599eea2b23cc2bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message.  <br /></td></tr>
+<tr class="separator:a311546f6633365365599eea2b23cc2bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a38824613573247d24bb7d998955990a0" id="r_a38824613573247d24bb7d998955990a0"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38824613573247d24bb7d998955990a0">get_string_param</a> (const <a class="el" href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">LoggerParam</a> &amp;param) const =0</td></tr>
 <tr class="memdesc:a38824613573247d24bb7d998955990a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a string parameter from the logger. Derived classes should implement this to return specific string-based parameters.  <br /></td></tr>
 <tr class="separator:a38824613573247d24bb7d998955990a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,7 +155,7 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for loggers that handle log message output. </p>
 
-<p class="definition">Definition at line <a class="el" href="ILogger_8hpp_source.html#l00025">25</a> of file <a class="el" href="ILogger_8hpp_source.html">ILogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ILogger_8hpp_source.html#l00026">26</a> of file <a class="el" href="ILogger_8hpp_source.html">ILogger.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7a261305932aebeaeffa26469b11f18f" name="a7a261305932aebeaeffa26469b11f18f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a261305932aebeaeffa26469b11f18f">&#9670;&#160;</a></span>~ILogger()</h2>
@@ -213,7 +215,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A double representing the requested parameter. </dd></dl>
 
-<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a0f9022e0612a4746a05eb950857699f3">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#afa02aa644253a9c83410c55f12c7a65e">logit::FileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#a305f2a69fe142117e1076d0e14271584">logit::UniqueFileLogger</a>.</p>
+<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a0f9022e0612a4746a05eb950857699f3">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a853aaa21c82e13d7efeef32f1b71d03a">logit::FileLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#afa02aa644253a9c83410c55f12c7a65e">logit::FileLogger</a>, <a class="el" href="classlogit_1_1UniqueFileLogger.html#a88999bb3647ce819c357f3c1deb6ff84">logit::UniqueFileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#a305f2a69fe142117e1076d0e14271584">logit::UniqueFileLogger</a>.</p>
 
 </div>
 </div>
@@ -249,7 +251,7 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>An integer representing the requested parameter. </dd></dl>
 
-<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a6c40849844af9cbd4e275a4e3a12fcdc">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a5a0905c806d735b856a9188c980ef6f8">logit::FileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#ade1e7871ec365450c8d4f3683f8e033d">logit::UniqueFileLogger</a>.</p>
+<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a6c40849844af9cbd4e275a4e3a12fcdc">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#ac514d212a50d069aab3133298f583345">logit::FileLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a5a0905c806d735b856a9188c980ef6f8">logit::FileLogger</a>, <a class="el" href="classlogit_1_1UniqueFileLogger.html#a2796c28f1ebf042a549f717dc9318d80">logit::UniqueFileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#ade1e7871ec365450c8d4f3683f8e033d">logit::UniqueFileLogger</a>.</p>
 
 </div>
 </div>
@@ -285,12 +287,12 @@ Public Member Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A string representing the requested parameter. </dd></dl>
 
-<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a389e1971440f027708f752ad0563b9f9">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a89f5eb266db9c1f53fe180d450df6279">logit::FileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#aa3a92008324559c69dba9fbbda98e668">logit::UniqueFileLogger</a>.</p>
+<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a389e1971440f027708f752ad0563b9f9">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a887f18e8f23de002dbfb7506a34a291b">logit::FileLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a89f5eb266db9c1f53fe180d450df6279">logit::FileLogger</a>, <a class="el" href="classlogit_1_1UniqueFileLogger.html#aef3b5e9baa7d2a44fc257636c55f4e78">logit::UniqueFileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#aa3a92008324559c69dba9fbbda98e668">logit::UniqueFileLogger</a>.</p>
 
 </div>
 </div>
-<a id="a1daaecd92439997aeaf9087874ff882f" name="a1daaecd92439997aeaf9087874ff882f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1daaecd92439997aeaf9087874ff882f">&#9670;&#160;</a></span>log()</h2>
+<a id="a311546f6633365365599eea2b23cc2bd" name="a311546f6633365365599eea2b23cc2bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a311546f6633365365599eea2b23cc2bd">&#9670;&#160;</a></span>log()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -301,12 +303,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void logit::ILogger::log </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+          <td class="paramtype">const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>record</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>message</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -326,7 +328,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a0ac46bf736ebe95bfe874041a62e4ca9">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#aa5e7810b14753049557076b60d5316fe">logit::FileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#aa3cab9db73ce56f3404a7e47f95bf5fa">logit::UniqueFileLogger</a>.</p>
+<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#a0ac46bf736ebe95bfe874041a62e4ca9">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#a50faf327bed520f616725f95628c9d46">logit::FileLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#aa5e7810b14753049557076b60d5316fe">logit::FileLogger</a>, <a class="el" href="classlogit_1_1UniqueFileLogger.html#a5ece7c3a3bd2619ceab736833a517ff7">logit::UniqueFileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#aa3cab9db73ce56f3404a7e47f95bf5fa">logit::UniqueFileLogger</a>.</p>
 
 </div>
 </div>
@@ -356,12 +358,12 @@ Public Member Functions</h2></td></tr>
 <p>Waits for all asynchronous logging operations to complete. </p>
 <p>This pure virtual function must be implemented by derived logger classes. It ensures that any pending log messages are fully processed, especially when logging asynchronously. </p>
 
-<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#ae7c7d01b597d2b997e2209719071954f">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#af054c0c426f5fd82c3eb8c6f1ce3f0bd">logit::FileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#a1b3a66593d2baeca595a89e6099fdf11">logit::UniqueFileLogger</a>.</p>
+<p>Implemented in <a class="el" href="classlogit_1_1ConsoleLogger.html#ae7c7d01b597d2b997e2209719071954f">logit::ConsoleLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#af054c0c426f5fd82c3eb8c6f1ce3f0bd">logit::FileLogger</a>, <a class="el" href="classlogit_1_1FileLogger.html#af054c0c426f5fd82c3eb8c6f1ce3f0bd">logit::FileLogger</a>, <a class="el" href="classlogit_1_1UniqueFileLogger.html#a1b3a66593d2baeca595a89e6099fdf11">logit::UniqueFileLogger</a>, and <a class="el" href="classlogit_1_1UniqueFileLogger.html#a1b3a66593d2baeca595a89e6099fdf11">logit::UniqueFileLogger</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this interface was generated from the following file:<ul>
-<li>include/log-it/parts/Logger/<a class="el" href="ILogger_8hpp_source.html">ILogger.hpp</a></li>
+<li>include/logit_cpp/logit/loggers/<a class="el" href="ILogger_8hpp_source.html">ILogger.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

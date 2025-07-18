@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -111,6 +111,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>Defines the base path used for log file paths. If <code>LOGIT_BASE_PATH</code> is not defined or is empty ({}), the full path from <code>__FILE__</code> will be used for log file paths.  </p>
+<p>Version: 1.0.0</p>
 <h1><a class="anchor" id="intro_sec"></a>
 Introduction</h1>
 <p><code>LogIt++</code> is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. The library combines the simplicity of macro-based logging similar to <b>IceCream-Cpp</b> and the configurability of logging backends and formats like <b>spdlog</b>.</p>
@@ -161,7 +162,7 @@ Extensibility</h2>
 <div class="line"><span class="keyword">public</span>:</div>
 <div class="line">    CustomLogger() = <span class="keywordflow">default</span>;</div>
 <div class="line"></div>
-<div class="line">    <span class="keywordtype">void</span> <a class="code hl_function" href="classlogit_1_1ILogger.html#a1daaecd92439997aeaf9087874ff882f">log</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structlogit_1_1LogRecord.html">logit::LogRecord</a>&amp; record, <span class="keyword">const</span> std::string&amp; message)<span class="keyword"> override </span>{</div>
+<div class="line">    <span class="keywordtype">void</span> <a class="code hl_function" href="classlogit_1_1ILogger.html#a311546f6633365365599eea2b23cc2bd">log</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structlogit_1_1LogRecord.html">logit::LogRecord</a>&amp; record, <span class="keyword">const</span> std::string&amp; message)<span class="keyword"> override </span>{</div>
 <div class="line">        <span class="comment">// Implementation for sending logs...</span></div>
 <div class="line">    }</div>
 <div class="line"> </div>
@@ -169,15 +170,15 @@ Extensibility</h2>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">LOGIT_ADD_LOGGER(CustomLogger, (), <a class="code hl_class" href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a>, (<span class="stringliteral">&quot;%v&quot;</span>));</div>
-<div class="ttc" id="aclasslogit_1_1ILogger_html"><div class="ttname"><a href="classlogit_1_1ILogger.html">logit::ILogger</a></div><div class="ttdoc">Interface for loggers that handle log message output.</div><div class="ttdef"><b>Definition</b> <a href="ILogger_8hpp_source.html#l00025">ILogger.hpp:25</a></div></div>
-<div class="ttc" id="aclasslogit_1_1ILogger_html_a1daaecd92439997aeaf9087874ff882f"><div class="ttname"><a href="classlogit_1_1ILogger.html#a1daaecd92439997aeaf9087874ff882f">logit::ILogger::log</a></div><div class="ttdeci">virtual void log(const LogRecord &amp;, const std::string &amp;)=0</div><div class="ttdoc">Logs a message.</div></div>
-<div class="ttc" id="aclasslogit_1_1SimpleLogFormatter_html"><div class="ttname"><a href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a></div><div class="ttdoc">A simple log formatter that formats log messages based on a user-defined pattern.</div><div class="ttdef"><b>Definition</b> <a href="SimpleLogFormatter_8hpp_source.html#l00017">SimpleLogFormatter.hpp:17</a></div></div>
-<div class="ttc" id="astructlogit_1_1LogRecord_html"><div class="ttname"><a href="structlogit_1_1LogRecord.html">logit::LogRecord</a></div><div class="ttdoc">Stores log metadata and content.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00013">LogRecord.hpp:13</a></div></div>
+<div class="ttc" id="aclasslogit_1_1ILogger_html"><div class="ttname"><a href="classlogit_1_1ILogger.html">logit::ILogger</a></div><div class="ttdoc">Interface for loggers that handle log message output.</div><div class="ttdef"><b>Definition</b> <a href="ILogger_8hpp_source.html#l00026">ILogger.hpp:26</a></div></div>
+<div class="ttc" id="aclasslogit_1_1ILogger_html_a311546f6633365365599eea2b23cc2bd"><div class="ttname"><a href="classlogit_1_1ILogger.html#a311546f6633365365599eea2b23cc2bd">logit::ILogger::log</a></div><div class="ttdeci">virtual void log(const LogRecord &amp;record, const std::string &amp;message)=0</div><div class="ttdoc">Logs a message.</div></div>
+<div class="ttc" id="aclasslogit_1_1SimpleLogFormatter_html"><div class="ttname"><a href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a></div><div class="ttdoc">A simple log formatter that formats log messages based on a user-defined pattern.</div><div class="ttdef"><b>Definition</b> <a href="SimpleLogFormatter_8hpp_source.html#l00019">SimpleLogFormatter.hpp:19</a></div></div>
+<div class="ttc" id="astructlogit_1_1LogRecord_html"><div class="ttname"><a href="structlogit_1_1LogRecord.html">logit::LogRecord</a></div><div class="ttdoc">Stores log metadata and content.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00014">LogRecord.hpp:14</a></div></div>
 </div><!-- fragment --><h1><a class="anchor" id="usage_sec"></a>
 Usage</h1>
 <p>Here's a simple example demonstrating how to use LogIt++ in your application:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define LOGIT_SHORT_NAME</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">log-it/LogIt.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">LogIt.hpp</a>&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
 <div class="line">    <span class="comment">// Initialize the logger with default console output</span></div>
@@ -233,7 +234,7 @@ Example for Setting a Custom Console Logger Format</h3>
 <div class="line">    <a class="code hl_class" href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a>, </div>
 <div class="line">    (<span class="stringliteral">&quot;%Y-%m-%d %H:%M:%S.%e [%l] %^%N(%g:%#)%v%$&quot;</span>)</div>
 <div class="line">);</div>
-<div class="ttc" id="aclasslogit_1_1ConsoleLogger_html"><div class="ttname"><a href="classlogit_1_1ConsoleLogger.html">logit::ConsoleLogger</a></div><div class="ttdoc">Outputs log messages to the console with optional ANSI color support.</div><div class="ttdef"><b>Definition</b> <a href="ConsoleLogger_8hpp_source.html#l00028">ConsoleLogger.hpp:28</a></div></div>
+<div class="ttc" id="aclasslogit_1_1ConsoleLogger_html"><div class="ttname"><a href="classlogit_1_1ConsoleLogger.html">logit::ConsoleLogger</a></div><div class="ttdoc">Outputs log messages to the console with optional ANSI color support.</div><div class="ttdef"><b>Definition</b> <a href="ConsoleLogger_8hpp_source.html#l00032">ConsoleLogger.hpp:32</a></div></div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md4"></a>
 Example Using Macros for Simplicity</h3>
 <p>Alternatively, use macros to specify a pattern:</p>
@@ -337,8 +338,8 @@ Advanced Path Handling</h2>
 <h1><a class="anchor" id="short_macros"></a>
 Shortened Logging Macros</h1>
 <p><code>LogIt++</code> provides shortened versions of logging macros when <code>LOGIT_SHORT_NAME</code> is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.</p>
-<h3><a class="anchor" id="autotoc_md5"></a>
-Available TRACE-level macros:</h3>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Available TRACE-level macros:</h2>
 <ul>
 <li><b>Basic logging</b>:<ul>
 <li><code>LOG_T(...)</code>: Logs a TRACE-level message.</li>
@@ -379,9 +380,7 @@ Available TRACE-level macros:</h3>
 </li>
 </ul>
 <p>These macros provide flexibility and convenience when logging messages at the TRACE level. They allow you to choose between different logging styles, such as standard logging, formatted logging, and printing each argument separately.</p>
-<h4><a class="anchor" id="autotoc_md6"></a>
-Note:</h4>
-<p>Similar macros are available for other log levels — <b>INFO</b> (<code>LOG_I</code>, <code>LOG_INFO</code>), <b>DEBUG</b> (<code>LOG_D</code>, <code>LOG_DEBUG</code>), <b>WARN</b> (<code>LOG_W</code>, <code>LOG_WARN</code>), <b>ERROR</b> (<code>LOG_E</code>, <code>LOG_ERROR</code>), and <b>FATAL</b> (<code>LOG_F</code>, <code>LOG_FATAL</code>). The naming conventions are consistent across levels, you only need to replace the level letter or word in the macro name.</p>
+<p>Note:** Similar macros are available for other log levels — <b>INFO</b> (<code>LOG_I</code>, <code>LOG_INFO</code>), <b>DEBUG</b> (<code>LOG_D</code>, <code>LOG_DEBUG</code>), <b>WARN</b> (<code>LOG_W</code>, <code>LOG_WARN</code>), <b>ERROR</b> (<code>LOG_E</code>, <code>LOG_ERROR</code>), and <b>FATAL</b> (<code>LOG_F</code>, <code>LOG_FATAL</code>). The naming conventions are consistent across levels; replace the level letter or word in the macro name.</p>
 <div class="fragment"><div class="line">LOG_T(<span class="stringliteral">&quot;Trace message using short macro&quot;</span>); </div>
 <div class="line">LOG_FT(<span class="stringliteral">&quot;%.4d&quot;</span>, 999); </div>
 <div class="line">LOG_PRINT_T(<span class="stringliteral">&quot;Printing trace message with multiple variables: &quot;</span>, var1, var2); </div>
@@ -485,7 +484,7 @@ Custom Logger Example</h2>
 <p>To create a custom logger backend, you need to implement the <code>ILogger</code> interface, which requires defining the <code>log()</code> and <code>wait()</code> methods. Here's an example of a simple custom logger that logs messages to a text file:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;fstream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;mutex&gt;</span></div>
-<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">log-it/LogIt.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">LogIt.hpp</a>&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">class </span>FileLogger : <span class="keyword">public</span> <a class="code hl_interface" href="classlogit_1_1ILogger.html">logit::ILogger</a> {</div>
 <div class="line"><span class="keyword">public</span>:</div>
@@ -501,7 +500,7 @@ Custom Logger Example</h2>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Logs the message to the file</span></div>
-<div class="line">    <span class="keywordtype">void</span> <a class="code hl_function" href="classlogit_1_1ILogger.html#a1daaecd92439997aeaf9087874ff882f">log</a>(<span class="keyword">const</span> logit::LogRecord&amp; record, <span class="keyword">const</span> std::string&amp; message)<span class="keyword"> override </span>{</div>
+<div class="line">    <span class="keywordtype">void</span> <a class="code hl_function" href="classlogit_1_1ILogger.html#a311546f6633365365599eea2b23cc2bd">log</a>(<span class="keyword">const</span> logit::LogRecord&amp; record, <span class="keyword">const</span> std::string&amp; message)<span class="keyword"> override </span>{</div>
 <div class="line">        std::lock_guard&lt;std::mutex&gt; lock(m_mutex);</div>
 <div class="line">        <span class="keywordflow">if</span> (m_log_file.is_open()) {</div>
 <div class="line">            m_log_file &lt;&lt; message &lt;&lt; std::endl;</div>
@@ -529,12 +528,12 @@ Custom Logger Example</h2>
 <div class="line"><a class="code hl_function" href="classlogit_1_1Logger.html#ac212f0bc0118797f4b8069db59d175d2">logit::Logger::get_instance</a>().<a class="code hl_function" href="classlogit_1_1Logger.html#a4e975699ce6b243f498cf05ec1d35b89">add_logger</a>(</div>
 <div class="line">    std::make_unique&lt;FileLogger&gt;(<span class="stringliteral">&quot;logfile.txt&quot;</span>),</div>
 <div class="line">    std::make_unique&lt;logit::SimpleLogFormatter&gt;());</div>
-<div class="ttc" id="aclasslogit_1_1Logger_html_a4e975699ce6b243f498cf05ec1d35b89"><div class="ttname"><a href="classlogit_1_1Logger.html#a4e975699ce6b243f498cf05ec1d35b89">logit::Logger::add_logger</a></div><div class="ttdeci">void add_logger(std::unique_ptr&lt; ILogger &gt; logger, std::unique_ptr&lt; ILogFormatter &gt; formatter, bool single_mode=false)</div><div class="ttdoc">Adds a logger and its corresponding formatter.</div><div class="ttdef"><b>Definition</b> <a href="Logger_8hpp_source.html#l00038">Logger.hpp:38</a></div></div>
-<div class="ttc" id="aclasslogit_1_1Logger_html_ac212f0bc0118797f4b8069db59d175d2"><div class="ttname"><a href="classlogit_1_1Logger.html#ac212f0bc0118797f4b8069db59d175d2">logit::Logger::get_instance</a></div><div class="ttdeci">static Logger &amp; get_instance()</div><div class="ttdoc">Retrieves singleton instance of Logger.</div><div class="ttdef"><b>Definition</b> <a href="Logger_8hpp_source.html#l00027">Logger.hpp:27</a></div></div>
+<div class="ttc" id="aclasslogit_1_1Logger_html_a4e975699ce6b243f498cf05ec1d35b89"><div class="ttname"><a href="classlogit_1_1Logger.html#a4e975699ce6b243f498cf05ec1d35b89">logit::Logger::add_logger</a></div><div class="ttdeci">void add_logger(std::unique_ptr&lt; ILogger &gt; logger, std::unique_ptr&lt; ILogFormatter &gt; formatter, bool single_mode=false)</div><div class="ttdoc">Adds a logger and its corresponding formatter.</div><div class="ttdef"><b>Definition</b> <a href="Logger_8hpp_source.html#l00039">Logger.hpp:39</a></div></div>
+<div class="ttc" id="aclasslogit_1_1Logger_html_ac212f0bc0118797f4b8069db59d175d2"><div class="ttname"><a href="classlogit_1_1Logger.html#ac212f0bc0118797f4b8069db59d175d2">logit::Logger::get_instance</a></div><div class="ttdeci">static Logger &amp; get_instance()</div><div class="ttdoc">Retrieves singleton instance of Logger.</div><div class="ttdef"><b>Definition</b> <a href="Logger_8hpp_source.html#l00028">Logger.hpp:28</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="custom_formatter"></a>
 Custom Formatter Example</h2>
 <p>In addition to creating custom loggers, you can also create custom formatters by implementing the <code>ILogFormatter</code> interface. Here's an example of a simple formatter that outputs log messages in JSON format:</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">log-it/LogIt.hpp</a>&gt;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">LogIt.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;json/json.h&gt;</span>  <span class="comment">// Or your preferred JSON library</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">class </span>JsonLogFormatter : <span class="keyword">public</span> <a class="code hl_interface" href="classlogit_1_1ILogFormatter.html">logit::ILogFormatter</a> {</div>
@@ -553,14 +552,14 @@ Custom Formatter Example</h2>
 <div class="line">        <span class="keywordflow">return</span> Json::writeString(writer, log_entry);</div>
 <div class="line">    }</div>
 <div class="line">};</div>
-<div class="ttc" id="aclasslogit_1_1ILogFormatter_html"><div class="ttname"><a href="classlogit_1_1ILogFormatter.html">logit::ILogFormatter</a></div><div class="ttdoc">Interface for formatting log records.</div><div class="ttdef"><b>Definition</b> <a href="ILogFormatter_8hpp_source.html#l00014">ILogFormatter.hpp:14</a></div></div>
+<div class="ttc" id="aclasslogit_1_1ILogFormatter_html"><div class="ttname"><a href="classlogit_1_1ILogFormatter.html">logit::ILogFormatter</a></div><div class="ttdoc">Interface for formatting log records.</div><div class="ttdef"><b>Definition</b> <a href="ILogFormatter_8hpp_source.html#l00015">ILogFormatter.hpp:15</a></div></div>
 <div class="ttc" id="aclasslogit_1_1ILogFormatter_html_ae513f0253954fd91a0cbbec91fe2d333"><div class="ttname"><a href="classlogit_1_1ILogFormatter.html#ae513f0253954fd91a0cbbec91fe2d333">logit::ILogFormatter::format</a></div><div class="ttdeci">virtual std::string format(const LogRecord &amp;record) const =0</div><div class="ttdoc">Formats a log record into a string.</div></div>
-<div class="ttc" id="astructlogit_1_1LogRecord_html_a0d893765b54e94a0350b254ddcc9c51b"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a0d893765b54e94a0350b254ddcc9c51b">logit::LogRecord::function</a></div><div class="ttdeci">const std::string function</div><div class="ttdoc">Function name.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00018">LogRecord.hpp:18</a></div></div>
-<div class="ttc" id="astructlogit_1_1LogRecord_html_a4391320be1edb2148a1152bfaa7ce95c"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a4391320be1edb2148a1152bfaa7ce95c">logit::LogRecord::line</a></div><div class="ttdeci">const int line</div><div class="ttdoc">Line number in the source file.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00017">LogRecord.hpp:17</a></div></div>
-<div class="ttc" id="astructlogit_1_1LogRecord_html_a568090fa7e3e34a23d895c9f6485a541"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a568090fa7e3e34a23d895c9f6485a541">logit::LogRecord::log_level</a></div><div class="ttdeci">const LogLevel log_level</div><div class="ttdoc">Log level (severity).</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00014">LogRecord.hpp:14</a></div></div>
-<div class="ttc" id="astructlogit_1_1LogRecord_html_a7d8f70bddc4ecb454e736cb9803c8e40"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a7d8f70bddc4ecb454e736cb9803c8e40">logit::LogRecord::timestamp_ms</a></div><div class="ttdeci">const int64_t timestamp_ms</div><div class="ttdoc">Timestamp in milliseconds.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00015">LogRecord.hpp:15</a></div></div>
-<div class="ttc" id="astructlogit_1_1LogRecord_html_a97d0a57c3ef0b4484dd2a1f3b3008e0e"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a97d0a57c3ef0b4484dd2a1f3b3008e0e">logit::LogRecord::file</a></div><div class="ttdeci">const std::string file</div><div class="ttdoc">Source file name.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00016">LogRecord.hpp:16</a></div></div>
-<div class="ttc" id="astructlogit_1_1LogRecord_html_aae53e723bda38459ba56f41a1971d84b"><div class="ttname"><a href="structlogit_1_1LogRecord.html#aae53e723bda38459ba56f41a1971d84b">logit::LogRecord::format</a></div><div class="ttdeci">const std::string format</div><div class="ttdoc">Format string for the message.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00019">LogRecord.hpp:19</a></div></div>
+<div class="ttc" id="astructlogit_1_1LogRecord_html_a0d893765b54e94a0350b254ddcc9c51b"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a0d893765b54e94a0350b254ddcc9c51b">logit::LogRecord::function</a></div><div class="ttdeci">const std::string function</div><div class="ttdoc">Function name.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00019">LogRecord.hpp:19</a></div></div>
+<div class="ttc" id="astructlogit_1_1LogRecord_html_a4391320be1edb2148a1152bfaa7ce95c"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a4391320be1edb2148a1152bfaa7ce95c">logit::LogRecord::line</a></div><div class="ttdeci">const int line</div><div class="ttdoc">Line number in the source file.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00018">LogRecord.hpp:18</a></div></div>
+<div class="ttc" id="astructlogit_1_1LogRecord_html_a568090fa7e3e34a23d895c9f6485a541"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a568090fa7e3e34a23d895c9f6485a541">logit::LogRecord::log_level</a></div><div class="ttdeci">const LogLevel log_level</div><div class="ttdoc">Log level (severity).</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00015">LogRecord.hpp:15</a></div></div>
+<div class="ttc" id="astructlogit_1_1LogRecord_html_a7d8f70bddc4ecb454e736cb9803c8e40"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a7d8f70bddc4ecb454e736cb9803c8e40">logit::LogRecord::timestamp_ms</a></div><div class="ttdeci">const int64_t timestamp_ms</div><div class="ttdoc">Timestamp in milliseconds.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00016">LogRecord.hpp:16</a></div></div>
+<div class="ttc" id="astructlogit_1_1LogRecord_html_a97d0a57c3ef0b4484dd2a1f3b3008e0e"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a97d0a57c3ef0b4484dd2a1f3b3008e0e">logit::LogRecord::file</a></div><div class="ttdeci">const std::string file</div><div class="ttdoc">Source file name.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00017">LogRecord.hpp:17</a></div></div>
+<div class="ttc" id="astructlogit_1_1LogRecord_html_aae53e723bda38459ba56f41a1971d84b"><div class="ttname"><a href="structlogit_1_1LogRecord.html#aae53e723bda38459ba56f41a1971d84b">logit::LogRecord::format</a></div><div class="ttdeci">const std::string format</div><div class="ttdoc">Format string for the message.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00020">LogRecord.hpp:20</a></div></div>
 </div><!-- fragment --><p>This <code>JsonLogFormatter</code> formats log messages as JSON objects. You can combine it with any logger, including the <code>FileLogger</code>, as shown below:</p>
 <div class="fragment"><div class="line">LOGIT_ADD_LOGGER(</div>
 <div class="line">    FileLogger, (<span class="stringliteral">&quot;logfile.json&quot;</span>),</div>
@@ -594,7 +593,7 @@ Step 1: Clone the Repository</h2>
 </div><!-- fragment --><h2><a class="anchor" id="step2"></a>
 Step 2: Include the LogIt++ Headers in Your Project</h2>
 <p>Since LogIt++ is a header-only library, you can simply include the main header in your project:</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">log-it/LogIt.hpp</a>&gt;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">LogIt.hpp</a>&gt;</span></div>
 </div><!-- fragment --><p>This will give you access to the entire logging system.</p>
 <h2><a class="anchor" id="step3"></a>
 Step 3: Configure the Path for Dependencies</h2>

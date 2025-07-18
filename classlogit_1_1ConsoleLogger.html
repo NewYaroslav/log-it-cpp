@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -213,6 +213,15 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a432984aaf03e1ee6c3b96ad84f6caab6" id="r_a432984aaf03e1ee6c3b96ad84f6caab6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a432984aaf03e1ee6c3b96ad84f6caab6">text_color_to_win_color</a> (const <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> &amp;color) const</td></tr>
 <tr class="memdesc:a432984aaf03e1ee6c3b96ad84f6caab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> to <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a>.  <br /></td></tr>
 <tr class="separator:a432984aaf03e1ee6c3b96ad84f6caab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed9f94ecaadde2050501a8020529ee73" id="r_aed9f94ecaadde2050501a8020529ee73"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed9f94ecaadde2050501a8020529ee73">text_color_to_css</a> (<a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> color) const</td></tr>
+<tr class="memdesc:aed9f94ecaadde2050501a8020529ee73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> to a CSS color name for Emscripten console output.  <br /></td></tr>
+<tr class="separator:aed9f94ecaadde2050501a8020529ee73"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae8cdf7647ced0cce8f414152400af9a" id="r_aae8cdf7647ced0cce8f414152400af9a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae8cdf7647ced0cce8f414152400af9a">css_color_from_ansi</a> (const std::string &amp;code) const</td></tr>
+<tr class="memdesc:aae8cdf7647ced0cce8f414152400af9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map ANSI code to a CSS color name.  <br /></td></tr>
+<tr class="separator:aae8cdf7647ced0cce8f414152400af9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2238b34adaede44b04c0475921be87b0" id="r_a2238b34adaede44b04c0475921be87b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2238b34adaede44b04c0475921be87b0">handle_ansi_colors_emscripten</a> (const std::string &amp;message) const</td></tr>
+<tr class="memdesc:a2238b34adaede44b04c0475921be87b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle ANSI color codes when compiling with Emscripten.  <br /></td></tr>
+<tr class="separator:a2238b34adaede44b04c0475921be87b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afaa7f2349fe56e9fc22b9a979016addc" id="r_afaa7f2349fe56e9fc22b9a979016addc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afaa7f2349fe56e9fc22b9a979016addc">reset_color</a> ()</td></tr>
 <tr class="memdesc:afaa7f2349fe56e9fc22b9a979016addc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the console text color to the default.  <br /></td></tr>
 <tr class="separator:afaa7f2349fe56e9fc22b9a979016addc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -243,7 +252,7 @@ Private Attributes</h2></td></tr>
 <li>Synchronous or asynchronous operation. </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00028">28</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00032">32</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 </div><h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="af6a884e3bb02bacd710f3cda1941f0d0" name="af6a884e3bb02bacd710f3cda1941f0d0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af6a884e3bb02bacd710f3cda1941f0d0">&#9670;&#160;</a></span>WinColor</h2>
@@ -283,7 +292,7 @@ Private Attributes</h2></td></tr>
 <tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a25a81701fbfa4a1efdf660a950c1d006" name="af6a884e3bb02bacd710f3cda1941f0d0a25a81701fbfa4a1efdf660a950c1d006"></a>White&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00167">167</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00186">186</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -313,7 +322,7 @@ Private Attributes</h2></td></tr>
 
 <p>Default constructor that uses default configuration. </p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00039">39</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00047">47</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -348,7 +357,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00045">45</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00053">53</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -383,7 +392,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00051">51</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00059">59</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -449,7 +458,36 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00227">227</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00246">246</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aae8cdf7647ced0cce8f414152400af9a" name="aae8cdf7647ced0cce8f414152400af9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae8cdf7647ced0cce8f414152400af9a">&#9670;&#160;</a></span>css_color_from_ansi()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string logit::ConsoleLogger::css_color_from_ansi </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>code</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Map ANSI code to a CSS color name. </p>
+
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00325">325</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -479,7 +517,7 @@ Private Attributes</h2></td></tr>
 <p>Gets the current logger configuration. Returns the logger's configuration with thread safety ensured. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current configuration. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00069">69</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00077">77</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -517,7 +555,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a056e646557ab900f90b6bcd5610ebc61">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00140">140</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00154">154</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -555,7 +593,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a19b45738a45bb1bc669897717a5f6ad7">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00127">127</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00141">141</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -585,7 +623,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the timestamp of the last log. </p>
 <dl class="section return"><dt>Returns</dt><dd>The last log timestamp. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00292">292</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00390">390</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -624,7 +662,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a38824613573247d24bb7d998955990a0">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00114">114</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00128">128</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -654,7 +692,36 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the time since the last log. </p>
 <dl class="section return"><dt>Returns</dt><dd>The time in milliseconds since the last log. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00298">298</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00396">396</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a2238b34adaede44b04c0475921be87b0" name="a2238b34adaede44b04c0475921be87b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2238b34adaede44b04c0475921be87b0">&#9670;&#160;</a></span>handle_ansi_colors_emscripten()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::ConsoleLogger::handle_ansi_colors_emscripten </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle ANSI color codes when compiling with Emscripten. </p>
+
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00349">349</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -689,7 +756,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00188">188</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00207">207</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -730,9 +797,9 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a1daaecd92439997aeaf9087874ff882f">logit::ILogger</a>.</p>
+<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a311546f6633365365599eea2b23cc2bd">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00081">81</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00089">89</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -761,7 +828,7 @@ Private Attributes</h2></td></tr>
 
 <p>Resets the console text color to the default. </p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00282">282</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00377">377</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -796,7 +863,36 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00061">61</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00069">69</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aed9f94ecaadde2050501a8020529ee73" name="aed9f94ecaadde2050501a8020529ee73"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed9f94ecaadde2050501a8020529ee73">&#9670;&#160;</a></span>text_color_to_css()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * logit::ConsoleLogger::text_color_to_css </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a></td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> to a CSS color name for Emscripten console output. </p>
+
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00302">302</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -832,7 +928,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Corresponding <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a> value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00258">258</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00277">277</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -863,7 +959,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a392e5820b55b8576c2aa5b12ff1f0b69">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00152">152</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00166">166</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -890,7 +986,7 @@ Private Attributes</h2></td></tr>
 
 <p>Configuration for the console logger. </p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00161">161</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00180">180</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -914,7 +1010,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00162">162</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00181">181</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -940,12 +1036,12 @@ Private Attributes</h2></td></tr>
 
 <p>Mutex to protect console output. </p>
 
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00160">160</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00179">179</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>include/log-it/parts/Logger/<a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a></li>
+<li>include/logit_cpp/logit/loggers/<a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

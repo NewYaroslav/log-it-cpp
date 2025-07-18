@@ -27,7 +27,9 @@ var index =
       [ "Alignment and Truncation", "index.html#alignment_truncation_flags", null ],
       [ "Advanced Path Handling", "index.html#advanced_path_handling", null ]
     ] ],
-    [ "Shortened Logging Macros", "index.html#short_macros", null ],
+    [ "Shortened Logging Macros", "index.html#short_macros", [
+      [ "Available TRACE-level macros:", "index.html#autotoc_md5", null ]
+    ] ],
     [ "Configuration Macros", "index.html#config_macros", null ],
     [ "Custom Logger Backend and Formatter", "index.html#custom_backend_sec", [
       [ "Custom Logger Example", "index.html#custom_logger", null ],

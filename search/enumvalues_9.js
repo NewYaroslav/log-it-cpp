@@ -1,7 +1,21 @@
 var searchData=
 [
-  ['int16_5fval_0',['INT16_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a30e197f6196444b539d5f330e121047b',1,'logit::VariableValue']]],
-  ['int32_5fval_1',['INT32_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a6d4625e504ad32dbf8d6b958dacd3b78',1,'logit::VariableValue']]],
-  ['int64_5fval_2',['INT64_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a605e14fd7caf8083a817b6b1ea1c5192',1,'logit::VariableValue']]],
-  ['int8_5fval_3',['INT8_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9ad7c5654897c9f90129c42cfd32d28eda',1,'logit::VariableValue']]]
+  ['l_5fdebug_0',['L_DEBUG',['../example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9abef96148470abb1ed19980e5b5c40ad4',1,'example_logit_customized.cpp']]],
+  ['l_5ferror_1',['L_ERROR',['../example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9a5aa6d01f59e4b628af96f650fc5ecc15',1,'example_logit_customized.cpp']]],
+  ['l_5ffatal_2',['L_FATAL',['../example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9a24007397b42d860492a8bd0930136573',1,'example_logit_customized.cpp']]],
+  ['l_5finfo_3',['L_INFO',['../example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9ae580867d0ddde34905fea2f8669839b7',1,'example_logit_customized.cpp']]],
+  ['l_5fwarn_4',['L_WARN',['../example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9a393ce3ed9796f091c30df9f3e3c73114',1,'example_logit_customized.cpp']]],
+  ['lastfilename_5',['LastFileName',['../namespacelogit.html#a9e415ea803231f2d81a3632b507dff2cadeb1095ea859c737af741d02fc94f96a',1,'logit']]],
+  ['lastfilepath_6',['LastFilePath',['../namespacelogit.html#a9e415ea803231f2d81a3632b507dff2cae7165331f77506419bdfc87d5a330dd4',1,'logit']]],
+  ['lastlogtimestamp_7',['LastLogTimestamp',['../namespacelogit.html#a9e415ea803231f2d81a3632b507dff2ca6c054e3d9db26cfc62a41e130107904f',1,'logit']]],
+  ['lightgray_8',['LightGray',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31afb55202637692de4a494e9ade4cff2dd',1,'logit']]],
+  ['linenumber_9',['LineNumber',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8af0832b74cdff24674836122af11cc30e',1,'logit::FormatInstruction']]],
+  ['log_5flvl_5fdebug_10',['LOG_LVL_DEBUG',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66ad3c7d6a92c7cc266c28c628ba85a31a8',1,'logit']]],
+  ['log_5flvl_5ferror_11',['LOG_LVL_ERROR',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66a5fdcedcdfbe2a83e33e2aa2f71d2e072',1,'logit']]],
+  ['log_5flvl_5ffatal_12',['LOG_LVL_FATAL',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66ab441802ac4336f10bf09072da3406e2b',1,'logit']]],
+  ['log_5flvl_5finfo_13',['LOG_LVL_INFO',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66a79d0f41a8e15ef293a508da32d5512b7',1,'logit']]],
+  ['log_5flvl_5ftrace_14',['LOG_LVL_TRACE',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66a24ee2ffeeafa11c42973cf352231028b',1,'logit']]],
+  ['log_5flvl_5fwarn_15',['LOG_LVL_WARN',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66af35dfb9928572a0340693a28d89088ce',1,'logit']]],
+  ['loglevel_16',['LogLevel',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a31f085f5c12702593ad0244e0090af4e',1,'logit::FormatInstruction']]],
+  ['long_5fdouble_5fval_17',['LONG_DOUBLE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a8145bebde89b1b0d95e052f8b5b0fe26',1,'logit::VariableValue']]]
 ];

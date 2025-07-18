@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -112,12 +112,12 @@ $(function(){initNavTree('example__logit__basic_8cpp_source.html',''); initResiz
 <div class="contents">
 <a href="example__logit__basic_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#define LOGIT_BASE_PATH &quot;E:\\_repoz\\log-it-cpp&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">// #define LOGIT_BASE_PATH &quot;E:\\_repoz\\log-it-cpp&quot;  &lt;- set via CMake</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;stdexcept&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">log-it/LogIt.hpp</a>&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="test__log__depth__3_8hpp.html">log-it/parts/Test/loggers/file/file/file/test_log_depth_3.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;<a class="code" href="LogIt_8hpp.html">LogIt.hpp</a>&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;<a class="code" href="test__log__depth__3_8hpp.html">logit/test/loggers/file/file/file/test_log_depth_3.hpp</a>&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="comment">// Example enumeration</span></div>
 <div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
@@ -329,7 +329,7 @@ $(function(){initNavTree('example__logit__basic_8cpp_source.html',''); initResiz
 <div class="ttc" id="aexample__logit__short__macros_8cpp_html_ab983350d6d1201c0ebd709320e7a0d50af77fb67151d0c18d397069ad8c271ba3"><div class="ttname"><a href="example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50af77fb67151d0c18d397069ad8c271ba3">BLACK</a></div><div class="ttdeci">@ BLACK</div><div class="ttdef"><b>Definition</b> <a href="example__logit__short__macros_8cpp_source.html#l00011">example_logit_short_macros.cpp:11</a></div></div>
 <div class="ttc" id="aexample__logit__short__macros_8cpp_html_ab983350d6d1201c0ebd709320e7a0d50af80f9a890089d211842d59625e561f88"><div class="ttname"><a href="example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50af80f9a890089d211842d59625e561f88">RED</a></div><div class="ttdeci">@ RED</div><div class="ttdef"><b>Definition</b> <a href="example__logit__short__macros_8cpp_source.html#l00012">example_logit_short_macros.cpp:12</a></div></div>
 <div class="ttc" id="anamespacelogit_html"><div class="ttname"><a href="namespacelogit.html">logit</a></div><div class="ttdoc">The primary namespace for the LogIt++ library.</div></div>
-<div class="ttc" id="anamespacelogit_html_a6f6ef213e30d00c16f8d7a2644655d64"><div class="ttname"><a href="namespacelogit.html#a6f6ef213e30d00c16f8d7a2644655d64">logit::enum_to_string</a></div><div class="ttdeci">std::string enum_to_string(EnumType value)</div><div class="ttdoc">Helper function to convert an enumeration to a string.</div><div class="ttdef"><b>Definition</b> <a href="VariableValue_8hpp_source.html#l00030">VariableValue.hpp:30</a></div></div>
+<div class="ttc" id="anamespacelogit_html_a6f6ef213e30d00c16f8d7a2644655d64"><div class="ttname"><a href="namespacelogit.html#a6f6ef213e30d00c16f8d7a2644655d64">logit::enum_to_string</a></div><div class="ttdeci">std::string enum_to_string(EnumType value)</div><div class="ttdoc">Helper function to convert an enumeration to a string.</div><div class="ttdef"><b>Definition</b> <a href="VariableValue_8hpp_source.html#l00031">VariableValue.hpp:31</a></div></div>
 <div class="ttc" id="anamespacelogit_html_aad4223e1a453b7f28aabf9795d68b3a7"><div class="ttname"><a href="namespacelogit.html#aad4223e1a453b7f28aabf9795d68b3a7">logit::test_log_depth_3</a></div><div class="ttdeci">void test_log_depth_3()</div><div class="ttdoc">Logs test messages to verify path shortening at depth level 3.</div><div class="ttdef"><b>Definition</b> <a href="test__log__depth__3_8hpp_source.html#l00011">test_log_depth_3.hpp:11</a></div></div>
 <div class="ttc" id="atest__log__depth__3_8hpp_html"><div class="ttname"><a href="test__log__depth__3_8hpp.html">test_log_depth_3.hpp</a></div><div class="ttdoc">Test file for verifying log path shortening at depth level 3.</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -128,6 +128,7 @@ Inheritance diagram for logit::UniqueFileLogger:</div>
   <img src="classlogit_1_1UniqueFileLogger.png" usemap="#logit::UniqueFileLogger_map" alt=""/>
   <map id="logit::UniqueFileLogger_map" name="logit::UniqueFileLogger_map">
 <area href="classlogit_1_1ILogger.html" title="Interface for loggers that handle log message output." alt="logit::ILogger" shape="rect" coords="0,0,140,24"/>
+<area href="classlogit_1_1ILogger.html" title="Interface for loggers that handle log message output." alt="logit::ILogger" shape="rect" coords="150,0,290,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -141,6 +142,27 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a55be631d8dc98d787b0f7173d75fb293" id="r_a55be631d8dc98d787b0f7173d75fb293"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55be631d8dc98d787b0f7173d75fb293">UniqueFileLogger</a> ()</td></tr>
+<tr class="separator:a55be631d8dc98d787b0f7173d75fb293"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d9cc6ce40491fea059b1d19e5ce084f" id="r_a7d9cc6ce40491fea059b1d19e5ce084f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d9cc6ce40491fea059b1d19e5ce084f">UniqueFileLogger</a> (const <a class="el" href="structlogit_1_1UniqueFileLogger_1_1Config.html">Config</a> &amp;)</td></tr>
+<tr class="separator:a7d9cc6ce40491fea059b1d19e5ce084f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acecaf30d926c7275e78c8fd12afb1576" id="r_acecaf30d926c7275e78c8fd12afb1576"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acecaf30d926c7275e78c8fd12afb1576">UniqueFileLogger</a> (const std::string &amp;, bool=true, int=30, size_t=8)</td></tr>
+<tr class="separator:acecaf30d926c7275e78c8fd12afb1576"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ece7c3a3bd2619ceab736833a517ff7" id="r_a5ece7c3a3bd2619ceab736833a517ff7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ece7c3a3bd2619ceab736833a517ff7">log</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;, const std::string &amp;) override</td></tr>
+<tr class="memdesc:a5ece7c3a3bd2619ceab736833a517ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message.  <br /></td></tr>
+<tr class="separator:a5ece7c3a3bd2619ceab736833a517ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef3b5e9baa7d2a44fc257636c55f4e78" id="r_aef3b5e9baa7d2a44fc257636c55f4e78"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aef3b5e9baa7d2a44fc257636c55f4e78">get_string_param</a> (const <a class="el" href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">LoggerParam</a> &amp;) const override</td></tr>
+<tr class="memdesc:aef3b5e9baa7d2a44fc257636c55f4e78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a string parameter from the logger. Derived classes should implement this to return specific string-based parameters.  <br /></td></tr>
+<tr class="separator:aef3b5e9baa7d2a44fc257636c55f4e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2796c28f1ebf042a549f717dc9318d80" id="r_a2796c28f1ebf042a549f717dc9318d80"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2796c28f1ebf042a549f717dc9318d80">get_int_param</a> (const <a class="el" href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">LoggerParam</a> &amp;) const override</td></tr>
+<tr class="memdesc:a2796c28f1ebf042a549f717dc9318d80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves an integer parameter from the logger. Derived classes should implement this to return specific integer-based parameters.  <br /></td></tr>
+<tr class="separator:a2796c28f1ebf042a549f717dc9318d80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88999bb3647ce819c357f3c1deb6ff84" id="r_a88999bb3647ce819c357f3c1deb6ff84"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88999bb3647ce819c357f3c1deb6ff84">get_float_param</a> (const <a class="el" href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">LoggerParam</a> &amp;) const override</td></tr>
+<tr class="memdesc:a88999bb3647ce819c357f3c1deb6ff84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a floating-point parameter from the logger. Derived classes should implement this to return specific floating-point-based parameters.  <br /></td></tr>
+<tr class="separator:a88999bb3647ce819c357f3c1deb6ff84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b3a66593d2baeca595a89e6099fdf11" id="r_a1b3a66593d2baeca595a89e6099fdf11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b3a66593d2baeca595a89e6099fdf11">wait</a> () override</td></tr>
+<tr class="memdesc:a1b3a66593d2baeca595a89e6099fdf11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for all asynchronous logging operations to complete.  <br /></td></tr>
+<tr class="separator:a1b3a66593d2baeca595a89e6099fdf11"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55be631d8dc98d787b0f7173d75fb293" id="r_a55be631d8dc98d787b0f7173d75fb293"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55be631d8dc98d787b0f7173d75fb293">UniqueFileLogger</a> ()</td></tr>
 <tr class="memdesc:a55be631d8dc98d787b0f7173d75fb293"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor that uses default configuration.  <br /></td></tr>
 <tr class="separator:a55be631d8dc98d787b0f7173d75fb293"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,6 +195,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
+<tr class="memitem:a936d81f62b9648dd502f02ed48499a01" id="r_a936d81f62b9648dd502f02ed48499a01"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a936d81f62b9648dd502f02ed48499a01">warn</a> () const</td></tr>
+<tr class="separator:a936d81f62b9648dd502f02ed48499a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add011e912adb880ca4641a630c539f89" id="r_add011e912adb880ca4641a630c539f89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add011e912adb880ca4641a630c539f89">start_logging</a> ()</td></tr>
 <tr class="memdesc:add011e912adb880ca4641a630c539f89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts the logging process by initializing the directory and removing old logs.  <br /></td></tr>
 <tr class="separator:add011e912adb880ca4641a630c539f89"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -252,10 +276,105 @@ Private Attributes</h2></td></tr>
 <li>Synchronous or asynchronous operation. </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00035">35</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00026">26</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a55be631d8dc98d787b0f7173d75fb293" name="a55be631d8dc98d787b0f7173d75fb293"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a55be631d8dc98d787b0f7173d75fb293">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a55be631d8dc98d787b0f7173d75fb293">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[1/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::UniqueFileLogger::UniqueFileLogger </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00035">35</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a7d9cc6ce40491fea059b1d19e5ce084f" name="a7d9cc6ce40491fea059b1d19e5ce084f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d9cc6ce40491fea059b1d19e5ce084f">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[2/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::UniqueFileLogger::UniqueFileLogger </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structlogit_1_1UniqueFileLogger_1_1Config.html">Config</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00036">36</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="acecaf30d926c7275e78c8fd12afb1576" name="acecaf30d926c7275e78c8fd12afb1576"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acecaf30d926c7275e78c8fd12afb1576">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[3/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::UniqueFileLogger::UniqueFileLogger </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em></em></span><span class="paramdefsep"> = </span><span class="paramdefval">true</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em></em></span><span class="paramdefsep"> = </span><span class="paramdefval">30</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em></em></span><span class="paramdefsep"> = </span><span class="paramdefval">8</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00037">37</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a55be631d8dc98d787b0f7173d75fb293" name="a55be631d8dc98d787b0f7173d75fb293"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55be631d8dc98d787b0f7173d75fb293">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -279,12 +398,12 @@ Private Attributes</h2></td></tr>
 
 <p>Default constructor that uses default configuration. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00048">48</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00076">76</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a77ddf7511827c616b3cd2387782e6212" name="a77ddf7511827c616b3cd2387782e6212"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a77ddf7511827c616b3cd2387782e6212">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a77ddf7511827c616b3cd2387782e6212">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -314,12 +433,12 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00054">54</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00082">82</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a4bd4cd863795d4aca2dd3a319b9b8516" name="a4bd4cd863795d4aca2dd3a319b9b8516"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4bd4cd863795d4aca2dd3a319b9b8516">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bd4cd863795d4aca2dd3a319b9b8516">&#9670;&#160;</a></span>UniqueFileLogger() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -366,7 +485,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00063">63</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00091">91</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -393,7 +512,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00075">75</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00103">103</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -430,7 +549,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The unique file path. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00294">294</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00322">322</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -460,7 +579,7 @@ Private Attributes</h2></td></tr>
 <p>Gets the current timestamp in milliseconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current timestamp in milliseconds. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00392">392</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00420">420</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -496,7 +615,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The formatted timestamp string. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00303">303</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00331">331</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -532,7 +651,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The hash string. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00313">313</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00341">341</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -562,12 +681,50 @@ Private Attributes</h2></td></tr>
 <p>Gets the full path to the logging directory. </p>
 <dl class="section return"><dt>Returns</dt><dd>The path to the logging directory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00268">268</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00296">296</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a88999bb3647ce819c357f3c1deb6ff84" name="a88999bb3647ce819c357f3c1deb6ff84"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88999bb3647ce819c357f3c1deb6ff84">&#9670;&#160;</a></span>get_float_param() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double logit::UniqueFileLogger::get_float_param </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">LoggerParam</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>param</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves a floating-point parameter from the logger. Derived classes should implement this to return specific floating-point-based parameters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param</td><td>The parameter type to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A double representing the requested parameter. </dd></dl>
+
+<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a056e646557ab900f90b6bcd5610ebc61">logit::ILogger</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00042">42</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a305f2a69fe142117e1076d0e14271584" name="a305f2a69fe142117e1076d0e14271584"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a305f2a69fe142117e1076d0e14271584">&#9670;&#160;</a></span>get_float_param()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a305f2a69fe142117e1076d0e14271584">&#9670;&#160;</a></span>get_float_param() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -600,12 +757,50 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a056e646557ab900f90b6bcd5610ebc61">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00201">201</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00229">229</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a2796c28f1ebf042a549f717dc9318d80" name="a2796c28f1ebf042a549f717dc9318d80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2796c28f1ebf042a549f717dc9318d80">&#9670;&#160;</a></span>get_int_param() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int64_t logit::UniqueFileLogger::get_int_param </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">LoggerParam</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>param</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves an integer parameter from the logger. Derived classes should implement this to return specific integer-based parameters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param</td><td>The parameter type to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An integer representing the requested parameter. </dd></dl>
+
+<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a19b45738a45bb1bc669897717a5f6ad7">logit::ILogger</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00041">41</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="ade1e7871ec365450c8d4f3683f8e033d" name="ade1e7871ec365450c8d4f3683f8e033d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade1e7871ec365450c8d4f3683f8e033d">&#9670;&#160;</a></span>get_int_param()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ade1e7871ec365450c8d4f3683f8e033d">&#9670;&#160;</a></span>get_int_param() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -638,7 +833,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a19b45738a45bb1bc669897717a5f6ad7">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00188">188</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00216">216</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -669,7 +864,7 @@ Private Attributes</h2></td></tr>
 <p>This method waits until all pending log messages for the calling thread have been processed. It then returns the name of the last file that the calling thread wrote a log message to.</p>
 <dl class="section return"><dt>Returns</dt><dd>The last log file name for the calling thread, or an empty string if none exists. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00402">402</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00430">430</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -700,7 +895,7 @@ Private Attributes</h2></td></tr>
 <p>This method waits until all pending log messages for the calling thread have been processed. It then returns the path of the last file that the calling thread wrote a log message to.</p>
 <dl class="section return"><dt>Returns</dt><dd>The last log file path for the calling thread, or an empty string if none exists. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00422">422</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00450">450</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -730,12 +925,50 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the timestamp of the last log. </p>
 <dl class="section return"><dt>Returns</dt><dd>The timestamp of the last log in milliseconds. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00438">438</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00466">466</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="aef3b5e9baa7d2a44fc257636c55f4e78" name="aef3b5e9baa7d2a44fc257636c55f4e78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef3b5e9baa7d2a44fc257636c55f4e78">&#9670;&#160;</a></span>get_string_param() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string logit::UniqueFileLogger::get_string_param </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">LoggerParam</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>param</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retrieves a string parameter from the logger. Derived classes should implement this to return specific string-based parameters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">param</td><td>The parameter type to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A string representing the requested parameter. </dd></dl>
+
+<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a38824613573247d24bb7d998955990a0">logit::ILogger</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00040">40</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="aa3a92008324559c69dba9fbbda98e668" name="aa3a92008324559c69dba9fbbda98e668"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3a92008324559c69dba9fbbda98e668">&#9670;&#160;</a></span>get_string_param()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3a92008324559c69dba9fbbda98e668">&#9670;&#160;</a></span>get_string_param() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -768,7 +1001,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a38824613573247d24bb7d998955990a0">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00173">173</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00201">201</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -798,7 +1031,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the time elapsed since the last log. </p>
 <dl class="section return"><dt>Returns</dt><dd>The time in milliseconds since the last log was written. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00444">444</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00472">472</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -834,7 +1067,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The timestamp in milliseconds. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00385">385</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00413">413</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -863,7 +1096,7 @@ Private Attributes</h2></td></tr>
 
 <p>Initializes the logging directory. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00262">262</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00290">290</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -899,12 +1132,55 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the filename matches the pattern, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00377">377</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00405">405</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a5ece7c3a3bd2619ceab736833a517ff7" name="a5ece7c3a3bd2619ceab736833a517ff7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ece7c3a3bd2619ceab736833a517ff7">&#9670;&#160;</a></span>log() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::UniqueFileLogger::log </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>record</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>message</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Logs a message. </p>
+<p>This pure virtual function must be implemented by derived logger classes. It handles the logging of messages, which could be output to a console, file, or other destinations.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">record</td><td>The log record containing details about the log event. </td></tr>
+    <tr><td class="paramname">message</td><td>The formatted log message. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a311546f6633365365599eea2b23cc2bd">logit::ILogger</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00039">39</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="aa3cab9db73ce56f3404a7e47f95bf5fa" name="aa3cab9db73ce56f3404a7e47f95bf5fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3cab9db73ce56f3404a7e47f95bf5fa">&#9670;&#160;</a></span>log()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3cab9db73ce56f3404a7e47f95bf5fa">&#9670;&#160;</a></span>log() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -940,9 +1216,9 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a1daaecd92439997aeaf9087874ff882f">logit::ILogger</a>.</p>
+<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a311546f6633365365599eea2b23cc2bd">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00086">86</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00114">114</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -971,7 +1247,7 @@ Private Attributes</h2></td></tr>
 
 <p>Removes old log files based on the auto-delete days configuration. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00330">330</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00358">358</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1000,7 +1276,7 @@ Private Attributes</h2></td></tr>
 
 <p>Starts the logging process by initializing the directory and removing old logs. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00246">246</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00274">274</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1029,12 +1305,44 @@ Private Attributes</h2></td></tr>
 
 <p>Stops the logging process by waiting for tasks. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00257">257</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00285">285</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a1b3a66593d2baeca595a89e6099fdf11" name="a1b3a66593d2baeca595a89e6099fdf11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b3a66593d2baeca595a89e6099fdf11">&#9670;&#160;</a></span>wait()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b3a66593d2baeca595a89e6099fdf11">&#9670;&#160;</a></span>wait() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::UniqueFileLogger::wait </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Waits for all asynchronous logging operations to complete. </p>
+<p>This pure virtual function must be implemented by derived logger classes. It ensures that any pending log messages are fully processed, especially when logging asynchronously. </p>
+
+<p>Implements <a class="el" href="classlogit_1_1ILogger.html#a392e5820b55b8576c2aa5b12ff1f0b69">logit::ILogger</a>.</p>
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00043">43</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a1b3a66593d2baeca595a89e6099fdf11" name="a1b3a66593d2baeca595a89e6099fdf11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b3a66593d2baeca595a89e6099fdf11">&#9670;&#160;</a></span>wait() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1060,7 +1368,34 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a392e5820b55b8576c2aa5b12ff1f0b69">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00212">212</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00240">240</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a936d81f62b9648dd502f02ed48499a01" name="a936d81f62b9648dd502f02ed48499a01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a936d81f62b9648dd502f02ed48499a01">&#9670;&#160;</a></span>warn()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::UniqueFileLogger::warn </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00046">46</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1101,7 +1436,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The name of the file the message was written to. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00276">276</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00304">304</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1128,7 +1463,7 @@ Private Attributes</h2></td></tr>
 
 <p>Configuration for the unique file logger. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00219">219</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00247">247</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1154,7 +1489,7 @@ Private Attributes</h2></td></tr>
 
 <p>Timestamp of the last log. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00242">242</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00270">270</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1180,7 +1515,7 @@ Private Attributes</h2></td></tr>
 
 <p>Mutex to protect file operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00218">218</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00246">246</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1206,7 +1541,7 @@ Private Attributes</h2></td></tr>
 
 <p>Condition variable to wait for pending logs to finish. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00239">239</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00267">267</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1232,7 +1567,7 @@ Private Attributes</h2></td></tr>
 
 <p>Map to store log information per thread. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00240">240</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00268">268</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1258,12 +1593,12 @@ Private Attributes</h2></td></tr>
 
 <p>Mutex to protect access to thread log information. </p>
 
-<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00238">238</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="UniqueFileLogger_8hpp_source.html#l00266">266</a> of file <a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>include/log-it/parts/Logger/<a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a></li>
+<li>include/logit_cpp/logit/loggers/<a class="el" href="UniqueFileLogger_8hpp_source.html">UniqueFileLogger.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

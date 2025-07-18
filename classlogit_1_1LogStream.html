@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -160,7 +160,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>A stream-based logger that collects log messages using the <code>&lt;&lt;</code> operator. </p>
 <p>The <code><a class="el" href="classlogit_1_1LogStream.html" title="A stream-based logger that collects log messages using the &lt;&lt; operator.">LogStream</a></code> class allows for logging messages in a stream-like manner. It collects log data through the <code>&lt;&lt;</code> operator and automatically sends the log message when the object is destroyed. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00018">18</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00019">19</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aece3ca69cf687a2c396c49f9f3bce051" name="aece3ca69cf687a2c396c49f9f3bce051"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aece3ca69cf687a2c396c49f9f3bce051">&#9670;&#160;</a></span>LogStream()</h2>
@@ -216,7 +216,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00027">27</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00028">28</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -246,7 +246,7 @@ Private Attributes</h2></td></tr>
 <p>Destructor that logs the collected message when the object goes out of scope. </p>
 <p>When the <code><a class="el" href="classlogit_1_1LogStream.html" title="A stream-based logger that collects log messages using the &lt;&lt; operator.">LogStream</a></code> object is destroyed, the log message is automatically sent using the <code><a class="el" href="classlogit_1_1Logger.html" title="Singleton class managing multiple loggers and formatters.">Logger</a></code> instance. The message is collected through the <code>&lt;&lt;</code> operator and stored in an internal string stream until the object is destructed. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00042">42</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00043">43</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -291,7 +291,7 @@ template&lt;typename T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A reference to the <code><a class="el" href="classlogit_1_1LogStream.html" title="A stream-based logger that collects log messages using the &lt;&lt; operator.">LogStream</a></code> for chaining. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00058">58</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00059">59</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -318,7 +318,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00064">64</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00065">65</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -345,7 +345,7 @@ template&lt;typename T&gt; </div>
 
 <p>Source file name. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00072">72</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00073">73</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -371,7 +371,7 @@ template&lt;typename T&gt; </div>
 
 <p>Function name. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00074">74</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00075">75</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -397,7 +397,7 @@ template&lt;typename T&gt; </div>
 
 <p>Log level. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00070">70</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00071">71</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -423,7 +423,7 @@ template&lt;typename T&gt; </div>
 
 <p>Line number. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00073">73</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00074">74</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -449,7 +449,7 @@ template&lt;typename T&gt; </div>
 
 <p><a class="el" href="classlogit_1_1Logger.html" title="Singleton class managing multiple loggers and formatters.">Logger</a> index. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00075">75</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00076">76</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
@@ -475,12 +475,12 @@ template&lt;typename T&gt; </div>
 
 <p>Stream for accumulating log content. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00071">71</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogStream_8hpp_source.html#l00072">72</a> of file <a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>include/log-it/parts/<a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a></li>
+<li>include/logit_cpp/logit/<a class="el" href="LogStream_8hpp_source.html">LogStream.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

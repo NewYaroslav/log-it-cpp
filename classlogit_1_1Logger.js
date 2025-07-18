@@ -19,6 +19,7 @@ var classlogit_1_1Logger =
     [ "on_exit_handler", "classlogit_1_1Logger.html#aba08f203435bb262e029f554dc180f36", null ],
     [ "operator=", "classlogit_1_1Logger.html#a5be1e4fe455bcdadee4fa88866a99f7e", null ],
     [ "operator=", "classlogit_1_1Logger.html#ac6f33c7d76748f2056584f02c99b3565", null ],
+    [ "print", "classlogit_1_1Logger.html#a927cd02c1a64be24186e7649c21c45ae", null ],
     [ "print", "classlogit_1_1Logger.html#af9ae40695451f21281d47cd2cfeac199", null ],
     [ "set_logger_enabled", "classlogit_1_1Logger.html#a26ae46f8748ff5c313a3acc5fc6f7690", null ],
     [ "set_logger_single_mode", "classlogit_1_1Logger.html#a3699b4c8c9a735cb6b58dbe3f8323f79", null ],

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LogIt++: include/log-it/parts/Formatter/ILogFormatter.hpp Source File</title>
+<title>LogIt++: include/logit_cpp/logit/formatter/ILogFormatter.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -113,35 +113,36 @@ $(function(){initNavTree('ILogFormatter_8hpp_source.html',''); initResizable(tru
 <a href="ILogFormatter_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef _LOGIT_ILOG_FORMATTER_HPP_INCLUDED</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define _LOGIT_ILOG_FORMATTER_HPP_INCLUDED</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacelogit.html">logit</a> {</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span></div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classlogit_1_1ILogFormatter.html">   14</a></span>    <span class="keyword">class </span><a class="code hl_interface" href="classlogit_1_1ILogFormatter.html">ILogFormatter</a> {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classlogit_1_1ILogFormatter.html#a2c3401af20fafec7d37fafa1e8e084f3">   16</a></span>        <span class="keyword">virtual</span> <a class="code hl_function" href="classlogit_1_1ILogFormatter.html#a2c3401af20fafec7d37fafa1e8e084f3">~ILogFormatter</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classlogit_1_1ILogFormatter.html#afa1b2041f08d8f4c3c1673d79d5b28e9">   24</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classlogit_1_1ILogFormatter.html#afa1b2041f08d8f4c3c1673d79d5b28e9">set_timestamp_offset</a>(int64_t offset_ms) = 0;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classlogit_1_1ILogFormatter.html#ae513f0253954fd91a0cbbec91fe2d333">   33</a></span>        <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classlogit_1_1ILogFormatter.html#ae513f0253954fd91a0cbbec91fe2d333">format</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structlogit_1_1LogRecord.html">LogRecord</a>&amp; record) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }; <span class="comment">// ILogFormatter</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacelogit.html">logit</a> {</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span></div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classlogit_1_1ILogFormatter.html">   15</a></span>    <span class="keyword">class </span><a class="code hl_interface" href="classlogit_1_1ILogFormatter.html">ILogFormatter</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classlogit_1_1ILogFormatter.html#a2c3401af20fafec7d37fafa1e8e084f3">   17</a></span>        <span class="keyword">virtual</span> <a class="code hl_function" href="classlogit_1_1ILogFormatter.html#a2c3401af20fafec7d37fafa1e8e084f3">~ILogFormatter</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classlogit_1_1ILogFormatter.html#afa1b2041f08d8f4c3c1673d79d5b28e9">   25</a></span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classlogit_1_1ILogFormatter.html#afa1b2041f08d8f4c3c1673d79d5b28e9">set_timestamp_offset</a>(int64_t offset_ms) = 0;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classlogit_1_1ILogFormatter.html#ae513f0253954fd91a0cbbec91fe2d333">   34</a></span>        <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classlogit_1_1ILogFormatter.html#ae513f0253954fd91a0cbbec91fe2d333">format</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structlogit_1_1LogRecord.html">LogRecord</a>&amp; record) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }; <span class="comment">// ILogFormatter</span></div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}; <span class="comment">// namespace logit</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_ILOG_FORMATTER_HPP_INCLUDED</span></div>
-<div class="ttc" id="aclasslogit_1_1ILogFormatter_html"><div class="ttname"><a href="classlogit_1_1ILogFormatter.html">logit::ILogFormatter</a></div><div class="ttdoc">Interface for formatting log records.</div><div class="ttdef"><b>Definition</b> <a href="#l00014">ILogFormatter.hpp:14</a></div></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}; <span class="comment">// namespace logit</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_ILOG_FORMATTER_HPP_INCLUDED</span></div>
+<div class="ttc" id="aclasslogit_1_1ILogFormatter_html"><div class="ttname"><a href="classlogit_1_1ILogFormatter.html">logit::ILogFormatter</a></div><div class="ttdoc">Interface for formatting log records.</div><div class="ttdef"><b>Definition</b> <a href="#l00015">ILogFormatter.hpp:15</a></div></div>
 <div class="ttc" id="aclasslogit_1_1ILogFormatter_html_a2c3401af20fafec7d37fafa1e8e084f3"><div class="ttname"><a href="classlogit_1_1ILogFormatter.html#a2c3401af20fafec7d37fafa1e8e084f3">logit::ILogFormatter::~ILogFormatter</a></div><div class="ttdeci">virtual ~ILogFormatter()=default</div></div>
 <div class="ttc" id="aclasslogit_1_1ILogFormatter_html_ae513f0253954fd91a0cbbec91fe2d333"><div class="ttname"><a href="classlogit_1_1ILogFormatter.html#ae513f0253954fd91a0cbbec91fe2d333">logit::ILogFormatter::format</a></div><div class="ttdeci">virtual std::string format(const LogRecord &amp;record) const =0</div><div class="ttdoc">Formats a log record into a string.</div></div>
 <div class="ttc" id="aclasslogit_1_1ILogFormatter_html_afa1b2041f08d8f4c3c1673d79d5b28e9"><div class="ttname"><a href="classlogit_1_1ILogFormatter.html#afa1b2041f08d8f4c3c1673d79d5b28e9">logit::ILogFormatter::set_timestamp_offset</a></div><div class="ttdeci">virtual void set_timestamp_offset(int64_t offset_ms)=0</div><div class="ttdoc">Sets the timestamp offset for log formatting.</div></div>
 <div class="ttc" id="anamespacelogit_html"><div class="ttname"><a href="namespacelogit.html">logit</a></div><div class="ttdoc">The primary namespace for the LogIt++ library.</div></div>
-<div class="ttc" id="astructlogit_1_1LogRecord_html"><div class="ttname"><a href="structlogit_1_1LogRecord.html">logit::LogRecord</a></div><div class="ttdoc">Stores log metadata and content.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00013">LogRecord.hpp:13</a></div></div>
+<div class="ttc" id="astructlogit_1_1LogRecord_html"><div class="ttname"><a href="structlogit_1_1LogRecord.html">logit::LogRecord</a></div><div class="ttdoc">Stores log metadata and content.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00014">LogRecord.hpp:14</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9f5e4856d2e76c263da9e3546dd5c087.html">log-it</a></li><li class="navelem"><a class="el" href="dir_f13316705ed44cc497b969d59eba4a26.html">parts</a></li><li class="navelem"><a class="el" href="dir_35d40c28e06e7e90288b7c581389dc09.html">Formatter</a></li><li class="navelem"><a class="el" href="ILogFormatter_8hpp.html">ILogFormatter.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_a7f3668f37dae728c9f8048b2c99fd70.html">logit_cpp</a></li><li class="navelem"><a class="el" href="dir_c72318ec2dd41c019b2cebe69b9a8641.html">logit</a></li><li class="navelem"><a class="el" href="dir_df2a2339309d3dc21dc95f02242a1199.html">formatter</a></li><li class="navelem"><a class="el" href="ILogFormatter_8hpp.html">ILogFormatter.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>

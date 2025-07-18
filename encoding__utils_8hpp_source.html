@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LogIt++: include/log-it/parts/Utils/encoding_utils.hpp Source File</title>
+<title>LogIt++: include/logit_cpp/logit/utils/encoding_utils.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -112,41 +112,42 @@ $(function(){initNavTree('encoding__utils_8hpp_source.html',''); initResizable(t
 <div class="contents">
 <a href="encoding__utils_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef _LOGIT_ENCODING_UTILS_HPP_INCLUDED</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define _LOGIT_ENCODING_UTILS_HPP_INCLUDED</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#if defined(_WIN32)</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;windows.h&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacelogit.html">logit</a> {</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span></div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="}">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="namespacelogit.html#a8e8e8cdec95a803085a376de67d605b6">   14</a></span>    std::string <a class="code hl_function" href="namespacelogit.html#a8e8e8cdec95a803085a376de67d605b6">utf8_to_ansi</a>(<span class="keyword">const</span> std::string&amp; utf8) {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="keywordtype">int</span> n_len = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, NULL, 0);</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordflow">if</span> (n_len == 0) <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>        std::wstring wide_string(n_len + 1, L<span class="charliteral">&#39;\0&#39;</span>);</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1,  &amp;wide_string[0], n_len);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        n_len = WideCharToMultiByte(CP_ACP, 0, wide_string.c_str(), -1, NULL, 0, NULL, NULL);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordflow">if</span> (n_len == 0) <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        std::string ansi_string(n_len - 1, <span class="charliteral">&#39;\0&#39;</span>);</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        WideCharToMultiByte(CP_ACP, 0, wide_string.c_str(), -1, &amp;ansi_string[0], n_len, NULL, NULL);</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keywordflow">return</span> ansi_string;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    }</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#if defined(_WIN32)</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;windows.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacelogit.html">logit</a> {</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span></div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="}">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="namespacelogit.html#a8e8e8cdec95a803085a376de67d605b6">   15</a></span>    std::string <a class="code hl_function" href="namespacelogit.html#a8e8e8cdec95a803085a376de67d605b6">utf8_to_ansi</a>(<span class="keyword">const</span> std::string&amp; utf8) {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>        <span class="keywordtype">int</span> n_len = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, NULL, 0);</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keywordflow">if</span> (n_len == 0) <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>        std::wstring wide_string(n_len + 1, L<span class="charliteral">&#39;\0&#39;</span>);</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>        MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1,  &amp;wide_string[0], n_len);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        n_len = WideCharToMultiByte(CP_ACP, 0, wide_string.c_str(), -1, NULL, 0, NULL, NULL);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>        <span class="keywordflow">if</span> (n_len == 0) <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        std::string ansi_string(n_len - 1, <span class="charliteral">&#39;\0&#39;</span>);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        WideCharToMultiByte(CP_ACP, 0, wide_string.c_str(), -1, &amp;ansi_string[0], n_len, NULL, NULL);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordflow">return</span> ansi_string;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    }</div>
 </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_ENCODING_UTILS_HPP_INCLUDED</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>};</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_ENCODING_UTILS_HPP_INCLUDED</span></div>
 <div class="ttc" id="anamespacelogit_html"><div class="ttname"><a href="namespacelogit.html">logit</a></div><div class="ttdoc">The primary namespace for the LogIt++ library.</div></div>
-<div class="ttc" id="anamespacelogit_html_a8e8e8cdec95a803085a376de67d605b6"><div class="ttname"><a href="namespacelogit.html#a8e8e8cdec95a803085a376de67d605b6">logit::utf8_to_ansi</a></div><div class="ttdeci">std::string utf8_to_ansi(const std::string &amp;utf8)</div><div class="ttdoc">Converts a UTF-8 string to an ANSI string (Windows-specific).</div><div class="ttdef"><b>Definition</b> <a href="#l00014">encoding_utils.hpp:14</a></div></div>
+<div class="ttc" id="anamespacelogit_html_a8e8e8cdec95a803085a376de67d605b6"><div class="ttname"><a href="namespacelogit.html#a8e8e8cdec95a803085a376de67d605b6">logit::utf8_to_ansi</a></div><div class="ttdeci">std::string utf8_to_ansi(const std::string &amp;utf8)</div><div class="ttdoc">Converts a UTF-8 string to an ANSI string (Windows-specific).</div><div class="ttdef"><b>Definition</b> <a href="#l00015">encoding_utils.hpp:15</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9f5e4856d2e76c263da9e3546dd5c087.html">log-it</a></li><li class="navelem"><a class="el" href="dir_f13316705ed44cc497b969d59eba4a26.html">parts</a></li><li class="navelem"><a class="el" href="dir_8030cf53bcfc9e767c48bd54199c86ae.html">Utils</a></li><li class="navelem"><a class="el" href="encoding__utils_8hpp.html">encoding_utils.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_a7f3668f37dae728c9f8048b2c99fd70.html">logit_cpp</a></li><li class="navelem"><a class="el" href="dir_c72318ec2dd41c019b2cebe69b9a8641.html">logit</a></li><li class="navelem"><a class="el" href="dir_1f2d2c0c02d0dde21410663b8836d271.html">utils</a></li><li class="navelem"><a class="el" href="encoding__utils_8hpp.html">encoding_utils.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>

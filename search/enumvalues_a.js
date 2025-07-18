@@ -1,16 +1,10 @@
 var searchData=
 [
-  ['lastfilename_0',['LastFileName',['../namespacelogit.html#a9e415ea803231f2d81a3632b507dff2cadeb1095ea859c737af741d02fc94f96a',1,'logit']]],
-  ['lastfilepath_1',['LastFilePath',['../namespacelogit.html#a9e415ea803231f2d81a3632b507dff2cae7165331f77506419bdfc87d5a330dd4',1,'logit']]],
-  ['lastlogtimestamp_2',['LastLogTimestamp',['../namespacelogit.html#a9e415ea803231f2d81a3632b507dff2ca6c054e3d9db26cfc62a41e130107904f',1,'logit']]],
-  ['lightgray_3',['LightGray',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31afb55202637692de4a494e9ade4cff2dd',1,'logit']]],
-  ['linenumber_4',['LineNumber',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8af0832b74cdff24674836122af11cc30e',1,'logit::FormatInstruction']]],
-  ['log_5flvl_5fdebug_5',['LOG_LVL_DEBUG',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66ad3c7d6a92c7cc266c28c628ba85a31a8',1,'logit']]],
-  ['log_5flvl_5ferror_6',['LOG_LVL_ERROR',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66a5fdcedcdfbe2a83e33e2aa2f71d2e072',1,'logit']]],
-  ['log_5flvl_5ffatal_7',['LOG_LVL_FATAL',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66ab441802ac4336f10bf09072da3406e2b',1,'logit']]],
-  ['log_5flvl_5finfo_8',['LOG_LVL_INFO',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66a79d0f41a8e15ef293a508da32d5512b7',1,'logit']]],
-  ['log_5flvl_5ftrace_9',['LOG_LVL_TRACE',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66a24ee2ffeeafa11c42973cf352231028b',1,'logit']]],
-  ['log_5flvl_5fwarn_10',['LOG_LVL_WARN',['../namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66af35dfb9928572a0340693a28d89088ce',1,'logit']]],
-  ['loglevel_11',['LogLevel',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a31f085f5c12702593ad0244e0090af4e',1,'logit::FormatInstruction']]],
-  ['long_5fdouble_5fval_12',['LONG_DOUBLE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a8145bebde89b1b0d95e052f8b5b0fe26',1,'logit::VariableValue']]]
+  ['magenta_0',['MAGENTA',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50ac634ffea7195608364671ac52ee59a61',1,'MAGENTA:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50ac634ffea7195608364671ac52ee59a61',1,'MAGENTA:&#160;example_logit_basic.cpp']]],
+  ['magenta_1',['Magenta',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0ab91cc2c1416fcca942b61c7ac5b1a9ac',1,'logit::ConsoleLogger::Magenta'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31ab91cc2c1416fcca942b61c7ac5b1a9ac',1,'logit::Magenta']]],
+  ['message_2',['Message',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a4c2a8fe7eaf24721cc7a9f0175115bd4',1,'logit::FormatInstruction']]],
+  ['millisecond_3',['Millisecond',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a988bbeeb80e7e0a6b4651aab5a76b413',1,'logit::FormatInstruction']]],
+  ['millisecondtimestamp_4',['MilliSecondTimeStamp',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a96f864c5c3e242514d34921998c95d25',1,'logit::FormatInstruction']]],
+  ['minute_5',['Minute',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a62902641c38f3a4a8eb3212454360e24',1,'logit::FormatInstruction']]],
+  ['month_6',['Month',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a7cbb885aa1164b390a0bc050a64e1812',1,'logit::FormatInstruction']]]
 ];

@@ -1,6 +1,16 @@
 var searchData=
 [
-  ['char_5fval_0',['CHAR_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a32d7df287b8e64ba22bfcdc34bafa529',1,'logit::VariableValue']]],
-  ['cyan_1',['CYAN',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a344dd8cd533280795b9db82ef0c92749',1,'CYAN:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a344dd8cd533280795b9db82ef0c92749',1,'CYAN:&#160;example_logit_basic.cpp']]],
-  ['cyan_2',['Cyan',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0a023c239d2f2538f140a20e72c7b73f20',1,'logit::ConsoleLogger::Cyan'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a023c239d2f2538f140a20e72c7b73f20',1,'logit::Cyan']]]
+  ['darkblue_0',['DarkBlue',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0a877716336e4eb22ac67faaa9c2b86635',1,'logit::ConsoleLogger::DarkBlue'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a877716336e4eb22ac67faaa9c2b86635',1,'logit::DarkBlue']]],
+  ['darkcyan_1',['DarkCyan',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0a85b1ae66e65b490f35c5e8b725e7049f',1,'logit::ConsoleLogger::DarkCyan'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a85b1ae66e65b490f35c5e8b725e7049f',1,'logit::DarkCyan']]],
+  ['darkgray_2',['DarkGray',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0a91e93fc984985226ad4d319a4e4134ab',1,'logit::ConsoleLogger::DarkGray'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a91e93fc984985226ad4d319a4e4134ab',1,'logit::DarkGray']]],
+  ['darkgreen_3',['DarkGreen',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0af780aab6295a2f368ac69a514f8b4605',1,'logit::ConsoleLogger::DarkGreen'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31af780aab6295a2f368ac69a514f8b4605',1,'logit::DarkGreen']]],
+  ['darkmagenta_4',['DarkMagenta',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0adf1b1322cf6703efd9885b0651ddb57a',1,'logit::ConsoleLogger::DarkMagenta'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31adf1b1322cf6703efd9885b0651ddb57a',1,'logit::DarkMagenta']]],
+  ['darkred_5',['DarkRed',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0a8746d21f8164452063398744f06307dd',1,'logit::ConsoleLogger::DarkRed'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a8746d21f8164452063398744f06307dd',1,'logit::DarkRed']]],
+  ['darkyellow_6',['DarkYellow',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0a42d873bb34e1055e40aad0ec45039e8b',1,'logit::ConsoleLogger::DarkYellow'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a42d873bb34e1055e40aad0ec45039e8b',1,'logit::DarkYellow']]],
+  ['dateiso8601_7',['DateISO8601',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a6c93c0dbbf53c2426805fe64d2d587f1',1,'logit::FormatInstruction']]],
+  ['datetime_8',['DateTime',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a8cf10d2341ed01492506085688270c1e',1,'logit::FormatInstruction']]],
+  ['day_9',['Day',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a03727ac48595a24daed975559c944a44',1,'logit::FormatInstruction']]],
+  ['default_10',['Default',['../structlogit_1_1FormatInstruction.html#a9a66c50ca010deee5b94a0dca9ef90a0a7a1920d61156abc05a60135aefe8bc67',1,'logit::FormatInstruction']]],
+  ['double_5fval_11',['DOUBLE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4',1,'logit::VariableValue']]],
+  ['duration_5fval_12',['DURATION_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a69d1ae3e7e14cdedc42556b0c4a51ca7',1,'logit::VariableValue']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['path_5fval_0',['PATH_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a69b582264c366059b11c48e8577a5a58',1,'logit::VariableValue']]],
-  ['pointer_5fval_1',['POINTER_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c',1,'logit::VariableValue']]]
+  ['red_0',['RED',['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50af80f9a890089d211842d59625e561f88',1,'RED:&#160;example_logit_short_macros.cpp'],['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50aa2d9547b5d3dd9f05984475f7c926da0',1,'RED:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50aa2d9547b5d3dd9f05984475f7c926da0',1,'RED:&#160;example_logit_basic.cpp']]],
+  ['red_1',['Red',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0aee38e4d5dd68c4e440825018d549cb47',1,'logit::ConsoleLogger::Red'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31aee38e4d5dd68c4e440825018d549cb47',1,'logit::Red']]]
 ];

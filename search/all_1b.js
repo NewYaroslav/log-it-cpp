@@ -1,7 +1,12 @@
 var searchData=
 [
-  ['year_0',['Year',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a537c66b24ef5c83b7382cdc3f34885f2',1,'logit::FormatInstruction']]],
-  ['yellow_1',['YELLOW',['../example__logit__basic_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a8a568e5f41b7e4da88fe5c4a00aad34e',1,'YELLOW:&#160;example_logit_basic.cpp'],['../example__logit__short__macros_8cpp.html#ab983350d6d1201c0ebd709320e7a0d50a8a568e5f41b7e4da88fe5c4a00aad34e',1,'YELLOW:&#160;example_logit_basic.cpp']]],
-  ['yellow_2',['Yellow',['../classlogit_1_1ConsoleLogger.html#af6a884e3bb02bacd710f3cda1941f0d0a51e6cd92b6c45f9affdc158ecca2b8b8',1,'logit::ConsoleLogger::Yellow'],['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a51e6cd92b6c45f9affdc158ecca2b8b8',1,'logit::Yellow']]],
-  ['your_20project_3',['Your Project',['../index.html#step2',1,'Step 2: Include the LogIt++ Headers in Your Project'],['../index.html#step5',1,'Step 5: Build and Run Your Project']]]
+  ['_7econsolelogger_0',['~ConsoleLogger',['../classlogit_1_1ConsoleLogger.html#a239983ca0f22c03cea4693d86edf38d9',1,'logit::ConsoleLogger']]],
+  ['_7efilelogger_1',['~FileLogger',['../classlogit_1_1FileLogger.html#a712802dcc6732f057e52fbd49f208388',1,'logit::FileLogger']]],
+  ['_7eilogformatter_2',['~ILogFormatter',['../classlogit_1_1ILogFormatter.html#a2c3401af20fafec7d37fafa1e8e084f3',1,'logit::ILogFormatter']]],
+  ['_7eilogger_3',['~ILogger',['../classlogit_1_1ILogger.html#a7a261305932aebeaeffa26469b11f18f',1,'logit::ILogger']]],
+  ['_7elogger_4',['~Logger',['../classlogit_1_1Logger.html#ac0f2ccc392e9a895e1a3ac9b1c79c01f',1,'logit::Logger']]],
+  ['_7elogstream_5',['~LogStream',['../classlogit_1_1LogStream.html#ae4ba165e9a3c0ab59165029f6532ca8b',1,'logit::LogStream']]],
+  ['_7etaskexecutor_6',['~TaskExecutor',['../classlogit_1_1TaskExecutor.html#a215cd6988a3f97bbb99bc12c75482126',1,'logit::TaskExecutor::~TaskExecutor()=default'],['../classlogit_1_1TaskExecutor.html#a4023e7c1a2f54cb83e2c56a14aada505',1,'logit::TaskExecutor::~TaskExecutor()']]],
+  ['_7euniquefilelogger_7',['~UniqueFileLogger',['../classlogit_1_1UniqueFileLogger.html#a455edb3893f4d31d5a2a65720e4e714c',1,'logit::UniqueFileLogger']]],
+  ['_7evariablevalue_8',['~VariableValue',['../structlogit_1_1VariableValue.html#a72bd26fb9c5d55a32289955e62587115',1,'logit::VariableValue']]]
 ];

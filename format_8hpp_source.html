@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>LogIt++: include/log-it/parts/Utils/format.hpp Source File</title>
+<title>LogIt++: include/logit_cpp/logit/utils/format.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,7 +38,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++
+   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
    </div>
   </td>
  </tr>
@@ -113,60 +113,61 @@ $(function(){initNavTree('format_8hpp_source.html',''); initResizable(true); });
 <a href="format_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef _LOGIT__FORMAT_HPP_INCLUDED</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define _LOGIT__FORMAT_HPP_INCLUDED</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;cstdarg&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#ifdef LOGIT_USE_FMT_LIB</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;fmt/core.h&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacelogit.html">logit</a> {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
-<div class="foldopen" id="foldopen00027" data-start="{" data-end="}">
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="namespacelogit.html#a2d42fce36e5265e7cfd666bd6f639460">   27</a></span>    <span class="keyword">inline</span> std::string <a class="code hl_function" href="namespacelogit.html#a2d42fce36e5265e7cfd666bd6f639460">format</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...) {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#       ifdef LOGIT_USE_FMT_LIB</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        va_list args;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        va_start(args, fmt);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        std::string result = fmt::vformat(fmt, fmt::make_format_args(args));</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        va_end(args);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keywordflow">return</span> result;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#       else</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>        va_list args;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        va_start(args, fmt);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        std::vector&lt;char&gt; buffer(1024);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        <span class="keywordflow">for</span> (;;) {</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>            va_list args_copy;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            va_copy(args_copy, args); <span class="comment">// Copy args to prevent modifying the original list.</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            <span class="keywordtype">int</span> res = vsnprintf(buffer.data(), buffer.size(), fmt, args_copy);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            va_end(args_copy); <span class="comment">// Clean up the copied argument list.</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <span class="keywordflow">if</span> ((res &gt;= 0) &amp;&amp; (res &lt; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(buffer.size()))) {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>                va_end(args); <span class="comment">// Clean up the original argument list.</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                <span class="keywordflow">return</span> std::string(buffer.data()); <span class="comment">// Return the formatted string.</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            }</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>            <span class="comment">// If the buffer was too small, resize it.</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="keyword">const</span> <span class="keywordtype">size_t</span> size = res &lt; 0 ? buffer.size() * 2 : <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(res) + 1;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            buffer.clear();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            buffer.resize(size);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span><span class="preprocessor">#       endif</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    }</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;cstdarg&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#ifdef LOGIT_USE_FMT_LIB</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;fmt/core.h&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacelogit.html">logit</a> {</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span></div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespacelogit.html#a2d42fce36e5265e7cfd666bd6f639460">   28</a></span>    <span class="keyword">inline</span> std::string <a class="code hl_function" href="namespacelogit.html#a2d42fce36e5265e7cfd666bd6f639460">format</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *fmt, ...) {</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#       ifdef LOGIT_USE_FMT_LIB</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>        va_list args;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>        va_start(args, fmt);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>        std::string result = fmt::vformat(fmt, fmt::make_format_args(args));</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        va_end(args);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>        <span class="keywordflow">return</span> result;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#       else</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>        va_list args;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>        va_start(args, fmt);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>        std::vector&lt;char&gt; buffer(1024);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>        <span class="keywordflow">for</span> (;;) {</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>            va_list args_copy;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>            va_copy(args_copy, args); <span class="comment">// Copy args to prevent modifying the original list.</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            <span class="keywordtype">int</span> res = vsnprintf(buffer.data(), buffer.size(), fmt, args_copy);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            va_end(args_copy); <span class="comment">// Clean up the copied argument list.</span></div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            <span class="keywordflow">if</span> ((res &gt;= 0) &amp;&amp; (res &lt; <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(buffer.size()))) {</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                va_end(args); <span class="comment">// Clean up the original argument list.</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>                <span class="keywordflow">return</span> std::string(buffer.data()); <span class="comment">// Return the formatted string.</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>            }</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            <span class="comment">// If the buffer was too small, resize it.</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keyword">const</span> <span class="keywordtype">size_t</span> size = res &lt; 0 ? buffer.size() * 2 : <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(res) + 1;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            buffer.clear();</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>            buffer.resize(size);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        }</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#       endif</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    }</div>
 </div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>}; <span class="comment">// namespace logit</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_FORMAT_HPP_INCLUDED</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>}; <span class="comment">// namespace logit</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_FORMAT_HPP_INCLUDED</span></div>
 <div class="ttc" id="anamespacelogit_html"><div class="ttname"><a href="namespacelogit.html">logit</a></div><div class="ttdoc">The primary namespace for the LogIt++ library.</div></div>
-<div class="ttc" id="anamespacelogit_html_a2d42fce36e5265e7cfd666bd6f639460"><div class="ttname"><a href="namespacelogit.html#a2d42fce36e5265e7cfd666bd6f639460">logit::format</a></div><div class="ttdeci">std::string format(const char *fmt,...)</div><div class="ttdoc">Formats a string according to the specified format.</div><div class="ttdef"><b>Definition</b> <a href="#l00027">format.hpp:27</a></div></div>
+<div class="ttc" id="anamespacelogit_html_a2d42fce36e5265e7cfd666bd6f639460"><div class="ttname"><a href="namespacelogit.html#a2d42fce36e5265e7cfd666bd6f639460">logit::format</a></div><div class="ttdeci">std::string format(const char *fmt,...)</div><div class="ttdoc">Formats a string according to the specified format.</div><div class="ttdef"><b>Definition</b> <a href="#l00028">format.hpp:28</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_9f5e4856d2e76c263da9e3546dd5c087.html">log-it</a></li><li class="navelem"><a class="el" href="dir_f13316705ed44cc497b969d59eba4a26.html">parts</a></li><li class="navelem"><a class="el" href="dir_8030cf53bcfc9e767c48bd54199c86ae.html">Utils</a></li><li class="navelem"><a class="el" href="format_8hpp.html">format.hpp</a></li>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_a7f3668f37dae728c9f8048b2c99fd70.html">logit_cpp</a></li><li class="navelem"><a class="el" href="dir_c72318ec2dd41c019b2cebe69b9a8641.html">logit</a></li><li class="navelem"><a class="el" href="dir_1f2d2c0c02d0dde21410663b8836d271.html">utils</a></li><li class="navelem"><a class="el" href="format_8hpp.html">format.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>
