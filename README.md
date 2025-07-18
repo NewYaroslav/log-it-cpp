@@ -480,6 +480,12 @@ LogIt++ supports the *fmt* library for advanced string formatting, which is also
 #define LOGIT_USE_FMT_LIB
 ```
 
+### Emscripten
+
+When building with Emscripten the library runs without threads. Console logging
+works as usual while file-based loggers are replaced by stubs that warn when
+used.
+
 ---
 
 ## Documentation

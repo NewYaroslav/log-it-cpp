@@ -33,6 +33,37 @@ namespace logit {
     namespace fs = std::filesystem;
 #   endif
 
+#if defined(__EMSCRIPTEN__)
+
+    inline std::string get_exec_dir() { return "./"; }
+
+    inline std::vector<std::string> get_list_files(const std::string&) {
+        std::cerr << "get_list_files is not supported under Emscripten" << std::endl;
+        return {};
+    }
+
+    inline std::string get_file_name(const std::string& file_path) {
+        size_t pos = file_path.find_last_of("/\\");
+        if (pos == std::string::npos) return file_path;
+        return file_path.substr(pos + 1);
+    }
+
+    inline std::string make_relative(const std::string& file_path, const std::string&) {
+        return file_path;
+    }
+
+    inline void create_directories(const std::string&) {
+        std::cerr << "create_directories is not supported under Emscripten" << std::endl;
+    }
+
+    inline bool is_file(const std::string& path) {
+        size_t dot_pos = path.find_last_of('.');
+        size_t slash_pos = path.find_last_of("/\\");
+        return (dot_pos != std::string::npos && (slash_pos == std::string::npos || dot_pos > slash_pos));
+    }
+
+#else
+
     /// \brief Retrieves the directory of the executable file.
     /// \return A string containing the directory path of the executable.
     std::string get_exec_dir() {
@@ -378,6 +409,8 @@ namespace logit {
     }
 
 #endif // __cplusplus >= 201703L
+
+#endif // defined(__EMSCRIPTEN__)
 
 }; // namespace logit
 
