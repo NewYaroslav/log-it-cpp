@@ -21,6 +21,33 @@
 
 namespace logit {
 
+#if defined(__EMSCRIPTEN__)
+
+    class UniqueFileLogger : public ILogger {
+    public:
+        struct Config {
+            std::string directory = "unique_logs";
+            bool        async     = false;
+            int         auto_delete_days = 30;
+            size_t      hash_length = 8;
+        };
+
+        UniqueFileLogger() { warn(); }
+        UniqueFileLogger(const Config&) { warn(); }
+        UniqueFileLogger(const std::string&, bool = true, int = 30, size_t = 8) { warn(); }
+
+        void log(const LogRecord&, const std::string&) override { warn(); }
+        std::string get_string_param(const LoggerParam&) const override { return {}; }
+        int64_t get_int_param(const LoggerParam&) const override { return 0; }
+        double get_float_param(const LoggerParam&) const override { return 0.0; }
+        void wait() override {}
+
+    private:
+        void warn() const { std::cerr << "UniqueFileLogger is not supported under Emscripten" << std::endl; }
+    };
+
+#else
+
     /// \class UniqueFileLogger
     /// \ingroup LogBackends
     /// \brief Writes each log message to a unique file with automatic cleanup.
@@ -446,7 +473,10 @@ namespace logit {
             return LOGIT_CURRENT_TIMESTAMP_MS() - m_last_log_ts;
         }
 
+
     }; // UniqueFileLogger
+
+#endif // defined(__EMSCRIPTEN__)
 
 }; // namespace logit
 

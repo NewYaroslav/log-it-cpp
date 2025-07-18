@@ -9,8 +9,38 @@
 #include <mutex>
 #include <functional>
 #include <condition_variable>
+#include <iostream>
 
 namespace logit {
+
+#if defined(__EMSCRIPTEN__)
+
+    /// \class TaskExecutor
+    /// \brief Simplified task executor for single-threaded environments.
+    class TaskExecutor {
+    public:
+        static TaskExecutor& get_instance() {
+            static TaskExecutor instance;
+            return instance;
+        }
+
+        void add_task(std::function<void()> task) {
+            if (task) task();
+        }
+
+        void wait() {}
+        void shutdown() {}
+
+    private:
+        TaskExecutor()  = default;
+        ~TaskExecutor() = default;
+        TaskExecutor(const TaskExecutor&) = delete;
+        TaskExecutor& operator=(const TaskExecutor&) = delete;
+        TaskExecutor(TaskExecutor&&) = delete;
+        TaskExecutor& operator=(TaskExecutor&&) = delete;
+    };
+
+#else
 
     /// \class TaskExecutor
     /// \brief A thread-safe task executor that processes tasks in a dedicated worker thread.
@@ -101,6 +131,8 @@ namespace logit {
         TaskExecutor(TaskExecutor&&) = delete;
         TaskExecutor& operator=(TaskExecutor&&) = delete;
     };
+
+#endif // defined(__EMSCRIPTEN__)
 
 }; // namespace logit
 

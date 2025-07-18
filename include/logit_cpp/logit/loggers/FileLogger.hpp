@@ -16,6 +16,32 @@
 
 namespace logit {
 
+#if defined(__EMSCRIPTEN__)
+
+    class FileLogger : public ILogger {
+    public:
+        struct Config {
+            std::string directory = "logs";
+            bool        async     = false;
+            int         auto_delete_days = 30;
+        };
+
+        FileLogger() { warn(); }
+        FileLogger(const Config&) { warn(); }
+        FileLogger(const std::string&, const bool& = true, const int& = 30) { warn(); }
+
+        void log(const LogRecord&, const std::string&) override { warn(); }
+        std::string get_string_param(const LoggerParam&) const override { return {}; }
+        int64_t get_int_param(const LoggerParam&) const override { return 0; }
+        double get_float_param(const LoggerParam&) const override { return 0.0; }
+        void wait() override {}
+
+    private:
+        void warn() const { std::cerr << "FileLogger is not supported under Emscripten" << std::endl; }
+    };
+
+#else
+
     /// \class FileLogger
     /// \ingroup LogBackends
     /// \brief Logs messages to files with date-based rotation and automatic deletion of old logs.
@@ -331,10 +357,11 @@ namespace logit {
 
         /// \brief Retrieves the time since the last log.
         /// \return The time in milliseconds since the last log.
-        int64_t get_time_since_last_log() const {
-            return LOGIT_CURRENT_TIMESTAMP_MS() - m_last_log_ts;
-        }
+    int64_t get_time_since_last_log() const {
+        return LOGIT_CURRENT_TIMESTAMP_MS() - m_last_log_ts;
+    }
     }; // FileLogger
+#endif // defined(__EMSCRIPTEN__)
 
 }; // namespace logit
 

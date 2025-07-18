@@ -10,6 +10,9 @@
 #if defined(_WIN32)
 #include <windows.h>
 #endif
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#endif
 #include <mutex>
 #include <atomic>
 
@@ -33,7 +36,11 @@ namespace logit {
         /// \brief Configuration for the console logger.
         struct Config {
             TextColor default_color = LOGIT_DEFAULT_COLOR; ///< Default text color for console output.
-            bool async = true; ///< Flag indicating whether logging should be asynchronous.
+#ifdef __EMSCRIPTEN__
+            bool async = false; ///< Async logging disabled under Emscripten.
+#else
+            bool async = true;  ///< Flag indicating whether logging should be asynchronous.
+#endif
         };
 
         /// \brief Default constructor that uses default configuration.
@@ -81,9 +88,14 @@ namespace logit {
         /// \param message The formatted log message.
         void log(const LogRecord& record, const std::string& message) override {
             m_last_log_ts = record.timestamp_ms;
+#ifdef __EMSCRIPTEN__
+            std::lock_guard<std::mutex> lock(m_mutex);
+            handle_ansi_colors_emscripten(message);
+            return;
+#else
             std::unique_lock<std::mutex> lock(m_mutex);
             if (!m_config.async) {
-#               if defined(__MINGW32__) || defined(_WIN32)
+#               if defined(_WIN32)
                 // For Windows, parse the message for ANSI color codes and apply them
                 handle_ansi_colors_windows(message);
 #               else
@@ -103,6 +115,7 @@ namespace logit {
                 std::cout << message << std::endl;
 #               endif
             });
+#endif
         }
 
         /// \brief Retrieves a string parameter from the logger.
@@ -151,10 +164,15 @@ namespace logit {
         /// \brief Waits for all asynchronous tasks to complete.
         /// If asynchronous logging is enabled, waits for all pending log messages to be written.
         void wait() override {
+#ifdef __EMSCRIPTEN__
+            // Nothing to wait for in single-threaded mode
+            return;
+#else
             std::unique_lock<std::mutex> lock(m_mutex);
             if (!m_config.async) return;
             lock.unlock();
             TaskExecutor::get_instance().wait();
+#endif
         }
 
     private:
@@ -279,9 +297,88 @@ namespace logit {
         }
 #       endif
 
+#       ifdef __EMSCRIPTEN__
+        /// \brief Convert TextColor to a CSS color name for Emscripten console output.
+        const char* text_color_to_css(TextColor color) const {
+            switch (color) {
+                case TextColor::Black:       return "black";
+                case TextColor::DarkRed:     return "darkred";
+                case TextColor::DarkGreen:   return "darkgreen";
+                case TextColor::DarkYellow:  return "olive";
+                case TextColor::DarkBlue:    return "darkblue";
+                case TextColor::DarkMagenta: return "purple";
+                case TextColor::DarkCyan:    return "teal";
+                case TextColor::LightGray:   return "lightgray";
+                case TextColor::DarkGray:    return "gray";
+                case TextColor::Red:         return "red";
+                case TextColor::Green:       return "green";
+                case TextColor::Yellow:      return "yellow";
+                case TextColor::Blue:        return "blue";
+                case TextColor::Magenta:     return "magenta";
+                case TextColor::Cyan:        return "cyan";
+                case TextColor::White:       return "white";
+                default:                     return "inherit";
+            }
+        }
+
+        /// \brief Map ANSI code to a CSS color name.
+        std::string css_color_from_ansi(const std::string& code) const {
+            int value = std::stoi(code);
+            switch (value) {
+                case 30: return "black";
+                case 31: return "darkred";
+                case 32: return "darkgreen";
+                case 33: return "olive";
+                case 34: return "darkblue";
+                case 35: return "purple";
+                case 36: return "teal";
+                case 37: return "lightgray";
+                case 90: return "gray";
+                case 91: return "red";
+                case 92: return "green";
+                case 93: return "yellow";
+                case 94: return "blue";
+                case 95: return "magenta";
+                case 96: return "cyan";
+                case 97: return "white";
+                default: return text_color_to_css(m_config.default_color);
+            }
+        }
+
+        /// \brief Handle ANSI color codes when compiling with Emscripten.
+        void handle_ansi_colors_emscripten(const std::string& message) const {
+            std::string current_color = text_color_to_css(m_config.default_color);
+            std::string::size_type start = 0;
+            std::string::size_type pos = 0;
+
+            while ((pos = message.find("\033[", start)) != std::string::npos) {
+                if (pos > start) {
+                    std::string part = message.substr(start, pos - start);
+                    EM_ASM_({ console.log('%c' + UTF8ToString($0), 'color: ' + UTF8ToString($1)); }, part.c_str(), current_color.c_str());
+                }
+                std::string::size_type end_pos = message.find('m', pos);
+                if (end_pos != std::string::npos) {
+                    std::string ansi_code = message.substr(pos + 2, end_pos - pos - 2);
+                    current_color = css_color_from_ansi(ansi_code);
+                    start = end_pos + 1;
+                } else {
+                    break;
+                }
+            }
+
+            if (start < message.size()) {
+                std::string part = message.substr(start);
+                EM_ASM_({ console.log('%c' + UTF8ToString($0), 'color: ' + UTF8ToString($1)); }, part.c_str(), current_color.c_str());
+            }
+        }
+#       endif // __EMSCRIPTEN__
+
         /// \brief Resets the console text color to the default.
         void reset_color() {
-#           if defined(_WIN32)
+#           ifdef __EMSCRIPTEN__
+            // No persistent console color in browsers
+            return;
+#           elif defined(_WIN32)
             handle_ansi_colors_windows(std::string());
 #           else
             std::cout << to_string(m_config.default_color);
