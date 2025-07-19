@@ -219,23 +219,23 @@ Below is a list of all supported format flags and their meanings:
 - `%$`: End color formatting
 - `%%SC`: Start removing color codes (Strip Color)
 - `%%EC`: End removing color codes (End Color)
-	
+    
 \subsection message_flags Message Content
 - `%%v`: The log message content
 - `%%N(...)`: Fallback format for cases with no arguments.
-	- When used in a pattern (e.g., `%%N(%g:%#)`), the specified sub-pattern will be applied
-	if no arguments are provided in the log macro (e.g., `LOG_TRACE0()`).
-	
+    - When used in a pattern (e.g., `%%N(%g:%#)`), the specified sub-pattern will be applied
+    if no arguments are provided in the log macro (e.g., `LOG_TRACE0()`).
+    
 \subsection alignment_truncation_flags Alignment and Truncation
 
 - **Alignment**:
-	- Left: Use `-` before the width, e.g., `%-10v` (aligns text to the left).
-	- Center: Use `=` before the width, e.g., `%=10v` (centers text).
-	- Right (default): `%10v` (aligns text to the right).
-	
+    - Left: Use `-` before the width, e.g., `%-10v` (aligns text to the left).
+    - Center: Use `=` before the width, e.g., `%=10v` (centers text).
+    - Right (default): `%10v` (aligns text to the right).
+    
 - **Truncation**:
-	- Use `!` after the width to truncate text if it exceeds the specified length, e.g., `%10!v`.
-	
+    - Use `!` after the width to truncate text if it exceeds the specified length, e.g., `%10!v`.
+    
 **Examples**:
 - `%10v`: Right-aligned message with a width of 10 characters.
 - `%-10v`: Left-aligned message with a width of 10 characters.
@@ -259,41 +259,41 @@ Example:
 ## Available TRACE-level macros:
   - **Basic logging**:
 
-	- `LOG_T(...)`: Logs a TRACE-level message.
-	- `LOG_T0()`: Logs a TRACE-level message without arguments.
-	- `LOG_0T()`: Alias for `LOG_T0()`.
-	- `LOG_0_T()`: Alias for `LOG_T0()`.
-	- `LOG_T_NOARGS()`: Alias for `LOG_T0()`.
-	- `LOG_NOARGS_T()`: Alias for `LOG_T0()`.
-	
+    - `LOG_T(...)`: Logs a TRACE-level message.
+    - `LOG_T0()`: Logs a TRACE-level message without arguments.
+    - `LOG_0T()`: Alias for `LOG_T0()`.
+    - `LOG_0_T()`: Alias for `LOG_T0()`.
+    - `LOG_T_NOARGS()`: Alias for `LOG_T0()`.
+    - `LOG_NOARGS_T()`: Alias for `LOG_T0()`.
+    
   - **Formatted logging**:
 
-	- `LOG_TF(fmt, ...)`: Logs a formatted TRACE-level message using format strings.
-	- `LOG_FT(fmt, ...)`: Alias for `LOG_TF(fmt, ...)`.
-	- `LOG_T_PRINT(...)`: Logs a TRACE-level message by printing each argument.
-	- `LOG_PRINT_T(...)`: Alias for `LOG_T_PRINT(...)`.
-	- `LOG_T_PRINTF(fmt, ...)`: Logs a formatted TRACE-level message using printf-style formatting.
-	- `LOG_PRINTF_T(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
-	- `LOG_TP(...)`: Alias for `LOG_T_PRINT(...)`.
-	- `LOG_PT(...)`: Alias for `LOG_T_PRINT(...)`.
-	- `LOG_TPF(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
-	- `LOG_PFT(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
-	
+    - `LOG_TF(fmt, ...)`: Logs a formatted TRACE-level message using format strings.
+    - `LOG_FT(fmt, ...)`: Alias for `LOG_TF(fmt, ...)`.
+    - `LOG_T_PRINT(...)`: Logs a TRACE-level message by printing each argument.
+    - `LOG_PRINT_T(...)`: Alias for `LOG_T_PRINT(...)`.
+    - `LOG_T_PRINTF(fmt, ...)`: Logs a formatted TRACE-level message using printf-style formatting.
+    - `LOG_PRINTF_T(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
+    - `LOG_TP(...)`: Alias for `LOG_T_PRINT(...)`.
+    - `LOG_PT(...)`: Alias for `LOG_T_PRINT(...)`.
+    - `LOG_TPF(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
+    - `LOG_PFT(fmt, ...)`: Alias for `LOG_T_PRINTF(fmt, ...)`.
+    
   - **Alternative TRACE-level macros**:
 
-	- `LOG_TRACE(...)`: Logs a TRACE-level message (same as `LOG_T(...)`).
-	- `LOG_TRACE0()`: Logs a TRACE-level message without arguments (same as `LOG_T0()`).
-	- `LOG_0TRACE()`: Alias for `LOG_TRACE0()`.
-	- `LOG_0_TRACE()`: Alias for `LOG_TRACE0()`.
-	- `LOG_TRACE_NOARGS()`: Logs a TRACE-level message with no arguments (same as `LOG_T_NOARGS()`).
-	- `LOG_NOARGS_TRACE()`: Alias for `LOG_TRACE_NOARGS()`.
-	- `LOG_TRACEF(fmt, ...)`: Logs a formatted TRACE-level message (same as `LOG_TF(fmt, ...)`).
-	- `LOG_FTRACE(fmt, ...)`: Alias for `LOG_TRACEF(fmt, ...)`.
-	- `LOG_TRACE_PRINT(...)`: Logs a TRACE-level message by printing each argument (same as `LOG_T_PRINT(...)`).
-	- `LOG_PRINT_TRACE(...)`: Alias for `LOG_TRACE_PRINT(...)`.
-	- `LOG_TRACE_PRINTF(fmt, ...)`: Logs a formatted TRACE-level message using printf-style formatting (same as `LOG_T_PRINTF(fmt, ...)`).
-	- `LOG_PRINTF_TRACE(fmt, ...)`: Alias for `LOG_TRACE_PRINTF(fmt, ...)`.
-	
+    - `LOG_TRACE(...)`: Logs a TRACE-level message (same as `LOG_T(...)`).
+    - `LOG_TRACE0()`: Logs a TRACE-level message without arguments (same as `LOG_T0()`).
+    - `LOG_0TRACE()`: Alias for `LOG_TRACE0()`.
+    - `LOG_0_TRACE()`: Alias for `LOG_TRACE0()`.
+    - `LOG_TRACE_NOARGS()`: Logs a TRACE-level message with no arguments (same as `LOG_T_NOARGS()`).
+    - `LOG_NOARGS_TRACE()`: Alias for `LOG_TRACE_NOARGS()`.
+    - `LOG_TRACEF(fmt, ...)`: Logs a formatted TRACE-level message (same as `LOG_TF(fmt, ...)`).
+    - `LOG_FTRACE(fmt, ...)`: Alias for `LOG_TRACEF(fmt, ...)`.
+    - `LOG_TRACE_PRINT(...)`: Logs a TRACE-level message by printing each argument (same as `LOG_T_PRINT(...)`).
+    - `LOG_PRINT_TRACE(...)`: Alias for `LOG_TRACE_PRINT(...)`.
+    - `LOG_TRACE_PRINTF(fmt, ...)`: Logs a formatted TRACE-level message using printf-style formatting (same as `LOG_T_PRINTF(fmt, ...)`).
+    - `LOG_PRINTF_TRACE(fmt, ...)`: Alias for `LOG_TRACE_PRINTF(fmt, ...)`.
+    
 These macros provide flexibility and convenience when logging messages at the TRACE level. They allow you to choose between different logging styles, such as standard logging, formatted logging, and printing each argument separately.
 
 **Note:** Similar macros are available for other log levels — **INFO** (`LOG_I`, `LOG_INFO`), **DEBUG** (`LOG_D`, `LOG_DEBUG`), **WARN** (`LOG_W`, `LOG_WARN`), **ERROR** (`LOG_E`, `LOG_ERROR`), and **FATAL** (`LOG_F`, `LOG_FATAL`). The naming conventions are consistent across levels; replace the level letter or word in the macro name.
@@ -311,7 +311,8 @@ LOG_PRINTF_TRACE("Formatted trace: value = %d", value);
 LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:
 
 - **LOGIT_BASE_PATH**:
-\brief Defines the base path used for log file paths. If `LOGIT_BASE_PATH` is not defined or is empty ({}), the full path from `__FILE__` will be used for log file paths.
+
+Defines the base path used for log file paths. If `LOGIT_BASE_PATH` is not defined or is empty ({}), the full path from `__FILE__` will be used for log file paths.
 
 \code{.cpp}
 // Defines the base path for project folder.
@@ -319,7 +320,8 @@ LogIt++ provides several macros that allow for customization and configuration. 
 \endcode
 
 - **LOGIT_DEFAULT_COLOR**:
-\brief Sets the default color for console output. If `LOGIT_DEFAULT_COLOR` is not defined, it defaults to `TextColor::LightGray`.
+
+Sets the default color for console output. If `LOGIT_DEFAULT_COLOR` is not defined, it defaults to `TextColor::LightGray`.
 
 \code{.cpp}
 // Sets the default log message color to green.
@@ -327,7 +329,8 @@ LogIt++ provides several macros that allow for customization and configuration. 
 \endcode
 
 - **LOGIT_COLOR_<LOG_LEVEL>**:
-\brief Defines the console text color for each log level. By default, each log level is associated with a specific color, but these can be customized.
+
+Defines the console text color for each log level. By default, each log level is associated with a specific color, but these can be customized.
 
 Available log levels:
   - **TRACE**: Defaults to `TextColor::DarkGray`
@@ -344,7 +347,8 @@ Available log levels:
 \endcode
 
 - **LOGIT_CURRENT_TIMESTAMP_MS**:
-\brief Macro to get the current timestamp in milliseconds. By default, it uses `std::chrono` for time calculation. You can override this to customize the timestamp generation.
+
+Macro to get the current timestamp in milliseconds. By default, it uses `std::chrono` for time calculation. You can override this to customize the timestamp generation.
 
 \code{.cpp}
 // Customize timestamp calculation if needed.
@@ -352,7 +356,7 @@ Available log levels:
 \endcode
 
 - **LOGIT_CONSOLE_PATTERN**:
-\brief Defines the default log pattern for the console logger. If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%%H:%%M:%%S.%%e | %^%N([%50!g:%#])%%v%$`.
+Defines the default log pattern for the console logger. If `LOGIT_CONSOLE_PATTERN` is not defined, it defaults to `%%H:%%M:%%S.%%e | %^%N([%50!g:%#])%%v%$`.
 
 \code{.cpp}
 // Customize the console log message pattern.
@@ -360,7 +364,8 @@ Available log levels:
 \endcode
 
 - **LOGIT_FILE_LOGGER_PATH**:
-\brief Defines the default directory path for log files. If `LOGIT_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs".
+
+Defines the default directory path for log files. If `LOGIT_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs".
 
 \code{.cpp}
 // Specify a custom path for log files.
@@ -368,7 +373,8 @@ Available log levels:
 \endcode
 
 - **LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS**:
-\brief Defines the number of days after which old log files are deleted. If `LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS` is not defined, it defaults to `30` days.
+
+Defines the number of days after which old log files are deleted. If `LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS` is not defined, it defaults to `30` days.
 
 \code{.cpp}
 // Set the number of days to keep log files.
@@ -376,7 +382,8 @@ Available log levels:
 \endcode
 
 - **LOGIT_FILE_LOGGER_PATTERN**:
-\brief Defines the default log pattern for file-based loggers. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%%Y-%%m-%%d %%H:%%M:%%S.%%e] [%-5l] [%60!@] [thread:%%t] %%SC%%v`.
+
+Defines the default log pattern for file-based loggers. If `LOGIT_FILE_LOGGER_PATTERN` is not defined, it defaults to `[%%Y-%%m-%%d %%H:%%M:%%S.%%e] [%-5l] [%60!@] [thread:%%t] %%SC%%v`.
 
 \code{.cpp}
 // Customize the log file message pattern.
@@ -384,7 +391,8 @@ Available log levels:
 \endcode
 
 - **LOGIT_UNIQUE_FILE_LOGGER_PATH**:
-\brief Defines the default directory path for unique log files. If `LOGIT_UNIQUE_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs/unique_logs".
+
+Defines the default directory path for unique log files. If `LOGIT_UNIQUE_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs/unique_logs".
 
 \code{.cpp}
 // Specify a custom path for unique log files.
@@ -392,7 +400,8 @@ Available log levels:
 \endcode
 
 - **LOGIT_UNIQUE_FILE_LOGGER_PATTERN**:
-\brief Defines the default log pattern for unique file-based loggers. If `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` is not defined, it defaults to `%v`.
+
+Defines the default log pattern for unique file-based loggers. If `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` is not defined, it defaults to `%v`.
 
 \code{.cpp}
 // Customize the unique file log message pattern.
@@ -400,7 +409,8 @@ Available log levels:
 \endcode
 
 - **LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH**:
-\brief Defines the length of the hash used in the unique log file names. If `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` is not defined, it defaults to `8` characters.
+
+Defines the length of the hash used in the unique log file names. If `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` is not defined, it defaults to `8` characters.
 
 This macro controls the length of the hash part in the filenames for unique log files, ensuring unique names for each log.
 
@@ -410,7 +420,8 @@ This macro controls the length of the hash part in the filenames for unique log 
 \endcode
 
 - **LOGIT_SHORT_NAME**:
-\brief Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for concise logging.
+
+Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for concise logging.
 
 \code{.cpp}
 // Enable short macro names for logging.
@@ -418,7 +429,8 @@ This macro controls the length of the hash part in the filenames for unique log 
 \endcode
 
 - **LOGIT_USE_FMT_LIB**:
-\brief Enables the use of the fmt library for string formatting. If defined, the logging system will use fmt for advanced formatting of log messages.
+
+Enables the use of the fmt library for string formatting. If defined, the logging system will use fmt for advanced formatting of log messages.
 
 \code{.cpp}
 // Enable use of the fmt library for formatting.
@@ -475,8 +487,8 @@ This `FileLogger` class writes log messages to a specified file. You can add thi
 
 \code{.cpp}
 LOGIT_ADD_LOGGER(
-	FileLogger, ("logfile.txt"),
-	logit::SimpleLogFormatter, ());
+    FileLogger, ("logfile.txt"),
+    logit::SimpleLogFormatter, ());
 
 // or...
 
@@ -515,8 +527,8 @@ This `JsonLogFormatter` formats log messages as JSON objects. You can combine it
 
 \code{.cpp}
 LOGIT_ADD_LOGGER(
-	FileLogger, ("logfile.json"),
-	logit::JsonLogFormatter, ());
+    FileLogger, ("logfile.json"),
+    logit::JsonLogFormatter, ());
 
 // or...
 

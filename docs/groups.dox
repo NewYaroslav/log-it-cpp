@@ -1,0 +1,68 @@
+/*!
+\defgroup LoggingMacros Logging Macros
+\brief A collection of macros for streamlined logging operations.
+
+This group includes macros for logging messages at various levels,
+adding loggers, managing log settings, and controlling loggers.
+
+\par Examples
+
+\par Basic Logging
+\code
+LOGIT_INFO("This is an informational message");
+LOGIT_WARN("This is a warning message");
+LOGIT_ERROR("This is an error message");
+\endcode
+
+\par Stream-Based Logging
+\code
+LOGIT_STREAM_INFO() << "Info level stream logging: value=" << 42;
+LOGIT_STREAM_TRACE_TO(2) << "Trace to unique logger at index 2";
+\endcode
+
+\par Conditional Logging
+\code
+int x = 42;
+LOGIT_DEBUG_IF(x > 0, "x is positive: ", x);
+\endcode
+
+\par Logger Management
+\code
+LOGIT_SET_LOGGER_ENABLED(1, false); // Disable logger at index 1
+if (LOGIT_IS_LOGGER_ENABLED(1)) {
+    LOGIT_INFO("Logger 1 is enabled");
+}
+\endcode
+*/
+
+/*!
+\defgroup ConfigMacros Configuration Macros
+\brief A set of macros used to configure the LogIt logging system.
+
+These macros control various aspects of the logging behavior,
+including paths, patterns, colors, timestamps, and retention policies.
+
+\par Examples
+
+\par Customizing Log File Paths
+\code
+#define LOGIT_FILE_LOGGER_PATH "custom/log/directory"
+\endcode
+
+\par Customizing Console Output Colors
+\code
+#define LOGIT_COLOR_WARN logit::TextColor::Yellow
+\endcode
+*/
+
+/*!
+\defgroup LogBackends Logging Backends
+\brief A collection of backends for the LogIt logging system.
+
+This group includes various logger implementations that define how
+log messages are processed and stored:
+
+- \b ConsoleLogger: Outputs logs to the console with optional color coding.
+- \b FileLogger: Logs messages to files with date-based rotation and old file deletion.
+- \b UniqueFileLogger: Writes each log message to a unique file with automatic cleanup.
+*/

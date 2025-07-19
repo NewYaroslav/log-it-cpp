@@ -5,40 +5,7 @@
 /// \file LogMacros.hpp
 /// \brief Provides various logging macros for different log levels and options.
 
-/// \defgroup LoggingMacros Logging Macros
-/// \brief A collection of macros for streamlined logging operations.
-///
-/// This group includes macros for logging messages at various levels, adding loggers,
-/// managing log settings, and controlling loggers.
-///
-/// ### Examples:
-///
-/// **Basic Logging**
-/// ```cpp
-/// LOGIT_INFO("This is an informational message");
-/// LOGIT_WARN("This is a warning message");
-/// LOGIT_ERROR("This is an error message");
-/// ```
-///
-/// **Stream-Based Logging**
-/// ```cpp
-/// LOGIT_STREAM_INFO() << "Info level stream logging: value=" << 42;
-/// LOGIT_STREAM_TRACE_TO(2) << "Trace to unique logger at index 2";
-/// ```
-///
-/// **Conditional Logging**
-/// ```cpp
-/// int x = 42;
-/// LOGIT_DEBUG_IF(x > 0, "x is positive: ", x);
-/// ```
-///
-/// **Logger Management**
-/// ```cpp
-/// LOGIT_SET_LOGGER_ENABLED(1, false); // Disable logger at index 1
-/// if (LOGIT_IS_LOGGER_ENABLED(1)) {
-///     LOGIT_INFO("Logger 1 is enabled");
-/// }
-/// ```
+/// \ingroup LoggingMacros
 /// \{
 
 //------------------------------------------------------------------------------
@@ -51,6 +18,8 @@
     #define LOGIT_FUNCTION __func__
 #endif
 
+/// \brief Expands to a `case` statement returning the stringified enum value.
+/// \param value The enum value.
 #define LOGIT_ENUM_TO_STR_CASE(value) case value: return #value;
 
 //------------------------------------------------------------------------------

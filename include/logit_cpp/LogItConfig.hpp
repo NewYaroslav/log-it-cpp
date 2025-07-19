@@ -5,43 +5,27 @@
 /// \file LogItConfig.hpp
 /// \brief Configuration macros for the LogIt logging system.
 
-/// \defgroup ConfigMacros Configuration Macros
-/// \brief A set of macros used to configure the LogIt logging system.
-///
-/// These macros control various aspects of the logging behavior, including
-/// paths, patterns, colors, timestamps, and retention policies.
-///
-/// ### Examples:
-///
-/// **Customizing Log File Paths**
-/// ```cpp
-/// #define LOGIT_FILE_LOGGER_PATH "custom/log/directory"
-/// ```
-///
-/// **Customizing Console Output Colors**
-/// ```cpp
-/// #define LOGIT_COLOR_WARN logit::TextColor::Yellow
-/// ```
-///
+/// \ingroup ConfigMacros Configuration Macros
 /// \{
 
-/// \brief Defines the base path used for log file paths.
-/// If `LOGIT_BASE_PATH` is not defined or is empty (`{}`), the full path from `__FILE__` will be used for log file paths.
 #ifndef LOGIT_BASE_PATH
+    /// \brief Defines the base path used for log file paths.
+    /// If `LOGIT_BASE_PATH` is not defined or is empty (`{}`), the full path from `__FILE__` will be used for log file paths.
     #define LOGIT_BASE_PATH {}
 #endif
 
-/// \brief Defines the default color for console output.
-/// If LOGIT_DEFAULT_COLOR is not defined, defaults to `logit::TextColor::LightGray`.
-///
-/// This macro allows setting a default console text color for log messages.
 #ifndef LOGIT_DEFAULT_COLOR
+    /// \brief Defines the default color for console output.
+    /// If LOGIT_DEFAULT_COLOR is not defined, defaults to `logit::TextColor::LightGray`.
+    ///
+    /// This macro allows setting a default console text color for log messages.
     #define LOGIT_DEFAULT_COLOR logit::TextColor::LightGray
 #endif
 
 /// \name Log Level Colors
 /// Default colors for each log level.
 /// \{
+    
 #ifndef LOGIT_COLOR_TRACE
     #define LOGIT_COLOR_TRACE   logit::TextColor::DarkGray
 #endif
