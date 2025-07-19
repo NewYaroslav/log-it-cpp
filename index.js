@@ -12,8 +12,8 @@ var index =
     [ "Usage", "index.html#usage_sec", null ],
     [ "Customizing Log Formats", "index.html#log_formatting_sec", [
       [ "Examples of Formatting Patterns", "index.html#pattern_example", [
-        [ "Example for Setting a Custom Console Logger Format", "index.html#autotoc_md3", null ],
-        [ "Example Using Macros for Simplicity", "index.html#autotoc_md4", null ]
+        [ "Example for Setting a Custom Console Logger Format", "index.html#autotoc_md0", null ],
+        [ "Example Using Macros for Simplicity", "index.html#autotoc_md1", null ]
       ] ]
     ] ],
     [ "Log Message Formatting Flags", "index.html#format_flags_sec", [
@@ -28,7 +28,7 @@ var index =
       [ "Advanced Path Handling", "index.html#advanced_path_handling", null ]
     ] ],
     [ "Shortened Logging Macros", "index.html#short_macros", [
-      [ "Available TRACE-level macros:", "index.html#autotoc_md5", null ]
+      [ "Available TRACE-level macros:", "index.html#autotoc_md2", null ]
     ] ],
     [ "Configuration Macros", "index.html#config_macros", null ],
     [ "Custom Logger Backend and Formatter", "index.html#custom_backend_sec", [

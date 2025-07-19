@@ -14,8 +14,6 @@ var hierarchy =
     [ "logit::ILogger", "classlogit_1_1ILogger.html", [
       [ "logit::ConsoleLogger", "classlogit_1_1ConsoleLogger.html", null ],
       [ "logit::FileLogger", "classlogit_1_1FileLogger.html", null ],
-      [ "logit::FileLogger", "classlogit_1_1FileLogger.html", null ],
-      [ "logit::UniqueFileLogger", "classlogit_1_1UniqueFileLogger.html", null ],
       [ "logit::UniqueFileLogger", "classlogit_1_1UniqueFileLogger.html", null ]
     ] ],
     [ "logit::Logger", "classlogit_1_1Logger.html", null ],

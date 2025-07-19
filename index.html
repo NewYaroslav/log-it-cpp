@@ -7,6 +7,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LogIt++: LogIt++ Library</title>
+<link rel="icon" href="logo.png" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,7 +39,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
+   <div id="projectname">LogIt++
    </div>
   </td>
  </tr>
@@ -110,8 +111,7 @@ $(function(){initNavTree('index.html',''); initResizable(true); });
   <div class="headertitle"><div class="title">LogIt++ Library </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Defines the base path used for log file paths. If <code>LOGIT_BASE_PATH</code> is not defined or is empty ({}), the full path from <code>__FILE__</code> will be used for log file paths.  </p>
-<p>Version: 1.0.0</p>
+<div class="textblock"><p>Version: 1.0.0</p>
 <h1><a class="anchor" id="intro_sec"></a>
 Introduction</h1>
 <p><code>LogIt++</code> is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations. The library combines the simplicity of macro-based logging similar to <b>IceCream-Cpp</b> and the configurability of logging backends and formats like <b>spdlog</b>.</p>
@@ -127,34 +127,41 @@ Flexible Log Formatting</h2>
 <div class="line"><span class="keywordflow">try</span> {</div>
 <div class="line">    <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;An example runtime error&quot;</span>);</div>
 <div class="line">} <span class="keywordflow">catch</span> (<span class="keyword">const</span> std::exception&amp; ex) {</div>
-<div class="line">    LOGIT_FATAL(ex);</div>
+<div class="line">    <a class="code hl_define" href="LogMacros_8hpp.html#a35087d4275bebb9daa9c649bf49dbe49">LOGIT_FATAL</a>(ex);</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Output:</span></div>
 <div class="line">&gt; 23:59:59.128 | An example runtime error</div>
+<div class="ttc" id="aLogMacros_8hpp_html_a35087d4275bebb9daa9c649bf49dbe49"><div class="ttname"><a href="LogMacros_8hpp.html#a35087d4275bebb9daa9c649bf49dbe49">LOGIT_FATAL</a></div><div class="ttdeci">#define LOGIT_FATAL(...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00250">LogMacros.hpp:250</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="macro_logging"></a>
 Logging with Macros</h2>
 <p>Log variables and messages easily using macros. Simply select the appropriate macro and pass variables or arguments.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">float</span> someFloat = 123.456f;</div>
 <div class="line"><span class="keywordtype">int</span> someInt = 789;</div>
-<div class="line">LOGIT_INFO(someFloat, someInt);</div>
+<div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a>(someFloat, someInt);</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">auto</span> now = std::chrono::system_clock::now();</div>
-<div class="line">LOGIT_PRINT_INFO(<span class="stringliteral">&quot;TimePoint example: &quot;</span>, now);</div>
+<div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a>(<span class="stringliteral">&quot;TimePoint example: &quot;</span>, now);</div>
+<div class="ttc" id="aLogMacros_8hpp_html_a1fb41700b3f6e73a90029bdf15f1877d"><div class="ttname"><a href="LogMacros_8hpp.html#a1fb41700b3f6e73a90029bdf15f1877d">LOGIT_INFO</a></div><div class="ttdeci">#define LOGIT_INFO(...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00170">LogMacros.hpp:170</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_ad6d0c4cfef76b6b306fb591d9d7f1ddb"><div class="ttname"><a href="LogMacros_8hpp.html#ad6d0c4cfef76b6b306fb591d9d7f1ddb">LOGIT_PRINT_INFO</a></div><div class="ttdeci">#define LOGIT_PRINT_INFO(...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00176">LogMacros.hpp:176</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="multiple_backends"></a>
 Support for Multiple Backends</h2>
 <p>Easily configure loggers for output to the console and files. Optionally, add support for sending messages to servers or databases by creating custom backends.</p>
 <div class="fragment"><div class="line"><span class="comment">// Adding three backends: console, file, and unique file loggers</span></div>
-<div class="line">LOGIT_ADD_CONSOLE_DEFAULT();</div>
-<div class="line">LOGIT_ADD_FILE_LOGGER_DEFAULT();</div>
-<div class="line">LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE();</div>
+<div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#a0b84a7b443921e0390272d98960576e7">LOGIT_ADD_CONSOLE_DEFAULT</a>();</div>
+<div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#a36534e7071e78d9aa0762cbc38898282">LOGIT_ADD_FILE_LOGGER_DEFAULT</a>();</div>
+<div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#a991d97ec74c5a577e67bcea0a91b95c5">LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE</a>();</div>
+<div class="ttc" id="aLogMacros_8hpp_html_a0b84a7b443921e0390272d98960576e7"><div class="ttname"><a href="LogMacros_8hpp.html#a0b84a7b443921e0390272d98960576e7">LOGIT_ADD_CONSOLE_DEFAULT</a></div><div class="ttdeci">#define LOGIT_ADD_CONSOLE_DEFAULT()</div><div class="ttdoc">Macro for adding the default console logger.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00748">LogMacros.hpp:748</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a36534e7071e78d9aa0762cbc38898282"><div class="ttname"><a href="LogMacros_8hpp.html#a36534e7071e78d9aa0762cbc38898282">LOGIT_ADD_FILE_LOGGER_DEFAULT</a></div><div class="ttdeci">#define LOGIT_ADD_FILE_LOGGER_DEFAULT()</div><div class="ttdoc">Macro for adding the default file logger.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00794">LogMacros.hpp:794</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a991d97ec74c5a577e67bcea0a91b95c5"><div class="ttname"><a href="LogMacros_8hpp.html#a991d97ec74c5a577e67bcea0a91b95c5">LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE</a></div><div class="ttdeci">#define LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE()</div><div class="ttdoc">Macro for adding the default unique file logger in single_mode.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00860">LogMacros.hpp:860</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="async_logging"></a>
 Asynchronous Logging</h2>
 <p>Improve application performance with asynchronous logging. All loggers handle messages in a separate thread by default.</p>
 <h2><a class="anchor" id="stream_logging"></a>
 Stream-Based Logging</h2>
 <p>Use stream operators for complex messages.</p>
-<div class="fragment"><div class="line">LOGIT_STREAM_INFO() &lt;&lt; <span class="stringliteral">&quot;Stream-based info logging with short macro. Integer value: &quot;</span> &lt;&lt; 123;</div>
+<div class="fragment"><div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#ab97083df153984a3845205c17c3db318">LOGIT_STREAM_INFO</a>() &lt;&lt; <span class="stringliteral">&quot;Stream-based info logging with short macro. Integer value: &quot;</span> &lt;&lt; 123;</div>
+<div class="ttc" id="aLogMacros_8hpp_html_ab97083df153984a3845205c17c3db318"><div class="ttname"><a href="LogMacros_8hpp.html#ab97083df153984a3845205c17c3db318">LOGIT_STREAM_INFO</a></div><div class="ttdeci">#define LOGIT_STREAM_INFO()</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00042">LogMacros.hpp:42</a></div></div>
 </div><!-- fragment --><h2><a class="anchor" id="extensibility"></a>
 Extensibility</h2>
 <p>Create custom loggers and formatters to meet your specific requirements.</p>
@@ -169,8 +176,9 @@ Extensibility</h2>
 <div class="line">    ~CustomLogger() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">LOGIT_ADD_LOGGER(CustomLogger, (), <a class="code hl_class" href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a>, (<span class="stringliteral">&quot;%v&quot;</span>));</div>
-<div class="ttc" id="aclasslogit_1_1ILogger_html"><div class="ttname"><a href="classlogit_1_1ILogger.html">logit::ILogger</a></div><div class="ttdoc">Interface for loggers that handle log message output.</div><div class="ttdef"><b>Definition</b> <a href="ILogger_8hpp_source.html#l00027">ILogger.hpp:27</a></div></div>
+<div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#ab5e8261127ffa4f6a6888411195ecfc9">LOGIT_ADD_LOGGER</a>(CustomLogger, (), <a class="code hl_class" href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a>, (<span class="stringliteral">&quot;%v&quot;</span>));</div>
+<div class="ttc" id="aLogMacros_8hpp_html_ab5e8261127ffa4f6a6888411195ecfc9"><div class="ttname"><a href="LogMacros_8hpp.html#ab5e8261127ffa4f6a6888411195ecfc9">LOGIT_ADD_LOGGER</a></div><div class="ttdeci">#define LOGIT_ADD_LOGGER(logger_type, logger_args, formatter_type, formatter_args)</div><div class="ttdoc">Macro for adding a logger with a specific formatter.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00705">LogMacros.hpp:705</a></div></div>
+<div class="ttc" id="aclasslogit_1_1ILogger_html"><div class="ttname"><a href="classlogit_1_1ILogger.html">logit::ILogger</a></div><div class="ttdoc">Interface for loggers that handle log message output.</div><div class="ttdef"><b>Definition</b> <a href="ILogger_8hpp_source.html#l00015">ILogger.hpp:15</a></div></div>
 <div class="ttc" id="aclasslogit_1_1ILogger_html_a311546f6633365365599eea2b23cc2bd"><div class="ttname"><a href="classlogit_1_1ILogger.html#a311546f6633365365599eea2b23cc2bd">logit::ILogger::log</a></div><div class="ttdeci">virtual void log(const LogRecord &amp;record, const std::string &amp;message)=0</div><div class="ttdoc">Logs a message.</div></div>
 <div class="ttc" id="aclasslogit_1_1SimpleLogFormatter_html"><div class="ttname"><a href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a></div><div class="ttdoc">A simple log formatter that formats log messages based on a user-defined pattern.</div><div class="ttdef"><b>Definition</b> <a href="SimpleLogFormatter_8hpp_source.html#l00019">SimpleLogFormatter.hpp:19</a></div></div>
 <div class="ttc" id="astructlogit_1_1LogRecord_html"><div class="ttname"><a href="structlogit_1_1LogRecord.html">logit::LogRecord</a></div><div class="ttdoc">Stores log metadata and content.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00014">LogRecord.hpp:14</a></div></div>
@@ -182,7 +190,7 @@ Usage</h1>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> <a class="code hl_function" href="example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a>() {</div>
 <div class="line">    <span class="comment">// Initialize the logger with default console output</span></div>
-<div class="line">    LOGIT_ADD_CONSOLE_DEFAULT();</div>
+<div class="line">    <a class="code hl_define" href="LogMacros_8hpp.html#a0b84a7b443921e0390272d98960576e7">LOGIT_ADD_CONSOLE_DEFAULT</a>();</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">float</span> a = 123.456f;</div>
 <div class="line">    <span class="keywordtype">int</span> b = 789;</div>
@@ -202,44 +210,48 @@ Usage</h1>
 <div class="line">    LOG_F(<span class="stringliteral">&quot;Fatal error. Terminating application.&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Conditional logging</span></div>
-<div class="line">    LOGIT_INFO_IF(b &lt; 0, <span class="stringliteral">&quot;Value of b is negative&quot;</span>);</div>
-<div class="line">    LOGIT_WARN_IF(a &gt; 100, <span class="stringliteral">&quot;Value of a exceeds 100&quot;</span>);</div>
+<div class="line">    <a class="code hl_define" href="LogMacros_8hpp.html#a17ef9ac072ae417ecfd4fff7c1aa79ac">LOGIT_INFO_IF</a>(b &lt; 0, <span class="stringliteral">&quot;Value of b is negative&quot;</span>);</div>
+<div class="line">    <a class="code hl_define" href="LogMacros_8hpp.html#ae285f974f6218755066c11483f6b3f31">LOGIT_WARN_IF</a>(a &gt; 100, <span class="stringliteral">&quot;Value of a exceeds 100&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Stream-based logging with short and long names</span></div>
 <div class="line">    LOG_S_INFO() &lt;&lt; <span class="stringliteral">&quot;Logging a float: &quot;</span> &lt;&lt; a &lt;&lt; <span class="stringliteral">&quot;, and an int: &quot;</span> &lt;&lt; b;</div>
 <div class="line">    LOG_S_ERROR() &lt;&lt; <span class="stringliteral">&quot;Error occurred in the system&quot;</span>;</div>
-<div class="line">    LOGIT_STREAM_WARN() &lt;&lt; <span class="stringliteral">&quot;Warning: potential issue detected with value: &quot;</span> &lt;&lt; someStr;</div>
+<div class="line">    <a class="code hl_define" href="LogMacros_8hpp.html#a658290ef063a518a1b8919c415c79d5e">LOGIT_STREAM_WARN</a>() &lt;&lt; <span class="stringliteral">&quot;Warning: potential issue detected with value: &quot;</span> &lt;&lt; someStr;</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Using LOGIT_TRACE for tracing function execution</span></div>
 <div class="line">    LOG_TRACE0();  <span class="comment">// Trace without arguments</span></div>
 <div class="line">    LOG_T(<span class="stringliteral">&quot;Entering main function with variable&quot;</span>, a);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// Wait for all asynchronous logs to be processed</span></div>
-<div class="line">    LOGIT_WAIT();</div>
+<div class="line">    <a class="code hl_define" href="LogMacros_8hpp.html#a12684b2496a4438b7a97301261c08f97">LOGIT_WAIT</a>();</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="aLogIt_8hpp_html"><div class="ttname"><a href="LogIt_8hpp.html">LogIt.hpp</a></div><div class="ttdoc">Main header file for the LogIt++ library.</div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a12684b2496a4438b7a97301261c08f97"><div class="ttname"><a href="LogMacros_8hpp.html#a12684b2496a4438b7a97301261c08f97">LOGIT_WAIT</a></div><div class="ttdeci">#define LOGIT_WAIT()</div><div class="ttdoc">Macro for waiting for all asynchronous loggers to finish processing.</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00963">LogMacros.hpp:963</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a17ef9ac072ae417ecfd4fff7c1aa79ac"><div class="ttname"><a href="LogMacros_8hpp.html#a17ef9ac072ae417ecfd4fff7c1aa79ac">LOGIT_INFO_IF</a></div><div class="ttdeci">#define LOGIT_INFO_IF(condition,...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00287">LogMacros.hpp:287</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_a658290ef063a518a1b8919c415c79d5e"><div class="ttname"><a href="LogMacros_8hpp.html#a658290ef063a518a1b8919c415c79d5e">LOGIT_STREAM_WARN</a></div><div class="ttdeci">#define LOGIT_STREAM_WARN()</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00043">LogMacros.hpp:43</a></div></div>
+<div class="ttc" id="aLogMacros_8hpp_html_ae285f974f6218755066c11483f6b3f31"><div class="ttname"><a href="LogMacros_8hpp.html#ae285f974f6218755066c11483f6b3f31">LOGIT_WARN_IF</a></div><div class="ttdeci">#define LOGIT_WARN_IF(condition,...)</div><div class="ttdef"><b>Definition</b> <a href="LogMacros_8hpp_source.html#l00307">LogMacros.hpp:307</a></div></div>
 <div class="ttc" id="aexample__logit__basic_8cpp_html_ae66f6b31b5ad750f1fe042a706a4e3d4"><div class="ttname"><a href="example__logit__basic_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4">main</a></div><div class="ttdeci">int main()</div><div class="ttdef"><b>Definition</b> <a href="example__logit__basic_8cpp_source.html#l00070">example_logit_basic.cpp:70</a></div></div>
 </div><!-- fragment --><h1><a class="anchor" id="log_formatting_sec"></a>
 Customizing Log Formats</h1>
 <p>LogIt++ supports customizable log message formatting using patterns that define the appearance of each log message. You can specify patterns either through macros or by providing them directly when adding logger backends.</p>
 <h2><a class="anchor" id="pattern_example"></a>
 Examples of Formatting Patterns</h2>
-<h3><a class="anchor" id="autotoc_md3"></a>
+<h3><a class="anchor" id="autotoc_md0"></a>
 Example for Setting a Custom Console Logger Format</h3>
 <p>You can define a custom format for the console logger as follows:</p>
-<div class="fragment"><div class="line">LOGIT_ADD_LOGGER(</div>
+<div class="fragment"><div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#ab5e8261127ffa4f6a6888411195ecfc9">LOGIT_ADD_LOGGER</a>(</div>
 <div class="line">    <a class="code hl_class" href="classlogit_1_1ConsoleLogger.html">logit::ConsoleLogger</a>, (), </div>
 <div class="line">    <a class="code hl_class" href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a>, </div>
 <div class="line">    (<span class="stringliteral">&quot;%Y-%m-%d %H:%M:%S.%e [%l] %^%N(%g:%#)%v%$&quot;</span>)</div>
 <div class="line">);</div>
 <div class="ttc" id="aclasslogit_1_1ConsoleLogger_html"><div class="ttname"><a href="classlogit_1_1ConsoleLogger.html">logit::ConsoleLogger</a></div><div class="ttdoc">Outputs log messages to the console with optional ANSI color support.</div><div class="ttdef"><b>Definition</b> <a href="ConsoleLogger_8hpp_source.html#l00032">ConsoleLogger.hpp:32</a></div></div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md4"></a>
+</div><!-- fragment --><h3><a class="anchor" id="autotoc_md1"></a>
 Example Using Macros for Simplicity</h3>
 <p>Alternatively, use macros to specify a pattern:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#define LOGIT_CONSOLE_PATTERN &quot;%H:%M:%S.%e | %^%N([%!g:%#])%v%$&quot;</span></div>
-<div class="line">LOGIT_ADD_CONSOLE_DEFAULT();</div>
+<div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#a0b84a7b443921e0390272d98960576e7">LOGIT_ADD_CONSOLE_DEFAULT</a>();</div>
 </div><!-- fragment --><p>In both cases, the logger will automatically replace placeholders in the pattern with corresponding data, such as:</p>
 <div class="fragment"><div class="line">23:59:59.128 | path/to/file.cpp:123 A sample log message</div>
 </div><!-- fragment --><h1><a class="anchor" id="format_flags_sec"></a>
@@ -338,7 +350,7 @@ Advanced Path Handling</h2>
 <h1><a class="anchor" id="short_macros"></a>
 Shortened Logging Macros</h1>
 <p><code>LogIt++</code> provides shortened versions of logging macros when <code>LOGIT_SHORT_NAME</code> is defined. These macros allow for concise logging across different log levels, including both standard and stream-based logging.</p>
-<h2><a class="anchor" id="autotoc_md5"></a>
+<h2><a class="anchor" id="autotoc_md2"></a>
 Available TRACE-level macros:</h2>
 <ul>
 <li><b>Basic logging</b>:<ul>
@@ -390,8 +402,9 @@ Available TRACE-level macros:</h2>
 Configuration Macros</h1>
 <p>LogIt++ provides several macros that allow for customization and configuration. Below are the available configuration macros:</p>
 <ul>
-<li><b>LOGIT_BASE_PATH</b>: </li>
+<li><b>LOGIT_BASE_PATH</b>:</li>
 </ul>
+<p>Defines the base path used for log file paths. If <code>LOGIT_BASE_PATH</code> is not defined or is empty ({}), the full path from <code>__FILE__</code> will be used for log file paths.</p>
 <div class="fragment"><div class="line"><span class="comment">// Defines the base path for project folder.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_BASE_PATH &quot;/path/to/your/project&quot;</span></div>
 </div><!-- fragment --><ul>
@@ -422,9 +435,8 @@ Configuration Macros</h1>
 <div class="fragment"><div class="line"><span class="comment">// Customize timestamp calculation if needed.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_CURRENT_TIMESTAMP_MS() my_custom_timestamp_function()</span></div>
 </div><!-- fragment --><ul>
-<li><b>LOGIT_CONSOLE_PATTERN</b>:</li>
+<li><b>LOGIT_CONSOLE_PATTERN</b>: Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to <code>%H:%M:%S.%e | %^N([%50!g:%#])%v%$</code>.</li>
 </ul>
-<p>Defines the default log pattern for the console logger. If <code>LOGIT_CONSOLE_PATTERN</code> is not defined, it defaults to <code>%H:%M:%S.%e | %^N([%50!g:%#])%v%$</code>.</p>
 <div class="fragment"><div class="line"><span class="comment">// Customize the console log message pattern.</span></div>
 <div class="line"><span class="preprocessor">#define LOGIT_CONSOLE_PATTERN &quot;%H:%M:%S.%e | %v&quot;</span></div>
 </div><!-- fragment --><ul>
@@ -519,7 +531,7 @@ Custom Logger Example</h2>
 <div class="line">};</div>
 <div class="ttc" id="aclasslogit_1_1ILogger_html_a392e5820b55b8576c2aa5b12ff1f0b69"><div class="ttname"><a href="classlogit_1_1ILogger.html#a392e5820b55b8576c2aa5b12ff1f0b69">logit::ILogger::wait</a></div><div class="ttdeci">virtual void wait()=0</div><div class="ttdoc">Waits for all asynchronous logging operations to complete.</div></div>
 </div><!-- fragment --><p>This <code>FileLogger</code> class writes log messages to a specified file. You can add this logger to your logging system like this:</p>
-<div class="fragment"><div class="line">LOGIT_ADD_LOGGER(</div>
+<div class="fragment"><div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#ab5e8261127ffa4f6a6888411195ecfc9">LOGIT_ADD_LOGGER</a>(</div>
 <div class="line">    FileLogger, (<span class="stringliteral">&quot;logfile.txt&quot;</span>),</div>
 <div class="line">    <a class="code hl_class" href="classlogit_1_1SimpleLogFormatter.html">logit::SimpleLogFormatter</a>, ());</div>
 <div class="line"> </div>
@@ -561,7 +573,7 @@ Custom Formatter Example</h2>
 <div class="ttc" id="astructlogit_1_1LogRecord_html_a97d0a57c3ef0b4484dd2a1f3b3008e0e"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a97d0a57c3ef0b4484dd2a1f3b3008e0e">logit::LogRecord::file</a></div><div class="ttdeci">const std::string file</div><div class="ttdoc">Source file name.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00017">LogRecord.hpp:17</a></div></div>
 <div class="ttc" id="astructlogit_1_1LogRecord_html_aae53e723bda38459ba56f41a1971d84b"><div class="ttname"><a href="structlogit_1_1LogRecord.html#aae53e723bda38459ba56f41a1971d84b">logit::LogRecord::format</a></div><div class="ttdeci">const std::string format</div><div class="ttdoc">Format string for the message.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00020">LogRecord.hpp:20</a></div></div>
 </div><!-- fragment --><p>This <code>JsonLogFormatter</code> formats log messages as JSON objects. You can combine it with any logger, including the <code>FileLogger</code>, as shown below:</p>
-<div class="fragment"><div class="line">LOGIT_ADD_LOGGER(</div>
+<div class="fragment"><div class="line"><a class="code hl_define" href="LogMacros_8hpp.html#ab5e8261127ffa4f6a6888411195ecfc9">LOGIT_ADD_LOGGER</a>(</div>
 <div class="line">    FileLogger, (<span class="stringliteral">&quot;logfile.json&quot;</span>),</div>
 <div class="line">    logit::JsonLogFormatter, ());</div>
 <div class="line"> </div>

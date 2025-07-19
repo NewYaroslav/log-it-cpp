@@ -7,6 +7,5 @@ var path__utils_8hpp =
     [ "logit::get_list_files", "namespacelogit.html#a0ba53ba88f1916d46b8da7847f734d67", null ],
     [ "logit::is_file", "namespacelogit.html#a5a3ad31d527c2646fee808a9072a0df2", null ],
     [ "logit::make_relative", "namespacelogit.html#a468afe9332af7c19b13e6fa9e6cb0769", null ],
-    [ "logit::split_path", "namespacelogit.html#a668cc1acca900bc9ad968b421d31bfa3", null ],
-    [ "logit::fs", "namespacelogit.html#aba989d2f4975a3c1dc3ec9ba2adc959f", null ]
+    [ "logit::split_path", "namespacelogit.html#a668cc1acca900bc9ad968b421d31bfa3", null ]
 ];

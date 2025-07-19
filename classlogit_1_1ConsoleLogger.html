@@ -7,6 +7,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LogIt++: logit::ConsoleLogger Class Reference</title>
+<link rel="icon" href="logo.png" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,7 +39,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
+   <div id="projectname">LogIt++
    </div>
   </td>
  </tr>
@@ -110,7 +111,6 @@ $(function(){initNavTree('classlogit_1_1ConsoleLogger.html',''); initResizable(t
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pri-types">Private Types</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classlogit_1_1ConsoleLogger-members.html">List of all members</a>  </div>
@@ -152,10 +152,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a239983ca0f22c03cea4693d86edf38d9" id="r_a239983ca0f22c03cea4693d86edf38d9"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a239983ca0f22c03cea4693d86edf38d9">~ConsoleLogger</a> ()=default</td></tr>
 <tr class="separator:a239983ca0f22c03cea4693d86edf38d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a513fbd92039e74b286f093db15ed53f1" id="r_a513fbd92039e74b286f093db15ed53f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a513fbd92039e74b286f093db15ed53f1">set_config</a> (const <a class="el" href="structlogit_1_1ConsoleLogger_1_1Config.html">Config</a> &amp;config)</td></tr>
-<tr class="memdesc:a513fbd92039e74b286f093db15ed53f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the logger configuration. This method sets the logger's configuration and ensures thread safety with a mutex lock.  <br /></td></tr>
+<tr class="memdesc:a513fbd92039e74b286f093db15ed53f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the logger configuration.  <br /></td></tr>
 <tr class="separator:a513fbd92039e74b286f093db15ed53f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9785f03ffe9590676b9bcea18a4f59a2" id="r_a9785f03ffe9590676b9bcea18a4f59a2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structlogit_1_1ConsoleLogger_1_1Config.html">Config</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9785f03ffe9590676b9bcea18a4f59a2">get_config</a> ()</td></tr>
-<tr class="memdesc:a9785f03ffe9590676b9bcea18a4f59a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current logger configuration. Returns the logger's configuration with thread safety ensured.  <br /></td></tr>
+<tr class="memdesc:a9785f03ffe9590676b9bcea18a4f59a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current logger configuration.  <br /></td></tr>
 <tr class="separator:a9785f03ffe9590676b9bcea18a4f59a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ac46bf736ebe95bfe874041a62e4ca9" id="r_a0ac46bf736ebe95bfe874041a62e4ca9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ac46bf736ebe95bfe874041a62e4ca9">log</a> (const <a class="el" href="structlogit_1_1LogRecord.html">LogRecord</a> &amp;record, const std::string &amp;message) override</td></tr>
 <tr class="memdesc:a0ac46bf736ebe95bfe874041a62e4ca9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message to the console with thread safety.  <br /></td></tr>
@@ -176,58 +176,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a11f8fd61070cc6b33ca1979a3d37d1ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the minimal log level for this logger.  <br /></td></tr>
 <tr class="separator:a11f8fd61070cc6b33ca1979a3d37d1ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7c7d01b597d2b997e2209719071954f" id="r_ae7c7d01b597d2b997e2209719071954f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae7c7d01b597d2b997e2209719071954f">wait</a> () override</td></tr>
-<tr class="memdesc:ae7c7d01b597d2b997e2209719071954f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for all asynchronous tasks to complete. If asynchronous logging is enabled, waits for all pending log messages to be written.  <br /></td></tr>
+<tr class="memdesc:ae7c7d01b597d2b997e2209719071954f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for all asynchronous tasks to complete.  <br /></td></tr>
 <tr class="separator:ae7c7d01b597d2b997e2209719071954f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classlogit_1_1ILogger"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classlogit_1_1ILogger')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classlogit_1_1ILogger.html">logit::ILogger</a></td></tr>
 <tr class="memitem:a7a261305932aebeaeffa26469b11f18f inherit pub_methods_classlogit_1_1ILogger" id="r_a7a261305932aebeaeffa26469b11f18f"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classlogit_1_1ILogger.html#a7a261305932aebeaeffa26469b11f18f">~ILogger</a> ()=default</td></tr>
 <tr class="separator:a7a261305932aebeaeffa26469b11f18f inherit pub_methods_classlogit_1_1ILogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
-Private Types</h2></td></tr>
-<tr class="memitem:af6a884e3bb02bacd710f3cda1941f0d0" id="r_af6a884e3bb02bacd710f3cda1941f0d0"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a> { <br />
-&#160;&#160;<a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0ae90dfb84e30edf611e326eeb04d680de">Black</a> = 0
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a877716336e4eb22ac67faaa9c2b86635">DarkBlue</a> = 1
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0af780aab6295a2f368ac69a514f8b4605">DarkGreen</a> = 2
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a85b1ae66e65b490f35c5e8b725e7049f">DarkCyan</a> = 3
-, <br />
-&#160;&#160;<a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a8746d21f8164452063398744f06307dd">DarkRed</a> = 4
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0adf1b1322cf6703efd9885b0651ddb57a">DarkMagenta</a> = 5
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a42d873bb34e1055e40aad0ec45039e8b">DarkYellow</a> = 6
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a994ae1d9731cebe455aff211bcb25b93">Gray</a> = 7
-, <br />
-&#160;&#160;<a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a91e93fc984985226ad4d319a4e4134ab">DarkGray</a> = 8
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a9594eec95be70e7b1710f730fdda33d9">Blue</a> = 9
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0ad382816a3cbeed082c9e216e7392eed1">Green</a> = 10
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a023c239d2f2538f140a20e72c7b73f20">Cyan</a> = 11
-, <br />
-&#160;&#160;<a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0aee38e4d5dd68c4e440825018d549cb47">Red</a> = 12
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0ab91cc2c1416fcca942b61c7ac5b1a9ac">Magenta</a> = 13
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a51e6cd92b6c45f9affdc158ecca2b8b8">Yellow</a> = 14
-, <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0a25a81701fbfa4a1efdf660a950c1d006">White</a> = 15
-<br />
- }</td></tr>
-<tr class="separator:af6a884e3bb02bacd710f3cda1941f0d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a5be20527f3b9254281d73c7ff0cac364" id="r_a5be20527f3b9254281d73c7ff0cac364"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5be20527f3b9254281d73c7ff0cac364">handle_ansi_colors_windows</a> (const std::string &amp;message) const</td></tr>
-<tr class="memdesc:a5be20527f3b9254281d73c7ff0cac364"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle ANSI color codes in the message for Windows console.  <br /></td></tr>
-<tr class="separator:a5be20527f3b9254281d73c7ff0cac364"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74178269f9e6e5cba9f7a3b03453738d" id="r_a74178269f9e6e5cba9f7a3b03453738d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a74178269f9e6e5cba9f7a3b03453738d">apply_color_from_ansi_code</a> (const std::string &amp;ansi_code, HANDLE handle_stdout) const</td></tr>
-<tr class="memdesc:a74178269f9e6e5cba9f7a3b03453738d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Apply color based on ANSI code for Windows console.  <br /></td></tr>
-<tr class="separator:a74178269f9e6e5cba9f7a3b03453738d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a432984aaf03e1ee6c3b96ad84f6caab6" id="r_a432984aaf03e1ee6c3b96ad84f6caab6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a432984aaf03e1ee6c3b96ad84f6caab6">text_color_to_win_color</a> (const <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> &amp;color) const</td></tr>
-<tr class="memdesc:a432984aaf03e1ee6c3b96ad84f6caab6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> to <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a>.  <br /></td></tr>
-<tr class="separator:a432984aaf03e1ee6c3b96ad84f6caab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed9f94ecaadde2050501a8020529ee73" id="r_aed9f94ecaadde2050501a8020529ee73"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed9f94ecaadde2050501a8020529ee73">text_color_to_css</a> (<a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> color) const</td></tr>
-<tr class="memdesc:aed9f94ecaadde2050501a8020529ee73"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> to a CSS color name for Emscripten console output.  <br /></td></tr>
-<tr class="separator:aed9f94ecaadde2050501a8020529ee73"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae8cdf7647ced0cce8f414152400af9a" id="r_aae8cdf7647ced0cce8f414152400af9a"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae8cdf7647ced0cce8f414152400af9a">css_color_from_ansi</a> (const std::string &amp;code) const</td></tr>
-<tr class="memdesc:aae8cdf7647ced0cce8f414152400af9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map ANSI code to a CSS color name.  <br /></td></tr>
-<tr class="separator:aae8cdf7647ced0cce8f414152400af9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2238b34adaede44b04c0475921be87b0" id="r_a2238b34adaede44b04c0475921be87b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2238b34adaede44b04c0475921be87b0">handle_ansi_colors_emscripten</a> (const std::string &amp;message) const</td></tr>
-<tr class="memdesc:a2238b34adaede44b04c0475921be87b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle ANSI color codes when compiling with Emscripten.  <br /></td></tr>
-<tr class="separator:a2238b34adaede44b04c0475921be87b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afaa7f2349fe56e9fc22b9a979016addc" id="r_afaa7f2349fe56e9fc22b9a979016addc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afaa7f2349fe56e9fc22b9a979016addc">reset_color</a> ()</td></tr>
 <tr class="memdesc:afaa7f2349fe56e9fc22b9a979016addc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the console text color to the default.  <br /></td></tr>
 <tr class="separator:afaa7f2349fe56e9fc22b9a979016addc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -261,50 +217,7 @@ Private Attributes</h2></td></tr>
 </ul>
 
 <p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00032">32</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
-</div><h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="af6a884e3bb02bacd710f3cda1941f0d0" name="af6a884e3bb02bacd710f3cda1941f0d0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6a884e3bb02bacd710f3cda1941f0d0">&#9670;&#160;</a></span>WinColor</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">logit::ConsoleLogger::WinColor</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0ae90dfb84e30edf611e326eeb04d680de" name="af6a884e3bb02bacd710f3cda1941f0d0ae90dfb84e30edf611e326eeb04d680de"></a>Black&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a877716336e4eb22ac67faaa9c2b86635" name="af6a884e3bb02bacd710f3cda1941f0d0a877716336e4eb22ac67faaa9c2b86635"></a>DarkBlue&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0af780aab6295a2f368ac69a514f8b4605" name="af6a884e3bb02bacd710f3cda1941f0d0af780aab6295a2f368ac69a514f8b4605"></a>DarkGreen&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a85b1ae66e65b490f35c5e8b725e7049f" name="af6a884e3bb02bacd710f3cda1941f0d0a85b1ae66e65b490f35c5e8b725e7049f"></a>DarkCyan&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a8746d21f8164452063398744f06307dd" name="af6a884e3bb02bacd710f3cda1941f0d0a8746d21f8164452063398744f06307dd"></a>DarkRed&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0adf1b1322cf6703efd9885b0651ddb57a" name="af6a884e3bb02bacd710f3cda1941f0d0adf1b1322cf6703efd9885b0651ddb57a"></a>DarkMagenta&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a42d873bb34e1055e40aad0ec45039e8b" name="af6a884e3bb02bacd710f3cda1941f0d0a42d873bb34e1055e40aad0ec45039e8b"></a>DarkYellow&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a994ae1d9731cebe455aff211bcb25b93" name="af6a884e3bb02bacd710f3cda1941f0d0a994ae1d9731cebe455aff211bcb25b93"></a>Gray&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a91e93fc984985226ad4d319a4e4134ab" name="af6a884e3bb02bacd710f3cda1941f0d0a91e93fc984985226ad4d319a4e4134ab"></a>DarkGray&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a9594eec95be70e7b1710f730fdda33d9" name="af6a884e3bb02bacd710f3cda1941f0d0a9594eec95be70e7b1710f730fdda33d9"></a>Blue&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0ad382816a3cbeed082c9e216e7392eed1" name="af6a884e3bb02bacd710f3cda1941f0d0ad382816a3cbeed082c9e216e7392eed1"></a>Green&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a023c239d2f2538f140a20e72c7b73f20" name="af6a884e3bb02bacd710f3cda1941f0d0a023c239d2f2538f140a20e72c7b73f20"></a>Cyan&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0aee38e4d5dd68c4e440825018d549cb47" name="af6a884e3bb02bacd710f3cda1941f0d0aee38e4d5dd68c4e440825018d549cb47"></a>Red&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0ab91cc2c1416fcca942b61c7ac5b1a9ac" name="af6a884e3bb02bacd710f3cda1941f0d0ab91cc2c1416fcca942b61c7ac5b1a9ac"></a>Magenta&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a51e6cd92b6c45f9affdc158ecca2b8b8" name="af6a884e3bb02bacd710f3cda1941f0d0a51e6cd92b6c45f9affdc158ecca2b8b8"></a>Yellow&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="af6a884e3bb02bacd710f3cda1941f0d0a25a81701fbfa4a1efdf660a950c1d006" name="af6a884e3bb02bacd710f3cda1941f0d0a25a81701fbfa4a1efdf660a950c1d006"></a>White&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00197">197</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
-
-</div>
-</div>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0b14993cf1a3ac55c3d2a787d869b68a" name="a0b14993cf1a3ac55c3d2a787d869b68a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0b14993cf1a3ac55c3d2a787d869b68a">&#9670;&#160;</a></span>ConsoleLogger() <span class="overload">[1/3]</span></h2>
 
@@ -430,75 +343,6 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a74178269f9e6e5cba9f7a3b03453738d" name="a74178269f9e6e5cba9f7a3b03453738d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74178269f9e6e5cba9f7a3b03453738d">&#9670;&#160;</a></span>apply_color_from_ansi_code()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void logit::ConsoleLogger::apply_color_from_ansi_code </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>ansi_code</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">HANDLE</td>          <td class="paramname"><span class="paramname"><em>handle_stdout</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Apply color based on ANSI code for Windows console. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">ansi_code</td><td>The ANSI code string. </td></tr>
-    <tr><td class="paramname">handle_stdout</td><td>The console handle. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00257">257</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
-
-</div>
-</div>
-<a id="aae8cdf7647ced0cce8f414152400af9a" name="aae8cdf7647ced0cce8f414152400af9a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae8cdf7647ced0cce8f414152400af9a">&#9670;&#160;</a></span>css_color_from_ansi()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string logit::ConsoleLogger::css_color_from_ansi </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>code</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Map ANSI code to a CSS color name. </p>
-
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00336">336</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
-
-</div>
-</div>
 <a id="a9785f03ffe9590676b9bcea18a4f59a2" name="a9785f03ffe9590676b9bcea18a4f59a2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9785f03ffe9590676b9bcea18a4f59a2">&#9670;&#160;</a></span>get_config()</h2>
 
@@ -522,8 +366,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the current logger configuration. Returns the logger's configuration with thread safety ensured. </p>
-<dl class="section return"><dt>Returns</dt><dd>The current configuration. </dd></dl>
+<p>Gets the current logger configuration. </p>
+<p>Returns the logger's configuration with thread safety ensured. </p><dl class="section return"><dt>Returns</dt><dd>The current configuration. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00077">77</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
 
@@ -735,70 +579,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a2238b34adaede44b04c0475921be87b0" name="a2238b34adaede44b04c0475921be87b0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2238b34adaede44b04c0475921be87b0">&#9670;&#160;</a></span>handle_ansi_colors_emscripten()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void logit::ConsoleLogger::handle_ansi_colors_emscripten </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Handle ANSI color codes when compiling with Emscripten. </p>
-
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00360">360</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a5be20527f3b9254281d73c7ff0cac364" name="a5be20527f3b9254281d73c7ff0cac364"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5be20527f3b9254281d73c7ff0cac364">&#9670;&#160;</a></span>handle_ansi_colors_windows()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void logit::ConsoleLogger::handle_ansi_colors_windows </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Handle ANSI color codes in the message for Windows console. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">message</td><td>The message containing ANSI color codes. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00218">218</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
-
-</div>
-</div>
 <a id="a0ac46bf736ebe95bfe874041a62e4ca9" name="a0ac46bf736ebe95bfe874041a62e4ca9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0ac46bf736ebe95bfe874041a62e4ca9">&#9670;&#160;</a></span>log()</h2>
 
@@ -894,8 +674,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the logger configuration. This method sets the logger's configuration and ensures thread safety with a mutex lock. </p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Sets the logger configuration. </p>
+<p>This method sets the logger's configuration and ensures thread safety with a mutex lock. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">config</td><td>The new configuration. </td></tr>
   </table>
@@ -937,71 +717,6 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aed9f94ecaadde2050501a8020529ee73" name="aed9f94ecaadde2050501a8020529ee73"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed9f94ecaadde2050501a8020529ee73">&#9670;&#160;</a></span>text_color_to_css()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char * logit::ConsoleLogger::text_color_to_css </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a></td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> to a CSS color name for Emscripten console output. </p>
-
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00313">313</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
-
-</div>
-</div>
-<a id="a432984aaf03e1ee6c3b96ad84f6caab6" name="a432984aaf03e1ee6c3b96ad84f6caab6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a432984aaf03e1ee6c3b96ad84f6caab6">&#9670;&#160;</a></span>text_color_to_win_color()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a> logit::ConsoleLogger::text_color_to_win_color </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31">TextColor</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>color</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> to <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a>. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">color</td><td>The <a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31" title="Text colors for console output.">TextColor</a> value. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Corresponding <a class="el" href="#af6a884e3bb02bacd710f3cda1941f0d0">WinColor</a> value. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="ConsoleLogger_8hpp_source.html#l00288">288</a> of file <a class="el" href="ConsoleLogger_8hpp_source.html">ConsoleLogger.hpp</a>.</p>
-
-</div>
-</div>
 <a id="ae7c7d01b597d2b997e2209719071954f" name="ae7c7d01b597d2b997e2209719071954f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae7c7d01b597d2b997e2209719071954f">&#9670;&#160;</a></span>wait()</h2>
 
@@ -1025,7 +740,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Waits for all asynchronous tasks to complete. If asynchronous logging is enabled, waits for all pending log messages to be written. </p>
+<p>Waits for all asynchronous tasks to complete. </p>
+<p>If asynchronous logging is enabled, waits for all pending log messages to be written. </p>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a392e5820b55b8576c2aa5b12ff1f0b69">logit::ILogger</a>.</p>
 

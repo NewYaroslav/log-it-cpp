@@ -7,6 +7,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LogIt++: Configuration Macros</title>
+<link rel="icon" href="logo.png" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,7 +39,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
+   <div id="projectname">LogIt++
    </div>
   </td>
  </tr>
@@ -112,14 +113,64 @@ $(function(){initNavTree('group__ConfigMacros.html',''); initResizable(true); })
 <div class="contents">
 
 <p>A set of macros used to configure the LogIt logging system.  
-</p>
+<a href="#details">More...</a></p>
+<table class="memberdecls">
+<tr class="memitem:ga3bf179993f836ab365df8a1888cd027d" id="r_ga3bf179993f836ab365df8a1888cd027d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga3bf179993f836ab365df8a1888cd027d">LOGIT_BASE_PATH</a>&#160;&#160;&#160;{}</td></tr>
+<tr class="memdesc:ga3bf179993f836ab365df8a1888cd027d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the base path used for log file paths.  <br /></td></tr>
+<tr class="separator:ga3bf179993f836ab365df8a1888cd027d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga496ab9af419e4bccd182b25573387c08" id="r_ga496ab9af419e4bccd182b25573387c08"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga496ab9af419e4bccd182b25573387c08">LOGIT_DEFAULT_COLOR</a>&#160;&#160;&#160;<a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31afb55202637692de4a494e9ade4cff2dd">logit::TextColor::LightGray</a></td></tr>
+<tr class="memdesc:ga496ab9af419e4bccd182b25573387c08"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default color for console output.  <br /></td></tr>
+<tr class="separator:ga496ab9af419e4bccd182b25573387c08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>A set of macros used to configure the LogIt logging system. </p>
 <p>These macros control various aspects of the logging behavior, including paths, patterns, colors, timestamps, and retention policies.</p>
-<h3><a class="anchor" id="autotoc_md2"></a>
-Examples:</h3>
-<p><b>Customizing Log File Paths</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#define LOGIT_FILE_LOGGER_PATH &quot;custom/log/directory&quot;</span></div>
-</div><!-- fragment --><p><b>Customizing Console Output Colors</b> </p><div class="fragment"><div class="line"><span class="preprocessor">#define LOGIT_COLOR_WARN logit::TextColor::Yellow</span></div>
-</div><!-- fragment --> </div><!-- contents -->
+<dl class="section user"><dt>Examples</dt><dd></dd></dl>
+<dl class="section user"><dt>Customizing Log File Paths</dt><dd><div class="fragment"><div class="line"><span class="preprocessor">#define LOGIT_FILE_LOGGER_PATH &quot;custom/log/directory&quot;</span></div>
+</div><!-- fragment --></dd></dl>
+<dl class="section user"><dt>Customizing Console Output Colors</dt><dd><div class="fragment"><div class="line"><span class="preprocessor">#define LOGIT_COLOR_WARN logit::TextColor::Yellow</span></div>
+</div><!-- fragment --> </dd></dl>
+<h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ga3bf179993f836ab365df8a1888cd027d" name="ga3bf179993f836ab365df8a1888cd027d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3bf179993f836ab365df8a1888cd027d">&#9670;&#160;</a></span>LOGIT_BASE_PATH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_BASE_PATH&#160;&#160;&#160;{}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Defines the base path used for log file paths. </p>
+<p>If <code>LOGIT_BASE_PATH</code> is not defined or is empty (<code>{}</code>), the full path from <code>__FILE__</code> will be used for log file paths. </p>
+
+<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00014">14</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ga496ab9af419e4bccd182b25573387c08" name="ga496ab9af419e4bccd182b25573387c08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga496ab9af419e4bccd182b25573387c08">&#9670;&#160;</a></span>LOGIT_DEFAULT_COLOR</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_DEFAULT_COLOR&#160;&#160;&#160;<a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31afb55202637692de4a494e9ade4cff2dd">logit::TextColor::LightGray</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Defines the default color for console output. </p>
+<p>If LOGIT_DEFAULT_COLOR is not defined, defaults to <code><a class="el" href="namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31afb55202637692de4a494e9ade4cff2dd">logit::TextColor::LightGray</a></code>.</p>
+<p>This macro allows setting a default console text color for log messages. </p>
+
+<p class="definition">Definition at line <a class="el" href="LogItConfig_8hpp_source.html#l00022">22</a> of file <a class="el" href="LogItConfig_8hpp_source.html">LogItConfig.hpp</a>.</p>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

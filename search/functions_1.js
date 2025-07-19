@@ -6,7 +6,6 @@ var searchData=
   ['create_5fdirectories_3',['create_directories',['../namespacelogit.html#a9da0cf75aa075e53a59ed0b5ab0e68c9',1,'logit']]],
   ['create_5ffile_5fpath_4',['create_file_path',['../classlogit_1_1FileLogger.html#adec517eafb29ab956d7279dae39d1f8a',1,'logit::FileLogger']]],
   ['create_5funique_5ffile_5fpath_5',['create_unique_file_path',['../classlogit_1_1UniqueFileLogger.html#ab3405d721a2d498413c96f6e95ce246c',1,'logit::UniqueFileLogger']]],
-  ['css_5fcolor_5ffrom_5fansi_6',['css_color_from_ansi',['../classlogit_1_1ConsoleLogger.html#aae8cdf7647ced0cce8f414152400af9a',1,'logit::ConsoleLogger']]],
-  ['current_5ftimestamp_5fms_7',['current_timestamp_ms',['../classlogit_1_1FileLogger.html#a32e3ecce41df23036a2a7715f33e56c4',1,'logit::FileLogger::current_timestamp_ms()'],['../classlogit_1_1UniqueFileLogger.html#a00c26dbde6214b3ef48c2363ee8e601d',1,'logit::UniqueFileLogger::current_timestamp_ms()']]],
-  ['custom_5ferror_5fcategory_8',['custom_error_category',['../example__logit__basic_8cpp.html#a0822522f836470533dabb03c77664f11',1,'example_logit_basic.cpp']]]
+  ['current_5ftimestamp_5fms_6',['current_timestamp_ms',['../classlogit_1_1FileLogger.html#a32e3ecce41df23036a2a7715f33e56c4',1,'logit::FileLogger::current_timestamp_ms()'],['../classlogit_1_1UniqueFileLogger.html#a00c26dbde6214b3ef48c2363ee8e601d',1,'logit::UniqueFileLogger::current_timestamp_ms()']]],
+  ['custom_5ferror_5fcategory_7',['custom_error_category',['../example__logit__basic_8cpp.html#a0822522f836470533dabb03c77664f11',1,'example_logit_basic.cpp']]]
 ];

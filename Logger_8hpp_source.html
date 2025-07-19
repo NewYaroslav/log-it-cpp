@@ -7,6 +7,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LogIt++: include/logit_cpp/logit/Logger.hpp Source File</title>
+<link rel="icon" href="logo.png" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,7 +39,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
+   <div id="projectname">LogIt++
    </div>
   </td>
  </tr>
@@ -112,7 +113,7 @@ $(function(){initNavTree('Logger_8hpp_source.html',''); initResizable(true); });
 <div class="contents">
 <a href="Logger_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef _LOGIT_LOGGER_HPP_INCLUDED</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define _LOGIT_LOGGER_HPP_INCLUDED</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno"><a class="line" href="Logger_8hpp.html#ae51f16fbb4cd3e5c34c6605a4a13b3ac">    3</a></span><span class="preprocessor">#define _LOGIT_LOGGER_HPP_INCLUDED</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;<a class="code" href="ILogger_8hpp.html">loggers/ILogger.hpp</a>&quot;</span></div>
@@ -421,12 +422,12 @@ $(function(){initNavTree('Logger_8hpp_source.html',''); initResizable(true); });
 <div class="ttc" id="aclasslogit_1_1Logger_html_ad7168d096af07ba08168ff46e87d81e6"><div class="ttname"><a href="classlogit_1_1Logger.html#ad7168d096af07ba08168ff46e87d81e6">logit::Logger::Logger</a></div><div class="ttdeci">Logger(Logger &amp;&amp;)=delete</div></div>
 <div class="ttc" id="aclasslogit_1_1Logger_html_add155fc2fe41d02fc07a65fd514e7d8a"><div class="ttname"><a href="classlogit_1_1Logger.html#add155fc2fe41d02fc07a65fd514e7d8a">logit::Logger::Logger</a></div><div class="ttdeci">Logger()</div><div class="ttdef"><b>Definition</b> <a href="#l00289">Logger.hpp:289</a></div></div>
 <div class="ttc" id="aclasslogit_1_1Logger_html_af9ae40695451f21281d47cd2cfeac199"><div class="ttname"><a href="classlogit_1_1Logger.html#af9ae40695451f21281d47cd2cfeac199">logit::Logger::print</a></div><div class="ttdeci">void print(const LogRecord &amp;record, Ts const &amp;... args)</div><div class="ttdoc">Logs a record with given arguments.</div><div class="ttdef"><b>Definition</b> <a href="#l00274">Logger.hpp:274</a></div></div>
-<div class="ttc" id="aclasslogit_1_1TaskExecutor_html_a4059ffcc991c60863981a27868c79dd6"><div class="ttname"><a href="classlogit_1_1TaskExecutor.html#a4059ffcc991c60863981a27868c79dd6">logit::TaskExecutor::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdef"><b>Definition</b> <a href="TaskExecutor_8hpp_source.html#l00032">TaskExecutor.hpp:32</a></div></div>
-<div class="ttc" id="aclasslogit_1_1TaskExecutor_html_ad8c2157b95313d9b7afb0b943b94d5c5"><div class="ttname"><a href="classlogit_1_1TaskExecutor.html#ad8c2157b95313d9b7afb0b943b94d5c5">logit::TaskExecutor::get_instance</a></div><div class="ttdeci">static TaskExecutor &amp; get_instance()</div><div class="ttdef"><b>Definition</b> <a href="TaskExecutor_8hpp_source.html#l00022">TaskExecutor.hpp:22</a></div></div>
+<div class="ttc" id="aclasslogit_1_1TaskExecutor_html_a4059ffcc991c60863981a27868c79dd6"><div class="ttname"><a href="classlogit_1_1TaskExecutor.html#a4059ffcc991c60863981a27868c79dd6">logit::TaskExecutor::shutdown</a></div><div class="ttdeci">void shutdown()</div><div class="ttdoc">Shuts down the TaskExecutor by stopping the worker thread.</div><div class="ttdef"><b>Definition</b> <a href="TaskExecutor_8hpp_source.html#l00084">TaskExecutor.hpp:84</a></div></div>
+<div class="ttc" id="aclasslogit_1_1TaskExecutor_html_ad8c2157b95313d9b7afb0b943b94d5c5"><div class="ttname"><a href="classlogit_1_1TaskExecutor.html#ad8c2157b95313d9b7afb0b943b94d5c5">logit::TaskExecutor::get_instance</a></div><div class="ttdeci">static TaskExecutor &amp; get_instance()</div><div class="ttdoc">Get the singleton instance of the TaskExecutor.</div><div class="ttdef"><b>Definition</b> <a href="TaskExecutor_8hpp_source.html#l00055">TaskExecutor.hpp:55</a></div></div>
 <div class="ttc" id="anamespacelogit_html"><div class="ttname"><a href="namespacelogit.html">logit</a></div><div class="ttdoc">The primary namespace for the LogIt++ library.</div></div>
 <div class="ttc" id="anamespacelogit_html_a3b99c712385aa258b8ba4b70d2c4786d"><div class="ttname"><a href="namespacelogit.html#a3b99c712385aa258b8ba4b70d2c4786d">logit::split_arguments</a></div><div class="ttdeci">std::vector&lt; std::string &gt; split_arguments(const std::string &amp;all_names)</div><div class="ttdoc">Splits a string of argument names into individual names, ignoring nested templates,...</div><div class="ttdef"><b>Definition</b> <a href="argument__utils_8hpp_source.html#l00063">argument_utils.hpp:63</a></div></div>
-<div class="ttc" id="anamespacelogit_html_a44f782ab5c6842c0d4d8e648c03f1a66"><div class="ttname"><a href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">logit::LogLevel</a></div><div class="ttdeci">LogLevel</div><div class="ttdoc">Logging levels.</div><div class="ttdef"><b>Definition</b> <a href="enums_8hpp_source.html#l00014">enums.hpp:14</a></div></div>
-<div class="ttc" id="anamespacelogit_html_a9e415ea803231f2d81a3632b507dff2c"><div class="ttname"><a href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">logit::LoggerParam</a></div><div class="ttdeci">LoggerParam</div><div class="ttdoc">Enumeration for different logger parameters that can be retrieved.</div><div class="ttdef"><b>Definition</b> <a href="enums_8hpp_source.html#l00046">enums.hpp:46</a></div></div>
+<div class="ttc" id="anamespacelogit_html_a44f782ab5c6842c0d4d8e648c03f1a66"><div class="ttname"><a href="namespacelogit.html#a44f782ab5c6842c0d4d8e648c03f1a66">logit::LogLevel</a></div><div class="ttdeci">LogLevel</div><div class="ttdoc">Logging levels.</div><div class="ttdef"><b>Definition</b> <a href="enums_8hpp_source.html#l00015">enums.hpp:15</a></div></div>
+<div class="ttc" id="anamespacelogit_html_a9e415ea803231f2d81a3632b507dff2c"><div class="ttname"><a href="namespacelogit.html#a9e415ea803231f2d81a3632b507dff2c">logit::LoggerParam</a></div><div class="ttdeci">LoggerParam</div><div class="ttdoc">Enumeration for different logger parameters that can be retrieved.</div><div class="ttdef"><b>Definition</b> <a href="enums_8hpp_source.html#l00047">enums.hpp:47</a></div></div>
 <div class="ttc" id="anamespacelogit_html_ad2db70d1585274b64495732271ef3277"><div class="ttname"><a href="namespacelogit.html#ad2db70d1585274b64495732271ef3277">logit::args_to_array</a></div><div class="ttdeci">std::vector&lt; VariableValue &gt; args_to_array(std::vector&lt; std::string &gt;::const_iterator name_iter)</div><div class="ttdoc">Base case of recursion for argument conversion — when there are no more arguments.</div><div class="ttdef"><b>Definition</b> <a href="argument__utils_8hpp_source.html#l00016">argument_utils.hpp:16</a></div></div>
 <div class="ttc" id="astructlogit_1_1LogRecord_html"><div class="ttname"><a href="structlogit_1_1LogRecord.html">logit::LogRecord</a></div><div class="ttdoc">Stores log metadata and content.</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00014">LogRecord.hpp:14</a></div></div>
 <div class="ttc" id="astructlogit_1_1LogRecord_html_a115c38e46963ba500d6afcffa40f350c"><div class="ttname"><a href="structlogit_1_1LogRecord.html#a115c38e46963ba500d6afcffa40f350c">logit::LogRecord::logger_index</a></div><div class="ttdeci">const int logger_index</div><div class="ttdoc">Logger index (-1 to log to all).</div><div class="ttdef"><b>Definition</b> <a href="LogRecord_8hpp_source.html#l00024">LogRecord.hpp:24</a></div></div>

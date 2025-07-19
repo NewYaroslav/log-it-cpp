@@ -7,6 +7,7 @@
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>LogIt++: include/logit_cpp/logit/formatter/compiler/PatternCompiler.hpp Source File</title>
+<link rel="icon" href="logo.png" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,7 +39,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">LogIt++<span id="projectnumber">&#160;1.0.2</span>
+   <div id="projectname">LogIt++
    </div>
   </td>
  </tr>
@@ -112,7 +113,7 @@ $(function(){initNavTree('PatternCompiler_8hpp_source.html',''); initResizable(t
 <div class="contents">
 <a href="PatternCompiler_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#ifndef _LOGIT_PATTERN_COMPILER_HPP_INCLUDED</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#define _LOGIT_PATTERN_COMPILER_HPP_INCLUDED</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno"><a class="line" href="PatternCompiler_8hpp.html#a09c36d68103a38d8362bd754e70af6d3">    3</a></span><span class="preprocessor">#define _LOGIT_PATTERN_COMPILER_HPP_INCLUDED</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;time_shield/time_conversions.hpp&gt;</span></div>
@@ -361,7 +362,7 @@ $(function(){initNavTree('PatternCompiler_8hpp_source.html',''); initResizable(t
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>                    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a3cf2c4f1030c2974a1b3028ed71b5783">FormatType::EndColor</a>:</div>
 <div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="structlogit_1_1FormatInstruction.html#a3533ffecf52adc87e5ae551770f8c005">strip_ansi</a>) {</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                        oss &lt;&lt; <a class="code hl_function" href="namespacelogit.html#a1894d2761436e68074fe1b18b8d21947">to_string</a>(LOGIT_DEFAULT_COLOR);</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                        oss &lt;&lt; <a class="code hl_function" href="namespacelogit.html#a1894d2761436e68074fe1b18b8d21947">to_string</a>(<a class="code hl_define" href="group__ConfigMacros.html#ga496ab9af419e4bccd182b25573387c08">LOGIT_DEFAULT_COLOR</a>);</div>
 <div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                    }</div>
 <div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                    <span class="keywordflow">break</span>;</div>
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
@@ -770,9 +771,10 @@ $(function(){initNavTree('PatternCompiler_8hpp_source.html',''); initResizable(t
 <div class="ttc" id="aclasslogit_1_1PatternCompiler_html"><div class="ttname"><a href="classlogit_1_1PatternCompiler.html">logit::PatternCompiler</a></div><div class="ttdoc">Compiler for log formatting patterns.</div><div class="ttdef"><b>Definition</b> <a href="#l00440">PatternCompiler.hpp:440</a></div></div>
 <div class="ttc" id="aclasslogit_1_1PatternCompiler_html_a1241bd37efb6f3af7f2a31379cb85a88"><div class="ttname"><a href="classlogit_1_1PatternCompiler.html#a1241bd37efb6f3af7f2a31379cb85a88">logit::PatternCompiler::CompileContext</a></div><div class="ttdeci">FormatInstruction::CompileContext CompileContext</div><div class="ttdef"><b>Definition</b> <a href="#l00442">PatternCompiler.hpp:442</a></div></div>
 <div class="ttc" id="aclasslogit_1_1PatternCompiler_html_a804a70908de4ca659e0f88de3a85bd45"><div class="ttname"><a href="classlogit_1_1PatternCompiler.html#a804a70908de4ca659e0f88de3a85bd45">logit::PatternCompiler::compile</a></div><div class="ttdeci">static std::vector&lt; FormatInstruction &gt; compile(const std::string &amp;pattern, CompileContext context=CompileContext::Default)</div><div class="ttdoc">Compiles a pattern string into a list of format instructions.</div><div class="ttdef"><b>Definition</b> <a href="#l00448">PatternCompiler.hpp:448</a></div></div>
+<div class="ttc" id="agroup__ConfigMacros_html_ga496ab9af419e4bccd182b25573387c08"><div class="ttname"><a href="group__ConfigMacros.html#ga496ab9af419e4bccd182b25573387c08">LOGIT_DEFAULT_COLOR</a></div><div class="ttdeci">#define LOGIT_DEFAULT_COLOR</div><div class="ttdoc">Defines the default color for console output.</div><div class="ttdef"><b>Definition</b> <a href="LogItConfig_8hpp_source.html#l00022">LogItConfig.hpp:22</a></div></div>
 <div class="ttc" id="anamespacelogit_html"><div class="ttname"><a href="namespacelogit.html">logit</a></div><div class="ttdoc">The primary namespace for the LogIt++ library.</div></div>
-<div class="ttc" id="anamespacelogit_html_a1894d2761436e68074fe1b18b8d21947"><div class="ttname"><a href="namespacelogit.html#a1894d2761436e68074fe1b18b8d21947">logit::to_string</a></div><div class="ttdeci">std::string to_string(LogLevel level, int mode=0)</div><div class="ttdoc">Convert LogLevel to a std::string representation.</div><div class="ttdef"><b>Definition</b> <a href="enums_8hpp_source.html#l00089">enums.hpp:89</a></div></div>
-<div class="ttc" id="anamespacelogit_html_a60f0324ca43457583e9a9b5aec809d4a"><div class="ttname"><a href="namespacelogit.html#a60f0324ca43457583e9a9b5aec809d4a">logit::get_log_level_color</a></div><div class="ttdeci">std::string get_log_level_color(LogLevel log_level)</div><div class="ttdoc">Get the ANSI color code associated with a log level.</div><div class="ttdef"><b>Definition</b> <a href="enums_8hpp_source.html#l00130">enums.hpp:130</a></div></div>
+<div class="ttc" id="anamespacelogit_html_a1894d2761436e68074fe1b18b8d21947"><div class="ttname"><a href="namespacelogit.html#a1894d2761436e68074fe1b18b8d21947">logit::to_string</a></div><div class="ttdeci">std::string to_string(LogLevel level, int mode=0)</div><div class="ttdoc">Convert LogLevel to a std::string representation.</div><div class="ttdef"><b>Definition</b> <a href="enums_8hpp_source.html#l00090">enums.hpp:90</a></div></div>
+<div class="ttc" id="anamespacelogit_html_a60f0324ca43457583e9a9b5aec809d4a"><div class="ttname"><a href="namespacelogit.html#a60f0324ca43457583e9a9b5aec809d4a">logit::get_log_level_color</a></div><div class="ttdeci">std::string get_log_level_color(LogLevel log_level)</div><div class="ttdoc">Get the ANSI color code associated with a log level.</div><div class="ttdef"><b>Definition</b> <a href="enums_8hpp_source.html#l00131">enums.hpp:131</a></div></div>
 <div class="ttc" id="astructlogit_1_1FormatInstruction_html"><div class="ttname"><a href="structlogit_1_1FormatInstruction.html">logit::FormatInstruction</a></div><div class="ttdoc">Structure to store log formatting instructions.</div><div class="ttdef"><b>Definition</b> <a href="#l00018">PatternCompiler.hpp:18</a></div></div>
 <div class="ttc" id="astructlogit_1_1FormatInstruction_html_a02acd24128bb2dafba5b7edbefb21d7e"><div class="ttname"><a href="structlogit_1_1FormatInstruction.html#a02acd24128bb2dafba5b7edbefb21d7e">logit::FormatInstruction::type</a></div><div class="ttdeci">FormatType type</div><div class="ttdoc">The type of the format instruction.</div><div class="ttdef"><b>Definition</b> <a href="#l00078">PatternCompiler.hpp:78</a></div></div>
 <div class="ttc" id="astructlogit_1_1FormatInstruction_html_a0dfac7e47e27be071b72040f76674600"><div class="ttname"><a href="structlogit_1_1FormatInstruction.html#a0dfac7e47e27be071b72040f76674600">logit::FormatInstruction::width</a></div><div class="ttdeci">int width</div><div class="ttdoc">Width for formatting.</div><div class="ttdef"><b>Definition</b> <a href="#l00082">PatternCompiler.hpp:82</a></div></div>

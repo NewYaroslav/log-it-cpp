@@ -4,7 +4,7 @@ var searchData=
   ['_5flogit_5fargument_5futils_5fhpp_5fincluded_1',['_LOGIT_ARGUMENT_UTILS_HPP_INCLUDED',['../argument__utils_8hpp.html#ac269386d135b12b400739e62a5e53741',1,'argument_utils.hpp']]],
   ['_5flogit_5fconfig_5fhpp_5fincluded_2',['_LOGIT_CONFIG_HPP_INCLUDED',['../LogItConfig_8hpp.html#a88ccde7736a52e6ffc7f197e1e5b7baa',1,'LogItConfig.hpp']]],
   ['_5flogit_5fconsole_5flogger_5fhpp_5fincluded_3',['_LOGIT_CONSOLE_LOGGER_HPP_INCLUDED',['../ConsoleLogger_8hpp.html#ac6c4043e6e8e6e80d174718d3c7605c8',1,'ConsoleLogger.hpp']]],
-  ['_5flogit_5fenums_5fhpp_5fincluded_4',['_LOGIT_ENUMS_HPP_INCLUDED',['../Enums_8hpp.html#a9db8d98d8cb3dd3d2371426db2a3176c',1,'Enums.hpp']]],
+  ['_5flogit_5fenums_5fhpp_5fincluded_4',['_LOGIT_ENUMS_HPP_INCLUDED',['../enums_8hpp.html#a9db8d98d8cb3dd3d2371426db2a3176c',1,'enums.hpp']]],
   ['_5flogit_5fhpp_5fincluded_5',['_LOGIT_HPP_INCLUDED',['../LogIt_8hpp.html#abb76b4488538667d0b9da8f38bbe7ae5',1,'LogIt.hpp']]],
   ['_5flogit_5filog_5fformatter_5fhpp_5fincluded_6',['_LOGIT_ILOG_FORMATTER_HPP_INCLUDED',['../ILogFormatter_8hpp.html#a8f955f05bdab7f8381b9c2eb26a1b82d',1,'ILogFormatter.hpp']]],
   ['_5flogit_5filogger_5fhpp_5fincluded_7',['_LOGIT_ILOGGER_HPP_INCLUDED',['../ILogger_8hpp.html#ab273a315ff6af520f2317bf50a8f7eb4',1,'ILogger.hpp']]],
@@ -18,6 +18,6 @@ var searchData=
   ['_5flogit_5ftest_5flog_5fdepth_5f1_5fhpp_5fincluded_15',['_LOGIT_TEST_LOG_DEPTH_1_HPP_INCLUDED',['../test__log__depth__1_8hpp.html#a5db1ab77d3434541aba834a415522851',1,'test_log_depth_1.hpp']]],
   ['_5flogit_5ftest_5flog_5fdepth_5f2_5fhpp_5fincluded_16',['_LOGIT_TEST_LOG_DEPTH_2_HPP_INCLUDED',['../test__log__depth__2_8hpp.html#aa4b23f9594c84ffff80fd886629a4c4a',1,'test_log_depth_2.hpp']]],
   ['_5flogit_5ftest_5flog_5fdepth_5f3_5fhpp_5fincluded_17',['_LOGIT_TEST_LOG_DEPTH_3_HPP_INCLUDED',['../test__log__depth__3_8hpp.html#aaafb46f4eb6b637a6142125fe45f739e',1,'test_log_depth_3.hpp']]],
-  ['_5flogit_5fuitls_5fhpp_5fincluded_18',['_LOGIT_UITLS_HPP_INCLUDED',['../Utils_8hpp.html#ab859c632b8074915e6acffd6f4976754',1,'Utils.hpp']]],
+  ['_5flogit_5fuitls_5fhpp_5fincluded_18',['_LOGIT_UITLS_HPP_INCLUDED',['../utils_8hpp.html#ab859c632b8074915e6acffd6f4976754',1,'utils.hpp']]],
   ['_5flogit_5fvariable_5fvalue_5fhpp_5fincluded_19',['_LOGIT_VARIABLE_VALUE_HPP_INCLUDED',['../VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38',1,'VariableValue.hpp']]]
 ];

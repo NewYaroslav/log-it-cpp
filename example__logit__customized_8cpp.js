@@ -1,5 +1,9 @@
 var example__logit__customized_8cpp =
 [
+    [ "LOGIT_CONSOLE_PATTERN", "example__logit__customized_8cpp.html#ae21dc36eb3e43139cacbd07c92bea9b9", null ],
+    [ "LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS", "example__logit__customized_8cpp.html#ab4d42b8c5a8fe2468557178ce120780b", null ],
+    [ "LOGIT_FILE_LOGGER_PATH", "example__logit__customized_8cpp.html#a0f7223e40eee5ab323ba83d779b471c9", null ],
+    [ "LOGIT_UNIQUE_FILE_LOGGER_PATH", "example__logit__customized_8cpp.html#af3e134818fca6df9710fa145ea62044a", null ],
     [ "LogLevel", "example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9", [
       [ "L_DEBUG", "example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9abef96148470abb1ed19980e5b5c40ad4", null ],
       [ "L_INFO", "example__logit__customized_8cpp.html#aca1fd1d8935433e6ba2e3918214e07f9ae580867d0ddde34905fea2f8669839b7", null ],
