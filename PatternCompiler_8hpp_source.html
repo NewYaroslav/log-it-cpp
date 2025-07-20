@@ -647,127 +647,129 @@ $(function(){initNavTree('PatternCompiler_8hpp_source.html',''); initResizable(t
 <div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>                                    strip_ansi = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>                                    ++i;  <span class="comment">// Skip &#39;c&#39; after &#39;s&#39;</span></div>
 <div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>                                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>                                }</div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;E&#39;</span>:</div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>                                <span class="keywordflow">if</span> ((i + 1) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;C&#39;</span>) {</div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>                                    strip_ansi = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>                                    ++i;  <span class="comment">// Skip &#39;C&#39; after &#39;E&#39;</span></div>
-<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>                                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>                                }</div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>                                instructions.emplace_back(context, FormatType::TimeStamp, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span> </div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>                            <span class="comment">// Weekday and Month Names</span></div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;b&#39;</span>:</div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>                                <span class="keywordflow">if</span> ((i + 1) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;s&#39;</span>) {</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>                                    instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>                                    ++i;  <span class="comment">// Skip &#39;s&#39; after &#39;b&#39;</span></div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>                                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>                                }</div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>                                instructions.emplace_back(context, FormatType::AbbreviatedMonthName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;B&#39;</span>:</div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                                instructions.emplace_back(context, FormatType::FullMonthName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;a&#39;</span>:</div>
-<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>                                instructions.emplace_back(context, FormatType::AbbreviatedWeekdayName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;A&#39;</span>:</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>                                instructions.emplace_back(context, FormatType::FullWeekdayName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span> </div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>                            <span class="comment">// Log Level</span></div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;l&#39;</span>:</div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>                                instructions.emplace_back(context, FormatType::LogLevel, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;L&#39;</span>:</div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>                                instructions.emplace_back(context, FormatType::ShortLogLevel, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span> </div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                            <span class="comment">// Thread</span></div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;t&#39;</span>:</div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>                                instructions.emplace_back(context, FormatType::ThreadId, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span> </div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>                            <span class="comment">// File and Function</span></div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;f&#39;</span>:</div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>                                <span class="keywordflow">if</span> ((i + 1) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;f&#39;</span> &amp;&amp; (i + 2) &lt; pattern.size() &amp;&amp; pattern[i + 2] == <span class="charliteral">&#39;n&#39;</span>) {</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>                                    instructions.emplace_back(context, FormatType::FullFileName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>                                    i += 2; <span class="comment">// Skip &#39;fn&#39; after &#39;f&#39;</span></div>
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>                                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>                                }</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>                                <span class="keywordflow">if</span> ((i + 1) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;n&#39;</span>) {</div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>                                    instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>                                    ++i;  <span class="comment">// Skip &#39;n&#39; after &#39;f&#39;</span></div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>                                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>                                }</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>                                instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;g&#39;</span>:</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>                                instructions.emplace_back(context, FormatType::FullFileName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;@&#39;</span>:</div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>                                instructions.emplace_back(context, FormatType::SourceFileAndLine, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;#&#39;</span>:</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>                                instructions.emplace_back(context, FormatType::LineNumber, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;!&#39;</span>:</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>                                instructions.emplace_back(context, FormatType::FunctionName, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span> </div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>                            <span class="comment">// Color</span></div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;^&#39;</span>:</div>
-<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>                                instructions.emplace_back(context, FormatType::StartColor, 0, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, strip_ansi);</div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;$&#39;</span>:</div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>                                instructions.emplace_back(context, FormatType::EndColor, 0, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, strip_ansi);</div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span> </div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>                            <span class="comment">// Message</span></div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;v&#39;</span>:</div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>                                instructions.emplace_back(context, FormatType::Message, width, left_align, center_align, truncate, strip_ansi);</div>
-<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span> </div>
-<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>                            <span class="comment">//</span></div>
-<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;N&#39;</span>:</div>
-<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>                                <span class="keywordflow">if</span> ((i + 2) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;(&#39;</span>) {</div>
-<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>                                    <span class="keywordtype">size_t</span> end = pattern.find(<span class="charliteral">&#39;)&#39;</span>, i + 2);</div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>                                    <span class="keywordflow">if</span> (end == std::string::npos) {</div>
-<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>                                        ++i;</div>
-<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>                                        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>                                    }</div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>                                    std::string params = pattern.substr(i + 2, end - i - 2);</div>
-<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>                                    <span class="keyword">auto</span> no_args_instructions = <a class="code hl_function" href="classlogit_1_1PatternCompiler.html#a804a70908de4ca659e0f88de3a85bd45">compile</a>(params, CompileContext::NoArgsFallback);</div>
-<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>                                    instructions.insert(instructions.end(), no_args_instructions.begin(), no_args_instructions.end());</div>
-<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>                                    i = end;</div>
-<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>                                }</div>
-<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span> </div>
-<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>                            <span class="comment">// Escape character or unknown</span></div>
-<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;%&#39;</span>:</div>
-<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>                            <span class="keywordflow">default</span>:</div>
-<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>                                buffer += next;  <span class="comment">// Unrecognized symbols are recorded as text</span></div>
-<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>                                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>                        };</div>
-<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>                    }</div>
-<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>                    buffer += c;</div>
-<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>                }</div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>            }</div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span> </div>
-<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>            <span class="keywordflow">if</span> (!buffer.empty()) {</div>
-<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span>                instructions.push_back(<a class="code hl_struct" href="structlogit_1_1FormatInstruction.html">FormatInstruction</a>(context, buffer, strip_ansi));</div>
-<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>            }</div>
-<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>            <span class="keywordflow">return</span> instructions;</div>
-<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>        }</div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>                                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>                                    instructions.emplace_back(context, FormatType::TimeStamp, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>                                }</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;E&#39;</span>:</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>                                <span class="keywordflow">if</span> ((i + 1) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;C&#39;</span>) {</div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>                                    strip_ansi = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>                                    ++i;  <span class="comment">// Skip &#39;C&#39; after &#39;E&#39;</span></div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>                                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>                                }</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>                                instructions.emplace_back(context, FormatType::TimeStamp, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>                            <span class="comment">// Weekday and Month Names</span></div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;b&#39;</span>:</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>                                <span class="keywordflow">if</span> ((i + 1) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;s&#39;</span>) {</div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>                                    instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>                                    ++i;  <span class="comment">// Skip &#39;s&#39; after &#39;b&#39;</span></div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>                                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>                                }</div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>                                instructions.emplace_back(context, FormatType::AbbreviatedMonthName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;B&#39;</span>:</div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span>                                instructions.emplace_back(context, FormatType::FullMonthName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;a&#39;</span>:</div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>                                instructions.emplace_back(context, FormatType::AbbreviatedWeekdayName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;A&#39;</span>:</div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>                                instructions.emplace_back(context, FormatType::FullWeekdayName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span> </div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>                            <span class="comment">// Log Level</span></div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;l&#39;</span>:</div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>                                instructions.emplace_back(context, FormatType::LogLevel, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;L&#39;</span>:</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                                instructions.emplace_back(context, FormatType::ShortLogLevel, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span> </div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>                            <span class="comment">// Thread</span></div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;t&#39;</span>:</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>                                instructions.emplace_back(context, FormatType::ThreadId, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span> </div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>                            <span class="comment">// File and Function</span></div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;f&#39;</span>:</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>                                <span class="keywordflow">if</span> ((i + 1) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;f&#39;</span> &amp;&amp; (i + 2) &lt; pattern.size() &amp;&amp; pattern[i + 2] == <span class="charliteral">&#39;n&#39;</span>) {</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>                                    instructions.emplace_back(context, FormatType::FullFileName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>                                    i += 2; <span class="comment">// Skip &#39;fn&#39; after &#39;f&#39;</span></div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>                                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>                                }</div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>                                <span class="keywordflow">if</span> ((i + 1) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;n&#39;</span>) {</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>                                    instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>                                    ++i;  <span class="comment">// Skip &#39;n&#39; after &#39;f&#39;</span></div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>                                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>                                }</div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>                                instructions.emplace_back(context, FormatType::FileName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;g&#39;</span>:</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>                                instructions.emplace_back(context, FormatType::FullFileName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;@&#39;</span>:</div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>                                instructions.emplace_back(context, FormatType::SourceFileAndLine, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;#&#39;</span>:</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>                                instructions.emplace_back(context, FormatType::LineNumber, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;!&#39;</span>:</div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>                                instructions.emplace_back(context, FormatType::FunctionName, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span> </div>
+<div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span>                            <span class="comment">// Color</span></div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;^&#39;</span>:</div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>                                instructions.emplace_back(context, FormatType::StartColor, 0, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, strip_ansi);</div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;$&#39;</span>:</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>                                instructions.emplace_back(context, FormatType::EndColor, 0, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, strip_ansi);</div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span> </div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>                            <span class="comment">// Message</span></div>
+<div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;v&#39;</span>:</div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>                                instructions.emplace_back(context, FormatType::Message, width, left_align, center_align, truncate, strip_ansi);</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span> </div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>                            <span class="comment">//</span></div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;N&#39;</span>:</div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>                                <span class="keywordflow">if</span> ((i + 2) &lt; pattern.size() &amp;&amp; pattern[i + 1] == <span class="charliteral">&#39;(&#39;</span>) {</div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>                                    <span class="keywordtype">size_t</span> end = pattern.find(<span class="charliteral">&#39;)&#39;</span>, i + 2);</div>
+<div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>                                    <span class="keywordflow">if</span> (end == std::string::npos) {</div>
+<div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>                                        ++i;</div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>                                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>                                    }</div>
+<div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>                                    std::string params = pattern.substr(i + 2, end - i - 2);</div>
+<div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>                                    <span class="keyword">auto</span> no_args_instructions = <a class="code hl_function" href="classlogit_1_1PatternCompiler.html#a804a70908de4ca659e0f88de3a85bd45">compile</a>(params, CompileContext::NoArgsFallback);</div>
+<div class="line"><a id="l00649" name="l00649"></a><span class="lineno">  649</span>                                    instructions.insert(instructions.end(), no_args_instructions.begin(), no_args_instructions.end());</div>
+<div class="line"><a id="l00650" name="l00650"></a><span class="lineno">  650</span>                                    i = end;</div>
+<div class="line"><a id="l00651" name="l00651"></a><span class="lineno">  651</span>                                }</div>
+<div class="line"><a id="l00652" name="l00652"></a><span class="lineno">  652</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00653" name="l00653"></a><span class="lineno">  653</span> </div>
+<div class="line"><a id="l00654" name="l00654"></a><span class="lineno">  654</span>                            <span class="comment">// Escape character or unknown</span></div>
+<div class="line"><a id="l00655" name="l00655"></a><span class="lineno">  655</span>                            <span class="keywordflow">case</span> <span class="charliteral">&#39;%&#39;</span>:</div>
+<div class="line"><a id="l00656" name="l00656"></a><span class="lineno">  656</span>                            <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l00657" name="l00657"></a><span class="lineno">  657</span>                                buffer += next;  <span class="comment">// Unrecognized symbols are recorded as text</span></div>
+<div class="line"><a id="l00658" name="l00658"></a><span class="lineno">  658</span>                                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span>                        };</div>
+<div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span>                    }</div>
+<div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span>                    buffer += c;</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span>                }</div>
+<div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span>            }</div>
+<div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span> </div>
+<div class="line"><a id="l00666" name="l00666"></a><span class="lineno">  666</span>            <span class="keywordflow">if</span> (!buffer.empty()) {</div>
+<div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span>                instructions.push_back(<a class="code hl_struct" href="structlogit_1_1FormatInstruction.html">FormatInstruction</a>(context, buffer, strip_ansi));</div>
+<div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span>            }</div>
+<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>            <span class="keywordflow">return</span> instructions;</div>
+<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span>        }</div>
 </div>
-<div class="line"><a id="l00669" name="l00669"></a><span class="lineno">  669</span>    }; <span class="comment">// PatternCompiler</span></div>
+<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>    }; <span class="comment">// PatternCompiler</span></div>
 </div>
-<div class="line"><a id="l00670" name="l00670"></a><span class="lineno">  670</span> </div>
-<div class="line"><a id="l00671" name="l00671"></a><span class="lineno">  671</span>}; <span class="comment">// namespace logit</span></div>
 <div class="line"><a id="l00672" name="l00672"></a><span class="lineno">  672</span> </div>
-<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_PATTERN_COMPILER_HPP_INCLUDED</span></div>
+<div class="line"><a id="l00673" name="l00673"></a><span class="lineno">  673</span>}; <span class="comment">// namespace logit</span></div>
+<div class="line"><a id="l00674" name="l00674"></a><span class="lineno">  674</span> </div>
+<div class="line"><a id="l00675" name="l00675"></a><span class="lineno">  675</span><span class="preprocessor">#endif </span><span class="comment">// _LOGIT_PATTERN_COMPILER_HPP_INCLUDED</span></div>
 <div class="ttc" id="aclasslogit_1_1PatternCompiler_html"><div class="ttname"><a href="classlogit_1_1PatternCompiler.html">logit::PatternCompiler</a></div><div class="ttdoc">Compiler for log formatting patterns.</div><div class="ttdef"><b>Definition</b> <a href="#l00440">PatternCompiler.hpp:440</a></div></div>
 <div class="ttc" id="aclasslogit_1_1PatternCompiler_html_a1241bd37efb6f3af7f2a31379cb85a88"><div class="ttname"><a href="classlogit_1_1PatternCompiler.html#a1241bd37efb6f3af7f2a31379cb85a88">logit::PatternCompiler::CompileContext</a></div><div class="ttdeci">FormatInstruction::CompileContext CompileContext</div><div class="ttdef"><b>Definition</b> <a href="#l00442">PatternCompiler.hpp:442</a></div></div>
 <div class="ttc" id="aclasslogit_1_1PatternCompiler_html_a804a70908de4ca659e0f88de3a85bd45"><div class="ttname"><a href="classlogit_1_1PatternCompiler.html#a804a70908de4ca659e0f88de3a85bd45">logit::PatternCompiler::compile</a></div><div class="ttdeci">static std::vector&lt; FormatInstruction &gt; compile(const std::string &amp;pattern, CompileContext context=CompileContext::Default)</div><div class="ttdoc">Compiles a pattern string into a list of format instructions.</div><div class="ttdef"><b>Definition</b> <a href="#l00448">PatternCompiler.hpp:448</a></div></div>

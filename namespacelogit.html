@@ -242,9 +242,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a6da1870420ec61ebb0fed37d08dc3114" id="r_a6da1870420ec61ebb0fed37d08dc3114"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6da1870420ec61ebb0fed37d08dc3114">test_log_depth_1</a> ()</td></tr>
 <tr class="memdesc:a6da1870420ec61ebb0fed37d08dc3114"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs test messages to verify path shortening at depth level 1.  <br /></td></tr>
 <tr class="separator:a6da1870420ec61ebb0fed37d08dc3114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2db70d1585274b64495732271ef3277" id="r_ad2db70d1585274b64495732271ef3277"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2db70d1585274b64495732271ef3277">args_to_array</a> (std::vector&lt; std::string &gt;::const_iterator name_iter)</td></tr>
-<tr class="memdesc:ad2db70d1585274b64495732271ef3277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base case of recursion for argument conversion — when there are no more arguments.  <br /></td></tr>
-<tr class="separator:ad2db70d1585274b64495732271ef3277"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a233ff3fa2eaa7ddc4d076239b0c05ae2" id="r_a233ff3fa2eaa7ddc4d076239b0c05ae2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a233ff3fa2eaa7ddc4d076239b0c05ae2">args_to_array</a> (std::vector&lt; std::string &gt;::const_iterator)</td></tr>
+<tr class="memdesc:a233ff3fa2eaa7ddc4d076239b0c05ae2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base case of recursion for argument conversion — when there are no more arguments.  <br /></td></tr>
+<tr class="separator:a233ff3fa2eaa7ddc4d076239b0c05ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac61cbb6336ea2c74d086799e21fab375" id="r_ac61cbb6336ea2c74d086799e21fab375"><td class="memTemplParams" colspan="2">template&lt;typename T, typename... Ts&gt; </td></tr>
 <tr class="memitem:ac61cbb6336ea2c74d086799e21fab375"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ac61cbb6336ea2c74d086799e21fab375">args_to_array</a> (std::vector&lt; std::string &gt;::const_iterator name_iter, const T &amp;first_arg, const Ts &amp;... args)</td></tr>
 <tr class="memdesc:ac61cbb6336ea2c74d086799e21fab375"><td class="mdescLeft">&#160;</td><td class="mdescRight">Recursive function to convert arguments into an array of tuples (name, value).  <br /></td></tr>
@@ -428,44 +428,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ad2db70d1585274b64495732271ef3277" name="ad2db70d1585274b64495732271ef3277"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2db70d1585274b64495732271ef3277">&#9670;&#160;</a></span>args_to_array() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; <a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a> &gt; logit::args_to_array </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; std::string &gt;::const_iterator</td>          <td class="paramname"><span class="paramname"><em>name_iter</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Base case of recursion for argument conversion — when there are no more arguments. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">name_iter</td><td>Iterator for the argument name list. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An empty vector, as there are no more arguments to process. </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00016">16</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
-
-</div>
-</div>
 <a id="ac61cbb6336ea2c74d086799e21fab375" name="ac61cbb6336ea2c74d086799e21fab375"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac61cbb6336ea2c74d086799e21fab375">&#9670;&#160;</a></span>args_to_array() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac61cbb6336ea2c74d086799e21fab375">&#9670;&#160;</a></span>args_to_array() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -509,6 +473,42 @@ template&lt;typename T, typename... Ts&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>A vector of tuples containing argument names and values. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00028">28</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a233ff3fa2eaa7ddc4d076239b0c05ae2" name="a233ff3fa2eaa7ddc4d076239b0c05ae2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a233ff3fa2eaa7ddc4d076239b0c05ae2">&#9670;&#160;</a></span>args_to_array() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="structlogit_1_1VariableValue.html">VariableValue</a> &gt; logit::args_to_array </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; std::string &gt;::const_iterator</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Base case of recursion for argument conversion — when there are no more arguments. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name_iter</td><td>Iterator for the argument name list. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An empty vector, as there are no more arguments to process. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="argument__utils_8hpp_source.html#l00016">16</a> of file <a class="el" href="argument__utils_8hpp_source.html">argument_utils.hpp</a>.</p>
 
 </div>
 </div>

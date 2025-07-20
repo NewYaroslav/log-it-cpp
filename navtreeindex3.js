@@ -1,7 +1,7 @@
 var NAVTREEINDEX3 =
 {
-"namespacelogit.html#ac61cbb6336ea2c74d086799e21fab375":[2,0,0,19],
-"namespacelogit.html#ad2db70d1585274b64495732271ef3277":[2,0,0,18],
+"namespacelogit.html#ac5ad16e3319e32ddda74d8ebe975d357":[2,0,0,39],
+"namespacelogit.html#ac61cbb6336ea2c74d086799e21fab375":[2,0,0,18],
 "namespacelogit.html#ad70b9fd6d27ebc73e4afce58bf2bfed6":[2,0,0,37],
 "namespacelogit.html#adc8dc91e6b62dc56cdbfa56f4c0568ba":[2,0,0,34],
 "namespacelogit.html#ae7d326ac6dced6cb044446eb1a1df45c":[2,0,0,24],

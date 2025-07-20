@@ -47,8 +47,8 @@ var namespacelogit =
       [ "Cyan", "namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a023c239d2f2538f140a20e72c7b73f20", null ],
       [ "White", "namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31a25a81701fbfa4a1efdf660a950c1d006", null ]
     ] ],
-    [ "args_to_array", "namespacelogit.html#ad2db70d1585274b64495732271ef3277", null ],
     [ "args_to_array", "namespacelogit.html#ac61cbb6336ea2c74d086799e21fab375", null ],
+    [ "args_to_array", "namespacelogit.html#a233ff3fa2eaa7ddc4d076239b0c05ae2", null ],
     [ "create_directories", "namespacelogit.html#a9da0cf75aa075e53a59ed0b5ab0e68c9", null ],
     [ "enum_to_string", "namespacelogit.html#aa55d937df9602e94ecf105a44d04ad86", null ],
     [ "enum_to_string", "namespacelogit.html#a6f6ef213e30d00c16f8d7a2644655d64", null ],
