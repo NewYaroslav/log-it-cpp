@@ -552,7 +552,10 @@ namespace logit {
                                     strip_ansi = true;
                                     ++i;  // Skip 'c' after 's'
                                     break;
+                                } else {
+                                    instructions.emplace_back(context, FormatType::TimeStamp, width, left_align, center_align, truncate, strip_ansi);
                                 }
+                                break;
                             case 'E':
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 'C') {
                                     strip_ansi = false;
@@ -561,7 +564,6 @@ namespace logit {
                                 }
                                 instructions.emplace_back(context, FormatType::TimeStamp, width, left_align, center_align, truncate, strip_ansi);
                                 break;
-
                             // Weekday and Month Names
                             case 'b':
                                 if ((i + 1) < pattern.size() && pattern[i + 1] == 's') {
