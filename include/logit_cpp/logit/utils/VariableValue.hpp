@@ -144,7 +144,9 @@ namespace logit {
 
         template <typename T>
         VariableValue(const std::string& name, T value,
-            typename std::enable_if<std::is_integral<T>::value>::type* = nullptr)
+            typename std::enable_if<
+                std::is_integral<T>::value && !std::is_same<T, bool>::value
+            >::type* = nullptr)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::UNKNOWN_VAL) {
             
             if (std::is_signed<T>::value) {

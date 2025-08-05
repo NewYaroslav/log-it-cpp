@@ -78,6 +78,10 @@ int main() {
     logit::test_log_depth_3();
 
     LOGIT_TRACE0();
+    
+    bool auth_success = true;
+    std::string email = "user@example.com";
+    LOGIT_TRACE(auth_success, email);
 
     // Log various levels of messages
     float someFloat = 123.456f;
@@ -179,5 +183,6 @@ int main() {
     LOGIT_SHUTDOWN();
 
     std::cout << "Logging example completed." << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     return 0;
 }

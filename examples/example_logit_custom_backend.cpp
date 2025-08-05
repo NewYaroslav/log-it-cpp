@@ -30,27 +30,39 @@ public:
     // Implementing other pure virtual methods
     std::string get_string_param(const logit::LoggerParam& param) const override {
         // Returning an empty string for this example, can be customized
-		(void)param;
+        (void)param;
         return "";
     }
 
     int64_t get_int_param(const logit::LoggerParam& param) const override {
         // Returning a default value, can be customized
-		(void)param;
+        (void)param;
         return 0;
     }
 
     double get_float_param(const logit::LoggerParam& param) const override {
         // Returning a default value, can be customized
-		(void)param;
+        (void)param;
         return 0.0;
     }
+    
+    void set_log_level(logit::LogLevel level) override {
+        m_log_level = level;
+    }
+
+    logit::LogLevel get_log_level() const override {
+        return m_log_level;
+    }
+
 
     void wait() override {
         // No asynchronous logging here, but method is required
     }
 
     ~CustomLogger() override = default;
+    
+private:
+    logit::LogLevel m_log_level = logit::LogLevel::LOG_LVL_TRACE;
 };
 /// \endcond
 
