@@ -182,9 +182,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aef96c3471c808ae7e74c6ad38719b00d" id="r_aef96c3471c808ae7e74c6ad38719b00d"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:aef96c3471c808ae7e74c6ad38719b00d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aef96c3471c808ae7e74c6ad38719b00d">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, T value, typename std::enable_if&lt; std::is_floating_point&lt; T &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *=nullptr)</td></tr>
 <tr class="separator:aef96c3471c808ae7e74c6ad38719b00d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a060792ecd61c5573594da28b2f11470d" id="r_a060792ecd61c5573594da28b2f11470d"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a060792ecd61c5573594da28b2f11470d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a060792ecd61c5573594da28b2f11470d">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, T value, typename std::enable_if&lt; std::is_integral&lt; T &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *=nullptr)</td></tr>
-<tr class="separator:a060792ecd61c5573594da28b2f11470d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae38c5d406f5daf2dffb6fb6b0e882528" id="r_ae38c5d406f5daf2dffb6fb6b0e882528"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ae38c5d406f5daf2dffb6fb6b0e882528"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ae38c5d406f5daf2dffb6fb6b0e882528">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, T value, typename std::enable_if&lt; std::is_integral&lt; T &gt;::value &amp;&amp;!std::is_same&lt; T, bool &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *=nullptr)</td></tr>
+<tr class="separator:ae38c5d406f5daf2dffb6fb6b0e882528"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab88ceaa5e13b3de04e896cb4057c3b0e" id="r_ab88ceaa5e13b3de04e896cb4057c3b0e"><td class="memTemplParams" colspan="2">template&lt;typename EnumType&gt; </td></tr>
 <tr class="memitem:ab88ceaa5e13b3de04e896cb4057c3b0e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ab88ceaa5e13b3de04e896cb4057c3b0e">VariableValue</a> (const std::string &amp;<a class="el" href="#a384ed16552b39216d326bca6409107a7">name</a>, EnumType value, typename std::enable_if&lt; std::is_enum&lt; EnumType &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *=0)</td></tr>
 <tr class="memdesc:ab88ceaa5e13b3de04e896cb4057c3b0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for enumerations.  <br /></td></tr>
@@ -610,8 +610,8 @@ template&lt;typename T&gt; </div>
 
 </div>
 </div>
-<a id="a060792ecd61c5573594da28b2f11470d" name="a060792ecd61c5573594da28b2f11470d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a060792ecd61c5573594da28b2f11470d">&#9670;&#160;</a></span>VariableValue() <span class="overload">[8/15]</span></h2>
+<a id="ae38c5d406f5daf2dffb6fb6b0e882528" name="ae38c5d406f5daf2dffb6fb6b0e882528"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae38c5d406f5daf2dffb6fb6b0e882528">&#9670;&#160;</a></span>VariableValue() <span class="overload">[8/15]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -634,7 +634,7 @@ template&lt;typename T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">typename std::enable_if&lt; std::is_integral&lt; T &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *</td>          <td class="paramname"><span class="paramname"><em></em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
+          <td class="paramtype">typename std::enable_if&lt; std::is_integral&lt; T &gt;::value &amp;&amp;!std::is_same&lt; T, bool &gt;::value &gt;<a class="el" href="#a807667914a451032f7d2ce8ad912172b">::type</a> *</td>          <td class="paramname"><span class="paramname"><em></em></span><span class="paramdefsep"> = </span><span class="paramdefval">nullptr</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -697,7 +697,7 @@ template&lt;typename EnumType&gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00190">190</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00192">192</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -730,7 +730,7 @@ template&lt;typename Rep, typename Period&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00197">197</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00199">199</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -763,7 +763,7 @@ template&lt;typename Clock, typename Duration&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00203">203</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00205">205</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -794,7 +794,7 @@ template&lt;typename Clock, typename Duration&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00251">251</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00253">253</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -827,7 +827,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00259">259</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00261">261</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -860,7 +860,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00268">268</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00270">270</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -889,7 +889,7 @@ template&lt;typename T&gt; </div>
 
 <p>Copy constructor. </p>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00277">277</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00279">279</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -955,7 +955,7 @@ template&lt;typename Period&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A string representing the unit of the duration. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00414">414</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00416">416</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -991,7 +991,7 @@ template&lt;typename Period&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the type is POD, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00389">389</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00391">391</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1027,7 +1027,7 @@ template&lt;typename Period&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if valid, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00381">381</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00383">383</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1056,7 +1056,7 @@ template&lt;typename Period&gt; </div>
 
 <p>Assignment operator. </p>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00287">287</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00289">289</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1086,7 +1086,7 @@ template&lt;typename Period&gt; </div>
 <p>Method to get the value as a string. </p>
 <dl class="section return"><dt>Returns</dt><dd>String representation of the value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00308">308</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00310">310</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>
@@ -1122,7 +1122,7 @@ template&lt;typename Period&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Formatted string representation of the value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00344">344</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="VariableValue_8hpp_source.html#l00346">346</a> of file <a class="el" href="VariableValue_8hpp_source.html">VariableValue.hpp</a>.</p>
 
 </div>
 </div>

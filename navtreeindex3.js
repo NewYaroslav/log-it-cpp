@@ -176,8 +176,6 @@ var NAVTREEINDEX3 =
 "structlogit_1_1UniqueFileLogger_1_1ThreadLogInfo.html#af1e74e31fc4ce79525705de138ad9bcb":[1,2,3,1,2],
 "structlogit_1_1VariableValue.html":[2,0,0,13],
 "structlogit_1_1VariableValue.html":[3,0,0,13],
-"structlogit_1_1VariableValue.html#a060792ecd61c5573594da28b2f11470d":[2,0,0,13,8],
-"structlogit_1_1VariableValue.html#a060792ecd61c5573594da28b2f11470d":[3,0,0,13,8],
 "structlogit_1_1VariableValue.html#a0b83f938b29bde60bfbbb278a153e992":[2,0,0,13,10],
 "structlogit_1_1VariableValue.html#a0b83f938b29bde60bfbbb278a153e992":[3,0,0,13,10],
 "structlogit_1_1VariableValue.html#a158877c821067242de79c53c46c209f1":[2,0,0,13,33],
@@ -249,5 +247,7 @@ var NAVTREEINDEX3 =
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c":[2,0,0,13,0,20],
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c":[3,0,0,13,0,20],
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb":[2,0,0,13,0,7],
-"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb":[3,0,0,13,0,7]
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb":[3,0,0,13,0,7],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71":[2,0,0,13,0,5],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71":[3,0,0,13,0,5]
 };

@@ -34,7 +34,7 @@ var structlogit_1_1VariableValue =
     [ "VariableValue", "structlogit_1_1VariableValue.html#a448d8d769d671a4f870ed6d9f34ffab4", null ],
     [ "VariableValue", "structlogit_1_1VariableValue.html#aca3f5f829656d5e3fd7bdbbe1d0f2c0d", null ],
     [ "VariableValue", "structlogit_1_1VariableValue.html#aef96c3471c808ae7e74c6ad38719b00d", null ],
-    [ "VariableValue", "structlogit_1_1VariableValue.html#a060792ecd61c5573594da28b2f11470d", null ],
+    [ "VariableValue", "structlogit_1_1VariableValue.html#ae38c5d406f5daf2dffb6fb6b0e882528", null ],
     [ "VariableValue", "structlogit_1_1VariableValue.html#ab88ceaa5e13b3de04e896cb4057c3b0e", null ],
     [ "VariableValue", "structlogit_1_1VariableValue.html#a0b83f938b29bde60bfbbb278a153e992", null ],
     [ "VariableValue", "structlogit_1_1VariableValue.html#a48a926bb1355074f802536379fdeea86", null ],
