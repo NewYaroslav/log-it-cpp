@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _LOGIT__FORMAT_HPP_INCLUDED
-#define _LOGIT__FORMAT_HPP_INCLUDED
+#ifndef _LOGIT_FORMAT_HPP_INCLUDED
+#define _LOGIT_FORMAT_HPP_INCLUDED
 
 /// \file format.hpp
 /// \brief Function for formatting strings according to a specified format.
