@@ -106,7 +106,7 @@ var NAVTREEINDEX2 =
 "example__logit__short__macros_8cpp_source.html":[4,0,1,3],
 "files.html":[4,0],
 "format_8hpp.html":[4,0,2,0,0,3,2],
-"format_8hpp.html#a21bd2f2f584dba3555b68d7adc2b43f1":[4,0,2,0,0,3,2,0],
+"format_8hpp.html#ada499dbc6565df032222ffb21702a3ab":[4,0,2,0,0,3,2,0],
 "format_8hpp_source.html":[4,0,2,0,0,3,2],
 "functions.html":[3,3,0],
 "functions.html":[3,3,0,0],

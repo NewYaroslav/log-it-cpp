@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['_5flogit_5f_5fformat_5fhpp_5fincluded_0',['_LOGIT__FORMAT_HPP_INCLUDED',['../format_8hpp.html#a21bd2f2f584dba3555b68d7adc2b43f1',1,'format.hpp']]],
-  ['_5flogit_5fargument_5futils_5fhpp_5fincluded_1',['_LOGIT_ARGUMENT_UTILS_HPP_INCLUDED',['../argument__utils_8hpp.html#ac269386d135b12b400739e62a5e53741',1,'argument_utils.hpp']]],
-  ['_5flogit_5fconfig_5fhpp_5fincluded_2',['_LOGIT_CONFIG_HPP_INCLUDED',['../LogItConfig_8hpp.html#a88ccde7736a52e6ffc7f197e1e5b7baa',1,'LogItConfig.hpp']]],
-  ['_5flogit_5fconsole_5flogger_5fhpp_5fincluded_3',['_LOGIT_CONSOLE_LOGGER_HPP_INCLUDED',['../ConsoleLogger_8hpp.html#ac6c4043e6e8e6e80d174718d3c7605c8',1,'ConsoleLogger.hpp']]],
-  ['_5flogit_5fenums_5fhpp_5fincluded_4',['_LOGIT_ENUMS_HPP_INCLUDED',['../enums_8hpp.html#a9db8d98d8cb3dd3d2371426db2a3176c',1,'enums.hpp']]],
+  ['_5flogit_5fargument_5futils_5fhpp_5fincluded_0',['_LOGIT_ARGUMENT_UTILS_HPP_INCLUDED',['../argument__utils_8hpp.html#ac269386d135b12b400739e62a5e53741',1,'argument_utils.hpp']]],
+  ['_5flogit_5fconfig_5fhpp_5fincluded_1',['_LOGIT_CONFIG_HPP_INCLUDED',['../LogItConfig_8hpp.html#a88ccde7736a52e6ffc7f197e1e5b7baa',1,'LogItConfig.hpp']]],
+  ['_5flogit_5fconsole_5flogger_5fhpp_5fincluded_2',['_LOGIT_CONSOLE_LOGGER_HPP_INCLUDED',['../ConsoleLogger_8hpp.html#ac6c4043e6e8e6e80d174718d3c7605c8',1,'ConsoleLogger.hpp']]],
+  ['_5flogit_5fenums_5fhpp_5fincluded_3',['_LOGIT_ENUMS_HPP_INCLUDED',['../enums_8hpp.html#a9db8d98d8cb3dd3d2371426db2a3176c',1,'enums.hpp']]],
+  ['_5flogit_5fformat_5fhpp_5fincluded_4',['_LOGIT_FORMAT_HPP_INCLUDED',['../format_8hpp.html#ada499dbc6565df032222ffb21702a3ab',1,'format.hpp']]],
   ['_5flogit_5fhpp_5fincluded_5',['_LOGIT_HPP_INCLUDED',['../LogIt_8hpp.html#abb76b4488538667d0b9da8f38bbe7ae5',1,'LogIt.hpp']]],
   ['_5flogit_5filog_5fformatter_5fhpp_5fincluded_6',['_LOGIT_ILOG_FORMATTER_HPP_INCLUDED',['../ILogFormatter_8hpp.html#a8f955f05bdab7f8381b9c2eb26a1b82d',1,'ILogFormatter.hpp']]],
   ['_5flogit_5filogger_5fhpp_5fincluded_7',['_LOGIT_ILOGGER_HPP_INCLUDED',['../ILogger_8hpp.html#ab273a315ff6af520f2317bf50a8f7eb4',1,'ILogger.hpp']]],
