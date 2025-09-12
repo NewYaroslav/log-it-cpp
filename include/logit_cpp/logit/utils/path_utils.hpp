@@ -19,8 +19,17 @@
 #include <windows.h>
 #include <locale>
 #include <codecvt>
+#elif defined(__APPLE__)
+// For macOS systems
+#include <mach-o/dyld.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <limits.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <errno.h>
 #else
-// For POSIX systems
+// For other POSIX systems
 #include <unistd.h>
 #include <limits.h>
 #include <dirent.h>
@@ -95,6 +104,23 @@ namespace logit {
         // Convert from std::wstring (UTF-16) to std::string (UTF-8)
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         return converter.to_bytes(exe_path);
+#       elif defined(__APPLE__)
+        uint32_t size = 0;
+        _NSGetExecutablePath(nullptr, &size);
+        std::string path(size, '\0');
+        if (_NSGetExecutablePath(path.data(), &size) != 0) {
+            throw std::runtime_error("Failed to get executable path.");
+        }
+        char resolved[PATH_MAX];
+        if (realpath(path.c_str(), resolved) == nullptr) {
+            throw std::runtime_error("Failed to resolve executable path.");
+        }
+        std::string exe_path(resolved);
+        size_t pos = exe_path.find_last_of("\\/");
+        if (pos != std::string::npos) {
+            exe_path = exe_path.substr(0, pos);
+        }
+        return exe_path;
 #       else
         char result[PATH_MAX];
         ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
