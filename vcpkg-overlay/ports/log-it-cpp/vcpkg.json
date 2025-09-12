@@ -1,0 +1,11 @@
+{
+  "name": "log-it-cpp",
+  "version-string": "1.0.0",
+  "description": "LogIt++ logging library",
+  "homepage": "https://github.com/NewYaroslav/log-it-cpp",
+  "dependencies": [
+    "vcpkg-cmake",
+    "vcpkg-cmake-config",
+    "time-shield-cpp"
+  ]
+}

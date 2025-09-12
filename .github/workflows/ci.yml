@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        std: [11, 17]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+      - name: Build
+        run: cmake --build build
+      - name: Install
+        run: cmake --install build --prefix install
+      - name: Test
+        run: ctest --test-dir build
+      - name: Configure consumer project
+        run: cmake -S tests/install_consumer -B build-consumer -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+      - name: Build consumer project
+        run: cmake --build build-consumer
+
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        std: [11, 17]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+      - name: Build
+        run: cmake --build build --config Release
+      - name: Install
+        run: cmake --install build --prefix install --config Release
+      - name: Test
+        run: ctest --test-dir build -C Release
+      - name: Configure consumer project
+        run: cmake -S tests/install_consumer -B build-consumer -DCMAKE_PREFIX_PATH="${{ github.workspace }}/install" -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+      - name: Build consumer project
+        run: cmake --build build-consumer --config Release
+
+  macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        std: [11, 17]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+      - name: Build
+        run: cmake --build build
+      - name: Install
+        run: cmake --install build --prefix install
+      - name: Test
+        run: ctest --test-dir build
+      - name: Configure consumer project
+        run: cmake -S tests/install_consumer -B build-consumer -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+      - name: Build consumer project
+        run: cmake --build build-consumer
+
+  vcpkg-install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git
+          ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
+      - name: Validate port
+        run: ./vcpkg/vcpkg install log-it-cpp --overlay-ports=vcpkg-overlay/ports
+      - name: Configure consumer project
+        run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
+      - name: Build consumer project
+        run: cmake --build build
