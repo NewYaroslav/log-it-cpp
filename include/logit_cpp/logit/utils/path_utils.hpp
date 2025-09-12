@@ -107,15 +107,16 @@ namespace logit {
 #       elif defined(__APPLE__)
         uint32_t size = 0;
         _NSGetExecutablePath(nullptr, &size);
-        std::string path(size, '\0');
+        std::vector<char> path(size);
         if (_NSGetExecutablePath(path.data(), &size) != 0) {
             throw std::runtime_error("Failed to get executable path.");
         }
+        std::string exe_path(path.data());
         char resolved[PATH_MAX];
-        if (realpath(path.c_str(), resolved) == nullptr) {
+        if (realpath(exe_path.c_str(), resolved) == nullptr) {
             throw std::runtime_error("Failed to resolve executable path.");
         }
-        std::string exe_path(resolved);
+        exe_path = resolved;
         size_t pos = exe_path.find_last_of("\\/");
         if (pos != std::string::npos) {
             exe_path = exe_path.substr(0, pos);
