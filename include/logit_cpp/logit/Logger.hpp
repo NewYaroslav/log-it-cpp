@@ -7,7 +7,7 @@
 
 #include "loggers/ILogger.hpp"
 #include "formatter.hpp"
-#include "logit/detail/TaskExecutor.hpp"
+#include "detail/TaskExecutor.hpp"
 #include <memory>
 #include <mutex>
 #include <sstream>
