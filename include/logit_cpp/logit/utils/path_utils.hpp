@@ -17,8 +17,6 @@
 // For Windows systems
 #include <direct.h>
 #include <windows.h>
-#include <locale>
-#include <codecvt>
 #elif defined(__APPLE__)
 // For macOS systems
 #include <mach-o/dyld.h>
@@ -46,10 +44,7 @@ namespace logit {
 
     inline std::string get_exec_dir() { return "./"; }
 
-    inline std::vector<std::string> get_list_files(const std::string&) {
-        std::cerr << "get_list_files is not supported under Emscripten" << std::endl;
-        return {};
-    }
+    inline std::vector<std::string> get_list_files(const std::string&) = delete;
 
     inline std::string get_file_name(const std::string& file_path) {
         size_t pos = file_path.find_last_of("/\\");
@@ -61,9 +56,7 @@ namespace logit {
         return file_path;
     }
 
-    inline void create_directories(const std::string&) {
-        std::cerr << "create_directories is not supported under Emscripten" << std::endl;
-    }
+    inline void create_directories(const std::string&) = delete;
 
     inline bool is_file(const std::string& path) {
         size_t dot_pos = path.find_last_of('.');
@@ -102,8 +95,7 @@ namespace logit {
         }
 
         // Convert from std::wstring (UTF-16) to std::string (UTF-8)
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        return converter.to_bytes(exe_path);
+        return wstring_to_utf8(exe_path);
 #       elif defined(__APPLE__)
         uint32_t size = 0;
         _NSGetExecutablePath(nullptr, &size);
@@ -149,7 +141,6 @@ namespace logit {
         std::vector<std::string> list_files;
 #       ifdef _WIN32
         // Use wide versions of functions to correctly handle non-ASCII characters.
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         std::wstring wsearch_path;
 
         // If the path is empty, use the current directory.
@@ -158,7 +149,7 @@ namespace logit {
             GetCurrentDirectoryW(MAX_PATH, buffer);
             wsearch_path = buffer;
         } else {
-            wsearch_path = converter.from_bytes(path);
+            wsearch_path = utf8_to_wstring(path);
         }
 
         // Ensure there is a trailing separator.
@@ -182,11 +173,11 @@ namespace logit {
 
                 if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
                     // Recursively process subdirectories.
-                    std::vector<std::string> sub_files = get_list_files(converter.to_bytes(wfull_path));
+                    std::vector<std::string> sub_files = get_list_files(wstring_to_utf8(wfull_path));
                     list_files.insert(list_files.end(), sub_files.begin(), sub_files.end());
                 } else {
                     // Add the found file.
-                    list_files.push_back(converter.to_bytes(wfull_path));
+                    list_files.push_back(wstring_to_utf8(wfull_path));
                 }
             } while (FindNextFileW(hFind, &fd));
             FindClose(hFind);
@@ -267,8 +258,7 @@ namespace logit {
     void create_directories(const std::string& path) {
 #       ifdef _WIN32
         // Convert UTF-8 string to wide string for Windows
-        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-        std::wstring wide_path = converter.from_bytes(path);
+        std::wstring wide_path = utf8_to_wstring(path);
         std::filesystem::path dir(wide_path);
 #       else
         std::filesystem::path dir = std::filesystem::u8path(path);
