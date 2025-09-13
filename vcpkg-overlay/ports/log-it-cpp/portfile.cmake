@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NewYaroslav/log-it-cpp
-    REF b1bceedddf34b417eb8b81de3508fe9c9704a46a
-    SHA512 f3781cbb4e9e190df38c3fe7fa80ba69bf6f9dbafb158e0426dd4604f2f1ba794450679005a38d0f9f1dad0696e2f22b8b086b2d7d08a0f99bb4fd3b0f7ed5d8
+    REF 6ae5c3c0c84422695ade31c25191af812474ee93
+    SHA512 9045037107c54b3bf9a9f1c9e24968a827dbb77c0fd82c22aa5bfb5ca43ff3b533a51a5ca4f3a435db5df9ebfe58e00c2d5dd9f11aa3f61a0e3d0191ae0eb604
     HEAD_REF main
 )
 
