@@ -4,6 +4,7 @@ var NAVTREEINDEX0 =
 "ConsoleLogger_8hpp.html#ac6c4043e6e8e6e80d174718d3c7605c8":[4,0,2,0,0,1,0,1],
 "ConsoleLogger_8hpp_source.html":[4,0,2,0,0,1,0],
 "FileLogger_8hpp.html":[4,0,2,0,0,1,1],
+"FileLogger_8hpp.html#a37e82da01c027cfa11a57274d3730cda":[4,0,2,0,0,1,1,1],
 "FileLogger_8hpp_source.html":[4,0,2,0,0,1,1],
 "ILogFormatter_8hpp.html":[4,0,2,0,0,0,1],
 "ILogFormatter_8hpp.html#a8f955f05bdab7f8381b9c2eb26a1b82d":[4,0,2,0,0,0,1,1],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "TaskExecutor_8hpp.html#af16f5f37b58f4ed8090b1becc90212da":[4,0,2,0,0,8,1],
 "TaskExecutor_8hpp_source.html":[4,0,2,0,0,8],
 "UniqueFileLogger_8hpp.html":[4,0,2,0,0,1,3],
-"UniqueFileLogger_8hpp_source.html":[4,0,2,0,0,1,3],
-"VariableValue_8hpp.html":[4,0,2,0,0,3,5]
+"UniqueFileLogger_8hpp.html#abddc49667277cd33db524114452c0434":[4,0,2,0,0,1,3,2]
 };

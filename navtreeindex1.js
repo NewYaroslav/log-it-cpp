@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"UniqueFileLogger_8hpp_source.html":[4,0,2,0,0,1,3],
+"VariableValue_8hpp.html":[4,0,2,0,0,3,5],
 "VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38":[4,0,2,0,0,3,5,1],
 "VariableValue_8hpp_source.html":[4,0,2,0,0,3,5],
 "annotated.html":[3,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX1 =
 "classlogit_1_1TaskExecutor.html#af8021fcfa067e73418d65c0000a59c5f":[2,0,0,11,0],
 "classlogit_1_1TaskExecutor.html#af8021fcfa067e73418d65c0000a59c5f":[3,0,0,11,0],
 "classlogit_1_1UniqueFileLogger.html":[1,2,3],
-"classlogit_1_1UniqueFileLogger.html#a00c26dbde6214b3ef48c2363ee8e601d":[1,2,3,7],
-"classlogit_1_1UniqueFileLogger.html#a0f4d2e47232001c8f28fb9f962a6f3d1":[1,2,3,10],
-"classlogit_1_1UniqueFileLogger.html#a14443e7a9dd2ac2657ffab1e15569db2":[1,2,3,9]
+"classlogit_1_1UniqueFileLogger.html#a00c26dbde6214b3ef48c2363ee8e601d":[1,2,3,7]
 };

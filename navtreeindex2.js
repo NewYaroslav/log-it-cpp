@@ -1,5 +1,7 @@
 var NAVTREEINDEX2 =
 {
+"classlogit_1_1UniqueFileLogger.html#a0f4d2e47232001c8f28fb9f962a6f3d1":[1,2,3,10],
+"classlogit_1_1UniqueFileLogger.html#a14443e7a9dd2ac2657ffab1e15569db2":[1,2,3,9],
 "classlogit_1_1UniqueFileLogger.html#a1b3a66593d2baeca595a89e6099fdf11":[1,2,3,27],
 "classlogit_1_1UniqueFileLogger.html#a1ce4c741cc0c178b529abc8df994826e":[1,2,3,15],
 "classlogit_1_1UniqueFileLogger.html#a223600556a6ac078a3df4041a6509e9e":[1,2,3,20],
@@ -247,7 +249,5 @@ var NAVTREEINDEX2 =
 "namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31ad382816a3cbeed082c9e216e7392eed1":[2,0,0,17,10],
 "namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31adf1b1322cf6703efd9885b0651ddb57a":[2,0,0,17,5],
 "namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31ae90dfb84e30edf611e326eeb04d680de":[2,0,0,17,0],
-"namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31aee38e4d5dd68c4e440825018d549cb47":[2,0,0,17,9],
-"namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31af780aab6295a2f368ac69a514f8b4605":[2,0,0,17,2],
-"namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31afb55202637692de4a494e9ade4cff2dd":[2,0,0,17,7]
+"namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31aee38e4d5dd68c4e440825018d549cb47":[2,0,0,17,9]
 };
