@@ -12,7 +12,7 @@
 #include "logit/Logger.hpp"
 #include "logit/LogStream.hpp"
 #include "logit/LogMacros.hpp"
-#include "logit/formatter/SimpleLogFormatter.hpp"
+#include "logit/formatter.hpp"
 #include "logit/loggers.hpp"
 
 /// \namespace logit
