@@ -9,7 +9,6 @@
 /// encoding utilities, path utilities, and log record management. Including this header
 /// provides a single point of access to common utility functions and types.
 
-#include "LogItConfig.hpp"
 #include "enums.hpp"
 #include "utils/format.hpp"
 #include "utils/VariableValue.hpp"
