@@ -143,105 +143,146 @@
         logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,            \
         LOGIT_FUNCTION, {}, arg_names, index, true}, __VA_ARGS__)
 
-/// \cond INTERNAL
-/// \brief Helper macro defining the logging macros for a specific level.
-/// \param NAME    Macro base name (e.g. TRACE).
-/// \param LEVEL   Enumeration value of ::logit::LogLevel.
-#define LOGIT_DEFINE_LOG_LEVEL_MACROS(NAME, LEVEL)                                             \
-    /// \brief Logs a message.                                                                 \
-    /// \param ... The arguments to log.                                                       \
-    #define LOGIT_##NAME(...)                LOGIT_LOG_AND_RETURN(LEVEL, {}, #__VA_ARGS__, __VA_ARGS__)                 \
-    /// \brief Logs a message without arguments.                                               \
-    #define LOGIT_##NAME##0()                LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, {})                               \
-    #define LOGIT_0##NAME()                  LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, {})                               \
-    #define LOGIT_0_##NAME()                 LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, {})                               \
-    #define LOGIT_NOARGS_##NAME()            LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, {})                               \
-    /// \brief Logs a formatted message.                                                      \
-    /// \param fmt Format string.                                                             \
-    /// \param ... The arguments to log.                                                      \
-    #define LOGIT_FORMAT_##NAME(fmt, ...)    LOGIT_LOG_AND_RETURN(LEVEL, fmt, #__VA_ARGS__, __VA_ARGS__)             \
-    /// \brief Logs arguments without formatting.                                             \
-    /// \param ... The arguments to log.                                                      \
-    #define LOGIT_PRINT_##NAME(...)          LOGIT_LOG_AND_RETURN_PRINT(LEVEL, #__VA_ARGS__, __VA_ARGS__)            \
-    /// \brief Logs a printf-style formatted message.                                         \
-    /// \param fmt Format string.                                                             \
-    /// \param ... The arguments to log.                                                      \
-    #define LOGIT_PRINTF_##NAME(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, logit::format(fmt, __VA_ARGS__))     \
-    /// \brief Logs a message to a specific logger.                                           \
-    /// \param index Logger index.                                                            \
-    /// \param ... The arguments to log.                                                      \
-    #define LOGIT_##NAME##_TO(index, ...)    LOGIT_LOG_AND_RETURN_WITH_INDEX(LEVEL, index, {}, #__VA_ARGS__, __VA_ARGS__) \
-    /// \brief Logs a message without arguments to a specific logger.                         \
-    /// \param index Logger index.                                                            \
-    #define LOGIT_##NAME##0_TO(index)        LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(LEVEL, index, {})               \
-    #define LOGIT_0##NAME##_TO(index)        LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(LEVEL, index, {})               \
-    #define LOGIT_0_##NAME##_TO(index)       LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(LEVEL, index, {})               \
-    #define LOGIT_NOARGS_##NAME##_TO(index)  LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(LEVEL, index, {})               \
-    /// \brief Logs a formatted message to a specific logger.                                 \
-    /// \param index Logger index.                                                            \
-    /// \param fmt Format string.                                                             \
-    /// \param ... The arguments to log.                                                      \
-    #define LOGIT_FORMAT_##NAME##_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(LEVEL, index, fmt, #__VA_ARGS__, __VA_ARGS__) \
-    /// \brief Logs arguments without formatting to a specific logger.                        \
-    /// \param index Logger index.                                                            \
-    /// \param ... The arguments to log.                                                      \
-    #define LOGIT_PRINT_##NAME##_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(LEVEL, index, #__VA_ARGS__, __VA_ARGS__) \
-    /// \brief Logs a printf-style formatted message to a specific logger.                    \
-    /// \param index Logger index.                                                            \
-    /// \param fmt Format string.                                                             \
-    /// \param ... The arguments to log.                                                      \
-    #define LOGIT_PRINTF_##NAME##_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(LEVEL, index, logit::format(fmt, __VA_ARGS__))
-
-/// \brief Helper macro defining the conditional logging macros for a specific level.
-/// \param NAME    Macro base name (e.g. TRACE).
-/// \param LEVEL   Enumeration value of ::logit::LogLevel.
-#define LOGIT_DEFINE_LOG_LEVEL_IF_MACROS(NAME, LEVEL)                                         \
-    /// \brief Logs a message if a condition is true.                                         \
-    /// \param condition Condition to check.                                                 \
-    /// \param ... The arguments to log.                                                     \
-    #define LOGIT_##NAME##_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(LEVEL, {}, #__VA_ARGS__, __VA_ARGS__) \
-    /// \brief Logs a message without arguments if a condition is true.                      \
-    /// \param condition Condition to check.                                                 \
-    #define LOGIT_##NAME##0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, {})          \
-    #define LOGIT_0##NAME##_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, {})          \
-    #define LOGIT_0_##NAME##_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, {})          \
-    #define LOGIT_NOARGS_##NAME##_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, {})          \
-    /// \brief Logs a formatted message if a condition is true.                              \
-    /// \param condition Condition to check.                                                 \
-    /// \param fmt Format string.                                                            \
-    /// \param ... The arguments to log.                                                     \
-    #define LOGIT_FORMAT_##NAME##_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(LEVEL, fmt, #__VA_ARGS__, __VA_ARGS__) \
-    /// \brief Logs a raw message if a condition is true.                                    \
-    /// \param condition Condition to check.                                                 \
-    /// \param fmt Message or format string.                                                \
-    #define LOGIT_PRINT_##NAME##_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, fmt)         \
-    /// \brief Logs a printf-style formatted message if a condition is true.                 \
-    /// \param condition Condition to check.                                                 \
-    /// \param fmt Format string.                                                            \
-    /// \param ... The arguments to log.                                                     \
-    #define LOGIT_PRINTF_##NAME##_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(LEVEL, logit::format(fmt, __VA_ARGS__))
-/// \endcond
-
 //------------------------------------------------------------------------------
 // Macros for each log level
 
 // TRACE level macros
-LOGIT_DEFINE_LOG_LEVEL_MACROS(TRACE, logit::LogLevel::LOG_LVL_TRACE)
+/// \brief Logs a message at TRACE level.
+/// \param ... The arguments to log.
+#define LOGIT_TRACE(...)                LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, {}, #__VA_ARGS__, __VA_ARGS__)
+/// \brief Logs a message without arguments at TRACE level.
+#define LOGIT_TRACE0()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
+#define LOGIT_0TRACE()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
+#define LOGIT_0_TRACE()                 LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
+#define LOGIT_NOARGS_TRACE()            LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
+#define LOGIT_FORMAT_TRACE(fmt, ...)    LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_TRACE(...)          LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_TRACE, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_TRACE(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, logit::format(fmt, __VA_ARGS__))
+
+// TRACE macros with index
+#define LOGIT_TRACE_TO(index, ...)      LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_TRACE0_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, {})
+#define LOGIT_0TRACE_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, {})
+#define LOGIT_0_TRACE_TO(index)         LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, {})
+#define LOGIT_NOARGS_TRACE_TO(index)    LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, {})
+#define LOGIT_FORMAT_TRACE_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_TRACE_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_TRACE_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, logit::format(fmt, __VA_ARGS__))
 
 // INFO level macros
-LOGIT_DEFINE_LOG_LEVEL_MACROS(INFO,  logit::LogLevel::LOG_LVL_INFO)
+/// \brief Logs a message at INFO level.
+/// \param ... The arguments to log.
+#define LOGIT_INFO(...)                 LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, {}, #__VA_ARGS__, __VA_ARGS__)
+/// \brief Logs a message without arguments at INFO level.
+#define LOGIT_INFO0()                   LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
+#define LOGIT_0INFO()                   LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
+#define LOGIT_0_INFO()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
+#define LOGIT_NOARGS_INFO()             LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
+#define LOGIT_FORMAT_INFO(fmt, ...)     LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_INFO(...)           LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_INFO, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_INFO(fmt, ...)     LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, logit::format(fmt, __VA_ARGS__))
+
+// INFO macros with index
+#define LOGIT_INFO_TO(index, ...)       LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_INFO0_TO(index)           LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, {})
+#define LOGIT_0INFO_TO(index)           LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, {})
+#define LOGIT_0_INFO_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, {})
+#define LOGIT_NOARGS_INFO_TO(index)     LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, {})
+#define LOGIT_FORMAT_INFO_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_INFO_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_INFO_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, logit::format(fmt, __VA_ARGS__))
 
 // DEBUG level macros
-LOGIT_DEFINE_LOG_LEVEL_MACROS(DEBUG, logit::LogLevel::LOG_LVL_DEBUG)
+/// \brief Logs a message at DEBUG level.
+/// \param ... The arguments to log.
+#define LOGIT_DEBUG(...)                LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, {}, #__VA_ARGS__, __VA_ARGS__)
+/// \brief Logs a message without arguments at DEBUG level.
+#define LOGIT_DEBUG0()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
+#define LOGIT_0DEBUG()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
+#define LOGIT_0_DEBUG()                 LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
+#define LOGIT_NOARGS_DEBUG()            LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
+#define LOGIT_FORMAT_DEBUG(fmt, ...)    LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_DEBUG(...)          LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_DEBUG, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_DEBUG(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, logit::format(fmt, __VA_ARGS__))
+
+// DEBUG macros with index
+#define LOGIT_DEBUG_TO(index, ...)      LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_DEBUG0_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, {})
+#define LOGIT_0DEBUG_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, {})
+#define LOGIT_0_DEBUG_TO(index)         LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, {})
+#define LOGIT_NOARGS_DEBUG_TO(index)    LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, {})
+#define LOGIT_FORMAT_DEBUG_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_DEBUG_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_DEBUG_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, logit::format(fmt, __VA_ARGS__))
 
 // WARN level macros
-LOGIT_DEFINE_LOG_LEVEL_MACROS(WARN,  logit::LogLevel::LOG_LVL_WARN)
+/// \brief Logs a message at WARN level.
+/// \param ... The arguments to log.
+#define LOGIT_WARN(...)                 LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, {}, #__VA_ARGS__, __VA_ARGS__)
+/// \brief Logs a message without arguments at WARN level.
+#define LOGIT_WARN0()                   LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
+#define LOGIT_0WARN()                   LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
+#define LOGIT_0_WARN()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
+#define LOGIT_NOARGS_WARN()             LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
+#define LOGIT_FORMAT_WARN(fmt, ...)     LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_WARN(...)           LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_WARN, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_WARN(fmt, ...)     LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, logit::format(fmt, __VA_ARGS__))
+
+// WARN macros with index
+#define LOGIT_WARN_TO(index, ...)       LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_WARN0_TO(index)           LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, {})
+#define LOGIT_0WARN_TO(index)           LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, {})
+#define LOGIT_0_WARN_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, {})
+#define LOGIT_NOARGS_WARN_TO(index)     LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, {})
+#define LOGIT_FORMAT_WARN_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_WARN_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_WARN_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, logit::format(fmt, __VA_ARGS__))
 
 // ERROR level macros
-LOGIT_DEFINE_LOG_LEVEL_MACROS(ERROR, logit::LogLevel::LOG_LVL_ERROR)
+/// \brief Logs a message at ERROR level.
+/// \param ... The arguments to log.
+#define LOGIT_ERROR(...)                LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, {}, #__VA_ARGS__, __VA_ARGS__)
+/// \brief Logs a message without arguments at ERROR level.
+#define LOGIT_ERROR0()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
+#define LOGIT_0ERROR()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
+#define LOGIT_0_ERROR()                 LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
+#define LOGIT_NOARGS_ERROR()            LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
+#define LOGIT_FORMAT_ERROR(fmt, ...)    LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_ERROR(...)          LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_ERROR, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_ERROR(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, logit::format(fmt, __VA_ARGS__))
+
+// ERROR macros with index
+#define LOGIT_ERROR_TO(index, ...)      LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_ERROR0_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, {})
+#define LOGIT_0ERROR_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, {})
+#define LOGIT_0_ERROR_TO(index)         LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, {})
+#define LOGIT_NOARGS_ERROR_TO(index)    LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, {})
+#define LOGIT_FORMAT_ERROR_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_ERROR_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_ERROR_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, logit::format(fmt, __VA_ARGS__))
 
 // FATAL level macros
-LOGIT_DEFINE_LOG_LEVEL_MACROS(FATAL, logit::LogLevel::LOG_LVL_FATAL)
+/// \brief Logs a message at FATAL level.
+/// \param ... The arguments to log.
+#define LOGIT_FATAL(...)                LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, {}, #__VA_ARGS__, __VA_ARGS__)
+/// \brief Logs a message without arguments at FATAL level.
+#define LOGIT_FATAL0()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
+#define LOGIT_0FATAL()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
+#define LOGIT_0_FATAL()                 LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
+#define LOGIT_NOARGS_FATAL()            LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
+#define LOGIT_FORMAT_FATAL(fmt, ...)    LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_FATAL(...)          LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_FATAL, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_FATAL(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, logit::format(fmt, __VA_ARGS__))
+
+// FATAL macros with index
+#define LOGIT_FATAL_TO(index, ...)      LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_FATAL0_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, {})
+#define LOGIT_0FATAL_TO(index)          LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, {})
+#define LOGIT_0_FATAL_TO(index)         LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, {})
+#define LOGIT_NOARGS_FATAL_TO(index)    LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, {})
+#define LOGIT_FORMAT_FATAL_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_FATAL_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINTF_FATAL_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, logit::format(fmt, __VA_ARGS__))
 
 //------------------------------------------------------------------------------
 // Conditional logging macros (logging based on a condition)
@@ -251,27 +292,67 @@ LOGIT_DEFINE_LOG_LEVEL_MACROS(FATAL, logit::LogLevel::LOG_LVL_FATAL)
 /// \{
 
 // TRACE level conditional macros
-LOGIT_DEFINE_LOG_LEVEL_IF_MACROS(TRACE, logit::LogLevel::LOG_LVL_TRACE)
+#define LOGIT_TRACE_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_TRACE0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
+#define LOGIT_0TRACE_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
+#define LOGIT_0_TRACE_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
+#define LOGIT_NOARGS_TRACE_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
+#define LOGIT_FORMAT_TRACE_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_TRACE_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, fmt)
+#define LOGIT_PRINTF_TRACE_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, logit::format(fmt, __VA_ARGS__))
 
 // INFO level conditional macros
-LOGIT_DEFINE_LOG_LEVEL_IF_MACROS(INFO,  logit::LogLevel::LOG_LVL_INFO)
+#define LOGIT_INFO_IF(condition, ...)         if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_INFO0_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
+#define LOGIT_0INFO_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
+#define LOGIT_0_INFO_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
+#define LOGIT_NOARGS_INFO_IF(condition)       if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
+#define LOGIT_FORMAT_INFO_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_INFO_IF(condition, fmt)   if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, fmt)
+#define LOGIT_PRINTF_INFO_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, logit::format(fmt, __VA_ARGS__))
 
 // DEBUG level conditional macros
-LOGIT_DEFINE_LOG_LEVEL_IF_MACROS(DEBUG, logit::LogLevel::LOG_LVL_DEBUG)
+#define LOGIT_DEBUG_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_DEBUG0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
+#define LOGIT_0DEBUG_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
+#define LOGIT_0_DEBUG_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
+#define LOGIT_NOARGS_DEBUG_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
+#define LOGIT_FORMAT_DEBUG_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_DEBUG_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, fmt)
+#define LOGIT_PRINTF_DEBUG_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, logit::format(fmt, __VA_ARGS__))
 
 // WARN level conditional macros
-LOGIT_DEFINE_LOG_LEVEL_IF_MACROS(WARN,  logit::LogLevel::LOG_LVL_WARN)
+#define LOGIT_WARN_IF(condition, ...)         if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_WARN0_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
+#define LOGIT_0WARN_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
+#define LOGIT_0_WARN_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
+#define LOGIT_NOARGS_WARN_IF(condition)       if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
+#define LOGIT_FORMAT_WARN_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_WARN_IF(condition, fmt)   if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, fmt)
+#define LOGIT_PRINTF_WARN_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, logit::format(fmt, __VA_ARGS__))
 
 // ERROR level conditional macros
-LOGIT_DEFINE_LOG_LEVEL_IF_MACROS(ERROR, logit::LogLevel::LOG_LVL_ERROR)
+#define LOGIT_ERROR_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_ERROR0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
+#define LOGIT_0ERROR_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
+#define LOGIT_0_ERROR_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
+#define LOGIT_NOARGS_ERROR_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
+#define LOGIT_FORMAT_ERROR_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_ERROR_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, fmt)
+#define LOGIT_PRINTF_ERROR_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, logit::format(fmt, __VA_ARGS__))
 
 // FATAL level conditional macros
-LOGIT_DEFINE_LOG_LEVEL_IF_MACROS(FATAL, logit::LogLevel::LOG_LVL_FATAL)
+#define LOGIT_FATAL_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, {}, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_FATAL0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
+#define LOGIT_0FATAL_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
+#define LOGIT_0_FATAL_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
+#define LOGIT_NOARGS_FATAL_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
+#define LOGIT_FORMAT_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, fmt, #__VA_ARGS__, __VA_ARGS__)
+#define LOGIT_PRINT_FATAL_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, fmt)
+#define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, logit::format(fmt, __VA_ARGS__))
 
 //------------------------------------------------------------------------------
 // Shorter versions of the macros when LOGIT_SHORT_NAME is defined
-#undef LOGIT_DEFINE_LOG_LEVEL_MACROS
-#undef LOGIT_DEFINE_LOG_LEVEL_IF_MACROS
 #if defined(LOGIT_SHORT_NAME)
 
 // TRACE level
