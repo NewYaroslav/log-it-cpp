@@ -88,7 +88,9 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git
           ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
       - name: Validate port
-        run: ./vcpkg/vcpkg install log-it-cpp --overlay-ports=vcpkg-overlay/ports
+        run: ./vcpkg/vcpkg install log-it-cpp \
+             --overlay-ports=vcpkg-overlay/ports \
+             --overlay-ports=libs/time-shield-cpp/vcpkg-overlay/ports
       - name: Configure consumer project
         run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
       - name: Build consumer project
