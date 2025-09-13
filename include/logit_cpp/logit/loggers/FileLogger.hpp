@@ -6,7 +6,6 @@
 /// \brief File logger implementation that outputs logs to files with rotation and deletion of old logs.
 
 #include "ILogger.hpp"
-#include "logit/detail/TaskExecutor.hpp"
 #include <iostream>
 #include <fstream>
 #include <mutex>
