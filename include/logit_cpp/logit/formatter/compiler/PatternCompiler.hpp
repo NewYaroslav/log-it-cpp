@@ -10,6 +10,8 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <cstdio>
+#include "logit/utils/LogRecord.hpp"
 
 namespace logit {
 
