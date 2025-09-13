@@ -960,10 +960,10 @@
 /// \}
 
 /// \brief Macro for waiting for all asynchronous loggers to finish processing.
-#define LOGIT_WAIT() logit::Logger::get_instance().wait();
+#define LOGIT_WAIT() logit::Logger::get_instance().wait()
 
 /// \brief Macro for shutting down logger system.
-#define LOGIT_SHUTDOWN() logit::Logger::get_instance().shutdown();
+#define LOGIT_SHUTDOWN() logit::Logger::get_instance().shutdown()
 
 //------------------------------------------------------------------------------
 
