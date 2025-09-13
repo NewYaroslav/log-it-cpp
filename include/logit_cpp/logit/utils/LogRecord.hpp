@@ -5,6 +5,9 @@
 /// \file LogRecord.hpp
 /// \brief Contains the definition of the LogRecord structure for storing log data.
 
+#include <string>
+#include <vector>
+#include <cstdint>
 #include <thread>
 
 namespace logit {
