@@ -9,7 +9,6 @@
 #include <vector>
 #include <cstdint>
 #include <thread>
-#include "logit/enums.hpp"
 
 namespace logit {
 
