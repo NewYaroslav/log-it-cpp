@@ -6,7 +6,6 @@
 /// \brief Logger that writes each log message to a unique file with auto-deletion of old logs.
 
 #include "ILogger.hpp"
-#include "logit/detail/TaskExecutor.hpp"
 #include <iostream>
 #include <fstream>
 #include <mutex>
