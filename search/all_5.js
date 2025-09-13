@@ -18,6 +18,6 @@ var searchData=
   ['_5flogit_5ftest_5flog_5fdepth_5f1_5fhpp_5fincluded_15',['_LOGIT_TEST_LOG_DEPTH_1_HPP_INCLUDED',['../test__log__depth__1_8hpp.html#a5db1ab77d3434541aba834a415522851',1,'test_log_depth_1.hpp']]],
   ['_5flogit_5ftest_5flog_5fdepth_5f2_5fhpp_5fincluded_16',['_LOGIT_TEST_LOG_DEPTH_2_HPP_INCLUDED',['../test__log__depth__2_8hpp.html#aa4b23f9594c84ffff80fd886629a4c4a',1,'test_log_depth_2.hpp']]],
   ['_5flogit_5ftest_5flog_5fdepth_5f3_5fhpp_5fincluded_17',['_LOGIT_TEST_LOG_DEPTH_3_HPP_INCLUDED',['../test__log__depth__3_8hpp.html#aaafb46f4eb6b637a6142125fe45f739e',1,'test_log_depth_3.hpp']]],
-  ['_5flogit_5fuitls_5fhpp_5fincluded_18',['_LOGIT_UITLS_HPP_INCLUDED',['../utils_8hpp.html#ab859c632b8074915e6acffd6f4976754',1,'utils.hpp']]],
+  ['_5flogit_5futils_5fhpp_5fincluded_18',['_LOGIT_UTILS_HPP_INCLUDED',['../utils_8hpp.html#a80b9acc6f897c4b3aa5bc87c316b01ba',1,'utils.hpp']]],
   ['_5flogit_5fvariable_5fvalue_5fhpp_5fincluded_19',['_LOGIT_VARIABLE_VALUE_HPP_INCLUDED',['../VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38',1,'VariableValue.hpp']]]
 ];

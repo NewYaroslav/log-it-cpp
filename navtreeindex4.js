@@ -71,6 +71,6 @@ var NAVTREEINDEX4 =
 "test__log__depth__3_8hpp_source.html":[4,0,2,0,0,2,0,0,0,0,0],
 "topics.html":[1],
 "utils_8hpp.html":[4,0,2,0,0,9],
-"utils_8hpp.html#ab859c632b8074915e6acffd6f4976754":[4,0,2,0,0,9,0],
+"utils_8hpp.html#a80b9acc6f897c4b3aa5bc87c316b01ba":[4,0,2,0,0,9,0],
 "utils_8hpp_source.html":[4,0,2,0,0,9]
 };

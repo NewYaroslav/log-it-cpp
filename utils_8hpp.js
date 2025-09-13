@@ -1,4 +1,4 @@
 var utils_8hpp =
 [
-    [ "_LOGIT_UITLS_HPP_INCLUDED", "utils_8hpp.html#ab859c632b8074915e6acffd6f4976754", null ]
+    [ "_LOGIT_UTILS_HPP_INCLUDED", "utils_8hpp.html#a80b9acc6f897c4b3aa5bc87c316b01ba", null ]
 ];
