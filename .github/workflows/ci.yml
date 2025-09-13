@@ -93,6 +93,6 @@ jobs:
             --overlay-ports=vcpkg-overlay/ports \
             --overlay-ports=libs/time-shield-cpp/vcpkg-overlay/ports
       - name: Configure consumer project
-        run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake
+        run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
       - name: Build consumer project
         run: cmake --build build
