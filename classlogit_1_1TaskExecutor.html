@@ -183,7 +183,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>A thread-safe task executor that processes tasks in a dedicated worker thread. </p>
 <p>This class provides a mechanism for queuing tasks (functions or lambdas) and executing them asynchronously in a background thread. It follows the singleton design pattern. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00051">51</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00052">52</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af8021fcfa067e73418d65c0000a59c5f" name="af8021fcfa067e73418d65c0000a59c5f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af8021fcfa067e73418d65c0000a59c5f">&#9670;&#160;</a></span>TaskExecutor() <span class="overload">[1/3]</span></h2>
@@ -210,7 +210,7 @@ Private Attributes</h2></td></tr>
 
 <p>Private constructor to enforce the singleton pattern. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00120">120</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00121">121</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -239,7 +239,7 @@ Private Attributes</h2></td></tr>
 
 <p>Destructor that stops the worker thread and cleans up resources. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00125">125</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00126">126</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -325,7 +325,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00062">62</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00063">63</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -355,7 +355,7 @@ Private Attributes</h2></td></tr>
 <p>Get the singleton instance of the <a class="el" href="classlogit_1_1TaskExecutor.html" title="A thread-safe task executor that processes tasks in a dedicated worker thread.">TaskExecutor</a>. </p>
 <dl class="section return"><dt>Returns</dt><dd>A reference to the single instance of <code><a class="el" href="classlogit_1_1TaskExecutor.html" title="A thread-safe task executor that processes tasks in a dedicated worker thread.">TaskExecutor</a></code>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00055">55</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00056">56</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -435,7 +435,7 @@ Private Attributes</h2></td></tr>
 <p>Shuts down the <a class="el" href="classlogit_1_1TaskExecutor.html" title="A thread-safe task executor that processes tasks in a dedicated worker thread.">TaskExecutor</a> by stopping the worker thread. </p>
 <p>This method signals the worker thread to stop and then joins it. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00084">84</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00085">85</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -464,7 +464,7 @@ Private Attributes</h2></td></tr>
 
 <p>Waits for all tasks in the queue to be processed. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00071">71</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00072">72</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -493,7 +493,7 @@ Private Attributes</h2></td></tr>
 
 <p>The worker thread function that processes tasks from the queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00102">102</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00103">103</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -520,7 +520,7 @@ Private Attributes</h2></td></tr>
 
 <p>Condition variable to signal task availability. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00097">97</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00098">98</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -546,7 +546,7 @@ Private Attributes</h2></td></tr>
 
 <p>Mutex to protect access to the task queue. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00096">96</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00097">97</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -572,7 +572,7 @@ Private Attributes</h2></td></tr>
 
 <p>Flag indicating if the worker thread should stop. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00099">99</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00100">100</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -598,7 +598,7 @@ Private Attributes</h2></td></tr>
 
 <p>Queue holding tasks to be executed. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00095">95</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00096">96</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
@@ -624,7 +624,7 @@ Private Attributes</h2></td></tr>
 
 <p>Worker thread for executing tasks. </p>
 
-<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00098">98</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="TaskExecutor_8hpp_source.html#l00099">99</a> of file <a class="el" href="TaskExecutor_8hpp_source.html">TaskExecutor.hpp</a>.</p>
 
 </div>
 </div>
