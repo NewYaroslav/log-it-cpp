@@ -1,4 +1,4 @@
 var encoding__utils_8hpp =
 [
-    [ "logit::utf8_to_ansi", "namespacelogit.html#a8e8e8cdec95a803085a376de67d605b6", null ]
+    [ "_LOGIT_ENCODING_UTILS_HPP_INCLUDED", "encoding__utils_8hpp.html#a6ba91d688f89e9f5f03899407e5697c5", null ]
 ];
