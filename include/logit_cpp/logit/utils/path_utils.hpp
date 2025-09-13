@@ -13,8 +13,6 @@
 #include <stdexcept>
 #endif
 
-#include "encoding_utils.hpp"
-
 #ifdef _WIN32
 // For Windows systems
 #include <direct.h>
