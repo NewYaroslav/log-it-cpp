@@ -1,71 +1,70 @@
-# When generating a Code::Blocks project with MinGW, you can use:
-# cmake -G "CodeBlocks - MinGW Makefiles" -S . -B build-cb
 cmake_minimum_required(VERSION 3.18)
-project(time_shield LANGUAGES CXX)
+project(log-it-cpp VERSION 1.0.0 LANGUAGES CXX)
 
-if(MINGW OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    set(COMMON_WARN_FLAGS -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow)
-endif()
-
-if(MSVC)
-    set(COMMON_WARN_FLAGS /W4 /wd4996)
-endif()
+option(LOG_IT_CPP_BUILD_TESTS "Build log-it-cpp tests" ${PROJECT_IS_TOP_LEVEL})
+option(LOG_IT_CPP_BUILD_EXAMPLES "Build log-it-cpp examples" OFF)
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 11)
 endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Absolute path to the project root (where CMakeLists.txt resides)
-get_filename_component(PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE)
-
-# Define the LOGIT_BASE_PATH macro
-add_compile_definitions(LOGIT_BASE_PATH="${PROJECT_ROOT}")
-
-# Include and library paths
-set(PROJECT_INCLUDE_DIRS
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/logit_cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/fmt/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/time-shield-cpp/include/time_shield_cpp
-)
-
-# Header files from include/
-file(GLOB_RECURSE PROJECT_HEADERS
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    include/*.hpp
-)
-
-# Create a virtual target for headers so IDEs show them
-add_custom_target(project_headers SOURCES ${PROJECT_HEADERS})
-
-# Locate all .cpp files in examples/
-file(GLOB EXAMPLES_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} examples/*.cpp)
-
-# Create a separate target for each example
-foreach(example_src ${EXAMPLES_SOURCES})
-    get_filename_component(example_name ${example_src} NAME_WE)
-
-    add_executable(${example_name} ${example_src})
-
-    target_include_directories(${example_name} PRIVATE ${PROJECT_INCLUDE_DIRS})
-    
-    if(COMMON_WARN_FLAGS)
-        target_compile_options(${example_name} PRIVATE ${COMMON_WARN_FLAGS})
+# Dependency: TimeShield
+find_package(TimeShield 1.0.3 QUIET CONFIG)
+if(NOT TimeShield_FOUND)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libs/time-shield-cpp/CMakeLists.txt")
+        add_subdirectory(libs/time-shield-cpp)
+    else()
+        message(FATAL_ERROR "TimeShield not found. Please install it or add as submodule.")
     endif()
+endif()
 
-    target_link_directories(${example_name} PRIVATE ${PROJECT_LIBRARY_DIRS})
-    target_compile_definitions(${example_name} PRIVATE ${PROJECT_DEFINES})
-    target_link_libraries(${example_name} PRIVATE ${PROJECT_LIBS})
+add_library(log-it-cpp INTERFACE)
 
-    # Add headers as SOURCES so IDEs display them
-    set_source_files_properties(${PROJECT_HEADERS} PROPERTIES HEADER_FILE_ONLY ON)
-    target_sources(${example_name} PRIVATE ${PROJECT_HEADERS})
-    
-    foreach(dll ${DLL_FILES})
-        add_custom_command(TARGET ${example_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${dll}"
-            "$<TARGET_FILE_DIR:${example_name}>"
-        )
-    endforeach()
-endforeach()
+add_compile_definitions(LOGIT_BASE_PATH="$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>")
+
+target_include_directories(log-it-cpp INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/logit_cpp>
+    $<INSTALL_INTERFACE:include/logit_cpp>
+)
+
+target_link_libraries(log-it-cpp INTERFACE time_shield::time_shield)
+
+if(LOG_IT_CPP_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
+if(LOG_IT_CPP_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
+
+include(CMakePackageConfigHelpers)
+
+install(DIRECTORY include/ DESTINATION include)
+
+install(TARGETS log-it-cpp EXPORT log-it-cppTargets)
+
+install(EXPORT log-it-cppTargets
+    FILE log-it-cppTargets.cmake
+    NAMESPACE log-it-cpp::
+    DESTINATION lib/cmake/log-it-cpp
+)
+
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+configure_package_config_file(
+    cmake/log-it-cppConfig.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/log-it-cpp
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfigVersion.cmake"
+    DESTINATION lib/cmake/log-it-cpp
+)

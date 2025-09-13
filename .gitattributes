@@ -1,0 +1,3 @@
+# Не включать эти папки в GitHub source archive (tar.gz/zip)
+vcpkg-overlay/ export-ignore
+.github/       export-ignore
