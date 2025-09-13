@@ -6,6 +6,7 @@
 /// \brief Console logger implementation that outputs logs to the console with color support.
 
 #include "ILogger.hpp"
+#include "logit/detail/TaskExecutor.hpp"
 #include <iostream>
 #if defined(_WIN32)
 #include <windows.h>
@@ -105,7 +106,7 @@ namespace logit {
                 return;
             }
             lock.unlock();
-            TaskExecutor::get_instance().add_task([this, message](){
+            detail::TaskExecutor::get_instance().add_task([this, message](){
                 std::lock_guard<std::mutex> lock(m_mutex);
 #               if defined(_WIN32)
                 // For Windows, parse the message for ANSI color codes and apply them
@@ -181,7 +182,7 @@ namespace logit {
             std::unique_lock<std::mutex> lock(m_mutex);
             if (!m_config.async) return;
             lock.unlock();
-            TaskExecutor::get_instance().wait();
+            detail::TaskExecutor::get_instance().wait();
 #endif
         }
 
