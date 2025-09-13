@@ -6,6 +6,7 @@ var dir_c72318ec2dd41c019b2cebe69b9a8641 =
     [ "utils", "dir_1f2d2c0c02d0dde21410663b8836d271.html", "dir_1f2d2c0c02d0dde21410663b8836d271" ],
     [ "enums.hpp", "enums_8hpp.html", "enums_8hpp" ],
     [ "Logger.hpp", "Logger_8hpp.html", "Logger_8hpp" ],
+    [ "loggers.hpp", "loggers_8hpp.html", "loggers_8hpp" ],
     [ "LogMacros.hpp", "LogMacros_8hpp.html", "LogMacros_8hpp" ],
     [ "LogStream.hpp", "LogStream_8hpp.html", "LogStream_8hpp" ],
     [ "TaskExecutor.hpp", "TaskExecutor_8hpp.html", "TaskExecutor_8hpp" ],

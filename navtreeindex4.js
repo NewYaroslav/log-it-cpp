@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c":[2,0,0,13,0,20],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a50bf62bc8c2342aeee58fc85aa8cad9c":[3,0,0,13,0,20],
+"structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb":[2,0,0,13,0,7],
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a550fe28643c6d6ab2d41012bdc0e3edb":[3,0,0,13,0,7],
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71":[2,0,0,13,0,5],
 "structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a5789cbbc0a492069cd17f63887878a71":[3,0,0,13,0,5],
@@ -73,7 +76,7 @@ var NAVTREEINDEX4 =
 "test__log__depth__3_8hpp.html#aaafb46f4eb6b637a6142125fe45f739e":[4,0,2,0,0,2,0,0,0,0,0,0],
 "test__log__depth__3_8hpp_source.html":[4,0,2,0,0,2,0,0,0,0,0],
 "topics.html":[1],
-"utils_8hpp.html":[4,0,2,0,0,9],
-"utils_8hpp.html#a80b9acc6f897c4b3aa5bc87c316b01ba":[4,0,2,0,0,9,0],
-"utils_8hpp_source.html":[4,0,2,0,0,9]
+"utils_8hpp.html":[4,0,2,0,0,10],
+"utils_8hpp.html#a80b9acc6f897c4b3aa5bc87c316b01ba":[4,0,2,0,0,10,0],
+"utils_8hpp_source.html":[4,0,2,0,0,10]
 };

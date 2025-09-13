@@ -14,13 +14,14 @@ var searchData=
   ['_5flogit_5flog_5frecord_5fhpp_5fincluded_11',['_LOGIT_LOG_RECORD_HPP_INCLUDED',['../LogRecord_8hpp.html#ab5091b80547bd05a0fc4bb170ff3876c',1,'LogRecord.hpp']]],
   ['_5flogit_5flog_5fstream_5fhpp_5fincluded_12',['_LOGIT_LOG_STREAM_HPP_INCLUDED',['../LogStream_8hpp.html#ad85df7dee5379255f7f8a46567a25baa',1,'LogStream.hpp']]],
   ['_5flogit_5flogger_5fhpp_5fincluded_13',['_LOGIT_LOGGER_HPP_INCLUDED',['../Logger_8hpp.html#ae51f16fbb4cd3e5c34c6605a4a13b3ac',1,'Logger.hpp']]],
-  ['_5flogit_5fpattern_5fcompiler_5fhpp_5fincluded_14',['_LOGIT_PATTERN_COMPILER_HPP_INCLUDED',['../PatternCompiler_8hpp.html#a09c36d68103a38d8362bd754e70af6d3',1,'PatternCompiler.hpp']]],
-  ['_5flogit_5fsimple_5flog_5fformatter_5fhpp_5fincluded_15',['_LOGIT_SIMPLE_LOG_FORMATTER_HPP_INCLUDED',['../SimpleLogFormatter_8hpp.html#a8cdbd02aa55e762aec5c00e4950f04b3',1,'SimpleLogFormatter.hpp']]],
-  ['_5flogit_5ftask_5fexecutor_5fhpp_5fincluded_16',['_LOGIT_TASK_EXECUTOR_HPP_INCLUDED',['../TaskExecutor_8hpp.html#af16f5f37b58f4ed8090b1becc90212da',1,'TaskExecutor.hpp']]],
-  ['_5flogit_5ftest_5flog_5fdepth_5f1_5fhpp_5fincluded_17',['_LOGIT_TEST_LOG_DEPTH_1_HPP_INCLUDED',['../test__log__depth__1_8hpp.html#a5db1ab77d3434541aba834a415522851',1,'test_log_depth_1.hpp']]],
-  ['_5flogit_5ftest_5flog_5fdepth_5f2_5fhpp_5fincluded_18',['_LOGIT_TEST_LOG_DEPTH_2_HPP_INCLUDED',['../test__log__depth__2_8hpp.html#aa4b23f9594c84ffff80fd886629a4c4a',1,'test_log_depth_2.hpp']]],
-  ['_5flogit_5ftest_5flog_5fdepth_5f3_5fhpp_5fincluded_19',['_LOGIT_TEST_LOG_DEPTH_3_HPP_INCLUDED',['../test__log__depth__3_8hpp.html#aaafb46f4eb6b637a6142125fe45f739e',1,'test_log_depth_3.hpp']]],
-  ['_5flogit_5funique_5ffile_5flogger_5fhpp_5fincluded_20',['_LOGIT_UNIQUE_FILE_LOGGER_HPP_INCLUDED',['../UniqueFileLogger_8hpp.html#abddc49667277cd33db524114452c0434',1,'UniqueFileLogger.hpp']]],
-  ['_5flogit_5futils_5fhpp_5fincluded_21',['_LOGIT_UTILS_HPP_INCLUDED',['../utils_8hpp.html#a80b9acc6f897c4b3aa5bc87c316b01ba',1,'utils.hpp']]],
-  ['_5flogit_5fvariable_5fvalue_5fhpp_5fincluded_22',['_LOGIT_VARIABLE_VALUE_HPP_INCLUDED',['../VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38',1,'VariableValue.hpp']]]
+  ['_5flogit_5floggers_5fhpp_5fincluded_14',['_LOGIT_LOGGERS_HPP_INCLUDED',['../loggers_8hpp.html#a46d4c762618f94bde89708bc799500bc',1,'loggers.hpp']]],
+  ['_5flogit_5fpattern_5fcompiler_5fhpp_5fincluded_15',['_LOGIT_PATTERN_COMPILER_HPP_INCLUDED',['../PatternCompiler_8hpp.html#a09c36d68103a38d8362bd754e70af6d3',1,'PatternCompiler.hpp']]],
+  ['_5flogit_5fsimple_5flog_5fformatter_5fhpp_5fincluded_16',['_LOGIT_SIMPLE_LOG_FORMATTER_HPP_INCLUDED',['../SimpleLogFormatter_8hpp.html#a8cdbd02aa55e762aec5c00e4950f04b3',1,'SimpleLogFormatter.hpp']]],
+  ['_5flogit_5ftask_5fexecutor_5fhpp_5fincluded_17',['_LOGIT_TASK_EXECUTOR_HPP_INCLUDED',['../TaskExecutor_8hpp.html#af16f5f37b58f4ed8090b1becc90212da',1,'TaskExecutor.hpp']]],
+  ['_5flogit_5ftest_5flog_5fdepth_5f1_5fhpp_5fincluded_18',['_LOGIT_TEST_LOG_DEPTH_1_HPP_INCLUDED',['../test__log__depth__1_8hpp.html#a5db1ab77d3434541aba834a415522851',1,'test_log_depth_1.hpp']]],
+  ['_5flogit_5ftest_5flog_5fdepth_5f2_5fhpp_5fincluded_19',['_LOGIT_TEST_LOG_DEPTH_2_HPP_INCLUDED',['../test__log__depth__2_8hpp.html#aa4b23f9594c84ffff80fd886629a4c4a',1,'test_log_depth_2.hpp']]],
+  ['_5flogit_5ftest_5flog_5fdepth_5f3_5fhpp_5fincluded_20',['_LOGIT_TEST_LOG_DEPTH_3_HPP_INCLUDED',['../test__log__depth__3_8hpp.html#aaafb46f4eb6b637a6142125fe45f739e',1,'test_log_depth_3.hpp']]],
+  ['_5flogit_5funique_5ffile_5flogger_5fhpp_5fincluded_21',['_LOGIT_UNIQUE_FILE_LOGGER_HPP_INCLUDED',['../UniqueFileLogger_8hpp.html#abddc49667277cd33db524114452c0434',1,'UniqueFileLogger.hpp']]],
+  ['_5flogit_5futils_5fhpp_5fincluded_22',['_LOGIT_UTILS_HPP_INCLUDED',['../utils_8hpp.html#a80b9acc6f897c4b3aa5bc87c316b01ba',1,'utils.hpp']]],
+  ['_5flogit_5fvariable_5fvalue_5fhpp_5fincluded_23',['_LOGIT_VARIABLE_VALUE_HPP_INCLUDED',['../VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38',1,'VariableValue.hpp']]]
 ];
