@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _LOGIT_FILE_LOGGER_HPP_INCLUDED
 #define _LOGIT_FILE_LOGGER_HPP_INCLUDED
 
