@@ -5,6 +5,7 @@
 /// \file loggers.hpp
 /// \brief Aggregates all logger implementations for convenient inclusion.
 
+#include "detail/TaskExecutor.hpp"
 #include "loggers/ILogger.hpp"
 #include "loggers/ConsoleLogger.hpp"
 #include "loggers/FileLogger.hpp"
