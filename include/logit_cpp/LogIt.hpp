@@ -13,9 +13,7 @@
 #include "logit/LogStream.hpp"
 #include "logit/LogMacros.hpp"
 #include "logit/formatter/SimpleLogFormatter.hpp"
-#include "logit/loggers/ConsoleLogger.hpp"
-#include "logit/loggers/FileLogger.hpp"
-#include "logit/loggers/UniqueFileLogger.hpp"
+#include "logit/loggers.hpp"
 
 /// \namespace logit
 /// \brief The primary namespace for the LogIt++ library.
