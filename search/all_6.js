@@ -4,7 +4,7 @@ var searchData=
   ['abbreviatedmonthname_1',['AbbreviatedMonthName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a99f62b9939a80101815ca4080d1fe257',1,'logit::FormatInstruction']]],
   ['abbreviatedweekdayname_2',['AbbreviatedWeekdayName',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a39db0b1ea1beaf9f5119bf84f1525b93',1,'logit::FormatInstruction']]],
   ['add_5flogger_3',['add_logger',['../classlogit_1_1Logger.html#a4e975699ce6b243f498cf05ec1d35b89',1,'logit::Logger']]],
-  ['add_5ftask_4',['add_task',['../classlogit_1_1TaskExecutor.html#a264de76ad03e778d7d5f2f74df0073e3',1,'logit::TaskExecutor']]],
+  ['add_5ftask_4',['add_task',['../classlogit_1_1detail_1_1TaskExecutor.html#ad07bd46d062a1cc4c9b90226af489fd3',1,'logit::detail::TaskExecutor']]],
   ['advanced_20path_20handling_5',['Advanced Path Handling',['../index.html#advanced_path_handling',1,'']]],
   ['alignment_20and_20truncation_6',['Alignment and Truncation',['../index.html#alignment_truncation_flags',1,'']]],
   ['and_20formatter_7',['Custom Logger Backend and Formatter',['../index.html#custom_backend_sec',1,'']]],

@@ -22,7 +22,7 @@ var hierarchy =
     [ "logit::LogStream", "classlogit_1_1LogStream.html", null ],
     [ "logit::PathComponents", "structlogit_1_1PathComponents.html", null ],
     [ "logit::PatternCompiler", "classlogit_1_1PatternCompiler.html", null ],
-    [ "logit::TaskExecutor", "classlogit_1_1TaskExecutor.html", null ],
+    [ "logit::detail::TaskExecutor", "classlogit_1_1detail_1_1TaskExecutor.html", null ],
     [ "logit::UniqueFileLogger::ThreadLogInfo", "structlogit_1_1UniqueFileLogger_1_1ThreadLogInfo.html", null ],
     [ "logit::VariableValue", "structlogit_1_1VariableValue.html", null ]
 ];

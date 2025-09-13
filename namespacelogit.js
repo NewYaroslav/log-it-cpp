@@ -1,5 +1,6 @@
 var namespacelogit =
 [
+    [ "detail", "namespacelogit_1_1detail.html", "namespacelogit_1_1detail" ],
     [ "ConsoleLogger", "classlogit_1_1ConsoleLogger.html", "classlogit_1_1ConsoleLogger" ],
     [ "FileLogger", "classlogit_1_1FileLogger.html", "classlogit_1_1FileLogger" ],
     [ "FormatInstruction", "structlogit_1_1FormatInstruction.html", "structlogit_1_1FormatInstruction" ],
@@ -11,7 +12,6 @@ var namespacelogit =
     [ "PathComponents", "structlogit_1_1PathComponents.html", "structlogit_1_1PathComponents" ],
     [ "PatternCompiler", "classlogit_1_1PatternCompiler.html", "classlogit_1_1PatternCompiler" ],
     [ "SimpleLogFormatter", "classlogit_1_1SimpleLogFormatter.html", "classlogit_1_1SimpleLogFormatter" ],
-    [ "TaskExecutor", "classlogit_1_1TaskExecutor.html", "classlogit_1_1TaskExecutor" ],
     [ "UniqueFileLogger", "classlogit_1_1UniqueFileLogger.html", "classlogit_1_1UniqueFileLogger" ],
     [ "VariableValue", "structlogit_1_1VariableValue.html", "structlogit_1_1VariableValue" ],
     [ "crev_it_t", "namespacelogit.html#a9c7736ed09a99969cfc292e372c4890a", null ],

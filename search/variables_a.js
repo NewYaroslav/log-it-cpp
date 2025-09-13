@@ -17,13 +17,13 @@ var searchData=
   ['m_5fmutex_14',['m_mutex',['../classlogit_1_1Logger.html#a81950257180f091313839ef6cfab463e',1,'logit::Logger::m_mutex'],['../classlogit_1_1ConsoleLogger.html#a180f88c35bc40a46b0587bc2bcb98afa',1,'logit::ConsoleLogger::m_mutex'],['../classlogit_1_1FileLogger.html#a04334c44630a07a66ce2d2bf931f4bac',1,'logit::FileLogger::m_mutex'],['../classlogit_1_1UniqueFileLogger.html#ab20e6941ff6b3df6f88ab076a74cab35',1,'logit::UniqueFileLogger::m_mutex']]],
   ['m_5foffset_5fms_15',['m_offset_ms',['../classlogit_1_1SimpleLogFormatter.html#ad56612615021665caac2185f23617652',1,'logit::SimpleLogFormatter']]],
   ['m_5fpending_5flogs_5fcv_16',['m_pending_logs_cv',['../classlogit_1_1UniqueFileLogger.html#a42488857596a0e952ab1bb3b32136cf1',1,'logit::UniqueFileLogger']]],
-  ['m_5fqueue_5fcondition_17',['m_queue_condition',['../classlogit_1_1TaskExecutor.html#adfe82b7987640219085d4a3f8aff3f0a',1,'logit::TaskExecutor']]],
-  ['m_5fqueue_5fmutex_18',['m_queue_mutex',['../classlogit_1_1TaskExecutor.html#a35776ba379faad1313ff4cf4d987c9a0',1,'logit::TaskExecutor']]],
+  ['m_5fqueue_5fcondition_17',['m_queue_condition',['../classlogit_1_1detail_1_1TaskExecutor.html#a752ed7a8559e00faae6c249d23b99833',1,'logit::detail::TaskExecutor']]],
+  ['m_5fqueue_5fmutex_18',['m_queue_mutex',['../classlogit_1_1detail_1_1TaskExecutor.html#a09f25153f001a39edc66c09d2aa64899',1,'logit::detail::TaskExecutor']]],
   ['m_5fshutdown_19',['m_shutdown',['../classlogit_1_1Logger.html#aa26a0f9acca5f4b4812e438d9c82ed20',1,'logit::Logger']]],
-  ['m_5fstop_5fflag_20',['m_stop_flag',['../classlogit_1_1TaskExecutor.html#a48a4ec5da683f9806a8ce3962540c754',1,'logit::TaskExecutor']]],
+  ['m_5fstop_5fflag_20',['m_stop_flag',['../classlogit_1_1detail_1_1TaskExecutor.html#a9dd82316be6e6ab657be787d7935054f',1,'logit::detail::TaskExecutor']]],
   ['m_5fstream_21',['m_stream',['../classlogit_1_1LogStream.html#ac279ad8749c5ef2ffafb1df51861e6dd',1,'logit::LogStream']]],
-  ['m_5ftasks_5fqueue_22',['m_tasks_queue',['../classlogit_1_1TaskExecutor.html#a53c41a85bb105c70e6f5b879897d46ef',1,'logit::TaskExecutor']]],
+  ['m_5ftasks_5fqueue_22',['m_tasks_queue',['../classlogit_1_1detail_1_1TaskExecutor.html#a8341cbf02a186a3293e6b68a6e86cc35',1,'logit::detail::TaskExecutor']]],
   ['m_5fthread_5flog_5finfo_23',['m_thread_log_info',['../classlogit_1_1UniqueFileLogger.html#a46d2a7bd77db687022d3cfb1866707a1',1,'logit::UniqueFileLogger']]],
   ['m_5fthread_5flog_5finfo_5fmutex_24',['m_thread_log_info_mutex',['../classlogit_1_1UniqueFileLogger.html#ae2bff072a4144569868d338dc85806cf',1,'logit::UniqueFileLogger']]],
-  ['m_5fworker_5fthread_25',['m_worker_thread',['../classlogit_1_1TaskExecutor.html#aaacb830e722cd9f074cc4fa611811c05',1,'logit::TaskExecutor']]]
+  ['m_5fworker_5fthread_25',['m_worker_thread',['../classlogit_1_1detail_1_1TaskExecutor.html#a198d330e68ab29cdfe302e20e1f96e38',1,'logit::detail::TaskExecutor']]]
 ];

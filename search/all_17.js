@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['taskexecutor_0',['TaskExecutor',['../classlogit_1_1TaskExecutor.html',1,'logit::TaskExecutor'],['../classlogit_1_1TaskExecutor.html#af8021fcfa067e73418d65c0000a59c5f',1,'logit::TaskExecutor::TaskExecutor()'],['../classlogit_1_1TaskExecutor.html#a4f73902012a51e4067981bf9620e7c15',1,'logit::TaskExecutor::TaskExecutor(const TaskExecutor &amp;)=delete'],['../classlogit_1_1TaskExecutor.html#a478b136a4e58f912ec548912d43afff7',1,'logit::TaskExecutor::TaskExecutor(TaskExecutor &amp;&amp;)=delete']]],
+  ['taskexecutor_0',['TaskExecutor',['../classlogit_1_1detail_1_1TaskExecutor.html',1,'logit::detail::TaskExecutor'],['../classlogit_1_1detail_1_1TaskExecutor.html#a887a6b6951a9cda9f9876103ff1ac9ce',1,'logit::detail::TaskExecutor::TaskExecutor()'],['../classlogit_1_1detail_1_1TaskExecutor.html#a3b6ed6fd5fa8261c88a157b0e985c120',1,'logit::detail::TaskExecutor::TaskExecutor(const TaskExecutor &amp;)=delete'],['../classlogit_1_1detail_1_1TaskExecutor.html#ac4b8dab9dcab4fb6acfd6b6e9133f2ea',1,'logit::detail::TaskExecutor::TaskExecutor(TaskExecutor &amp;&amp;)=delete']]],
   ['taskexecutor_2ehpp_1',['TaskExecutor.hpp',['../TaskExecutor_8hpp.html',1,'']]],
   ['test_5flog_5fdepth_5f1_2',['test_log_depth_1',['../namespacelogit.html#a6da1870420ec61ebb0fed37d08dc3114',1,'logit']]],
   ['test_5flog_5fdepth_5f1_2ehpp_3',['test_log_depth_1.hpp',['../test__log__depth__1_8hpp.html',1,'']]],

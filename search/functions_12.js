@@ -6,7 +6,7 @@ var searchData=
   ['_7eilogger_3',['~ILogger',['../classlogit_1_1ILogger.html#a7a261305932aebeaeffa26469b11f18f',1,'logit::ILogger']]],
   ['_7elogger_4',['~Logger',['../classlogit_1_1Logger.html#ac0f2ccc392e9a895e1a3ac9b1c79c01f',1,'logit::Logger']]],
   ['_7elogstream_5',['~LogStream',['../classlogit_1_1LogStream.html#ae4ba165e9a3c0ab59165029f6532ca8b',1,'logit::LogStream']]],
-  ['_7etaskexecutor_6',['~TaskExecutor',['../classlogit_1_1TaskExecutor.html#a4023e7c1a2f54cb83e2c56a14aada505',1,'logit::TaskExecutor']]],
+  ['_7etaskexecutor_6',['~TaskExecutor',['../classlogit_1_1detail_1_1TaskExecutor.html#ad9375619019f204fa80715c8d10942a4',1,'logit::detail::TaskExecutor']]],
   ['_7euniquefilelogger_7',['~UniqueFileLogger',['../classlogit_1_1UniqueFileLogger.html#a455edb3893f4d31d5a2a65720e4e714c',1,'logit::UniqueFileLogger']]],
   ['_7evariablevalue_8',['~VariableValue',['../structlogit_1_1VariableValue.html#a72bd26fb9c5d55a32289955e62587115',1,'logit::VariableValue']]]
 ];

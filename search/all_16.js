@@ -11,7 +11,7 @@ var searchData=
   ['shortdate_8',['ShortDate',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a7c5b7580e4269fd93b25519beb510f81',1,'logit::FormatInstruction']]],
   ['shortened_20logging_20macros_9',['Shortened Logging Macros',['../index.html#short_macros',1,'']]],
   ['shortloglevel_10',['ShortLogLevel',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a306cc46e7462190db3cf7f7ef77bfec6',1,'logit::FormatInstruction']]],
-  ['shutdown_11',['shutdown',['../classlogit_1_1Logger.html#a6298b1402c15a2c930e047b911915c15',1,'logit::Logger::shutdown()'],['../classlogit_1_1TaskExecutor.html#a4059ffcc991c60863981a27868c79dd6',1,'logit::TaskExecutor::shutdown()']]],
+  ['shutdown_11',['shutdown',['../classlogit_1_1detail_1_1TaskExecutor.html#ab0951ee5e579d5c7a3c8020c6234851a',1,'logit::detail::TaskExecutor::shutdown()'],['../classlogit_1_1Logger.html#a6298b1402c15a2c930e047b911915c15',1,'logit::Logger::shutdown()']]],
   ['simplelogformatter_12',['SimpleLogFormatter',['../classlogit_1_1SimpleLogFormatter.html',1,'logit::SimpleLogFormatter'],['../classlogit_1_1SimpleLogFormatter.html#adcf75187041cb00aae1aee7f8827adb2',1,'logit::SimpleLogFormatter::SimpleLogFormatter()'],['../classlogit_1_1SimpleLogFormatter.html#a7153fe9ddf8b45274e0b69d79a12f94b',1,'logit::SimpleLogFormatter::SimpleLogFormatter(const std::string &amp;pattern, const bool json_format=false)']]],
   ['simplelogformatter_2ehpp_13',['SimpleLogFormatter.hpp',['../SimpleLogFormatter_8hpp.html',1,'']]],
   ['simplicity_14',['Example Using Macros for Simplicity',['../index.html#autotoc_md1',1,'']]],
