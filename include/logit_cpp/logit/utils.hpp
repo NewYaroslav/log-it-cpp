@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _LOGIT_UITLS_HPP_INCLUDED
-#define _LOGIT_UITLS_HPP_INCLUDED
+#ifndef _LOGIT_UTILS_HPP_INCLUDED
+#define _LOGIT_UTILS_HPP_INCLUDED
 
 /// \file utils.hpp
 /// \brief Aggregates various utility modules used throughout the project.
@@ -16,4 +16,4 @@
 #include "utils/path_utils.hpp"
 #include "utils/LogRecord.hpp"
 
-#endif // _LOGIT_UITLS_HPP_INCLUDED
+#endif // _LOGIT_UTILS_HPP_INCLUDED
