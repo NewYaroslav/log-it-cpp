@@ -13,7 +13,7 @@
 #include <iostream>
 #include <chrono>
 
-namespace logit { namespace detail {
+namespace logit::detail {
 
 #if defined(__EMSCRIPTEN__)
 
@@ -136,6 +136,6 @@ namespace logit { namespace detail {
 
 #endif // defined(__EMSCRIPTEN__)
 
-}} // namespace logit::detail
+} // namespace logit::detail
 
 #endif // _LOGIT_DETAIL_TASK_EXECUTOR_HPP_INCLUDED
