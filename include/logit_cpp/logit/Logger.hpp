@@ -7,6 +7,7 @@
 
 #include "loggers/ILogger.hpp"
 #include "formatter.hpp"
+#include "detail/TaskExecutor.hpp"
 #include <memory>
 #include <mutex>
 #include <sstream>
@@ -239,7 +240,7 @@ namespace logit {
             if (m_shutdown) return;
             m_shutdown = true;
             wait();
-            TaskExecutor::get_instance().shutdown();
+            detail::TaskExecutor::get_instance().shutdown();
         }
 
     private:

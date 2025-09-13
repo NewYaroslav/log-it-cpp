@@ -6,6 +6,7 @@
 /// \brief Logger that writes each log message to a unique file with auto-deletion of old logs.
 
 #include "ILogger.hpp"
+#include "logit/detail/TaskExecutor.hpp"
 #include <iostream>
 #include <fstream>
 #include <mutex>
@@ -163,7 +164,7 @@ namespace logit {
             info_lock.unlock();
 
             auto timestamp_ms = record.timestamp_ms;
-            TaskExecutor::get_instance().add_task([this, message, timestamp_ms, thread_id]() {
+            detail::TaskExecutor::get_instance().add_task([this, message, timestamp_ms, thread_id]() {
                 std::lock_guard<std::mutex> lock(m_mutex);
                 std::string file_path;
                 try {
@@ -253,7 +254,7 @@ namespace logit {
         /// \brief Waits for all asynchronous tasks to complete.
         void wait() override {
             if (!m_config.async) return;
-            TaskExecutor::get_instance().wait();
+            detail::TaskExecutor::get_instance().wait();
         }
 
     private:

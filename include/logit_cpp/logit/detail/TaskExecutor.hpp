@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _LOGIT_TASK_EXECUTOR_HPP_INCLUDED
-#define _LOGIT_TASK_EXECUTOR_HPP_INCLUDED
+#ifndef _LOGIT_DETAIL_TASK_EXECUTOR_HPP_INCLUDED
+#define _LOGIT_DETAIL_TASK_EXECUTOR_HPP_INCLUDED
 
 /// \file TaskExecutor.hpp
 /// \brief Defines the TaskExecutor class, which manages task execution in a separate thread.
@@ -13,7 +13,7 @@
 #include <iostream>
 #include <chrono>
 
-namespace logit {
+namespace logit { namespace detail {
 
 #if defined(__EMSCRIPTEN__)
 
@@ -136,6 +136,6 @@ namespace logit {
 
 #endif // defined(__EMSCRIPTEN__)
 
-}; // namespace logit
+}} // namespace logit::detail
 
-#endif // _LOGIT_TASK_EXECUTOR_HPP_INCLUDED
+#endif // _LOGIT_DETAIL_TASK_EXECUTOR_HPP_INCLUDED

@@ -8,7 +8,6 @@
 #include "LogItConfig.hpp"
 #include "logit/enums.hpp"
 #include "logit/utils.hpp"
-#include "logit/TaskExecutor.hpp"
 #include "logit/Logger.hpp"
 #include "logit/LogStream.hpp"
 #include "logit/LogMacros.hpp"
