@@ -11,6 +11,7 @@
 #include <functional>
 #include <condition_variable>
 #include <iostream>
+#include <chrono>
 
 namespace logit {
 
