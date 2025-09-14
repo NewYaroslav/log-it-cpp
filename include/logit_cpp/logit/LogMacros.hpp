@@ -26,6 +26,12 @@
 #    define LOGIT_COMPILED_LEVEL logit::LogLevel::LOG_LVL_TRACE
 #endif
 
+#if __cplusplus >= 201703L
+#    define LOGIT_IF_COMPILED_LEVEL(level) if constexpr (LOGIT_COMPILED_LEVEL <= (level))
+#else
+#    define LOGIT_IF_COMPILED_LEVEL(level) if (LOGIT_COMPILED_LEVEL <= (level))
+#endif
+
 //------------------------------------------------------------------------------
 // Stream-based logging macros for various levels
 
@@ -84,7 +90,7 @@
 /// \param format The log message format.
 #define LOGIT_LOG_AND_RETURN_NOARGS(level, format)                                          \
     do {                                                                                    \
-        if constexpr (LOGIT_COMPILED_LEVEL <= level)                                        \
+        LOGIT_IF_COMPILED_LEVEL(level)                                                      \
             logit::Logger::get_instance().log_and_return(                                   \
                 logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                       \
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                  \
@@ -97,7 +103,7 @@
 /// \param format The log message format.
 #define LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(level, index, format)                      \
     do {                                                                                  \
-        if constexpr (LOGIT_COMPILED_LEVEL <= level)                                      \
+        LOGIT_IF_COMPILED_LEVEL(level)                                                    \
             logit::Logger::get_instance().log_and_return(                                 \
                 logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                     \
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
@@ -114,7 +120,7 @@
 /// \param ... The arguments to log.
 #define LOGIT_LOG_AND_RETURN(level, format, arg_names, ...)                               \
     do {                                                                                  \
-        if constexpr (LOGIT_COMPILED_LEVEL <= level)                                      \
+        LOGIT_IF_COMPILED_LEVEL(level)                                                    \
             logit::Logger::get_instance().log_and_return(                                 \
                 logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                     \
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
@@ -128,7 +134,7 @@
 /// \details This macro logs the raw arguments without applying any formatting to them.
 #define LOGIT_LOG_AND_RETURN_PRINT(level, arg_names, ...)                                 \
     do {                                                                                  \
-        if constexpr (LOGIT_COMPILED_LEVEL <= level)                                      \
+        LOGIT_IF_COMPILED_LEVEL(level)                                                    \
             logit::Logger::get_instance().log_and_return(                                 \
                 logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                     \
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
@@ -143,7 +149,7 @@
 /// \param ... The arguments to log.
 #define LOGIT_LOG_AND_RETURN_WITH_INDEX(level, index, format, arg_names, ...)             \
     do {                                                                                  \
-        if constexpr (LOGIT_COMPILED_LEVEL <= level)                                      \
+        LOGIT_IF_COMPILED_LEVEL(level)                                                    \
             logit::Logger::get_instance().log_and_return(                                 \
                 logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                     \
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
@@ -158,7 +164,7 @@
 /// \details This macro logs the raw arguments without applying any formatting to them to a specific logger.
 #define LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(level, index, arg_names, ...)               \
     do {                                                                                  \
-        if constexpr (LOGIT_COMPILED_LEVEL <= level)                                      \
+        LOGIT_IF_COMPILED_LEVEL(level)                                                    \
             logit::Logger::get_instance().log_and_return(                                 \
                 logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                     \
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
