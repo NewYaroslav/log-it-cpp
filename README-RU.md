@@ -88,51 +88,53 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 
 ## Использование
 
-Ниже приведен простой пример использования LogIt++ в вашем приложении:
+Ниже приведен простой пример использования LogIt++ в вашем приложении. Размер очереди и поведение при переполнении настраиваются с помощью `LOGIT_SET_MAX_QUEUE` и `LOGIT_SET_QUEUE_POLICY` (используйте `LOGIT_QUEUE_DROP` или `LOGIT_QUEUE_BLOCK`):
 
 ```cpp
 #define LOGIT_SHORT_NAME
 #include <LogIt.hpp>
 
 int main() {
-	// Инициализация логгера с выводом в консоль по умолчанию
-	LOGIT_ADD_CONSOLE_DEFAULT();
+    // Инициализация логгера с выводом в консоль по умолчанию
+    LOGIT_ADD_CONSOLE_DEFAULT();
+    LOGIT_SET_MAX_QUEUE(64);
+    LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP);
 
-	float a = 123.456f;
-	int b = 789;
-	int c = 899;
-	const char* someStr = "Hello, World!";
+    float a = 123.456f;
+    int b = 789;
+    int c = 899;
+    const char* someStr = "Hello, World!";
 
-	// Базовое логирование с использованием макросов
-	LOG_INFO("Starting the application");
-	LOG_DEBUG("Variable values", a, b);
-	LOG_WARN("This is a warning message");
+    // Базовое логирование с использованием макросов
+    LOG_INFO("Starting the application");
+    LOG_DEBUG("Variable values", a, b);
+    LOG_WARN("This is a warning message");
 
-	// Логирование с форматированием
-	LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
-	LOG_FORMAT_WARN("%.4d", b, c);
+    // Логирование с форматированием
+    LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
+    LOG_FORMAT_WARN("%.4d", b, c);
 
-	// Логирование ошибок и фатальных ошибок
-	LOG_ERROR("An error occurred", b);
-	LOG_FATAL("Fatal error. Terminating application.");
+    // Логирование ошибок и фатальных ошибок
+    LOG_ERROR("An error occurred", b);
+    LOG_FATAL("Fatal error. Terminating application.");
 
-	// Условное логирование
-	LOG_ERROR_IF(b < 0, "Value of b is negative");
-	LOG_WARN_IF(a > 100, "Value of a exceeds 100");
+    // Условное логирование
+    LOG_ERROR_IF(b < 0, "Value of b is negative");
+    LOG_WARN_IF(a > 100, "Value of a exceeds 100");
 
-	// Потоковое логирование с использованием коротких и длинных макросов
-	LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
-	LOG_S_ERROR() << "Error occurred in the system";
-	LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
+    // Потоковое логирование с использованием коротких и длинных макросов
+    LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
+    LOG_S_ERROR() << "Error occurred in the system";
+    LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
 
-	// Использование LOGIT_TRACE для трассировки выполнения функций
-	LOGIT_TRACE0();	 // Trace without arguments
-	LOG_PRINT_TRACE("Entering main function with variable a =", a);
+    // Использование LOGIT_TRACE для трассировки выполнения функций
+    LOGIT_TRACE0();  // Trace without arguments
+    LOG_PRINT_TRACE("Entering main function with variable a =", a);
 
-	// Ожидание завершения всех асинхронных операций логирования
-	LOGIT_WAIT();
+    // Ожидание завершения всех асинхронных операций логирования
+    LOGIT_WAIT();
 
-	return 0;
+    return 0;
 }
 ```
 

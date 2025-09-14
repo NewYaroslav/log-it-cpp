@@ -93,51 +93,53 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 
 ## Usage
 
-Here’s a simple example demonstrating how to use LogIt++ in your application:
+Here’s a simple example demonstrating how to use LogIt++ in your application. The task queue size and overflow behavior are configurable via `LOGIT_SET_MAX_QUEUE` and `LOGIT_SET_QUEUE_POLICY` (use `LOGIT_QUEUE_DROP` or `LOGIT_QUEUE_BLOCK`):
 
 ```cpp
 #define LOGIT_SHORT_NAME
 #include <LogIt.hpp>
 
 int main() {
-	// Initialize the logger with default console output
-	LOGIT_ADD_CONSOLE_DEFAULT();
+    // Initialize the logger with default console output
+    LOGIT_ADD_CONSOLE_DEFAULT();
+    LOGIT_SET_MAX_QUEUE(64);
+    LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP);
 
-	float a = 123.456f;
-	int b = 789;
-	int c = 899;
-	const char* someStr = "Hello, World!";
+    float a = 123.456f;
+    int b = 789;
+    int c = 899;
+    const char* someStr = "Hello, World!";
 
-	// Basic logging using macros
-	LOG_INFO("Starting the application");
-	LOG_DEBUG("Variable values", a, b);
-	LOG_WARN("This is a warning message");
+    // Basic logging using macros
+    LOG_INFO("Starting the application");
+    LOG_DEBUG("Variable values", a, b);
+    LOG_WARN("This is a warning message");
 
-	// Formatted logging
-	LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
-	LOG_FORMAT_WARN("%.4d", b, c);
+    // Formatted logging
+    LOG_PRINTF_INFO("Formatted log: value of a = %.2f", a);
+    LOG_FORMAT_WARN("%.4d", b, c);
 
-	// Error and fatal logs
-	LOG_ERROR("An error occurred", b);
-	LOG_FATAL("Fatal error. Terminating application.");
+    // Error and fatal logs
+    LOG_ERROR("An error occurred", b);
+    LOG_FATAL("Fatal error. Terminating application.");
 
-	// Conditional logging
-	LOG_ERROR_IF(b < 0, "Value of b is negative");
-	LOG_WARN_IF(a > 100, "Value of a exceeds 100");
+    // Conditional logging
+    LOG_ERROR_IF(b < 0, "Value of b is negative");
+    LOG_WARN_IF(a > 100, "Value of a exceeds 100");
 
-	// Stream-based logging with short and long names
-	LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
-	LOG_S_ERROR() << "Error occurred in the system";
-	LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
+    // Stream-based logging with short and long names
+    LOG_S_INFO() << "Logging a float: " << a << ", and an int: " << b;
+    LOG_S_ERROR() << "Error occurred in the system";
+    LOGIT_STREAM_WARN() << "Warning: potential issue detected with value: " << someStr;
 
-	// Using LOGIT_TRACE for tracing function execution
-	LOGIT_TRACE0();	 // Trace without arguments
-	LOG_PRINT_TRACE("Entering main function with variable a =", a);
+    // Using LOGIT_TRACE for tracing function execution
+    LOGIT_TRACE0();   // Trace without arguments
+    LOG_PRINT_TRACE("Entering main function with variable a =", a);
 
-	// Wait for all asynchronous logs to be processed
-	LOGIT_WAIT();
+    // Wait for all asynchronous logs to be processed
+    LOGIT_WAIT();
 
-	return 0;
+    return 0;
 }
 ```
 
