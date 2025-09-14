@@ -10,6 +10,7 @@ int main() {
     cfg.directory = "rotation_ts";
     cfg.max_file_size_bytes = 20;
     cfg.naming = logit::RotationNaming::Timestamp;
+    const std::string dir = cfg.directory;
     logit::Logger::get_instance().add_logger(
         std::unique_ptr<logit::FileLogger>(new logit::FileLogger(cfg)),
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter("%v")));
@@ -17,10 +18,8 @@ int main() {
     LOGIT_INFO(msg);
     LOGIT_INFO(msg);
     LOGIT_WAIT();
-    std::string current = LOGIT_GET_LAST_FILE_PATH(0);
-    std::string base_dir = current.substr(0, current.find_last_of("/\\"));
-    std::vector<std::string> files = logit::get_list_files(base_dir);
     LOGIT_SHUTDOWN();
+    std::vector<std::string> files = logit::get_list_files(dir);
     std::regex re("\\d{4}-\\d{2}-\\d{2}_\\d{6}(?:\\.\\d+)?\\.log");
     for (const auto& path : files) {
         std::string name = path.substr(path.find_last_of("/\\") + 1);
