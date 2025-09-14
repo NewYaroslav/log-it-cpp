@@ -30,6 +30,7 @@ if(NOT TimeShield_FOUND)
 endif()
 
 add_library(log-it-cpp INTERFACE)
+add_library(log-it-cpp::log-it-cpp ALIAS log-it-cpp)
 
 add_compile_definitions(LOGIT_BASE_PATH="$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>")
 
@@ -132,14 +133,25 @@ write_basic_package_version_file(
     COMPATIBILITY AnyNewerVersion
 )
 
-configure_package_config_file(
-    cmake/log-it-cppConfig.cmake.in
-    "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfig.cmake"
-    INSTALL_DESTINATION lib/cmake/log-it-cpp
-)
+  configure_package_config_file(
+      cmake/log-it-cppConfig.cmake.in
+      "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfig.cmake"
+      INSTALL_DESTINATION lib/cmake/log-it-cpp
+  )
 
-install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfigVersion.cmake"
-    DESTINATION lib/cmake/log-it-cpp
-)
+  configure_file(
+      cmake/log-it-cpp.pc.in
+      "${CMAKE_CURRENT_BINARY_DIR}/log-it-cpp.pc"
+      @ONLY
+  )
+
+  install(FILES
+      "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfig.cmake"
+      "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfigVersion.cmake"
+      DESTINATION lib/cmake/log-it-cpp
+  )
+
+  install(FILES
+      "${CMAKE_CURRENT_BINARY_DIR}/log-it-cpp.pc"
+      DESTINATION share/pkgconfig
+  )
