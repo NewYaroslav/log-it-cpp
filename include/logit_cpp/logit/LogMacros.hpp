@@ -981,6 +981,28 @@
 
 /// \}
 
+/// \name Task Executor Configuration
+/// Macros for configuring the TaskExecutor.
+/// \{
+
+/// \brief Sets the maximum number of queued tasks.
+/// \param size Maximum queue size (0 for unlimited).
+#define LOGIT_SET_MAX_QUEUE(size) \
+    logit::detail::TaskExecutor::get_instance().set_max_queue_size(size)
+
+/// \brief Queue policy for dropping tasks when the queue is full.
+#define LOGIT_QUEUE_DROP logit::detail::QueuePolicy::Drop
+
+/// \brief Queue policy for blocking when the queue is full.
+#define LOGIT_QUEUE_BLOCK logit::detail::QueuePolicy::Block
+
+/// \brief Sets the behavior when the queue is full.
+/// \param mode LOGIT_QUEUE_DROP or LOGIT_QUEUE_BLOCK.
+#define LOGIT_SET_QUEUE_POLICY(mode) \
+    logit::detail::TaskExecutor::get_instance().set_queue_policy(mode)
+
+/// \}
+
 /// \brief Macro for waiting for all asynchronous loggers to finish processing.
 #define LOGIT_WAIT() logit::Logger::get_instance().wait()
 
