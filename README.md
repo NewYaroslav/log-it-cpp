@@ -44,7 +44,11 @@ auto now = std::chrono::system_clock::now();
 LOGIT_PRINT_INFO("TimePoint example: ", now);
 ```
 
-- **Support for Multiple Backends**: 
+- **Rotating File Logs**:
+
+  Automatic file rotation based on size with optional asynchronous compression using gzip or zstd.
+
+- **Support for Multiple Backends**:
 
 Easily configure loggers for console and file output. If necessary, add support for sending messages to servers or databases by creating custom backends.
 
