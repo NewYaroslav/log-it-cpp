@@ -168,6 +168,14 @@ Macros</h2></td></tr>
 <tr class="memitem:afeff518c76cf3749e91fdb8ad5e64bfa" id="r_afeff518c76cf3749e91fdb8ad5e64bfa"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afeff518c76cf3749e91fdb8ad5e64bfa">LOGIT_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;[%Y-%m-%d %H:%M:%S.%e] [%-5l] [%60!@] [thread:%t] %SC%v&quot;</td></tr>
 <tr class="memdesc:afeff518c76cf3749e91fdb8ad5e64bfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for file-based loggers.  <br /></td></tr>
 <tr class="separator:afeff518c76cf3749e91fdb8ad5e64bfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb0a339d0691331255881f1c76de886d" id="r_adb0a339d0691331255881f1c76de886d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb0a339d0691331255881f1c76de886d">LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:adb0a339d0691331255881f1c76de886d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac53ea2ae1b297346387da2122a326bad" id="r_ac53ea2ae1b297346387da2122a326bad"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac53ea2ae1b297346387da2122a326bad">LOGIT_FILE_LOGGER_MAX_ROTATED_FILES</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:ac53ea2ae1b297346387da2122a326bad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a842d11066b7d6235029da21fc02a8737" id="r_a842d11066b7d6235029da21fc02a8737"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a842d11066b7d6235029da21fc02a8737">LOGIT_FILE_LOGGER_COMPRESS_ROTATED</a>&#160;&#160;&#160;0</td></tr>
+<tr class="separator:a842d11066b7d6235029da21fc02a8737"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ee988e93008c4d783d78049a2e8bc8a" id="r_a3ee988e93008c4d783d78049a2e8bc8a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ee988e93008c4d783d78049a2e8bc8a">LOGIT_FILE_LOGGER_COMPRESS_CMD</a>&#160;&#160;&#160;&quot;&quot;</td></tr>
+<tr class="separator:a3ee988e93008c4d783d78049a2e8bc8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9084ea16f31554bdf35137910c027811" id="r_a9084ea16f31554bdf35137910c027811"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9084ea16f31554bdf35137910c027811">LOGIT_UNIQUE_FILE_LOGGER_PATTERN</a>&#160;&#160;&#160;&quot;%v&quot;</td></tr>
 <tr class="memdesc:a9084ea16f31554bdf35137910c027811"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the default log pattern for unique file-based loggers.  <br /></td></tr>
 <tr class="separator:a9084ea16f31554bdf35137910c027811"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -373,6 +381,70 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a3ee988e93008c4d783d78049a2e8bc8a" name="a3ee988e93008c4d783d78049a2e8bc8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ee988e93008c4d783d78049a2e8bc8a">&#9670;&#160;</a></span>LOGIT_FILE_LOGGER_COMPRESS_CMD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_FILE_LOGGER_COMPRESS_CMD&#160;&#160;&#160;&quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00124">124</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a842d11066b7d6235029da21fc02a8737" name="a842d11066b7d6235029da21fc02a8737"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a842d11066b7d6235029da21fc02a8737">&#9670;&#160;</a></span>LOGIT_FILE_LOGGER_COMPRESS_ROTATED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_FILE_LOGGER_COMPRESS_ROTATED&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00121">121</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+
+</div>
+</div>
+<a id="adb0a339d0691331255881f1c76de886d" name="adb0a339d0691331255881f1c76de886d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb0a339d0691331255881f1c76de886d">&#9670;&#160;</a></span>LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00115">115</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ac53ea2ae1b297346387da2122a326bad" name="ac53ea2ae1b297346387da2122a326bad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac53ea2ae1b297346387da2122a326bad">&#9670;&#160;</a></span>LOGIT_FILE_LOGGER_MAX_ROTATED_FILES</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_FILE_LOGGER_MAX_ROTATED_FILES&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00118">118</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a0f7223e40eee5ab323ba83d779b471c9" name="a0f7223e40eee5ab323ba83d779b471c9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0f7223e40eee5ab323ba83d779b471c9">&#9670;&#160;</a></span>LOGIT_FILE_LOGGER_PATH</h2>
 
@@ -428,7 +500,7 @@ Macros</h2></td></tr>
 <p>Defines the default hash length for unique file names. </p>
 <p>If <code>LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH</code> is not defined, it defaults to 8. </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00123">123</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00136">136</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>
@@ -467,7 +539,7 @@ Macros</h2></td></tr>
 <p>Defines the default log pattern for unique file-based loggers. </p>
 <p>If <code>LOGIT_UNIQUE_FILE_LOGGER_PATTERN</code> is not defined, it defaults to "%v". </p>
 
-<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00117">117</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="config_8hpp_source.html#l00130">130</a> of file <a class="el" href="config_8hpp_source.html">config.hpp</a>.</p>
 
 </div>
 </div>

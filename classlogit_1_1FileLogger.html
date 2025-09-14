@@ -149,6 +149,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3e9a0318e38ec97de60131cada485c55" id="r_a3e9a0318e38ec97de60131cada485c55"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e9a0318e38ec97de60131cada485c55">FileLogger</a> (const std::string &amp;directory, const bool &amp;async=true, const int &amp;auto_delete_days=30)</td></tr>
 <tr class="memdesc:a3e9a0318e38ec97de60131cada485c55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with directory and asynchronous flag.  <br /></td></tr>
 <tr class="separator:a3e9a0318e38ec97de60131cada485c55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b4042992d39b9893242e58d2c083b9e" id="r_a4b4042992d39b9893242e58d2c083b9e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b4042992d39b9893242e58d2c083b9e">FileLogger</a> (const std::string &amp;directory, const bool &amp;async, const int &amp;auto_delete_days, uint64_t max_file_size_bytes, uint32_t max_rotated_files, bool compress_rotated=false, std::string compress_cmd={})</td></tr>
+<tr class="memdesc:a4b4042992d39b9893242e58d2c083b9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor with directory, size-based rotation and additional options.  <br /></td></tr>
+<tr class="separator:a4b4042992d39b9893242e58d2c083b9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a712802dcc6732f057e52fbd49f208388" id="r_a712802dcc6732f057e52fbd49f208388"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a712802dcc6732f057e52fbd49f208388">~FileLogger</a> ()</td></tr>
 <tr class="memdesc:a712802dcc6732f057e52fbd49f208388"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor to stop logging and close file.  <br /></td></tr>
 <tr class="separator:a712802dcc6732f057e52fbd49f208388"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,6 +203,10 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:ac29847753726b074df6e4491f8db6779" id="r_ac29847753726b074df6e4491f8db6779"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac29847753726b074df6e4491f8db6779">write_log</a> (const std::string &amp;message, const int64_t &amp;timestamp_ms)</td></tr>
 <tr class="memdesc:ac29847753726b074df6e4491f8db6779"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a log message to the file.  <br /></td></tr>
 <tr class="separator:ac29847753726b074df6e4491f8db6779"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42c7e23ed4cc60327cdb569894f2efa3" id="r_a42c7e23ed4cc60327cdb569894f2efa3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a42c7e23ed4cc60327cdb569894f2efa3">rotate_current_file</a> ()</td></tr>
+<tr class="separator:a42c7e23ed4cc60327cdb569894f2efa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac31caf0f7d9cb27b3286402e96a40cd9" id="r_ac31caf0f7d9cb27b3286402e96a40cd9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac31caf0f7d9cb27b3286402e96a40cd9">enforce_rotation_retention</a> (const std::string &amp;base, uint32_t max_files, const std::string &amp;dir)</td></tr>
+<tr class="separator:ac31caf0f7d9cb27b3286402e96a40cd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21b8741d411d770d6c208b74b0987336" id="r_a21b8741d411d770d6c208b74b0987336"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a21b8741d411d770d6c208b74b0987336">remove_old_logs</a> ()</td></tr>
 <tr class="memdesc:a21b8741d411d770d6c208b74b0987336"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes old log files based on the auto-delete days configuration.  <br /></td></tr>
 <tr class="separator:a21b8741d411d770d6c208b74b0987336"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -251,6 +258,9 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a095d6eb51f0f98a3f28b9da3ab34ec38" id="r_a095d6eb51f0f98a3f28b9da3ab34ec38"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a095d6eb51f0f98a3f28b9da3ab34ec38">m_current_date_ts</a> = 0</td></tr>
 <tr class="memdesc:a095d6eb51f0f98a3f28b9da3ab34ec38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timestamp of the current log file's date.  <br /></td></tr>
 <tr class="separator:a095d6eb51f0f98a3f28b9da3ab34ec38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a438b7e4941d32b7e0f29e87ecfd85589" id="r_a438b7e4941d32b7e0f29e87ecfd85589"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a438b7e4941d32b7e0f29e87ecfd85589">m_current_file_size</a> = 0</td></tr>
+<tr class="memdesc:a438b7e4941d32b7e0f29e87ecfd85589"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current size of the log file.  <br /></td></tr>
+<tr class="separator:a438b7e4941d32b7e0f29e87ecfd85589"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c0a39788c312710309adb37fe353d9a" id="r_a6c0a39788c312710309adb37fe353d9a"><td class="memItemLeft" align="right" valign="top">std::atomic&lt; int64_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c0a39788c312710309adb37fe353d9a">m_last_log_ts</a> = ATOMIC_VAR_INIT(0)</td></tr>
 <tr class="memdesc:a6c0a39788c312710309adb37fe353d9a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timestamp of the last log.  <br /></td></tr>
 <tr class="separator:a6c0a39788c312710309adb37fe353d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,10 +276,10 @@ Private Attributes</h2></td></tr>
 <li>Synchronous or asynchronous operation. </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00060">60</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00071">71</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aa99ee3533bb182ef8b8f63c18b688d1c" name="aa99ee3533bb182ef8b8f63c18b688d1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa99ee3533bb182ef8b8f63c18b688d1c">&#9670;&#160;</a></span>FileLogger() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa99ee3533bb182ef8b8f63c18b688d1c">&#9670;&#160;</a></span>FileLogger() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -293,12 +303,12 @@ Private Attributes</h2></td></tr>
 
 <p>Default constructor that uses default configuration. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00072">72</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00087">87</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a2f582ce8896c139917e600ff6daa53e7" name="a2f582ce8896c139917e600ff6daa53e7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f582ce8896c139917e600ff6daa53e7">&#9670;&#160;</a></span>FileLogger() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f582ce8896c139917e600ff6daa53e7">&#9670;&#160;</a></span>FileLogger() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -328,12 +338,12 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00078">78</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00093">93</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
 <a id="a3e9a0318e38ec97de60131cada485c55" name="a3e9a0318e38ec97de60131cada485c55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e9a0318e38ec97de60131cada485c55">&#9670;&#160;</a></span>FileLogger() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e9a0318e38ec97de60131cada485c55">&#9670;&#160;</a></span>FileLogger() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -374,7 +384,65 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00086">86</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00101">101</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4b4042992d39b9893242e58d2c083b9e" name="a4b4042992d39b9893242e58d2c083b9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b4042992d39b9893242e58d2c083b9e">&#9670;&#160;</a></span>FileLogger() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">logit::FileLogger::FileLogger </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>directory</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool &amp;</td>          <td class="paramname"><span class="paramname"><em>async</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int &amp;</td>          <td class="paramname"><span class="paramname"><em>auto_delete_days</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t</td>          <td class="paramname"><span class="paramname"><em>max_file_size_bytes</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>max_rotated_files</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>compress_rotated</em></span><span class="paramdefsep"> = </span><span class="paramdefval">false</span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string</td>          <td class="paramname"><span class="paramname"><em>compress_cmd</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor with directory, size-based rotation and additional options. </p>
+
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00112">112</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -403,7 +471,7 @@ Private Attributes</h2></td></tr>
 
 <p>Destructor to stop logging and close file. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00097">97</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00131">131</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -440,7 +508,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The path to the log file. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00262">262</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00299">299</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -470,7 +538,43 @@ Private Attributes</h2></td></tr>
 <p>Gets the current timestamp in milliseconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current timestamp in milliseconds. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00349">349</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00483">483</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="ac31caf0f7d9cb27b3286402e96a40cd9" name="ac31caf0f7d9cb27b3286402e96a40cd9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac31caf0f7d9cb27b3286402e96a40cd9">&#9670;&#160;</a></span>enforce_rotation_retention()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::FileLogger::enforce_rotation_retention </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>base</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>max_files</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>dir</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00373">373</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -500,7 +604,7 @@ Private Attributes</h2></td></tr>
 <p>Gets the current UTC date timestamp in seconds. </p>
 <dl class="section return"><dt>Returns</dt><dd>The current UTC date timestamp in seconds. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00343">343</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00477">477</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -536,7 +640,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The date timestamp. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00336">336</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00471">471</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -566,7 +670,7 @@ Private Attributes</h2></td></tr>
 <p>Gets the full path to the logging directory. </p>
 <dl class="section return"><dt>Returns</dt><dd>The path to the logging directory. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00230">230</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00265">265</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -604,7 +708,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a056e646557ab900f90b6bcd5610ebc61">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00161">161</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00195">195</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -642,7 +746,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a19b45738a45bb1bc669897717a5f6ad7">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00148">148</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00182">182</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -672,7 +776,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the last log file name. </p>
 <dl class="section return"><dt>Returns</dt><dd>The last log file name. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00362">362</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00496">496</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -702,7 +806,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the last log file path. </p>
 <dl class="section return"><dt>Returns</dt><dd>The last log file path. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00355">355</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00489">489</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -732,7 +836,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the timestamp of the last log. </p>
 <dl class="section return"><dt>Returns</dt><dd>The last log timestamp. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00369">369</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00503">503</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -763,7 +867,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#af3962470018af253768db2a03792a309">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00177">177</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00211">211</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -801,7 +905,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a38824613573247d24bb7d998955990a0">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00133">133</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00167">167</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -831,7 +935,7 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the time since the last log. </p>
 <dl class="section return"><dt>Returns</dt><dd>The time in milliseconds since the last log. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00375">375</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00509">509</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -860,7 +964,7 @@ Private Attributes</h2></td></tr>
 
 <p>Initializes the logging directory. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00224">224</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00259">259</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -896,7 +1000,7 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the filename matches the pattern, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00328">328</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00464">464</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -939,7 +1043,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a311546f6633365365599eea2b23cc2bd">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00108">108</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00142">142</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -974,7 +1078,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00240">240</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00275">275</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1003,7 +1107,34 @@ Private Attributes</h2></td></tr>
 
 <p>Removes old log files based on the auto-delete days configuration. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00282">282</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00418">418</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a42c7e23ed4cc60327cdb569894f2efa3" name="a42c7e23ed4cc60327cdb569894f2efa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42c7e23ed4cc60327cdb569894f2efa3">&#9670;&#160;</a></span>rotate_current_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void logit::FileLogger::rotate_current_file </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00325">325</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1034,7 +1165,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a0bda3af704a3232afeae73b9a2718914">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00172">172</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00206">206</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1063,7 +1194,7 @@ Private Attributes</h2></td></tr>
 
 <p>Starts the logging process by initializing the file and directory. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00199">199</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00234">234</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1092,7 +1223,7 @@ Private Attributes</h2></td></tr>
 
 <p>Stops the logging process by closing the file and waiting for tasks. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00215">215</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00250">250</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1123,7 +1254,7 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classlogit_1_1ILogger.html#a392e5820b55b8576c2aa5b12ff1f0b69">logit::ILogger</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00182">182</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00216">216</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1163,7 +1294,7 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00270">270</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00307">307</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1190,7 +1321,7 @@ Private Attributes</h2></td></tr>
 
 <p>Configuration for the file logger. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00189">189</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00223">223</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1216,7 +1347,33 @@ Private Attributes</h2></td></tr>
 
 <p>Timestamp of the current log file's date. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00194">194</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00228">228</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a438b7e4941d32b7e0f29e87ecfd85589" name="a438b7e4941d32b7e0f29e87ecfd85589"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a438b7e4941d32b7e0f29e87ecfd85589">&#9670;&#160;</a></span>m_current_file_size</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t logit::FileLogger::m_current_file_size = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel private">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Current size of the log file. </p>
+
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00229">229</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1242,7 +1399,7 @@ Private Attributes</h2></td></tr>
 
 <p>Output file stream for logging. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00190">190</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00224">224</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1268,7 +1425,7 @@ Private Attributes</h2></td></tr>
 
 <p>Name of the currently open log file. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00193">193</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00227">227</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1294,7 +1451,7 @@ Private Attributes</h2></td></tr>
 
 <p>Path of the currently open log file. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00192">192</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00226">226</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1320,7 +1477,7 @@ Private Attributes</h2></td></tr>
 
 <p>Mutex to protect file path operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00191">191</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00225">225</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1346,7 +1503,7 @@ Private Attributes</h2></td></tr>
 
 <p>Timestamp of the last log. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00195">195</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00230">230</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1370,7 +1527,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00196">196</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00231">231</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -1396,7 +1553,7 @@ Private Attributes</h2></td></tr>
 
 <p>Mutex to protect file operations. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00188">188</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00222">222</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>

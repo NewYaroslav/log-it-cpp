@@ -131,11 +131,23 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a796ec08314addbfc674c82bea43619b7" id="r_a796ec08314addbfc674c82bea43619b7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a796ec08314addbfc674c82bea43619b7">auto_delete_days</a> = 30</td></tr>
 <tr class="memdesc:a796ec08314addbfc674c82bea43619b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of days after which old log files are deleted.  <br /></td></tr>
 <tr class="separator:a796ec08314addbfc674c82bea43619b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38e23f7d9bc209e80ed8ab16f3ea4c1a" id="r_a38e23f7d9bc209e80ed8ab16f3ea4c1a"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38e23f7d9bc209e80ed8ab16f3ea4c1a">max_file_size_bytes</a> = 0</td></tr>
+<tr class="memdesc:a38e23f7d9bc209e80ed8ab16f3ea4c1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Max size for log file before rotation (0 = off).  <br /></td></tr>
+<tr class="separator:a38e23f7d9bc209e80ed8ab16f3ea4c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f04d25888eb456de17eb2804210325a" id="r_a6f04d25888eb456de17eb2804210325a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f04d25888eb456de17eb2804210325a">max_rotated_files</a> = 0</td></tr>
+<tr class="memdesc:a6f04d25888eb456de17eb2804210325a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of rotated files to keep (0 = unlimited).  <br /></td></tr>
+<tr class="separator:a6f04d25888eb456de17eb2804210325a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e4797fc3a0fa274b21996c9061322a1" id="r_a2e4797fc3a0fa274b21996c9061322a1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e4797fc3a0fa274b21996c9061322a1">compress_rotated</a> = false</td></tr>
+<tr class="memdesc:a2e4797fc3a0fa274b21996c9061322a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether to compress rotated files.  <br /></td></tr>
+<tr class="separator:a2e4797fc3a0fa274b21996c9061322a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07afdc47f2a1fc5421e94d0ef62fa1cc" id="r_a07afdc47f2a1fc5421e94d0ef62fa1cc"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07afdc47f2a1fc5421e94d0ef62fa1cc">compress_cmd</a></td></tr>
+<tr class="memdesc:a07afdc47f2a1fc5421e94d0ef62fa1cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">External command used for compression.  <br /></td></tr>
+<tr class="separator:a07afdc47f2a1fc5421e94d0ef62fa1cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Configuration for the file logger. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00065">65</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00076">76</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a7ed1376311c09df400755df8907e2317" name="a7ed1376311c09df400755df8907e2317"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7ed1376311c09df400755df8907e2317">&#9670;&#160;</a></span>async</h2>
@@ -151,7 +163,7 @@ Public Attributes</h2></td></tr>
 
 <p>Flag indicating whether logging should be asynchronous. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00067">67</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00078">78</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -169,7 +181,43 @@ Public Attributes</h2></td></tr>
 
 <p>Number of days after which old log files are deleted. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00068">68</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00079">79</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a07afdc47f2a1fc5421e94d0ef62fa1cc" name="a07afdc47f2a1fc5421e94d0ef62fa1cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07afdc47f2a1fc5421e94d0ef62fa1cc">&#9670;&#160;</a></span>compress_cmd</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string logit::FileLogger::Config::compress_cmd</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>External command used for compression. </p>
+
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00083">83</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a2e4797fc3a0fa274b21996c9061322a1" name="a2e4797fc3a0fa274b21996c9061322a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e4797fc3a0fa274b21996c9061322a1">&#9670;&#160;</a></span>compress_rotated</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool logit::FileLogger::Config::compress_rotated = false</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether to compress rotated files. </p>
+
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00082">82</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>
@@ -187,7 +235,43 @@ Public Attributes</h2></td></tr>
 
 <p>Directory where log files are stored. </p>
 
-<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00066">66</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00077">77</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a38e23f7d9bc209e80ed8ab16f3ea4c1a" name="a38e23f7d9bc209e80ed8ab16f3ea4c1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38e23f7d9bc209e80ed8ab16f3ea4c1a">&#9670;&#160;</a></span>max_file_size_bytes</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t logit::FileLogger::Config::max_file_size_bytes = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Max size for log file before rotation (0 = off). </p>
+
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00080">80</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a6f04d25888eb456de17eb2804210325a" name="a6f04d25888eb456de17eb2804210325a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f04d25888eb456de17eb2804210325a">&#9670;&#160;</a></span>max_rotated_files</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t logit::FileLogger::Config::max_rotated_files = 0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Number of rotated files to keep (0 = unlimited). </p>
+
+<p class="definition">Definition at line <a class="el" href="FileLogger_8hpp_source.html#l00081">81</a> of file <a class="el" href="FileLogger_8hpp_source.html">FileLogger.hpp</a>.</p>
 
 </div>
 </div>

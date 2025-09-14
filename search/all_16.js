@@ -7,5 +7,6 @@ var searchData=
   ['repository_4',['Repository',['../index.html#repo_sec',1,'Repository'],['../index.html#step1',1,'Step 1: Clone the Repository']]],
   ['reset_5fcolor_5',['reset_color',['../classlogit_1_1ConsoleLogger.html#afaa7f2349fe56e9fc22b9a979016addc',1,'logit::ConsoleLogger']]],
   ['root_6',['root',['../structlogit_1_1PathComponents.html#aa095a4638dc9e9d994db96d3b4d9bf37',1,'logit::PathComponents']]],
-  ['run_20your_20project_7',['Step 5: Build and Run Your Project',['../index.html#step5',1,'']]]
+  ['rotate_5fcurrent_5ffile_7',['rotate_current_file',['../classlogit_1_1FileLogger.html#a42c7e23ed4cc60327cdb569894f2efa3',1,'logit::FileLogger']]],
+  ['run_20your_20project_8',['Step 5: Build and Run Your Project',['../index.html#step5',1,'']]]
 ];
