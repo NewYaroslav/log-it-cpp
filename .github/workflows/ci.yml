@@ -103,6 +103,36 @@ jobs:
             build/Testing/Temporary/LastTest.log
           if-no-files-found: ignore
 
+  asan-ubsan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - run: git submodule update --init --recursive
+      - name: Configure
+        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_LINKER_FLAGS='-fsanitize=address,undefined'
+      - name: Build
+        run: cmake --build build
+      - name: Test
+        run: ctest --test-dir build
+
+  tsan:
+    runs-on: ubuntu-latest
+    env:
+      LOGIT_PROFILE: thread
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - run: git submodule update --init --recursive
+      - name: Configure
+        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DLOGIT_FORCE_ASYNC_OFF=OFF -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=thread' -DCMAKE_LINKER_FLAGS='-fsanitize=thread'
+      - name: Build
+        run: cmake --build build
+      - name: Test
+        run: ctest --test-dir build
+
   vcpkg-install:
     runs-on: ubuntu-latest
     env:
