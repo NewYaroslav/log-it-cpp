@@ -22,14 +22,19 @@
 /// \param value The enum value.
 #define LOGIT_ENUM_TO_STR_CASE(value) case value: return #value;
 
+#define LOGIT_LEVEL_TRACE 0
+#define LOGIT_LEVEL_DEBUG 1
+#define LOGIT_LEVEL_INFO  2
+#define LOGIT_LEVEL_WARN  3
+#define LOGIT_LEVEL_ERROR 4
+#define LOGIT_LEVEL_FATAL 5
+
 #ifndef LOGIT_COMPILED_LEVEL
-#    define LOGIT_COMPILED_LEVEL logit::LogLevel::LOG_LVL_TRACE
+#    define LOGIT_COMPILED_LEVEL LOGIT_LEVEL_TRACE
 #endif
 
 #if __cplusplus >= 201703L
-#    define LOGIT_IF_COMPILED_LEVEL(level) if constexpr (LOGIT_COMPILED_LEVEL <= (level))
-#else
-#    define LOGIT_IF_COMPILED_LEVEL(level) if (LOGIT_COMPILED_LEVEL <= (level))
+#    define LOGIT_IF_COMPILED_LEVEL(level) if constexpr (LOGIT_COMPILED_LEVEL <= static_cast<int>(level))
 #endif
 
 //------------------------------------------------------------------------------
@@ -88,6 +93,7 @@
 /// \brief Logs a message without arguments.
 /// \param level The log level.
 /// \param format The log message format.
+#if __cplusplus >= 201703L
 #define LOGIT_LOG_AND_RETURN_NOARGS(level, format)                                          \
     do {                                                                                    \
         LOGIT_IF_COMPILED_LEVEL(level)                                                      \
@@ -96,11 +102,21 @@
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                  \
                 LOGIT_FUNCTION, format, {}, -1, false});                                    \
     } while (0)
+#else
+#define LOGIT_LOG_AND_RETURN_NOARGS(level, format)                                          \
+    do {                                                                                    \
+        logit::Logger::get_instance().log_and_return(                                       \
+            logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                           \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                      \
+            LOGIT_FUNCTION, format, {}, -1, false});                                        \
+    } while (0)
+#endif
 
 /// \brief Logs a message to a specific logger without arguments.
 /// \param level The log level.
 /// \param index The index of the logger to log to.
 /// \param format The log message format.
+#if __cplusplus >= 201703L
 #define LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(level, index, format)                      \
     do {                                                                                  \
         LOGIT_IF_COMPILED_LEVEL(level)                                                    \
@@ -109,6 +125,15 @@
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
                 LOGIT_FUNCTION, format, {}, index});                                      \
     } while (0)
+#else
+#define LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(level, index, format)                      \
+    do {                                                                                  \
+        logit::Logger::get_instance().log_and_return(                                     \
+            logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                         \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                    \
+            LOGIT_FUNCTION, format, {}, index});                                          \
+    } while (0)
+#endif
 
 //------------------------------------------------------------------------------
 // Macros for logging with arguments
@@ -118,6 +143,7 @@
 /// \param format The log message format.
 /// \param arg_names The names of the arguments.
 /// \param ... The arguments to log.
+#if __cplusplus >= 201703L
 #define LOGIT_LOG_AND_RETURN(level, format, arg_names, ...)                               \
     do {                                                                                  \
         LOGIT_IF_COMPILED_LEVEL(level)                                                    \
@@ -126,12 +152,22 @@
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
                 LOGIT_FUNCTION, format, arg_names, -1, false}, __VA_ARGS__);               \
     } while (0)
+#else
+#define LOGIT_LOG_AND_RETURN(level, format, arg_names, ...)                               \
+    do {                                                                                  \
+        logit::Logger::get_instance().log_and_return(                                     \
+            logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                         \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                    \
+            LOGIT_FUNCTION, format, arg_names, -1, false}, __VA_ARGS__);                  \
+    } while (0)
+#endif
 
 /// \brief Logs a message with arguments, but prints them without using a format string.
 /// \param level The log level.
 /// \param arg_names The names of the arguments.
 /// \param ... The arguments to log.
 /// \details This macro logs the raw arguments without applying any formatting to them.
+#if __cplusplus >= 201703L
 #define LOGIT_LOG_AND_RETURN_PRINT(level, arg_names, ...)                                 \
     do {                                                                                  \
         LOGIT_IF_COMPILED_LEVEL(level)                                                    \
@@ -140,6 +176,15 @@
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
                 LOGIT_FUNCTION, {}, arg_names, -1, true}, __VA_ARGS__);                   \
     } while (0)
+#else
+#define LOGIT_LOG_AND_RETURN_PRINT(level, arg_names, ...)                                 \
+    do {                                                                                  \
+        logit::Logger::get_instance().log_and_return(                                     \
+            logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                         \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                    \
+            LOGIT_FUNCTION, {}, arg_names, -1, true}, __VA_ARGS__);                       \
+    } while (0)
+#endif
 
 /// \brief Logs a message with arguments to a specific logger.
 /// \param level The log level.
@@ -147,6 +192,7 @@
 /// \param format The log message format.
 /// \param arg_names The names of the arguments.
 /// \param ... The arguments to log.
+#if __cplusplus >= 201703L
 #define LOGIT_LOG_AND_RETURN_WITH_INDEX(level, index, format, arg_names, ...)             \
     do {                                                                                  \
         LOGIT_IF_COMPILED_LEVEL(level)                                                    \
@@ -155,6 +201,15 @@
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
                 LOGIT_FUNCTION, format, arg_names, index, false}, __VA_ARGS__);           \
     } while (0)
+#else
+#define LOGIT_LOG_AND_RETURN_WITH_INDEX(level, index, format, arg_names, ...)             \
+    do {                                                                                  \
+        logit::Logger::get_instance().log_and_return(                                     \
+            logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                         \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                    \
+            LOGIT_FUNCTION, format, arg_names, index, false}, __VA_ARGS__);               \
+    } while (0)
+#endif
 
 /// \brief Logs a message with arguments to a specific logger, but prints them without using a format string.
 /// \param level The log level.
@@ -162,6 +217,7 @@
 /// \param arg_names The names of the arguments.
 /// \param ... The arguments to log.
 /// \details This macro logs the raw arguments without applying any formatting to them to a specific logger.
+#if __cplusplus >= 201703L
 #define LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(level, index, arg_names, ...)               \
     do {                                                                                  \
         LOGIT_IF_COMPILED_LEVEL(level)                                                    \
@@ -170,10 +226,20 @@
                 logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
                 LOGIT_FUNCTION, {}, arg_names, index, true}, __VA_ARGS__);                \
     } while (0)
+#else
+#define LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(level, index, arg_names, ...)               \
+    do {                                                                                  \
+        logit::Logger::get_instance().log_and_return(                                     \
+            logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                         \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                    \
+            LOGIT_FUNCTION, {}, arg_names, index, true}, __VA_ARGS__);                    \
+    } while (0)
+#endif
 
 //------------------------------------------------------------------------------
 // Macros for each log level
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
 // TRACE level macros
 #define LOGIT_TRACE(...)                LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_TRACE0()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
@@ -193,7 +259,14 @@
 #define LOGIT_FORMAT_TRACE_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_TRACE_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_TRACE_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_TRACE(...)                do { } while (0)
+#define LOGIT_TRACE0()                  do { } while (0)
+#define LOGIT_TRACE_TO(index, ...)      do { } while (0)
+#define LOGIT_TRACE0_TO(index)          do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
 // INFO level macros
 #define LOGIT_INFO(...)                 LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_INFO0()                   LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
@@ -213,7 +286,14 @@
 #define LOGIT_FORMAT_INFO_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_INFO_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_INFO_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_INFO(...)                 do { } while (0)
+#define LOGIT_INFO0()                   do { } while (0)
+#define LOGIT_INFO_TO(index, ...)       do { } while (0)
+#define LOGIT_INFO0_TO(index)           do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
 // DEBUG level macros
 #define LOGIT_DEBUG(...)                LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_DEBUG0()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
@@ -233,7 +313,14 @@
 #define LOGIT_FORMAT_DEBUG_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_DEBUG_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_DEBUG_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_DEBUG(...)                do { } while (0)
+#define LOGIT_DEBUG0()                  do { } while (0)
+#define LOGIT_DEBUG_TO(index, ...)      do { } while (0)
+#define LOGIT_DEBUG0_TO(index)          do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
 // WARN level macros
 #define LOGIT_WARN(...)                 LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_WARN0()                   LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
@@ -253,7 +340,14 @@
 #define LOGIT_FORMAT_WARN_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_WARN_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_WARN_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_WARN(...)                 do { } while (0)
+#define LOGIT_WARN0()                   do { } while (0)
+#define LOGIT_WARN_TO(index, ...)       do { } while (0)
+#define LOGIT_WARN0_TO(index)           do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
 // ERROR level macros
 #define LOGIT_ERROR(...)                LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_ERROR0()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
@@ -273,7 +367,14 @@
 #define LOGIT_FORMAT_ERROR_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_ERROR_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_ERROR_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_ERROR(...)                do { } while (0)
+#define LOGIT_ERROR0()                  do { } while (0)
+#define LOGIT_ERROR_TO(index, ...)      do { } while (0)
+#define LOGIT_ERROR0_TO(index)          do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
 // FATAL level macros
 #define LOGIT_FATAL(...)                LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_FATAL0()                  LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
@@ -293,6 +394,12 @@
 #define LOGIT_FORMAT_FATAL_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_FATAL_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_FATAL_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_FATAL(...)                do { } while (0)
+#define LOGIT_FATAL0()                  do { } while (0)
+#define LOGIT_FATAL_TO(index, ...)      do { } while (0)
+#define LOGIT_FATAL0_TO(index)          do { } while (0)
+#endif
 
 //------------------------------------------------------------------------------
 // Conditional logging macros (logging based on a condition)
@@ -301,6 +408,7 @@
 /// Macros for logging based on conditions.
 /// \{
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
 // TRACE level conditional macros
 #define LOGIT_TRACE_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_TRACE0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
@@ -310,7 +418,12 @@
 #define LOGIT_FORMAT_TRACE_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_TRACE_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, fmt)
 #define LOGIT_PRINTF_TRACE_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_TRACE_IF(condition, ...)        do { } while (0)
+#define LOGIT_TRACE0_IF(condition)            do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
 // INFO level conditional macros
 #define LOGIT_INFO_IF(condition, ...)         if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_INFO0_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
@@ -320,7 +433,12 @@
 #define LOGIT_FORMAT_INFO_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_INFO_IF(condition, fmt)   if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, fmt)
 #define LOGIT_PRINTF_INFO_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_INFO_IF(condition, ...)         do { } while (0)
+#define LOGIT_INFO0_IF(condition)             do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
 // DEBUG level conditional macros
 #define LOGIT_DEBUG_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_DEBUG0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
@@ -330,7 +448,12 @@
 #define LOGIT_FORMAT_DEBUG_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_DEBUG_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, fmt)
 #define LOGIT_PRINTF_DEBUG_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_DEBUG_IF(condition, ...)        do { } while (0)
+#define LOGIT_DEBUG0_IF(condition)            do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
 // WARN level conditional macros
 #define LOGIT_WARN_IF(condition, ...)         if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_WARN0_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
@@ -340,7 +463,12 @@
 #define LOGIT_FORMAT_WARN_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_WARN_IF(condition, fmt)   if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, fmt)
 #define LOGIT_PRINTF_WARN_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_WARN_IF(condition, ...)         do { } while (0)
+#define LOGIT_WARN0_IF(condition)             do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
 // ERROR level conditional macros
 #define LOGIT_ERROR_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_ERROR0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
@@ -350,7 +478,12 @@
 #define LOGIT_FORMAT_ERROR_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_ERROR_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, fmt)
 #define LOGIT_PRINTF_ERROR_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_ERROR_IF(condition, ...)        do { } while (0)
+#define LOGIT_ERROR0_IF(condition)            do { } while (0)
+#endif
 
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
 // FATAL level conditional macros
 #define LOGIT_FATAL_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, {}, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_FATAL0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
@@ -360,6 +493,10 @@
 #define LOGIT_FORMAT_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_FATAL_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, fmt)
 #define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, logit::format(fmt, __VA_ARGS__))
+#else
+#define LOGIT_FATAL_IF(condition, ...)        do { } while (0)
+#define LOGIT_FATAL0_IF(condition)            do { } while (0)
+#endif
 
 //------------------------------------------------------------------------------
 // Shorter versions of the macros when LOGIT_SHORT_NAME is defined

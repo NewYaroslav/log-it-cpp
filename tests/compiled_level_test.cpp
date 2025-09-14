@@ -1,4 +1,4 @@
-#define LOGIT_COMPILED_LEVEL logit::LogLevel::LOG_LVL_INFO
+#define LOGIT_COMPILED_LEVEL LOGIT_LEVEL_INFO
 #include <LogIt.hpp>
 
 template <class T>
