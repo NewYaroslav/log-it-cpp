@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['consolelogger_2ehpp_0',['ConsoleLogger.hpp',['../ConsoleLogger_8hpp.html',1,'']]]
+  ['config_2ehpp_0',['config.hpp',['../config_8hpp.html',1,'']]],
+  ['consolelogger_2ehpp_1',['ConsoleLogger.hpp',['../ConsoleLogger_8hpp.html',1,'']]]
 ];

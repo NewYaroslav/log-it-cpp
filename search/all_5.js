@@ -1,7 +1,7 @@
 var searchData=
 [
   ['_5flogit_5fargument_5futils_5fhpp_5fincluded_0',['_LOGIT_ARGUMENT_UTILS_HPP_INCLUDED',['../argument__utils_8hpp.html#ac269386d135b12b400739e62a5e53741',1,'argument_utils.hpp']]],
-  ['_5flogit_5fconfig_5fhpp_5fincluded_1',['_LOGIT_CONFIG_HPP_INCLUDED',['../LogItConfig_8hpp.html#a88ccde7736a52e6ffc7f197e1e5b7baa',1,'LogItConfig.hpp']]],
+  ['_5flogit_5fconfig_5fhpp_5fincluded_1',['_LOGIT_CONFIG_HPP_INCLUDED',['../config_8hpp.html#a88ccde7736a52e6ffc7f197e1e5b7baa',1,'config.hpp']]],
   ['_5flogit_5fconsole_5flogger_5fhpp_5fincluded_2',['_LOGIT_CONSOLE_LOGGER_HPP_INCLUDED',['../ConsoleLogger_8hpp.html#ac6c4043e6e8e6e80d174718d3c7605c8',1,'ConsoleLogger.hpp']]],
   ['_5flogit_5fdetail_5ftask_5fexecutor_5fhpp_5fincluded_3',['_LOGIT_DETAIL_TASK_EXECUTOR_HPP_INCLUDED',['../TaskExecutor_8hpp.html#a971e5b4dc90388388e2794cac56a8760',1,'TaskExecutor.hpp']]],
   ['_5flogit_5fencoding_5futils_5fhpp_5fincluded_4',['_LOGIT_ENCODING_UTILS_HPP_INCLUDED',['../encoding__utils_8hpp.html#a6ba91d688f89e9f5f03899407e5697c5',1,'encoding_utils.hpp']]],

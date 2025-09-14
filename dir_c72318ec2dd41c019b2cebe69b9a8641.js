@@ -5,6 +5,7 @@ var dir_c72318ec2dd41c019b2cebe69b9a8641 =
     [ "loggers", "dir_c80fae293bdf57c1c67b4874c22574b2.html", "dir_c80fae293bdf57c1c67b4874c22574b2" ],
     [ "test", "dir_507bbd4eee0540669171d6407ba2048f.html", "dir_507bbd4eee0540669171d6407ba2048f" ],
     [ "utils", "dir_1f2d2c0c02d0dde21410663b8836d271.html", "dir_1f2d2c0c02d0dde21410663b8836d271" ],
+    [ "config.hpp", "config_8hpp.html", "config_8hpp" ],
     [ "enums.hpp", "enums_8hpp.html", "enums_8hpp" ],
     [ "formatter.hpp", "formatter_8hpp.html", "formatter_8hpp" ],
     [ "Logger.hpp", "Logger_8hpp.html", "Logger_8hpp" ],
