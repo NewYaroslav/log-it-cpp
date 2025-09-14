@@ -13,6 +13,11 @@
 #include <regex>
 #include <queue>
 #include <functional>
+#include <utility>
+#include <vector>
+#include <algorithm>
+#include <cstdlib>
+#include <cstdio>
 #include <time_shield/time_parser.hpp>
 
 namespace logit {
@@ -22,14 +27,20 @@ namespace logit {
     class FileLogger : public ILogger {
     public:
         struct Config {
-            std::string directory = "logs";
-            bool        async     = false;
+            std::string directory        = "logs";
+            bool        async            = false;
             int         auto_delete_days = 30;
+            uint64_t    max_file_size_bytes = 0;
+            uint32_t    max_rotated_files   = 0;
+            bool        compress_rotated    = false;
+            std::string compress_cmd;
         };
 
         FileLogger() { warn(); }
         FileLogger(const Config&) { warn(); }
-        FileLogger(const std::string&, const bool& = true, const int& = 30) { warn(); }
+        FileLogger(const std::string&, const bool& = true, const int& = 30,
+                    const uint64_t& = 0, const uint32_t& = 0,
+                    const bool& = false, std::string = {}) { warn(); }
 
         void log(const LogRecord&, const std::string&) override { warn(); }
         std::string get_string_param(const LoggerParam&) const override { return {}; }
@@ -63,9 +74,13 @@ namespace logit {
         /// \struct Config
         /// \brief Configuration for the file logger.
         struct Config {
-            std::string directory           = "logs"; ///< Directory where log files are stored.
-            bool        async               = true; ///< Flag indicating whether logging should be asynchronous.
-            int         auto_delete_days    = 30;   ///< Number of days after which old log files are deleted.
+            std::string directory        = "logs"; ///< Directory where log files are stored.
+            bool        async            = true;   ///< Flag indicating whether logging should be asynchronous.
+            int         auto_delete_days = 30;     ///< Number of days after which old log files are deleted.
+            uint64_t    max_file_size_bytes = 0;   ///< Max size for log file before rotation (0 = off).
+            uint32_t    max_rotated_files   = 0;   ///< Number of rotated files to keep (0 = unlimited).
+            bool        compress_rotated    = false; ///< Whether to compress rotated files.
+            std::string compress_cmd;             ///< External command used for compression.
         };
 
         /// \brief Default constructor that uses default configuration.
@@ -90,6 +105,25 @@ namespace logit {
             m_config.directory = directory;
             m_config.async = async;
             m_config.auto_delete_days = auto_delete_days;
+            start_logging();
+        }
+
+        /// \brief Constructor with directory, size-based rotation and additional options.
+        FileLogger(
+                const std::string& directory,
+                const bool& async,
+                const int& auto_delete_days,
+                uint64_t max_file_size_bytes,
+                uint32_t max_rotated_files,
+                bool compress_rotated = false,
+                std::string compress_cmd = {}) {
+            m_config.directory = directory;
+            m_config.async = async;
+            m_config.auto_delete_days = auto_delete_days;
+            m_config.max_file_size_bytes = max_file_size_bytes;
+            m_config.max_rotated_files = max_rotated_files;
+            m_config.compress_rotated = compress_rotated;
+            m_config.compress_cmd = std::move(compress_cmd);
             start_logging();
         }
 
@@ -192,6 +226,7 @@ namespace logit {
         std::string        m_file_path; ///< Path of the currently open log file.
         std::string        m_file_name; ///< Name of the currently open log file.
         int64_t            m_current_date_ts = 0; ///< Timestamp of the current log file's date.
+        uint64_t           m_current_file_size = 0; ///< Current size of the log file.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
         std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
 
@@ -254,6 +289,8 @@ namespace logit {
             if (!m_file.is_open()) {
                 throw std::runtime_error("Failed to open log file: " + m_file_path);
             }
+            m_file.seekp(0, std::ios::end);
+            m_current_file_size = static_cast<uint64_t>(m_file.tellp());
         }
 
         /// \brief Creates a file path for the log file based on the date timestamp.
@@ -272,10 +309,109 @@ namespace logit {
             if (message_date_ts != m_current_date_ts) {
                 open_log_file(message_date_ts);
             }
+            if (m_config.max_file_size_bytes > 0) {
+                const uint64_t add = static_cast<uint64_t>(message.size() + 1);
+                if (m_current_file_size + add > m_config.max_file_size_bytes) {
+                    rotate_current_file();
+                }
+            }
             if (m_file.is_open()) {
                 m_file << message << std::endl;
+                m_current_file_size += static_cast<uint64_t>(message.size() + 1);
             }
             remove_old_logs();
+        }
+
+        void rotate_current_file() {
+            if (m_file.is_open()) m_file.close();
+
+            const std::string base = time_shield::to_iso8601_date(m_current_date_ts);
+            const std::string dir  = get_directory_path();
+            const std::string cur  = dir + "/" + base + ".log";
+            std::string rotated;
+            uint32_t idx = 1;
+#           if __cplusplus >= 201703L
+            for (;; ++idx) {
+                rotated = dir + "/" + base + "." + std::to_string(idx) + ".log";
+                if (!fs::exists(rotated)) break;
+            }
+#           else
+            auto file_exists = [](const std::string& path) {
+#               if defined(_WIN32)
+                std::ifstream f(utf8_to_ansi(path).c_str());
+#               else
+                std::ifstream f(path.c_str());
+#               endif
+                return f.good();
+            };
+            for (;; ++idx) {
+                rotated = dir + "/" + base + "." + std::to_string(idx) + ".log";
+                if (!file_exists(rotated)) break;
+            }
+#           endif
+#           if defined(_WIN32)
+            std::rename(utf8_to_ansi(cur).c_str(), utf8_to_ansi(rotated).c_str());
+#           else
+            std::rename(cur.c_str(), rotated.c_str());
+#           endif
+
+            if (m_config.compress_rotated && !m_config.compress_cmd.empty()) {
+                std::string cmd = m_config.compress_cmd;
+                size_t pos = cmd.find("{file}");
+                if (pos != std::string::npos) cmd.replace(pos, 6, "\"" + rotated + "\"");
+                std::system(cmd.c_str());
+            }
+
+            if (m_config.max_rotated_files > 0) {
+                enforce_rotation_retention(base, m_config.max_rotated_files, dir);
+            }
+
+            open_log_file(m_current_date_ts);
+            m_current_file_size = 0;
+        }
+
+        void enforce_rotation_retention(const std::string& base, uint32_t max_files, const std::string& dir) {
+#           if __cplusplus >= 201703L
+            std::vector<std::pair<uint32_t, fs::path>> files;
+            std::regex pattern(base + R"(\.(\d+)\.log(\..*)?)");
+            for (const auto& entry : fs::directory_iterator(dir)) {
+                if (!fs::is_regular_file(entry.status())) continue;
+                std::smatch m;
+                std::string name = entry.path().filename().string();
+                if (std::regex_match(name, m, pattern)) {
+                    uint32_t idx = static_cast<uint32_t>(std::stoul(m[1].str()));
+                    files.emplace_back(idx, entry.path());
+                }
+            }
+            if (files.size() <= max_files) return;
+            std::sort(files.begin(), files.end(), [](const std::pair<uint32_t, fs::path>& a, const std::pair<uint32_t, fs::path>& b) { return a.first < b.first; });
+            size_t to_remove = files.size() - max_files;
+            for (size_t i = 0; i < to_remove; ++i) {
+                fs::remove(files[i].second);
+            }
+#           else
+            std::vector<std::pair<uint32_t, std::string>> files;
+            std::regex pattern(base + R"(\.(\d+)\.log(\..*)?)");
+            std::vector<std::string> file_list = get_list_files(dir);
+            for (const auto& path : file_list) {
+                std::string name = path.substr(path.find_last_of("/\\") + 1);
+                std::smatch m;
+                if (std::regex_match(name, m, pattern)) {
+                    uint32_t idx = static_cast<uint32_t>(std::stoul(m[1].str()));
+                    files.emplace_back(idx, path);
+                }
+            }
+            if (files.size() <= max_files) return;
+            std::sort(files.begin(), files.end(), [](const std::pair<uint32_t, std::string>& a, const std::pair<uint32_t, std::string>& b) { return a.first < b.first; });
+            size_t to_remove = files.size() - max_files;
+            for (size_t i = 0; i < to_remove; ++i) {
+#               if defined(_WIN32)
+                remove(utf8_to_ansi(files[i].second).c_str());
+#               else
+                remove(files[i].second.c_str());
+#               endif
+            }
+#           endif
         }
 
         /// \brief Removes old log files based on the auto-delete days configuration.
@@ -326,16 +462,14 @@ namespace logit {
         /// \param filename The filename to check.
         /// \return True if the filename matches the pattern, false otherwise.
         bool is_valid_log_filename(const std::string& filename) const {
-            static const std::regex pattern(R"((\d{4}-\d{2}-\d{2})\.log)");
-            return std::regex_match(filename, pattern);
+            return filename.size() >= 10 && filename[4] == '-' && filename[7] == '-';
         }
 
         /// \brief Extracts the date timestamp from the log filename.
         /// \param filename The filename to extract the date from.
         /// \return The date timestamp.
         int64_t get_date_ts_from_filename(const std::string& filename) const {
-            constexpr size_t EXTENSION_LENGTH = sizeof(".log") - 1;
-            return time_shield::ts(filename.substr(0, filename.size() - EXTENSION_LENGTH));
+            return time_shield::ts(filename.substr(0, 10));
         }
 
         /// \brief Gets the current UTC date timestamp in seconds.
