@@ -45,6 +45,7 @@ if(LOGIT_EMSCRIPTEN)
     set(LOGIT_WITH_WIN_EVENT_LOG OFF CACHE BOOL "" FORCE)
     target_compile_definitions(log-it-cpp INTERFACE LOGIT_EMSCRIPTEN=1)
     target_compile_definitions(log-it-cpp INTERFACE LOGIT_DEFAULT_ASYNC_OFF=1)
+    target_link_options(log-it-cpp INTERFACE "-sEXPORTED_RUNTIME_METHODS=['UTF8ToString']")
 endif()
 
 if(LOGIT_FORCE_ASYNC_OFF)
