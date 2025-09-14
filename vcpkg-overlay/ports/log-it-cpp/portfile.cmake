@@ -8,6 +8,7 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    MAYBE_UNUSED_VARIABLES LOGIT_WITH_SYSLOG LOGIT_WITH_WIN_EVENT_LOG
     OPTIONS
       -DLOG_IT_CPP_BUILD_TESTS=OFF
       -DLOGIT_WITH_SYSLOG=ON
@@ -18,10 +19,11 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME log-it-cpp CONFIG_PATH lib/cmake/log-it-cpp)
 
+vcpkg_fixup_pkgconfig()
+
 vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/LICENSE")
 
 file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug/include"
-    "${CURRENT_PACKAGES_DIR}/debug/lib"
-    "${CURRENT_PACKAGES_DIR}/debug/share/${PORT}"
+    "${CURRENT_PACKAGES_DIR}/debug"
+    "${CURRENT_PACKAGES_DIR}/lib"
 )
