@@ -338,16 +338,39 @@ namespace logit {
 
             const std::string base = time_shield::to_iso8601_date(m_current_date_ts);
             const std::string dir  = get_directory_path();
-#           if defined(_WIN32)
+            std::string rotated_str;
+#           if __cplusplus >= 201703L
+#               if defined(_WIN32)
+            fs::path cur = (fs::u8path(dir) / (base + ".log")).lexically_normal();
+            fs::path rotated = fs::u8path(make_rotated_name(base, dir)).lexically_normal();
+#               else
+            fs::path cur = (fs::path(dir) / (base + ".log")).lexically_normal();
+            fs::path rotated = fs::path(make_rotated_name(base, dir)).lexically_normal();
+#               endif
+            std::error_code ec;
+            fs::rename(cur, rotated, ec);
+            if (ec) {
+                throw std::runtime_error("Failed to rename log file: " + ec.message());
+            }
+#               if defined(_WIN32)
+            rotated_str = rotated.u8string();
+#               else
+            rotated_str = rotated.string();
+#               endif
+#           else
+#               if defined(_WIN32)
             const std::string cur  = dir + "\\" + base + ".log";
-#           else
+#               else
             const std::string cur  = dir + "/" + base + ".log";
-#           endif
-            std::string rotated = make_rotated_name(base, dir);
-#           if defined(_WIN32)
-            std::rename(utf8_to_ansi(cur).c_str(), utf8_to_ansi(rotated).c_str());
-#           else
-            std::rename(cur.c_str(), rotated.c_str());
+#               endif
+            rotated_str = make_rotated_name(base, dir);
+#               if defined(_WIN32)
+            if (std::rename(utf8_to_ansi(cur).c_str(), utf8_to_ansi(rotated_str).c_str()) != 0) {
+#               else
+            if (std::rename(cur.c_str(), rotated_str.c_str()) != 0) {
+#               endif
+                throw std::runtime_error("Failed to rename log file");
+            }
 #           endif
 
             open_log_file(m_current_date_ts);
@@ -359,9 +382,9 @@ namespace logit {
                         m_compressor.reset(new detail::CompressionWorker(
                             m_config.compress, m_config.compress_level, m_config.external_cmd));
                     }
-                    m_compressor->enqueue(rotated);
+                    m_compressor->enqueue(rotated_str);
                 } else {
-                    detail::compress_file(m_config.compress, rotated, m_config.compress_level, m_config.external_cmd);
+                    detail::compress_file(m_config.compress, rotated_str, m_config.compress_level, m_config.external_cmd);
                 }
             }
 
