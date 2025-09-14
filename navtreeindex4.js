@@ -1,5 +1,7 @@
 var NAVTREEINDEX4 =
 {
+"structlogit_1_1VariableValue.html#aa9f698e4aa381157e6739fd77b983bbe":[2,0,0,13,15],
+"structlogit_1_1VariableValue.html#aa9f698e4aa381157e6739fd77b983bbe":[3,0,0,13,15],
 "structlogit_1_1VariableValue.html#aaa28fb7ee72cb3b3a554faf6c63cfbb7":[2,0,0,13,27],
 "structlogit_1_1VariableValue.html#aaa28fb7ee72cb3b3a554faf6c63cfbb7":[3,0,0,13,27],
 "structlogit_1_1VariableValue.html#aaaf3d8fcb95a5e3d4a60478dabbb17c5":[2,0,0,13,13],

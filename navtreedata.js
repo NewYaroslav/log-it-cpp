@@ -66,8 +66,8 @@ var NAVTREEINDEX =
 "ConsoleLogger_8hpp.html",
 "TaskExecutor_8hpp.html#a971e5b4dc90388388e2794cac56a8760",
 "classlogit_1_1UniqueFileLogger.html#af90ef5dd8b23d305bcca8371349dc0d8",
-"namespacelogit.html#a9e415ea803231f2d81a3632b507dff2cadeb1095ea859c737af741d02fc94f96a",
-"structlogit_1_1VariableValue.html#aaa28fb7ee72cb3b3a554faf6c63cfbb7"
+"namespacelogit.html#a9e415ea803231f2d81a3632b507dff2ca4f5860c44e02474ae9c819c35be838f4",
+"structlogit_1_1VariableValue.html#aa9f698e4aa381157e6739fd77b983bbe"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

@@ -51,6 +51,7 @@ var LogMacros_8hpp =
     [ "LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT", "LogMacros_8hpp.html#a1a5be272aaa6828a149187164c1d03d9", null ],
     [ "LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE", "LogMacros_8hpp.html#a991d97ec74c5a577e67bcea0a91b95c5", null ],
     [ "LOGIT_ADD_UNIQUE_FILE_LOGGER_SINGLE_MODE", "LogMacros_8hpp.html#aec9d1da7f0ed3c109987b20b50bf4c26", null ],
+    [ "LOGIT_COMPILED_LEVEL", "group__LoggingMacros.html#ga81b3ace010407a03f581e45fa091de9b", null ],
     [ "LOGIT_DEBUG", "LogMacros_8hpp.html#a234dbab1d4cba8d232dff3e7cdaef9e0", null ],
     [ "LOGIT_DEBUG0", "LogMacros_8hpp.html#a6ddbfa66d68d7d9095c39e26cbbd83b3", null ],
     [ "LOGIT_DEBUG0_IF", "LogMacros_8hpp.html#ab77097b6bad13a97f8530b50cd831f62", null ],

@@ -7,6 +7,7 @@ var index =
       [ "Support for Multiple Backends", "index.html#multiple_backends", null ],
       [ "Asynchronous Logging", "index.html#async_logging", null ],
       [ "Stream-Based Logging", "index.html#stream_logging", null ],
+      [ "Compile-Time Log Level", "index.html#compile_level", null ],
       [ "Extensibility", "index.html#extensibility", null ]
     ] ],
     [ "Usage", "index.html#usage_sec", null ],
