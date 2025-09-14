@@ -145,6 +145,18 @@ For more usage examples, please refer to the `examples` folder in the repository
 
 ---
 
+### Compile-Time Log Level
+
+You can exclude lower-severity logs from the binary by specifying the maximum level to compile. Define the `LOGIT_COMPILED_LEVEL` macro during compilation:
+
+```bash
+g++ -DLOGIT_COMPILED_LEVEL=logit::LogLevel::LOG_LVL_WARN ...
+```
+
+With the example above, `TRACE`, `DEBUG`, and `INFO` macros are turned into no-ops at compile time.
+
+---
+
 ## Log Format Customization
 
 `LogIt++` supports customizable log message formatting using patterns that define how each message should appear. You can specify patterns through macros or provide them when adding logger backends.

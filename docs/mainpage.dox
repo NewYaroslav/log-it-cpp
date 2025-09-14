@@ -67,6 +67,16 @@ Use stream operators for complex messages.
 LOGIT_STREAM_INFO() << "Stream-based info logging with short macro. Integer value: " << 123;
 \endcode
 
+\subsection compile_level Compile-Time Log Level
+
+Exclude lower-severity logs from the final binary by defining the maximum level to compile. Set the `LOGIT_COMPILED_LEVEL` macro during compilation:
+
+\code{.bash}
+g++ -DLOGIT_COMPILED_LEVEL=logit::LogLevel::LOG_LVL_WARN ...
+\endcode
+
+With this configuration, `TRACE`, `DEBUG`, and `INFO` macros are disabled at compile time.
+
 \subsection extensibility Extensibility
 
 Create custom loggers and formatters to meet your specific requirements.
