@@ -29,6 +29,15 @@ jobs:
         run: cmake -S tests/install_consumer -B build-consumer -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install -DCMAKE_CXX_STANDARD=${{ matrix.std }}
       - name: Build consumer project
         run: cmake --build build-consumer
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.std }}
+          path: |
+            build/CMakeFiles/CMakeOutput.log
+            build/Testing/Temporary/LastTest.log
+          if-no-files-found: ignore
 
   windows:
     runs-on: windows-latest
@@ -52,6 +61,15 @@ jobs:
         run: cmake -S tests/install_consumer -B build-consumer -DCMAKE_PREFIX_PATH="${{ github.workspace }}/install" -DCMAKE_CXX_STANDARD=${{ matrix.std }}
       - name: Build consumer project
         run: cmake --build build-consumer --config Release
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.std }}
+          path: |
+            build/CMakeFiles/CMakeOutput.log
+            build/Testing/Temporary/LastTest.log
+          if-no-files-found: ignore
 
   macos:
     runs-on: macos-latest
@@ -75,6 +93,15 @@ jobs:
         run: cmake -S tests/install_consumer -B build-consumer -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install -DCMAKE_CXX_STANDARD=${{ matrix.std }}
       - name: Build consumer project
         run: cmake --build build-consumer
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.std }}
+          path: |
+            build/CMakeFiles/CMakeOutput.log
+            build/Testing/Temporary/LastTest.log
+          if-no-files-found: ignore
 
   vcpkg-install:
     runs-on: ubuntu-latest
@@ -96,6 +123,15 @@ jobs:
         run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
       - name: Build consumer project
         run: cmake --build build
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vcpkg-install-logs
+          path: |
+            build/CMakeFiles/CMakeOutput.log
+            build/Testing/Temporary/LastTest.log
+          if-no-files-found: ignore
 
   emscripten:
     runs-on: ubuntu-latest
@@ -119,3 +155,12 @@ jobs:
         run: |
           node --no-experimental-fetch build-ems/tests/ems_console.js
           node --no-experimental-fetch build-ems/tests/ems_async_flush.js
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: emscripten-logs
+          path: |
+            build-ems/CMakeFiles/CMakeOutput.log
+            build-ems/Testing/Temporary/LastTest.log
+          if-no-files-found: ignore
