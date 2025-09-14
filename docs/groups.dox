@@ -33,6 +33,13 @@ if (LOGIT_IS_LOGGER_ENABLED(1)) {
     LOGIT_INFO("Logger 1 is enabled");
 }
 \endcode
+
+\par Task Executor Configuration
+Use `LOGIT_QUEUE_DROP` or `LOGIT_QUEUE_BLOCK` with `LOGIT_SET_QUEUE_POLICY`.
+\code
+LOGIT_SET_MAX_QUEUE(64); // Limit queue size
+LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP); // Drop tasks when full
+\endcode
 */
 
 /*!
