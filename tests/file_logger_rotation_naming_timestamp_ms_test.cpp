@@ -2,10 +2,25 @@
 #include <regex>
 #include <string>
 #include <vector>
+#if __cplusplus >= 201703L
 #include <filesystem>
+#else
+#include <cstdlib>
+#endif
 
 int main() {
+#if __cplusplus >= 201703L
     std::filesystem::remove_all(logit::get_exec_dir() + "/rotation_tms");
+#else
+#ifdef _WIN32
+    std::string clean = logit::get_exec_dir() + "\\rotation_tms";
+    std::string cmd = "rmdir /s /q \"" + clean + "\"";
+#else
+    std::string clean = logit::get_exec_dir() + "/rotation_tms";
+    std::string cmd = "rm -rf \"" + clean + "\"";
+#endif
+    std::system(cmd.c_str());
+#endif
     const std::string dir = logit::get_exec_dir() + "/rotation_tms";
     logit::FileLogger::Config cfg;
     cfg.directory = "rotation_tms";
