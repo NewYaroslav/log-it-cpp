@@ -7,3 +7,9 @@
 [submodule ".github/doxygen-awesome-css"]
 	path = .github/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "libs/zstd"]
+	path = libs/zstd
+	url = https://github.com/facebook/zstd.git
+[submodule "libs/zlib"]
+	path = libs/zlib
+	url = https://github.com/madler/zlib
