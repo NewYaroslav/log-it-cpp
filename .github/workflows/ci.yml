@@ -18,7 +18,7 @@ jobs:
           submodules: true
       - run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=ON -DLOGIT_WITH_WIN_EVENT_LOG=OFF
       - name: Build
         run: cmake --build build
       - name: Install
@@ -41,7 +41,7 @@ jobs:
           submodules: true
       - run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=OFF -DLOGIT_WITH_WIN_EVENT_LOG=ON
       - name: Build
         run: cmake --build build --config Release
       - name: Install
@@ -64,7 +64,7 @@ jobs:
           submodules: true
       - run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }}
+        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=ON -DLOGIT_WITH_WIN_EVENT_LOG=OFF
       - name: Build
         run: cmake --build build
       - name: Install

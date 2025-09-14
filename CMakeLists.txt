@@ -6,6 +6,8 @@ option(LOG_IT_CPP_BUILD_EXAMPLES "Build log-it-cpp examples" OFF)
 option(LOGIT_WITH_GZIP "Enable gzip via zlib" OFF)
 option(LOGIT_WITH_ZSTD "Enable zstd" OFF)
 option(LOGIT_USE_SUBMODULES "Allow bundled third_party fallback" OFF)
+option(LOGIT_WITH_SYSLOG "Enable POSIX syslog backend" ON)
+option(LOGIT_WITH_WIN_EVENT_LOG "Enable Windows Event Log backend" ON)
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 11)
@@ -32,6 +34,15 @@ target_include_directories(log-it-cpp INTERFACE
 )
 
 target_link_libraries(log-it-cpp INTERFACE time_shield::time_shield)
+
+if(LOGIT_WITH_SYSLOG AND (UNIX OR APPLE) AND NOT EMSCRIPTEN)
+    target_compile_definitions(log-it-cpp INTERFACE LOGIT_HAS_SYSLOG=1)
+endif()
+
+if(LOGIT_WITH_WIN_EVENT_LOG AND WIN32)
+    target_compile_definitions(log-it-cpp INTERFACE LOGIT_HAS_WIN_EVENT_LOG=1)
+    target_link_libraries(log-it-cpp INTERFACE advapi32)
+endif()
 
 # ---------- GZIP (zlib) ----------
 if(LOGIT_WITH_GZIP)

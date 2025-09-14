@@ -8,7 +8,10 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    OPTIONS -DLOG_IT_CPP_BUILD_TESTS=OFF
+    OPTIONS
+      -DLOG_IT_CPP_BUILD_TESTS=OFF
+      -DLOGIT_WITH_SYSLOG=ON
+      -DLOGIT_WITH_WIN_EVENT_LOG=ON
 )
 
 vcpkg_cmake_install()

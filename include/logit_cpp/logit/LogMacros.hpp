@@ -994,6 +994,30 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_UNIQUE_FILE_LOGGER_PATTERN),  \
         true)
 
+#define LOGIT_ADD_SYSLOG(ident, facility, async) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::SyslogLogger>(ident, facility, async), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), false)
+
+#define LOGIT_ADD_SYSLOG_SINGLE_MODE(ident, facility, async) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::SyslogLogger>(ident, facility, async), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
+
+#define LOGIT_ADD_SYSLOG_DEFAULT() LOGIT_ADD_SYSLOG("log-it", LOG_USER, true)
+
+#define LOGIT_ADD_EVENT_LOG(source_wide, async) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::EventLogLogger>(source_wide, async), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), false)
+
+#define LOGIT_ADD_EVENT_LOG_SINGLE_MODE(source_wide, async) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::EventLogLogger>(source_wide, async), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
+
+#define LOGIT_ADD_EVENT_LOG_DEFAULT() LOGIT_ADD_EVENT_LOG(L"LogIt", true)
+
 #else // C++11 fallback
 
 /// \brief Macro for adding a logger with a specific formatter.
@@ -1184,6 +1208,34 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
             LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS)),                                \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_UNIQUE_FILE_LOGGER_PATTERN)), \
         true)
+
+#define LOGIT_ADD_SYSLOG(ident, facility, async) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger(ident, facility, async)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        false)
+
+#define LOGIT_ADD_SYSLOG_SINGLE_MODE(ident, facility, async) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger(ident, facility, async)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+#define LOGIT_ADD_SYSLOG_DEFAULT() LOGIT_ADD_SYSLOG("log-it", LOG_USER, true)
+
+#define LOGIT_ADD_EVENT_LOG(source_wide, async) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger(source_wide, async)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        false)
+
+#define LOGIT_ADD_EVENT_LOG_SINGLE_MODE(source_wide, async) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger(source_wide, async)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+#define LOGIT_ADD_EVENT_LOG_DEFAULT() LOGIT_ADD_EVENT_LOG(L"LogIt", true)
 
 #endif // C++ version check
 

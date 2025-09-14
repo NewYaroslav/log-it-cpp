@@ -10,5 +10,8 @@
 #include "loggers/ConsoleLogger.hpp"
 #include "loggers/FileLogger.hpp"
 #include "loggers/UniqueFileLogger.hpp"
+#include "loggers/SyslogLogger.hpp"
+#include "loggers/EventLogLogger.hpp"
+#include "loggers/SystemLogger.hpp"
 
 #endif // _LOGIT_LOGGERS_HPP_INCLUDED
