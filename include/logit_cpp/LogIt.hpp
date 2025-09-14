@@ -5,7 +5,7 @@
 /// \file LogIt.hpp
 /// \brief Main header file for the LogIt++ library.
 
-#include "LogItConfig.hpp"
+#include "logit/config.hpp"
 #include "logit/enums.hpp"
 #include "logit/utils.hpp"
 #include "logit/Logger.hpp"

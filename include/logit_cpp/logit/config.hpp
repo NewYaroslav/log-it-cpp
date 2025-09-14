@@ -2,7 +2,7 @@
 #ifndef _LOGIT_CONFIG_HPP_INCLUDED
 #define _LOGIT_CONFIG_HPP_INCLUDED
 
-/// \file LogItConfig.hpp
+/// \file config.hpp
 /// \brief Configuration macros for the LogIt logging system.
 
 /// \ingroup ConfigMacros Configuration Macros
