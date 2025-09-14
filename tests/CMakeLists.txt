@@ -1,4 +1,7 @@
 file(GLOB TEST_SOURCES *.cpp)
+if(NOT LOGIT_WITH_GZIP)
+    list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_LIST_DIR}/file_logger_gzip_compression_test.cpp)
+endif()
 foreach(test_src ${TEST_SOURCES})
     get_filename_component(test_name ${test_src} NAME_WE)
     add_executable(${test_name} ${test_src})
