@@ -2,15 +2,15 @@
 #include <regex>
 #include <string>
 #include <vector>
-#include <cstdlib>
+#include <filesystem>
 
 int main() {
-    std::system("rm -rf rotation_ts");
+    std::filesystem::remove_all(logit::get_exec_dir() + "/rotation_ts");
+    const std::string dir = logit::get_exec_dir() + "/rotation_ts";
     logit::FileLogger::Config cfg;
     cfg.directory = "rotation_ts";
     cfg.max_file_size_bytes = 20;
     cfg.naming = logit::RotationNaming::Timestamp;
-    const std::string dir = cfg.directory;
     logit::Logger::get_instance().add_logger(
         std::unique_ptr<logit::FileLogger>(new logit::FileLogger(cfg)),
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter("%v")));
