@@ -12,18 +12,26 @@ int main() {
     LOGIT_INFO(msg);
     LOGIT_INFO(msg);
     LOGIT_WAIT();
+    
 #if __cplusplus >= 201703L
     std::filesystem::path current = LOGIT_GET_LAST_FILE_PATH(0);
     std::filesystem::path rotated = current;
     rotated.replace_filename(current.stem().string() + ".001.log");
-    return std::filesystem::exists(rotated) ? 0 : 1;
+    LOGIT_SHUTDOWN();
+    bool exists = std::filesystem::exists(rotated);
 #else
     std::string current = LOGIT_GET_LAST_FILE_PATH(0);
     std::string rotated = current;
     size_t pos = rotated.rfind(".log");
-    if (pos == std::string::npos) return 1;
-    rotated.insert(pos, ".001");
-    std::ifstream f(rotated.c_str());
-    return f.good() ? 0 : 1;
+    if (pos != std::string::npos) {
+        rotated.insert(pos, ".001");
+    }
+    LOGIT_SHUTDOWN();
+    bool exists = false;
+    if (pos != std::string::npos) {
+        std::ifstream f(rotated.c_str());
+        exists = f.good();
+    }
 #endif
+    return exists ? 0 : 1;
 }
