@@ -24,9 +24,18 @@ jobs:
           sed -i "0,/VERSION_PLACEHOLDER/s//$TAG/" docs/mainpage.dox
       - name: Generate Documentation
         uses: mattnotmitt/doxygen-action@edge
+      - name: Check for documentation changes
+        id: docs_changed
+        run: |
+          if git diff --quiet -- docs/html; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Publish generated content to GitHub Pages
-        uses: tsunematsu21/actions-publish-gh-pages@v1.0.2
+        if: steps.docs_changed.outputs.changed == 'true'
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          dir: docs/html
-          branch: gh-pages
-          token: ${{ secrets.ACCESS_TOKEN }}
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: docs/html
+          publish_branch: gh-pages
