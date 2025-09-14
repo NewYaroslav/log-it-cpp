@@ -117,12 +117,6 @@
 #ifndef LOGIT_FILE_LOGGER_MAX_ROTATED_FILES
     #define LOGIT_FILE_LOGGER_MAX_ROTATED_FILES 0
 #endif
-#ifndef LOGIT_FILE_LOGGER_COMPRESS_ROTATED
-    #define LOGIT_FILE_LOGGER_COMPRESS_ROTATED 0
-#endif
-#ifndef LOGIT_FILE_LOGGER_COMPRESS_CMD
-    #define LOGIT_FILE_LOGGER_COMPRESS_CMD ""
-#endif
 
 /// \brief Defines the default log pattern for unique file-based loggers.
 /// If `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` is not defined, it defaults to "%v".

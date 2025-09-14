@@ -6,11 +6,14 @@
 /// \brief File logger implementation that outputs logs to files with rotation and deletion of old logs.
 
 #include "ILogger.hpp"
+#include "../enums.hpp"
+#ifndef __EMSCRIPTEN__
+#include "../detail/CompressionWorker.hpp"
+#endif
 #include <iostream>
 #include <fstream>
 #include <mutex>
 #include <atomic>
-#include <regex>
 #include <queue>
 #include <functional>
 #include <utility>
@@ -18,6 +21,9 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstdio>
+#include <memory>
+#include <sstream>
+#include <iomanip>
 #include <time_shield/time_parser.hpp>
 
 namespace logit {
@@ -32,15 +38,18 @@ namespace logit {
             int         auto_delete_days = 30;
             uint64_t    max_file_size_bytes = 0;
             uint32_t    max_rotated_files   = 0;
-            bool        compress_rotated    = false;
-            std::string compress_cmd;
+            CompressType compress       = CompressType::NONE;
+            int         compress_level  = 1;
+            bool        compress_async  = true;
+            std::string external_cmd;
+            RotationNaming naming      = RotationNaming::Sequence;
+            uint32_t    seq_width       = 3;
         };
 
         FileLogger() { warn(); }
         FileLogger(const Config&) { warn(); }
         FileLogger(const std::string&, const bool& = true, const int& = 30,
-                    const uint64_t& = 0, const uint32_t& = 0,
-                    const bool& = false, std::string = {}) { warn(); }
+                    const uint64_t& = 0, const uint32_t& = 0) { warn(); }
 
         void log(const LogRecord&, const std::string&) override { warn(); }
         std::string get_string_param(const LoggerParam&) const override { return {}; }
@@ -79,8 +88,12 @@ namespace logit {
             int         auto_delete_days = 30;     ///< Number of days after which old log files are deleted.
             uint64_t    max_file_size_bytes = 0;   ///< Max size for log file before rotation (0 = off).
             uint32_t    max_rotated_files   = 0;   ///< Number of rotated files to keep (0 = unlimited).
-            bool        compress_rotated    = false; ///< Whether to compress rotated files.
-            std::string compress_cmd;             ///< External command used for compression.
+            CompressType compress       = CompressType::NONE; ///< Compression algorithm for rotated files.
+            int         compress_level  = 1;       ///< Compression level.
+            bool        compress_async  = true;    ///< Run compression in background thread.
+            std::string external_cmd;             ///< External command template.
+            RotationNaming naming      = RotationNaming::Sequence; ///< Naming policy for rotated files.
+            uint32_t    seq_width       = 3;       ///< Width of sequence index.
         };
 
         /// \brief Default constructor that uses default configuration.
@@ -114,22 +127,19 @@ namespace logit {
                 const bool& async,
                 const int& auto_delete_days,
                 uint64_t max_file_size_bytes,
-                uint32_t max_rotated_files,
-                bool compress_rotated = false,
-                std::string compress_cmd = {}) {
+                uint32_t max_rotated_files) {
             m_config.directory = directory;
             m_config.async = async;
             m_config.auto_delete_days = auto_delete_days;
             m_config.max_file_size_bytes = max_file_size_bytes;
             m_config.max_rotated_files = max_rotated_files;
-            m_config.compress_rotated = compress_rotated;
-            m_config.compress_cmd = std::move(compress_cmd);
             start_logging();
         }
 
         /// \brief Destructor to stop logging and close file.
         virtual ~FileLogger() {
             stop_logging();
+            if (m_compressor) m_compressor->wait();
         }
 
         /// \brief Logs a message to a file with thread safety.
@@ -227,6 +237,7 @@ namespace logit {
         std::string        m_file_name; ///< Name of the currently open log file.
         int64_t            m_current_date_ts = 0; ///< Timestamp of the current log file's date.
         uint64_t           m_current_file_size = 0; ///< Current size of the log file.
+        std::unique_ptr<detail::CompressionWorker> m_compressor; ///< Background compressor.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
         std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
 
@@ -327,12 +338,96 @@ namespace logit {
 
             const std::string base = time_shield::to_iso8601_date(m_current_date_ts);
             const std::string dir  = get_directory_path();
+#           if defined(_WIN32)
+            const std::string cur  = dir + "\\" + base + ".log";
+#           else
             const std::string cur  = dir + "/" + base + ".log";
-            std::string rotated;
+#           endif
+            std::string rotated = make_rotated_name(base, dir);
+#           if defined(_WIN32)
+            std::rename(utf8_to_ansi(cur).c_str(), utf8_to_ansi(rotated).c_str());
+#           else
+            std::rename(cur.c_str(), rotated.c_str());
+#           endif
+
+            open_log_file(m_current_date_ts);
+            m_current_file_size = 0;
+
+            if (m_config.compress != CompressType::NONE) {
+                if (m_config.compress_async) {
+                    if (!m_compressor) {
+                        m_compressor.reset(new detail::CompressionWorker(
+                            m_config.compress, m_config.compress_level, m_config.external_cmd));
+                    }
+                    m_compressor->enqueue(rotated);
+                } else {
+                    detail::compress_file(m_config.compress, rotated, m_config.compress_level, m_config.external_cmd);
+                }
+            }
+
+            if (m_config.max_rotated_files > 0) {
+                enforce_rotation_retention(base, m_config.max_rotated_files, dir);
+            }
+        }
+
+        void enforce_rotation_retention(const std::string& base, uint32_t max_files, const std::string& dir) {
+#           if __cplusplus >= 201703L
+            std::vector<fs::path> files;
+            for (const auto& entry : fs::directory_iterator(dir)) {
+                if (!fs::is_regular_file(entry.status())) continue;
+                std::string name = entry.path().filename().string();
+                if (name.rfind(base, 0) == 0 && name != base + ".log") {
+                    files.emplace_back(entry.path());
+                }
+            }
+            if (files.size() <= max_files) return;
+            std::sort(files.begin(), files.end());
+            size_t to_remove = files.size() - max_files;
+            for (size_t i = 0; i < to_remove; ++i) {
+                fs::remove(files[i]);
+            }
+#           else
+            std::vector<std::string> files;
+            std::vector<std::string> file_list = get_list_files(dir);
+            for (const auto& path : file_list) {
+                std::string name = path.substr(path.find_last_of("/\\") + 1);
+                if (name.rfind(base, 0) == 0 && name != base + ".log") {
+                    files.emplace_back(path);
+                }
+            }
+            if (files.size() <= max_files) return;
+            std::sort(files.begin(), files.end());
+            size_t to_remove = files.size() - max_files;
+            for (size_t i = 0; i < to_remove; ++i) {
+#               if defined(_WIN32)
+                remove(utf8_to_ansi(files[i]).c_str());
+#               else
+                remove(files[i].c_str());
+#               endif
+            }
+#           endif
+        }
+
+        std::string make_rotated_name(const std::string& base, const std::string& dir) const {
+            switch (m_config.naming) {
+            case RotationNaming::Sequence:
+                return make_sequence_name(base, dir);
+            case RotationNaming::Timestamp:
+            case RotationNaming::TimestampMs:
+                return make_timestamp_name(base, dir);
+            }
+            return make_sequence_name(base, dir);
+        }
+
+        std::string make_sequence_name(const std::string& base, const std::string& dir) const {
             uint32_t idx = 1;
+            std::string rotated;
 #           if __cplusplus >= 201703L
             for (;; ++idx) {
-                rotated = dir + "/" + base + "." + std::to_string(idx) + ".log";
+                std::ostringstream oss;
+                oss << dir << "/" << base << '.' << std::setw(m_config.seq_width)
+                    << std::setfill('0') << idx << ".log";
+                rotated = oss.str();
                 if (!fs::exists(rotated)) break;
             }
 #           else
@@ -345,71 +440,57 @@ namespace logit {
                 return f.good();
             };
             for (;; ++idx) {
-                rotated = dir + "/" + base + "." + std::to_string(idx) + ".log";
+                std::ostringstream oss;
+                oss << dir << "/" << base << '.' << std::setw(m_config.seq_width)
+                    << std::setfill('0') << idx << ".log";
+                rotated = oss.str();
                 if (!file_exists(rotated)) break;
             }
 #           endif
-#           if defined(_WIN32)
-            std::rename(utf8_to_ansi(cur).c_str(), utf8_to_ansi(rotated).c_str());
-#           else
-            std::rename(cur.c_str(), rotated.c_str());
-#           endif
-
-            if (m_config.compress_rotated && !m_config.compress_cmd.empty()) {
-                std::string cmd = m_config.compress_cmd;
-                size_t pos = cmd.find("{file}");
-                if (pos != std::string::npos) cmd.replace(pos, 6, "\"" + rotated + "\"");
-                std::system(cmd.c_str());
-            }
-
-            if (m_config.max_rotated_files > 0) {
-                enforce_rotation_retention(base, m_config.max_rotated_files, dir);
-            }
-
-            open_log_file(m_current_date_ts);
-            m_current_file_size = 0;
+            return rotated;
         }
 
-        void enforce_rotation_retention(const std::string& base, uint32_t max_files, const std::string& dir) {
-#           if __cplusplus >= 201703L
-            std::vector<std::pair<uint32_t, fs::path>> files;
-            std::regex pattern(base + R"(\.(\d+)\.log(\..*)?)");
-            for (const auto& entry : fs::directory_iterator(dir)) {
-                if (!fs::is_regular_file(entry.status())) continue;
-                std::smatch m;
-                std::string name = entry.path().filename().string();
-                if (std::regex_match(name, m, pattern)) {
-                    uint32_t idx = static_cast<uint32_t>(std::stoul(m[1].str()));
-                    files.emplace_back(idx, entry.path());
-                }
+        std::string make_timestamp_name(const std::string& base, const std::string& dir) const {
+            int64_t ts_ms = LOGIT_CURRENT_TIMESTAMP_MS();
+            time_t sec = static_cast<time_t>(time_shield::ms_to_sec(ts_ms));
+            std::tm tm{};
+#           if defined(_WIN32)
+            gmtime_s(&tm, &sec);
+#           else
+            gmtime_r(&sec, &tm);
+#           endif
+            char buf[32];
+            std::strftime(buf, sizeof(buf), "%H%M%S", &tm);
+            std::string timepart(buf);
+            if (m_config.naming == RotationNaming::TimestampMs) {
+                char msbuf[4];
+                std::snprintf(msbuf, sizeof(msbuf), "%03d", static_cast<int>(ts_ms % 1000));
+                timepart += msbuf;
             }
-            if (files.size() <= max_files) return;
-            std::sort(files.begin(), files.end(), [](const std::pair<uint32_t, fs::path>& a, const std::pair<uint32_t, fs::path>& b) { return a.first < b.first; });
-            size_t to_remove = files.size() - max_files;
-            for (size_t i = 0; i < to_remove; ++i) {
-                fs::remove(files[i].second);
+            std::string rotated = dir + "/" + base + "_" + timepart + ".log";
+#           if __cplusplus >= 201703L
+            if (!fs::exists(rotated)) return rotated;
+            uint32_t idx = 1;
+            for (;; ++idx) {
+                std::string candidate = rotated.substr(0, rotated.size() - 4) + "." + std::to_string(idx) + ".log";
+                if (!fs::exists(candidate)) return candidate;
             }
 #           else
-            std::vector<std::pair<uint32_t, std::string>> files;
-            std::regex pattern(base + R"(\.(\d+)\.log(\..*)?)");
-            std::vector<std::string> file_list = get_list_files(dir);
-            for (const auto& path : file_list) {
-                std::string name = path.substr(path.find_last_of("/\\") + 1);
-                std::smatch m;
-                if (std::regex_match(name, m, pattern)) {
-                    uint32_t idx = static_cast<uint32_t>(std::stoul(m[1].str()));
-                    files.emplace_back(idx, path);
-                }
-            }
-            if (files.size() <= max_files) return;
-            std::sort(files.begin(), files.end(), [](const std::pair<uint32_t, std::string>& a, const std::pair<uint32_t, std::string>& b) { return a.first < b.first; });
-            size_t to_remove = files.size() - max_files;
-            for (size_t i = 0; i < to_remove; ++i) {
+            auto file_exists = [](const std::string& path) {
 #               if defined(_WIN32)
-                remove(utf8_to_ansi(files[i].second).c_str());
+                std::ifstream f(utf8_to_ansi(path).c_str());
 #               else
-                remove(files[i].second.c_str());
+                std::ifstream f(path.c_str());
 #               endif
+                return f.good();
+            };
+            if (!file_exists(rotated)) return rotated;
+            uint32_t idx = 1;
+            for (;; ++idx) {
+                std::ostringstream oss;
+                oss << rotated.substr(0, rotated.size() - 4) << '.' << idx << ".log";
+                std::string candidate = oss.str();
+                if (!file_exists(candidate)) return candidate;
             }
 #           endif
         }

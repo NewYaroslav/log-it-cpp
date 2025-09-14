@@ -51,6 +51,23 @@ namespace logit {
         TimeSinceLastLog       ///< The time elapsed since the last log in seconds.
     };
 
+    /// \enum CompressType
+    /// \brief Supported compression algorithms for rotated files.
+    enum class CompressType {
+        NONE,        ///< Do not compress rotated files.
+        GZIP,        ///< Compress using gzip (zlib).
+        ZSTD,        ///< Compress using zstd.
+        EXTERNAL_CMD ///< Use an external command for compression.
+    };
+
+    /// \enum RotationNaming
+    /// \brief Naming policy for rotated log files.
+    enum class RotationNaming {
+        Sequence,    ///< Append a numeric sequence: YYYY-MM-DD.001.log
+        Timestamp,   ///< Append HHMMSS timestamp: YYYY-MM-DD_HHMMSS.log
+        TimestampMs  ///< Append HHMMSSmmm timestamp: YYYY-MM-DD_HHMMSSmmm.log
+    };
+
     /// \brief Convert LogLevel to a C-style string representation.
     /// \param level The log level.
     /// \param mode The output mode (0 for full name, 1 for abbreviation).

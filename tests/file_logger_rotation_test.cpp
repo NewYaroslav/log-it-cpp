@@ -12,7 +12,7 @@ int main() {
     std::string current = LOGIT_GET_LAST_FILE_PATH(0);
     std::string rotated = current;
     size_t pos = rotated.rfind(".log");
-    rotated.insert(pos, ".1");
+    rotated.insert(pos, ".001");
     std::ifstream in(rotated);
     return in.good() ? 0 : 1;
 }

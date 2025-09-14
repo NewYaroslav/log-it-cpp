@@ -937,8 +937,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
     logit::Logger::get_instance().add_logger( \
         std::make_unique<logit::FileLogger>( \
             LOGIT_FILE_LOGGER_PATH, true, LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS, \
-            LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES, LOGIT_FILE_LOGGER_MAX_ROTATED_FILES, \
-            LOGIT_FILE_LOGGER_COMPRESS_ROTATED, LOGIT_FILE_LOGGER_COMPRESS_CMD), \
+            LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES, LOGIT_FILE_LOGGER_MAX_ROTATED_FILES), \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN))
 
 /// \brief Macro for adding a unique file logger with custom parameters.
@@ -1129,8 +1128,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
     logit::Logger::get_instance().add_logger( \
         std::unique_ptr<logit::FileLogger>(new logit::FileLogger( \
             LOGIT_FILE_LOGGER_PATH, true, LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS, \
-            LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES, LOGIT_FILE_LOGGER_MAX_ROTATED_FILES, \
-            LOGIT_FILE_LOGGER_COMPRESS_ROTATED, LOGIT_FILE_LOGGER_COMPRESS_CMD)), \
+            LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES, LOGIT_FILE_LOGGER_MAX_ROTATED_FILES)), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)))
 
 /// \brief Macro for adding a unique file logger with custom parameters.
