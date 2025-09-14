@@ -564,6 +564,21 @@ Macros</h2></td></tr>
 <tr class="memitem:aed16baee9ebcd1f52e11eceb9c68b7b4" id="r_aed16baee9ebcd1f52e11eceb9c68b7b4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aed16baee9ebcd1f52e11eceb9c68b7b4">LOGIT_IS_SINGLE_MODE</a>(logger_index)</td></tr>
 <tr class="memdesc:aed16baee9ebcd1f52e11eceb9c68b7b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a logger is in single mode.  <br /></td></tr>
 <tr class="separator:aed16baee9ebcd1f52e11eceb9c68b7b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Task Executor Configuration</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>Macros for configuring the TaskExecutor. </p>
+</div></td></tr>
+<tr class="memitem:a5e2f77e4e8a799569b9b807082391f6c" id="r_a5e2f77e4e8a799569b9b807082391f6c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e2f77e4e8a799569b9b807082391f6c">LOGIT_SET_MAX_QUEUE</a>(size)</td></tr>
+<tr class="memdesc:a5e2f77e4e8a799569b9b807082391f6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the maximum number of queued tasks.  <br /></td></tr>
+<tr class="separator:a5e2f77e4e8a799569b9b807082391f6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a753485969f45c2c640ced2e62eb3987f" id="r_a753485969f45c2c640ced2e62eb3987f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a753485969f45c2c640ced2e62eb3987f">LOGIT_QUEUE_DROP</a>&#160;&#160;&#160;<a class="el" href="namespacelogit_1_1detail.html#a77f1a331d383a8293d4a3e6efc49f5c2a3e679cff5b3a6f6f8f32aead541a0a12">logit::detail::QueuePolicy::Drop</a></td></tr>
+<tr class="memdesc:a753485969f45c2c640ced2e62eb3987f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue policy for dropping tasks when the queue is full.  <br /></td></tr>
+<tr class="separator:a753485969f45c2c640ced2e62eb3987f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ffbe7f193a9d575d78268982991eed1" id="r_a0ffbe7f193a9d575d78268982991eed1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ffbe7f193a9d575d78268982991eed1">LOGIT_QUEUE_BLOCK</a>&#160;&#160;&#160;<a class="el" href="namespacelogit_1_1detail.html#a77f1a331d383a8293d4a3e6efc49f5c2ae1e4c8c9ccd9fc39c391da4bcd093fb2">logit::detail::QueuePolicy::Block</a></td></tr>
+<tr class="memdesc:a0ffbe7f193a9d575d78268982991eed1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queue policy for blocking when the queue is full.  <br /></td></tr>
+<tr class="separator:a0ffbe7f193a9d575d78268982991eed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d14c307eb7e23faead2ef27ccf860f2" id="r_a4d14c307eb7e23faead2ef27ccf860f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d14c307eb7e23faead2ef27ccf860f2">LOGIT_SET_QUEUE_POLICY</a>(mode)</td></tr>
+<tr class="memdesc:a4d14c307eb7e23faead2ef27ccf860f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the behavior when the queue is full.  <br /></td></tr>
+<tr class="separator:a4d14c307eb7e23faead2ef27ccf860f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Provides various logging macros for different log levels and options. </p>
@@ -4697,6 +4712,42 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a0ffbe7f193a9d575d78268982991eed1" name="a0ffbe7f193a9d575d78268982991eed1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ffbe7f193a9d575d78268982991eed1">&#9670;&#160;</a></span>LOGIT_QUEUE_BLOCK</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_QUEUE_BLOCK&#160;&#160;&#160;<a class="el" href="namespacelogit_1_1detail.html#a77f1a331d383a8293d4a3e6efc49f5c2ae1e4c8c9ccd9fc39c391da4bcd093fb2">logit::detail::QueuePolicy::Block</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queue policy for blocking when the queue is full. </p>
+
+<p class="definition">Definition at line <a class="el" href="LogMacros_8hpp_source.html#l00975">975</a> of file <a class="el" href="LogMacros_8hpp_source.html">LogMacros.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a753485969f45c2c640ced2e62eb3987f" name="a753485969f45c2c640ced2e62eb3987f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a753485969f45c2c640ced2e62eb3987f">&#9670;&#160;</a></span>LOGIT_QUEUE_DROP</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_QUEUE_DROP&#160;&#160;&#160;<a class="el" href="namespacelogit_1_1detail.html#a77f1a331d383a8293d4a3e6efc49f5c2a3e679cff5b3a6f6f8f32aead541a0a12">logit::detail::QueuePolicy::Drop</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Queue policy for dropping tasks when the queue is full. </p>
+
+<p class="definition">Definition at line <a class="el" href="LogMacros_8hpp_source.html#l00972">972</a> of file <a class="el" href="LogMacros_8hpp_source.html">LogMacros.hpp</a>.</p>
+
+</div>
+</div>
 <a id="a91470a4d0e718cc82c5155f2b20f355a" name="a91470a4d0e718cc82c5155f2b20f355a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a91470a4d0e718cc82c5155f2b20f355a">&#9670;&#160;</a></span>LOGIT_SET_LOG_LEVEL</h2>
 
@@ -4793,6 +4844,65 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="a5e2f77e4e8a799569b9b807082391f6c" name="a5e2f77e4e8a799569b9b807082391f6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e2f77e4e8a799569b9b807082391f6c">&#9670;&#160;</a></span>LOGIT_SET_MAX_QUEUE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_SET_MAX_QUEUE</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>size</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_function" href="classlogit_1_1detail_1_1TaskExecutor.html#ad756ab27dc19cd994d450b4e59208db8">logit::detail::TaskExecutor::get_instance</a>().<a class="code hl_function" href="classlogit_1_1detail_1_1TaskExecutor.html#a32b40c181a3b23645d9859653b32fe3d">set_max_queue_size</a>(size)</div>
+<div class="ttc" id="aclasslogit_1_1detail_1_1TaskExecutor_html_a32b40c181a3b23645d9859653b32fe3d"><div class="ttname"><a href="classlogit_1_1detail_1_1TaskExecutor.html#a32b40c181a3b23645d9859653b32fe3d">logit::detail::TaskExecutor::set_max_queue_size</a></div><div class="ttdeci">void set_max_queue_size(std::size_t size)</div><div class="ttdoc">Sets the maximum size of the task queue.</div><div class="ttdef"><b>Definition</b> <a href="TaskExecutor_8hpp_source.html#l00112">TaskExecutor.hpp:112</a></div></div>
+<div class="ttc" id="aclasslogit_1_1detail_1_1TaskExecutor_html_ad756ab27dc19cd994d450b4e59208db8"><div class="ttname"><a href="classlogit_1_1detail_1_1TaskExecutor.html#ad756ab27dc19cd994d450b4e59208db8">logit::detail::TaskExecutor::get_instance</a></div><div class="ttdeci">static TaskExecutor &amp; get_instance()</div><div class="ttdoc">Get the singleton instance of the TaskExecutor.</div><div class="ttdef"><b>Definition</b> <a href="TaskExecutor_8hpp_source.html#l00062">TaskExecutor.hpp:62</a></div></div>
+</div><!-- fragment -->
+<p>Sets the maximum number of queued tasks. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">size</td><td>Maximum queue size (0 for unlimited). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LogMacros_8hpp_source.html#l00968">968</a> of file <a class="el" href="LogMacros_8hpp_source.html">LogMacros.hpp</a>.</p>
+
+</div>
+</div>
+<a id="a4d14c307eb7e23faead2ef27ccf860f2" name="a4d14c307eb7e23faead2ef27ccf860f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d14c307eb7e23faead2ef27ccf860f2">&#9670;&#160;</a></span>LOGIT_SET_QUEUE_POLICY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LOGIT_SET_QUEUE_POLICY</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>mode</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <a class="code hl_function" href="classlogit_1_1detail_1_1TaskExecutor.html#ad756ab27dc19cd994d450b4e59208db8">logit::detail::TaskExecutor::get_instance</a>().<a class="code hl_function" href="classlogit_1_1detail_1_1TaskExecutor.html#ac8a09e784156fd5fe52cd88b7aca1af6">set_queue_policy</a>(mode)</div>
+<div class="ttc" id="aclasslogit_1_1detail_1_1TaskExecutor_html_ac8a09e784156fd5fe52cd88b7aca1af6"><div class="ttname"><a href="classlogit_1_1detail_1_1TaskExecutor.html#ac8a09e784156fd5fe52cd88b7aca1af6">logit::detail::TaskExecutor::set_queue_policy</a></div><div class="ttdeci">void set_queue_policy(QueuePolicy policy)</div><div class="ttdoc">Sets the behavior when the queue is full.</div><div class="ttdef"><b>Definition</b> <a href="TaskExecutor_8hpp_source.html#l00119">TaskExecutor.hpp:119</a></div></div>
+</div><!-- fragment -->
+<p>Sets the behavior when the queue is full. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>LOGIT_QUEUE_DROP or LOGIT_QUEUE_BLOCK. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="LogMacros_8hpp_source.html#l00979">979</a> of file <a class="el" href="LogMacros_8hpp_source.html">LogMacros.hpp</a>.</p>
+
+</div>
+</div>
 <a id="abac30523df5b00f6a08d1a0ca00a05b3" name="abac30523df5b00f6a08d1a0ca00a05b3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abac30523df5b00f6a08d1a0ca00a05b3">&#9670;&#160;</a></span>LOGIT_SET_SINGLE_MODE</h2>
 
@@ -4880,7 +4990,7 @@ Macros</h2></td></tr>
 </div><!-- fragment -->
 <p>Macro for shutting down logger system. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogMacros_8hpp_source.html#l00966">966</a> of file <a class="el" href="LogMacros_8hpp_source.html">LogMacros.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogMacros_8hpp_source.html#l00988">988</a> of file <a class="el" href="LogMacros_8hpp_source.html">LogMacros.hpp</a>.</p>
 
 </div>
 </div>
@@ -5323,7 +5433,7 @@ Macros</h2></td></tr>
 </div><!-- fragment -->
 <p>Macro for waiting for all asynchronous loggers to finish processing. </p>
 
-<p class="definition">Definition at line <a class="el" href="LogMacros_8hpp_source.html#l00963">963</a> of file <a class="el" href="LogMacros_8hpp_source.html">LogMacros.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="LogMacros_8hpp_source.html#l00985">985</a> of file <a class="el" href="LogMacros_8hpp_source.html">LogMacros.hpp</a>.</p>
 
 </div>
 </div>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['valuetype_0',['ValueType',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9',1,'logit::VariableValue']]]
+  ['textcolor_0',['TextColor',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31',1,'logit']]]
 ];

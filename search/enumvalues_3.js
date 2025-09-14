@@ -12,5 +12,6 @@ var searchData=
   ['day_9',['Day',['../structlogit_1_1FormatInstruction.html#a6a3644a7970741bbdd4750d30a8e4ad8a03727ac48595a24daed975559c944a44',1,'logit::FormatInstruction']]],
   ['default_10',['Default',['../structlogit_1_1FormatInstruction.html#a9a66c50ca010deee5b94a0dca9ef90a0a7a1920d61156abc05a60135aefe8bc67',1,'logit::FormatInstruction']]],
   ['double_5fval_11',['DOUBLE_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a6a3c5df1fb0537503763dc02418668b4',1,'logit::VariableValue']]],
-  ['duration_5fval_12',['DURATION_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a69d1ae3e7e14cdedc42556b0c4a51ca7',1,'logit::VariableValue']]]
+  ['drop_12',['Drop',['../namespacelogit_1_1detail.html#a77f1a331d383a8293d4a3e6efc49f5c2a3e679cff5b3a6f6f8f32aead541a0a12',1,'logit::detail']]],
+  ['duration_5fval_13',['DURATION_VAL',['../structlogit_1_1VariableValue.html#aadabf80a158fd1569ca3f761c673c6e9a69d1ae3e7e14cdedc42556b0c4a51ca7',1,'logit::VariableValue']]]
 ];

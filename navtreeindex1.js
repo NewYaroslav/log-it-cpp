@@ -1,5 +1,9 @@
 var NAVTREEINDEX1 =
 {
+"TaskExecutor_8hpp.html#a971e5b4dc90388388e2794cac56a8760":[4,0,2,0,0,0,0,1],
+"TaskExecutor_8hpp_source.html":[4,0,2,0,0,0,0],
+"UniqueFileLogger_8hpp.html":[4,0,2,0,0,2,3],
+"UniqueFileLogger_8hpp.html#abddc49667277cd33db524114452c0434":[4,0,2,0,0,2,3,2],
 "UniqueFileLogger_8hpp_source.html":[4,0,2,0,0,2,3],
 "VariableValue_8hpp.html":[4,0,2,0,0,4,5],
 "VariableValue_8hpp.html#a066baf574c91ca89294cd5d659946d38":[4,0,2,0,0,4,5,1],
@@ -245,9 +249,5 @@ var NAVTREEINDEX1 =
 "classlogit_1_1UniqueFileLogger.html#add011e912adb880ca4641a630c539f89":[1,2,3,25],
 "classlogit_1_1UniqueFileLogger.html#ade1e7871ec365450c8d4f3683f8e033d":[1,2,3,12],
 "classlogit_1_1UniqueFileLogger.html#ae2bff072a4144569868d338dc85806cf":[1,2,3,35],
-"classlogit_1_1UniqueFileLogger.html#aeda8ce043f7d9ac0f910723c69cf9d6b":[1,2,3,31],
-"classlogit_1_1UniqueFileLogger.html#af90ef5dd8b23d305bcca8371349dc0d8":[1,2,3,18],
-"classlogit_1_1UniqueFileLogger.html#af98af47d7610715810ddfb3406f80cb6":[1,2,3,28],
-"classlogit_1_1UniqueFileLogger.html#afd3ab09953dfd555c7ba24857a04a094":[1,2,3,21],
-"classlogit_1_1detail_1_1TaskExecutor.html":[2,0,0,0,0]
+"classlogit_1_1UniqueFileLogger.html#aeda8ce043f7d9ac0f910723c69cf9d6b":[1,2,3,31]
 };

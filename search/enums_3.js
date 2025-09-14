@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['textcolor_0',['TextColor',['../namespacelogit.html#aa63786fdda1bd7b89a591a13fd12bb31',1,'logit']]]
+  ['queuepolicy_0',['QueuePolicy',['../namespacelogit_1_1detail.html#a77f1a331d383a8293d4a3e6efc49f5c2',1,'logit::detail']]]
 ];
