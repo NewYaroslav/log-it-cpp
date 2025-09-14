@@ -5,23 +5,27 @@
 /// \file TaskExecutor.hpp
 /// \brief Defines the TaskExecutor class, which manages task execution in a separate thread.
 
+#include <functional>
+#if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
+#include <deque>
+#include <emscripten/emscripten.h>
+#else
 #include <thread>
 #include <queue>
 #include <mutex>
-#include <functional>
 #include <condition_variable>
-#include <iostream>
 #include <chrono>
+#endif
 
 namespace logit { namespace detail {
 
     /// \brief Queue overflow handling policy.
     enum class QueuePolicy { Drop, Block };
 
-#if defined(__EMSCRIPTEN__)
+#if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
 
     /// \class TaskExecutor
-    /// \brief Simplified task executor for single-threaded environments.
+    /// \brief Simplified task executor for single-threaded Emscripten builds.
     class TaskExecutor {
     public:
         static TaskExecutor& get_instance() {
@@ -30,11 +34,16 @@ namespace logit { namespace detail {
         }
 
         void add_task(std::function<void()> task) {
-            if (task) task();
+            if (!task) return;
+            const bool schedule = m_tasks.empty();
+            m_tasks.push_back(std::move(task));
+            if (schedule) {
+                emscripten_async_call(&TaskExecutor::drain_thunk, this, 0);
+            }
         }
 
-        void wait() {}
-        void shutdown() {}
+        void wait() { drain(); }
+        void shutdown() { drain(); }
 
         void set_max_queue_size(std::size_t) {}
         void set_queue_policy(QueuePolicy) {}
@@ -46,6 +55,20 @@ namespace logit { namespace detail {
         TaskExecutor& operator=(const TaskExecutor&) = delete;
         TaskExecutor(TaskExecutor&&) = delete;
         TaskExecutor& operator=(TaskExecutor&&) = delete;
+
+        std::deque<std::function<void()>> m_tasks;
+
+        static void drain_thunk(void* arg) {
+            static_cast<TaskExecutor*>(arg)->drain();
+        }
+
+        void drain() {
+            while (!m_tasks.empty()) {
+                auto task = std::move(m_tasks.front());
+                m_tasks.pop_front();
+                task();
+            }
+        }
     };
 
 #else
@@ -166,7 +189,7 @@ namespace logit { namespace detail {
         TaskExecutor& operator=(TaskExecutor&&) = delete;
     };
 
-#endif // defined(__EMSCRIPTEN__)
+#endif // defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
 
 }} // namespace logit::detail
 

@@ -46,7 +46,13 @@ namespace logit {
         void wait() override {}
 
     private:
-        void warn() const { std::cerr << "UniqueFileLogger is not supported under Emscripten" << std::endl; }
+        void warn() const {
+            static bool warned = false;
+            if (!warned) {
+                warned = true;
+                std::cerr << "UniqueFileLogger is not supported under Emscripten" << std::endl;
+            }
+        }
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
     };
 

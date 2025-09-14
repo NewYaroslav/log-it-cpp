@@ -12,6 +12,34 @@
 #endif
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
+#if defined(LOGIT_EM_BROWSER_COLORS)
+EM_JS(void, log_ansi_js, (int lvl, const char* cmsg, const char* cdefcolor), {
+  const msg = UTF8ToString(cmsg);
+  const def = UTF8ToString(cdefcolor);
+  const isNode = (typeof process !== 'undefined' && process.versions && process.versions.node);
+  const fn = lvl >= 5 ? console.error : (lvl == 4 ? console.warn : console.log);
+  if (isNode) { fn(msg); return; }
+  const map = {30:"black",31:"darkred",32:"darkgreen",33:"olive",34:"darkblue",35:"purple",36:"teal",37:"lightgray",
+               90:"gray",91:"red",92:"green",93:"yellow",94:"blue",95:"magenta",96:"cyan",97:"white"};
+  const re = /\x1b\[(\d+)m/g;
+  let last = 0, m, style = 'color:' + def;
+  const fmt = [];
+  const styles = [];
+  while ((m = re.exec(msg)) !== null) {
+    if (m.index > last) { fmt.push('%c' + msg.slice(last, m.index)); styles.push(style); }
+    style = 'color:' + (map[m[1]] || def);
+    last = re.lastIndex;
+  }
+  if (last < msg.length) { fmt.push('%c' + msg.slice(last)); styles.push(style); }
+  fn(fmt.join(''), ...styles);
+});
+#else
+EM_JS(void, log_level, (int lvl, const char* msg), {
+  const s = UTF8ToString(msg);
+  const fn = lvl >= 5 ? console.error : (lvl == 4 ? console.warn : console.log);
+  fn(s);
+});
+#endif
 #endif
 #include <mutex>
 #include <atomic>
@@ -89,8 +117,27 @@ namespace logit {
         void log(const LogRecord& record, const std::string& message) override {
             m_last_log_ts = record.timestamp_ms;
 #ifdef __EMSCRIPTEN__
-            std::lock_guard<std::mutex> lock(m_mutex);
-            handle_ansi_colors_emscripten(message);
+            std::unique_lock<std::mutex> lock(m_mutex);
+            const int lvl = static_cast<int>(record.log_level);
+            if (!m_config.async) {
+#   if defined(LOGIT_EM_BROWSER_COLORS)
+                log_ansi_js(lvl, message.c_str(), text_color_to_css(m_config.default_color));
+#   else
+                log_level(lvl, message.c_str());
+#   endif
+                return;
+            }
+            auto msg_copy = std::string(message);
+            const auto def_color = m_config.default_color;
+            lock.unlock();
+            detail::TaskExecutor::get_instance().add_task([this, lvl, msg_copy, def_color]() {
+                std::lock_guard<std::mutex> inner_lock(m_mutex);
+#   if defined(LOGIT_EM_BROWSER_COLORS)
+                log_ansi_js(lvl, msg_copy.c_str(), text_color_to_css(def_color));
+#   else
+                log_level(lvl, msg_copy.c_str());
+#   endif
+            });
             return;
 #else
             std::unique_lock<std::mutex> lock(m_mutex);
@@ -174,15 +221,10 @@ namespace logit {
         /// \brief Waits for all asynchronous tasks to complete.
         /// If asynchronous logging is enabled, waits for all pending log messages to be written.
         void wait() override {
-#ifdef __EMSCRIPTEN__
-            // Nothing to wait for in single-threaded mode
-            return;
-#else
             std::unique_lock<std::mutex> lock(m_mutex);
             if (!m_config.async) return;
             lock.unlock();
             detail::TaskExecutor::get_instance().wait();
-#endif
         }
 
     private:
@@ -190,6 +232,31 @@ namespace logit {
         Config             m_config;    ///< Configuration for the console logger.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
         std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
+
+#       ifdef __EMSCRIPTEN__
+        /// \brief Convert TextColor to a CSS color name.
+        const char* text_color_to_css(TextColor color) const {
+            switch (color) {
+                case TextColor::Black:       return "black";
+                case TextColor::DarkRed:     return "darkred";
+                case TextColor::DarkGreen:   return "darkgreen";
+                case TextColor::DarkYellow:  return "olive";
+                case TextColor::DarkBlue:    return "darkblue";
+                case TextColor::DarkMagenta: return "purple";
+                case TextColor::DarkCyan:    return "teal";
+                case TextColor::LightGray:   return "lightgray";
+                case TextColor::DarkGray:    return "gray";
+                case TextColor::Red:         return "red";
+                case TextColor::Green:       return "green";
+                case TextColor::Yellow:      return "yellow";
+                case TextColor::Blue:        return "blue";
+                case TextColor::Magenta:     return "magenta";
+                case TextColor::Cyan:        return "cyan";
+                case TextColor::White:       return "white";
+                default:                     return "inherit";
+            }
+        }
+#       endif
 
 #       if defined(_WIN32)
 
@@ -308,81 +375,6 @@ namespace logit {
         }
 #       endif
 
-#       ifdef __EMSCRIPTEN__
-        /// \brief Convert TextColor to a CSS color name for Emscripten console output.
-        const char* text_color_to_css(TextColor color) const {
-            switch (color) {
-                case TextColor::Black:       return "black";
-                case TextColor::DarkRed:     return "darkred";
-                case TextColor::DarkGreen:   return "darkgreen";
-                case TextColor::DarkYellow:  return "olive";
-                case TextColor::DarkBlue:    return "darkblue";
-                case TextColor::DarkMagenta: return "purple";
-                case TextColor::DarkCyan:    return "teal";
-                case TextColor::LightGray:   return "lightgray";
-                case TextColor::DarkGray:    return "gray";
-                case TextColor::Red:         return "red";
-                case TextColor::Green:       return "green";
-                case TextColor::Yellow:      return "yellow";
-                case TextColor::Blue:        return "blue";
-                case TextColor::Magenta:     return "magenta";
-                case TextColor::Cyan:        return "cyan";
-                case TextColor::White:       return "white";
-                default:                     return "inherit";
-            }
-        }
-
-        /// \brief Map ANSI code to a CSS color name.
-        std::string css_color_from_ansi(const std::string& code) const {
-            int value = std::stoi(code);
-            switch (value) {
-                case 30: return "black";
-                case 31: return "darkred";
-                case 32: return "darkgreen";
-                case 33: return "olive";
-                case 34: return "darkblue";
-                case 35: return "purple";
-                case 36: return "teal";
-                case 37: return "lightgray";
-                case 90: return "gray";
-                case 91: return "red";
-                case 92: return "green";
-                case 93: return "yellow";
-                case 94: return "blue";
-                case 95: return "magenta";
-                case 96: return "cyan";
-                case 97: return "white";
-                default: return text_color_to_css(m_config.default_color);
-            }
-        }
-
-        /// \brief Handle ANSI color codes when compiling with Emscripten.
-        void handle_ansi_colors_emscripten(const std::string& message) const {
-            std::string current_color = text_color_to_css(m_config.default_color);
-            std::string::size_type start = 0;
-            std::string::size_type pos = 0;
-
-            while ((pos = message.find("\033[", start)) != std::string::npos) {
-                if (pos > start) {
-                    std::string part = message.substr(start, pos - start);
-                    EM_ASM_({ console.log('%c' + UTF8ToString($0), 'color: ' + UTF8ToString($1)); }, part.c_str(), current_color.c_str());
-                }
-                std::string::size_type end_pos = message.find('m', pos);
-                if (end_pos != std::string::npos) {
-                    std::string ansi_code = message.substr(pos + 2, end_pos - pos - 2);
-                    current_color = css_color_from_ansi(ansi_code);
-                    start = end_pos + 1;
-                } else {
-                    break;
-                }
-            }
-
-            if (start < message.size()) {
-                std::string part = message.substr(start);
-                EM_ASM_({ console.log('%c' + UTF8ToString($0), 'color: ' + UTF8ToString($1)); }, part.c_str(), current_color.c_str());
-            }
-        }
-#       endif // __EMSCRIPTEN__
 
         /// \brief Resets the console text color to the default.
         void reset_color() {
