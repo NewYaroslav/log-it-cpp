@@ -59,7 +59,11 @@ LOGIT_ADD_FILE_LOGGER_DEFAULT();
 LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE();
 ```
 
-- **Asynchronous Logging**: 
+- **System Backends**:
+
+Use the host OS logging facility. `SyslogLogger` works with POSIX `syslog`, while `EventLogLogger` writes to the Windows Event Log.
+
+- **Asynchronous Logging**:
 
 Improve application performance with asynchronous logging. All loggers handle messages in a separate thread by default.
 
@@ -497,6 +501,30 @@ LogIt++ supports the *fmt* library for advanced string formatting, which is also
 ```cpp
 #define LOGIT_USE_FMT_LIB
 ```
+
+## System Backends
+
+LogIt++ can forward messages to system logging facilities.
+
+### Syslog (Unix)
+
+Available when `LOGIT_WITH_SYSLOG=ON` on Unix-like systems. Log levels are mapped as follows: TRACE/DEBUG → `LOG_DEBUG`, INFO → `LOG_INFO`, WARN → `LOG_WARNING`, ERROR/FATAL → `LOG_ERR`/`LOG_CRIT`.
+
+```cpp
+LOGIT_ADD_SYSLOG_DEFAULT();
+LOGIT_INFO("Syslog is alive");
+```
+
+### Windows Event Log
+
+Enabled with `LOGIT_WITH_WIN_EVENT_LOG=ON` on Windows. Levels map TRACE/DEBUG/INFO → `INFORMATION`, WARN → `WARNING`, ERROR/FATAL → `ERROR`.
+
+```cpp
+LOGIT_ADD_EVENT_LOG_DEFAULT();
+LOGIT_ERROR("Something went wrong");
+```
+
+Both loggers compile to no-ops on unsupported platforms.
 
 ### Emscripten
 
