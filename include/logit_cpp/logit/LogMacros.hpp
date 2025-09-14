@@ -29,6 +29,15 @@
 #define LOGIT_LEVEL_ERROR 4
 #define LOGIT_LEVEL_FATAL 5
 
+#ifdef _LOGIT_ENUMS_HPP_INCLUDED
+static_assert(LOGIT_LEVEL_TRACE == static_cast<int>(logit::LogLevel::LOG_LVL_TRACE));
+static_assert(LOGIT_LEVEL_DEBUG == static_cast<int>(logit::LogLevel::LOG_LVL_DEBUG));
+static_assert(LOGIT_LEVEL_INFO  == static_cast<int>(logit::LogLevel::LOG_LVL_INFO));
+static_assert(LOGIT_LEVEL_WARN  == static_cast<int>(logit::LogLevel::LOG_LVL_WARN));
+static_assert(LOGIT_LEVEL_ERROR == static_cast<int>(logit::LogLevel::LOG_LVL_ERROR));
+static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FATAL));
+#endif // _LOGIT_ENUMS_HPP_INCLUDED
+
 #ifndef LOGIT_COMPILED_LEVEL
 #    define LOGIT_COMPILED_LEVEL LOGIT_LEVEL_TRACE
 #endif
