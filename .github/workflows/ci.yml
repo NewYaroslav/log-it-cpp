@@ -105,14 +105,26 @@ jobs:
 
   vcpkg-install:
     runs-on: ubuntu-latest
+    env:
+      VCPKG_TAG: '2024.09.30'
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
       - run: git submodule update --init --recursive
+      - name: Restore vcpkg cache
+        id: cache-vcpkg
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            vcpkg
+            vcpkg/downloads
+            vcpkg/installed
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_TAG }}-${{ hashFiles('vcpkg-overlay/ports/**', 'libs/time-shield-cpp/vcpkg-overlay/ports/**') }}
       - name: Install vcpkg
+        if: steps.cache-vcpkg.outputs.cache-hit != 'true'
         run: |
-          git clone https://github.com/microsoft/vcpkg.git
+          git clone https://github.com/microsoft/vcpkg.git --branch $VCPKG_TAG --single-branch
           ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
       - name: Validate port
         run: |
@@ -123,6 +135,15 @@ jobs:
         run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
       - name: Build consumer project
         run: cmake --build build
+      - name: Save vcpkg cache
+        if: success() && steps.cache-vcpkg.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            vcpkg
+            vcpkg/downloads
+            vcpkg/installed
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_TAG }}-${{ hashFiles('vcpkg-overlay/ports/**', 'libs/time-shield-cpp/vcpkg-overlay/ports/**') }}
       - name: Upload logs
         if: failure()
         uses: actions/upload-artifact@v4
