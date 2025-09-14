@@ -95,7 +95,6 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 #include <LogIt.hpp>
 
 int main() {
-    // Инициализация логгера с выводом в консоль по умолчанию
     LOGIT_ADD_CONSOLE_DEFAULT();
     LOGIT_SET_MAX_QUEUE(64);
     LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP);
@@ -139,6 +138,16 @@ int main() {
 ```
 
 Для получения дополнительных примеров использования обратитесь к папке `examples` в репозитории, где можно найти подробные демонстрации различных сценариев логирования и конфигураций.
+
+### Уровень логирования на этапе компиляции
+
+Можно исключить сообщения низких уровней из итогового бинарного файла, указав максимальный уровень для компиляции. Задайте макрос `LOGIT_COMPILED_LEVEL` при компиляции:
+
+```bash
+g++ -DLOGIT_COMPILED_LEVEL=logit::LogLevel::LOG_LVL_WARN ...
+```
+
+В этом примере макросы `TRACE`, `DEBUG` и `INFO` будут отключены на этапе компиляции.
 
 ---
 
