@@ -262,8 +262,20 @@
 #else
 #define LOGIT_TRACE(...)                do { } while (0)
 #define LOGIT_TRACE0()                  do { } while (0)
+#define LOGIT_0TRACE()                  do { } while (0)
+#define LOGIT_0_TRACE()                 do { } while (0)
+#define LOGIT_NOARGS_TRACE()            do { } while (0)
+#define LOGIT_FORMAT_TRACE(fmt, ...)    do { } while (0)
+#define LOGIT_PRINT_TRACE(...)          do { } while (0)
+#define LOGIT_PRINTF_TRACE(fmt, ...)    do { } while (0)
 #define LOGIT_TRACE_TO(index, ...)      do { } while (0)
 #define LOGIT_TRACE0_TO(index)          do { } while (0)
+#define LOGIT_0TRACE_TO(index)          do { } while (0)
+#define LOGIT_0_TRACE_TO(index)         do { } while (0)
+#define LOGIT_NOARGS_TRACE_TO(index)    do { } while (0)
+#define LOGIT_FORMAT_TRACE_TO(index, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_TRACE_TO(index, ...)       do { } while (0)
+#define LOGIT_PRINTF_TRACE_TO(index, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
@@ -289,8 +301,20 @@
 #else
 #define LOGIT_INFO(...)                 do { } while (0)
 #define LOGIT_INFO0()                   do { } while (0)
+#define LOGIT_0INFO()                   do { } while (0)
+#define LOGIT_0_INFO()                  do { } while (0)
+#define LOGIT_NOARGS_INFO()             do { } while (0)
+#define LOGIT_FORMAT_INFO(fmt, ...)     do { } while (0)
+#define LOGIT_PRINT_INFO(...)           do { } while (0)
+#define LOGIT_PRINTF_INFO(fmt, ...)     do { } while (0)
 #define LOGIT_INFO_TO(index, ...)       do { } while (0)
 #define LOGIT_INFO0_TO(index)           do { } while (0)
+#define LOGIT_0INFO_TO(index)           do { } while (0)
+#define LOGIT_0_INFO_TO(index)          do { } while (0)
+#define LOGIT_NOARGS_INFO_TO(index)     do { } while (0)
+#define LOGIT_FORMAT_INFO_TO(index, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_INFO_TO(index, ...)       do { } while (0)
+#define LOGIT_PRINTF_INFO_TO(index, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
@@ -316,8 +340,20 @@
 #else
 #define LOGIT_DEBUG(...)                do { } while (0)
 #define LOGIT_DEBUG0()                  do { } while (0)
+#define LOGIT_0DEBUG()                  do { } while (0)
+#define LOGIT_0_DEBUG()                 do { } while (0)
+#define LOGIT_NOARGS_DEBUG()            do { } while (0)
+#define LOGIT_FORMAT_DEBUG(fmt, ...)    do { } while (0)
+#define LOGIT_PRINT_DEBUG(...)          do { } while (0)
+#define LOGIT_PRINTF_DEBUG(fmt, ...)    do { } while (0)
 #define LOGIT_DEBUG_TO(index, ...)      do { } while (0)
 #define LOGIT_DEBUG0_TO(index)          do { } while (0)
+#define LOGIT_0DEBUG_TO(index)          do { } while (0)
+#define LOGIT_0_DEBUG_TO(index)         do { } while (0)
+#define LOGIT_NOARGS_DEBUG_TO(index)    do { } while (0)
+#define LOGIT_FORMAT_DEBUG_TO(index, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_DEBUG_TO(index, ...)       do { } while (0)
+#define LOGIT_PRINTF_DEBUG_TO(index, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
@@ -343,8 +379,20 @@
 #else
 #define LOGIT_WARN(...)                 do { } while (0)
 #define LOGIT_WARN0()                   do { } while (0)
+#define LOGIT_0WARN()                   do { } while (0)
+#define LOGIT_0_WARN()                  do { } while (0)
+#define LOGIT_NOARGS_WARN()             do { } while (0)
+#define LOGIT_FORMAT_WARN(fmt, ...)     do { } while (0)
+#define LOGIT_PRINT_WARN(...)           do { } while (0)
+#define LOGIT_PRINTF_WARN(fmt, ...)     do { } while (0)
 #define LOGIT_WARN_TO(index, ...)       do { } while (0)
 #define LOGIT_WARN0_TO(index)           do { } while (0)
+#define LOGIT_0WARN_TO(index)           do { } while (0)
+#define LOGIT_0_WARN_TO(index)          do { } while (0)
+#define LOGIT_NOARGS_WARN_TO(index)     do { } while (0)
+#define LOGIT_FORMAT_WARN_TO(index, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_WARN_TO(index, ...)       do { } while (0)
+#define LOGIT_PRINTF_WARN_TO(index, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
@@ -370,8 +418,20 @@
 #else
 #define LOGIT_ERROR(...)                do { } while (0)
 #define LOGIT_ERROR0()                  do { } while (0)
+#define LOGIT_0ERROR()                  do { } while (0)
+#define LOGIT_0_ERROR()                 do { } while (0)
+#define LOGIT_NOARGS_ERROR()            do { } while (0)
+#define LOGIT_FORMAT_ERROR(fmt, ...)    do { } while (0)
+#define LOGIT_PRINT_ERROR(...)          do { } while (0)
+#define LOGIT_PRINTF_ERROR(fmt, ...)    do { } while (0)
 #define LOGIT_ERROR_TO(index, ...)      do { } while (0)
 #define LOGIT_ERROR0_TO(index)          do { } while (0)
+#define LOGIT_0ERROR_TO(index)          do { } while (0)
+#define LOGIT_0_ERROR_TO(index)         do { } while (0)
+#define LOGIT_NOARGS_ERROR_TO(index)    do { } while (0)
+#define LOGIT_FORMAT_ERROR_TO(index, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_ERROR_TO(index, ...)       do { } while (0)
+#define LOGIT_PRINTF_ERROR_TO(index, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
@@ -397,8 +457,20 @@
 #else
 #define LOGIT_FATAL(...)                do { } while (0)
 #define LOGIT_FATAL0()                  do { } while (0)
+#define LOGIT_0FATAL()                  do { } while (0)
+#define LOGIT_0_FATAL()                 do { } while (0)
+#define LOGIT_NOARGS_FATAL()            do { } while (0)
+#define LOGIT_FORMAT_FATAL(fmt, ...)    do { } while (0)
+#define LOGIT_PRINT_FATAL(...)          do { } while (0)
+#define LOGIT_PRINTF_FATAL(fmt, ...)    do { } while (0)
 #define LOGIT_FATAL_TO(index, ...)      do { } while (0)
 #define LOGIT_FATAL0_TO(index)          do { } while (0)
+#define LOGIT_0FATAL_TO(index)          do { } while (0)
+#define LOGIT_0_FATAL_TO(index)         do { } while (0)
+#define LOGIT_NOARGS_FATAL_TO(index)    do { } while (0)
+#define LOGIT_FORMAT_FATAL_TO(index, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_FATAL_TO(index, ...)       do { } while (0)
+#define LOGIT_PRINTF_FATAL_TO(index, fmt, ...) do { } while (0)
 #endif
 
 //------------------------------------------------------------------------------
@@ -421,6 +493,12 @@
 #else
 #define LOGIT_TRACE_IF(condition, ...)        do { } while (0)
 #define LOGIT_TRACE0_IF(condition)            do { } while (0)
+#define LOGIT_0TRACE_IF(condition)            do { } while (0)
+#define LOGIT_0_TRACE_IF(condition)           do { } while (0)
+#define LOGIT_NOARGS_TRACE_IF(condition)      do { } while (0)
+#define LOGIT_FORMAT_TRACE_IF(condition, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_TRACE_IF(condition, fmt)  do { } while (0)
+#define LOGIT_PRINTF_TRACE_IF(condition, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
@@ -436,6 +514,12 @@
 #else
 #define LOGIT_INFO_IF(condition, ...)         do { } while (0)
 #define LOGIT_INFO0_IF(condition)             do { } while (0)
+#define LOGIT_0INFO_IF(condition)             do { } while (0)
+#define LOGIT_0_INFO_IF(condition)            do { } while (0)
+#define LOGIT_NOARGS_INFO_IF(condition)       do { } while (0)
+#define LOGIT_FORMAT_INFO_IF(condition, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_INFO_IF(condition, fmt)   do { } while (0)
+#define LOGIT_PRINTF_INFO_IF(condition, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
@@ -451,6 +535,12 @@
 #else
 #define LOGIT_DEBUG_IF(condition, ...)        do { } while (0)
 #define LOGIT_DEBUG0_IF(condition)            do { } while (0)
+#define LOGIT_0DEBUG_IF(condition)            do { } while (0)
+#define LOGIT_0_DEBUG_IF(condition)           do { } while (0)
+#define LOGIT_NOARGS_DEBUG_IF(condition)      do { } while (0)
+#define LOGIT_FORMAT_DEBUG_IF(condition, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_DEBUG_IF(condition, fmt)  do { } while (0)
+#define LOGIT_PRINTF_DEBUG_IF(condition, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
@@ -466,6 +556,12 @@
 #else
 #define LOGIT_WARN_IF(condition, ...)         do { } while (0)
 #define LOGIT_WARN0_IF(condition)             do { } while (0)
+#define LOGIT_0WARN_IF(condition)             do { } while (0)
+#define LOGIT_0_WARN_IF(condition)            do { } while (0)
+#define LOGIT_NOARGS_WARN_IF(condition)       do { } while (0)
+#define LOGIT_FORMAT_WARN_IF(condition, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_WARN_IF(condition, fmt)   do { } while (0)
+#define LOGIT_PRINTF_WARN_IF(condition, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
@@ -481,6 +577,12 @@
 #else
 #define LOGIT_ERROR_IF(condition, ...)        do { } while (0)
 #define LOGIT_ERROR0_IF(condition)            do { } while (0)
+#define LOGIT_0ERROR_IF(condition)            do { } while (0)
+#define LOGIT_0_ERROR_IF(condition)           do { } while (0)
+#define LOGIT_NOARGS_ERROR_IF(condition)      do { } while (0)
+#define LOGIT_FORMAT_ERROR_IF(condition, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_ERROR_IF(condition, fmt)  do { } while (0)
+#define LOGIT_PRINTF_ERROR_IF(condition, fmt, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
@@ -496,6 +598,12 @@
 #else
 #define LOGIT_FATAL_IF(condition, ...)        do { } while (0)
 #define LOGIT_FATAL0_IF(condition)            do { } while (0)
+#define LOGIT_0FATAL_IF(condition)            do { } while (0)
+#define LOGIT_0_FATAL_IF(condition)           do { } while (0)
+#define LOGIT_NOARGS_FATAL_IF(condition)      do { } while (0)
+#define LOGIT_FORMAT_FATAL_IF(condition, fmt, ...) do { } while (0)
+#define LOGIT_PRINT_FATAL_IF(condition, fmt)  do { } while (0)
+#define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) do { } while (0)
 #endif
 
 //------------------------------------------------------------------------------
