@@ -11,6 +11,10 @@ int main() {
     const std::string log_path = LOGIT_GET_LAST_FILE_PATH(0);
     std::ifstream in(log_path);
     std::string line;
-    std::getline(in, line);
-    return line.find(message) != std::string::npos ? 0 : 1;
+    while (std::getline(in, line)) {
+        if (line.find(message) != std::string::npos) {
+            return 0;
+        }
+    }
+    return 1;
 }

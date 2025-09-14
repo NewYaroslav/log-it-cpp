@@ -111,6 +111,19 @@
     #define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%-5l] [%60!@] [thread:%t] %SC%v"
 #endif
 
+#ifndef LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES
+    #define LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES 0
+#endif
+#ifndef LOGIT_FILE_LOGGER_MAX_ROTATED_FILES
+    #define LOGIT_FILE_LOGGER_MAX_ROTATED_FILES 0
+#endif
+#ifndef LOGIT_FILE_LOGGER_COMPRESS_ROTATED
+    #define LOGIT_FILE_LOGGER_COMPRESS_ROTATED 0
+#endif
+#ifndef LOGIT_FILE_LOGGER_COMPRESS_CMD
+    #define LOGIT_FILE_LOGGER_COMPRESS_CMD ""
+#endif
+
 /// \brief Defines the default log pattern for unique file-based loggers.
 /// If `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` is not defined, it defaults to "%v".
 #ifndef LOGIT_UNIQUE_FILE_LOGGER_PATTERN

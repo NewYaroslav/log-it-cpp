@@ -922,6 +922,25 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN), \
         true)
 
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION(dir, async, days, pattern, max_bytes, max_files) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::FileLogger>(dir, async, days, max_bytes, max_files), \
+        std::make_unique<logit::SimpleLogFormatter>(pattern))
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_SINGLE_MODE(dir, async, days, pattern, max_bytes, max_files) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::FileLogger>(dir, async, days, max_bytes, max_files), \
+        std::make_unique<logit::SimpleLogFormatter>(pattern), \
+        true)
+
+#define LOGIT_ADD_FILE_LOGGER_DEFAULT_WITH_ROTATION() \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::FileLogger>( \
+            LOGIT_FILE_LOGGER_PATH, true, LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS, \
+            LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES, LOGIT_FILE_LOGGER_MAX_ROTATED_FILES, \
+            LOGIT_FILE_LOGGER_COMPRESS_ROTATED, LOGIT_FILE_LOGGER_COMPRESS_CMD), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN))
+
 /// \brief Macro for adding a unique file logger with custom parameters.
 /// \param directory The directory where log files will be stored.
 /// \param async Boolean indicating whether logging should be asynchronous (true) or synchronous (false).
@@ -1092,6 +1111,27 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::unique_ptr<logit::SimpleLogFormatter>(                         \
             new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)),      \
         true)
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION(dir, async, days, pattern, max_bytes, max_files) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger( \
+            dir, async, days, max_bytes, max_files)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)))
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_SINGLE_MODE(dir, async, days, pattern, max_bytes, max_files) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger( \
+            dir, async, days, max_bytes, max_files)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+#define LOGIT_ADD_FILE_LOGGER_DEFAULT_WITH_ROTATION() \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger( \
+            LOGIT_FILE_LOGGER_PATH, true, LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS, \
+            LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES, LOGIT_FILE_LOGGER_MAX_ROTATED_FILES, \
+            LOGIT_FILE_LOGGER_COMPRESS_ROTATED, LOGIT_FILE_LOGGER_COMPRESS_CMD)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)))
 
 /// \brief Macro for adding a unique file logger with custom parameters.
 /// \param directory The directory where log files will be stored.
