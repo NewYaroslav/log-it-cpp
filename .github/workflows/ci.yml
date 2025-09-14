@@ -96,3 +96,26 @@ jobs:
         run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
       - name: Build consumer project
         run: cmake --build build
+
+  emscripten:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - run: git submodule update --init --recursive
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 'latest'
+      - name: Configure (Node target)
+        run: |
+          emcmake cmake -S . -B build-ems \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DLOG_IT_CPP_BUILD_TESTS=ON \
+            -DLOGIT_EMSCRIPTEN=ON -DLOGIT_FORCE_ASYNC_OFF=ON
+      - name: Build
+        run: cmake --build build-ems --target ems_console ems_async_flush -j
+      - name: Run smoke tests
+        run: |
+          node --no-experimental-fetch build-ems/tests/ems_console.js
+          node --no-experimental-fetch build-ems/tests/ems_async_flush.js
