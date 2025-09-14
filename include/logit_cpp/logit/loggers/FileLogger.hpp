@@ -410,7 +410,29 @@ namespace logit {
                 }
             }
             if (files.size() <= max_files) return;
-            std::sort(files.begin(), files.end());
+            // Extract timestamp and optional index for chronological sorting
+            auto extract = [&base](const std::string& name) {
+                int64_t ts = 0;
+                int      idx = 0;
+                std::string rest = name.substr(base.size());
+                if (!rest.empty() && (rest[0] == '_' || rest[0] == '.')) {
+                    rest = rest.substr(1);
+                    size_t dot = rest.find('.');
+                    ts = std::strtoll(rest.substr(0, dot).c_str(), nullptr, 10);
+                    if (dot != std::string::npos) {
+                        size_t dot2 = rest.find('.', dot + 1);
+                        if (dot2 != std::string::npos) {
+                            idx = std::atoi(rest.substr(dot + 1, dot2 - dot - 1).c_str());
+                        }
+                    }
+                }
+                return std::make_pair(ts, idx);
+            };
+            std::sort(files.begin(), files.end(), [&](const fs::path& a, const fs::path& b) {
+                auto pa = extract(a.filename().string());
+                auto pb = extract(b.filename().string());
+                return (pa.first == pb.first) ? (pa.second < pb.second) : (pa.first < pb.first);
+            });
             size_t to_remove = files.size() - max_files;
             for (size_t i = 0; i < to_remove; ++i) {
                 fs::remove(files[i]);
@@ -425,7 +447,29 @@ namespace logit {
                 }
             }
             if (files.size() <= max_files) return;
-            std::sort(files.begin(), files.end());
+            // Extract timestamp and optional index for chronological sorting
+            auto extract = [&base](const std::string& name) {
+                int64_t ts = 0;
+                int      idx = 0;
+                std::string rest = name.substr(base.size());
+                if (!rest.empty() && (rest[0] == '_' || rest[0] == '.')) {
+                    rest = rest.substr(1);
+                    size_t dot = rest.find('.');
+                    ts = std::strtoll(rest.substr(0, dot).c_str(), nullptr, 10);
+                    if (dot != std::string::npos) {
+                        size_t dot2 = rest.find('.', dot + 1);
+                        if (dot2 != std::string::npos) {
+                            idx = std::atoi(rest.substr(dot + 1, dot2 - dot - 1).c_str());
+                        }
+                    }
+                }
+                return std::make_pair(ts, idx);
+            };
+            std::sort(files.begin(), files.end(), [&](const std::string& a, const std::string& b) {
+                auto pa = extract(a.substr(a.find_last_of("/\\") + 1));
+                auto pb = extract(b.substr(b.find_last_of("/\\") + 1));
+                return (pa.first == pb.first) ? (pa.second < pb.second) : (pa.first < pb.first);
+            });
             size_t to_remove = files.size() - max_files;
             for (size_t i = 0; i < to_remove; ++i) {
 #               if defined(_WIN32)
