@@ -1,6 +1,7 @@
 file(GLOB TEST_SOURCES *.cpp)
 if(NOT LOGIT_WITH_GZIP)
     list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_LIST_DIR}/file_logger_gzip_compression_test.cpp)
+    list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_LIST_DIR}/file_logger_external_cmd_compression_test.cpp)
 endif()
 if(NOT LOGIT_WITH_ZSTD)
     list(REMOVE_ITEM TEST_SOURCES ${CMAKE_CURRENT_LIST_DIR}/file_logger_zstd_compression_test.cpp)
