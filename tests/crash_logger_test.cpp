@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include <logit_cpp/logit/utils.hpp>
+#include <logit/utils.hpp>
 
 #ifndef _WIN32
 #    include <csignal>
@@ -27,17 +27,17 @@ namespace logit_test {
 
 #ifdef _WIN32
 #    define private public
-#    include <logit_cpp/logit/loggers/CrashWindowsLogger.hpp>
+#    include <logit/loggers/CrashWindowsLogger.hpp>
 #    undef private
 #else
 #    define private public
-#    include <logit_cpp/logit/loggers/CrashPosixLogger.hpp>
+#    include <logit/loggers/CrashPosixLogger.hpp>
 #    undef private
 #endif
 
 #undef _exit
 
-#include <logit_cpp/LogIt.hpp>
+#include <LogIt.hpp>
 
 int main() {
     logit_test::reset_exit_code();
