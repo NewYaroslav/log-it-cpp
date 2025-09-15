@@ -18,6 +18,7 @@
 #include <random>
 #include <algorithm>
 #include <unordered_map>
+#include <regex>
 
 namespace logit {
 
@@ -423,7 +424,9 @@ namespace logit {
         /// \param filename The filename to check.
         /// \return True if the filename matches the pattern, false otherwise.
         bool is_valid_log_filename(const std::string& filename) const {
-            return filename.size() >= 10 && filename[4] == '-' && filename[7] == '-';
+            static const std::regex pattern(
+                R"((\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{3})-[a-zA-Z0-9]{1,}\.log(?:\.gz|\.zst)?)");
+            return std::regex_match(filename, pattern);
         }
 
         /// \brief Extracts the date timestamp from the filename.
