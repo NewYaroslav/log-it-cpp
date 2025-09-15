@@ -1340,14 +1340,20 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_SET_MAX_QUEUE(size) \
     logit::detail::TaskExecutor::get_instance().set_max_queue_size(size)
 
-/// \brief Queue policy for dropping tasks when the queue is full.
-#define LOGIT_QUEUE_DROP logit::detail::QueuePolicy::Drop
+/// \brief Queue policy for dropping the newest task when the queue is full.
+#define LOGIT_QUEUE_DROP_NEWEST logit::detail::QueuePolicy::DropNewest
+
+/// \brief Queue policy for dropping the oldest task when the queue is full.
+#define LOGIT_QUEUE_DROP_OLDEST logit::detail::QueuePolicy::DropOldest
+
+/// \brief Backward-compatible alias for dropping the newest task.
+#define LOGIT_QUEUE_DROP LOGIT_QUEUE_DROP_NEWEST
 
 /// \brief Queue policy for blocking when the queue is full.
 #define LOGIT_QUEUE_BLOCK logit::detail::QueuePolicy::Block
 
 /// \brief Sets the behavior when the queue is full.
-/// \param mode LOGIT_QUEUE_DROP or LOGIT_QUEUE_BLOCK.
+/// \param mode LOGIT_QUEUE_DROP_NEWEST, LOGIT_QUEUE_DROP_OLDEST or LOGIT_QUEUE_BLOCK.
 #define LOGIT_SET_QUEUE_POLICY(mode) \
     logit::detail::TaskExecutor::get_instance().set_queue_policy(mode)
 

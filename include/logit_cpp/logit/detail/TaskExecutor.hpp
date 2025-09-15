@@ -6,6 +6,7 @@
 /// \brief Defines the TaskExecutor class, which manages task execution in a separate thread.
 
 #include <functional>
+#include <atomic>
 #if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
 #include <deque>
 #include <emscripten/emscripten.h>
@@ -20,7 +21,7 @@
 namespace logit { namespace detail {
 
     /// \brief Queue overflow handling policy.
-    enum class QueuePolicy { Drop, Block };
+    enum class QueuePolicy { DropNewest, DropOldest, Block };
 
 #if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
 
@@ -36,6 +37,20 @@ namespace logit { namespace detail {
         void add_task(std::function<void()> task) {
             if (!task) return;
             const bool schedule = m_tasks.empty();
+            if (m_max_queue_size > 0 && m_tasks.size() >= m_max_queue_size) {
+                switch (m_overflow_policy) {
+                    case QueuePolicy::DropNewest:
+                        ++m_dropped_tasks;
+                        return;
+                    case QueuePolicy::DropOldest:
+                        m_tasks.pop_front();
+                        ++m_dropped_tasks;
+                        break;
+                    case QueuePolicy::Block:
+                        drain();
+                        break;
+                }
+            }
             m_tasks.push_back(std::move(task));
             if (schedule) {
                 emscripten_async_call(&TaskExecutor::drain_thunk, this, 0);
@@ -45,11 +60,11 @@ namespace logit { namespace detail {
         void wait() { drain(); }
         void shutdown() { drain(); }
 
-        void set_max_queue_size(std::size_t) {}
-        void set_queue_policy(QueuePolicy) {}
+        void set_max_queue_size(std::size_t size) { m_max_queue_size = size; }
+        void set_queue_policy(QueuePolicy policy) { m_overflow_policy = policy; }
 
     private:
-        TaskExecutor()  = default;
+        TaskExecutor() : m_max_queue_size(0), m_overflow_policy(QueuePolicy::Block), m_dropped_tasks(0) {}
         ~TaskExecutor() = default;
         TaskExecutor(const TaskExecutor&) = delete;
         TaskExecutor& operator=(const TaskExecutor&) = delete;
@@ -57,6 +72,9 @@ namespace logit { namespace detail {
         TaskExecutor& operator=(TaskExecutor&&) = delete;
 
         std::deque<std::function<void()>> m_tasks;
+        std::size_t m_max_queue_size;
+        QueuePolicy m_overflow_policy;
+        std::atomic<std::size_t> m_dropped_tasks;
 
         static void drain_thunk(void* arg) {
             static_cast<TaskExecutor*>(arg)->drain();
@@ -93,13 +111,21 @@ namespace logit { namespace detail {
             std::unique_lock<std::mutex> lock(m_queue_mutex);
             if (m_stop_flag) return;
             if (m_max_queue_size > 0 && m_tasks_queue.size() >= m_max_queue_size) {
-                if (m_overflow_policy == QueuePolicy::Drop) {
-                    return;
+                switch (m_overflow_policy) {
+                    case QueuePolicy::DropNewest:
+                        ++m_dropped_tasks;
+                        return;
+                    case QueuePolicy::DropOldest:
+                        m_tasks_queue.pop();
+                        ++m_dropped_tasks;
+                        break;
+                    case QueuePolicy::Block:
+                        m_queue_condition.wait(lock, [this]() {
+                            return m_tasks_queue.size() < m_max_queue_size || m_stop_flag;
+                        });
+                        if (m_stop_flag) return;
+                        break;
                 }
-                m_queue_condition.wait(lock, [this]() {
-                    return m_tasks_queue.size() < m_max_queue_size || m_stop_flag;
-                });
-                if (m_stop_flag) return;
             }
             m_tasks_queue.push(std::move(task));
             lock.unlock();
@@ -138,7 +164,9 @@ namespace logit { namespace detail {
         }
 
         /// \brief Sets the behavior when the queue is full.
-        /// \param policy QueuePolicy::Drop to discard tasks or QueuePolicy::Block to wait.
+        /// \param policy QueuePolicy::DropNewest to discard the incoming task,
+        /// QueuePolicy::DropOldest to discard the oldest task,
+        /// or QueuePolicy::Block to wait.
         void set_queue_policy(QueuePolicy policy) {
             std::lock_guard<std::mutex> lock(m_queue_mutex);
             m_overflow_policy = policy;
@@ -152,6 +180,7 @@ namespace logit { namespace detail {
         bool m_stop_flag;                                 ///< Flag indicating if the worker thread should stop.
         std::size_t m_max_queue_size;                     ///< Maximum number of tasks in the queue (0 for unlimited).
         QueuePolicy m_overflow_policy;                    ///< Policy for handling queue overflow.
+        std::atomic<std::size_t> m_dropped_tasks;         ///< Number of discarded tasks due to overflow.
 
         /// \brief The worker thread function that processes tasks from the queue.
         void worker_function() {
@@ -173,7 +202,7 @@ namespace logit { namespace detail {
         }
 
         /// \brief Private constructor to enforce the singleton pattern.
-        TaskExecutor() : m_stop_flag(false), m_max_queue_size(0), m_overflow_policy(QueuePolicy::Block) {
+        TaskExecutor() : m_stop_flag(false), m_max_queue_size(0), m_overflow_policy(QueuePolicy::Block), m_dropped_tasks(0) {
             m_worker_thread = std::thread(&TaskExecutor::worker_function, this);
         }
 
