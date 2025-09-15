@@ -38,7 +38,7 @@ try {
 > 23:59:59.128 | An example runtime error
 ```
 
-- **Macro-Based Logging**: 
+- **Macro-Based Logging**:
 
 Easily log variables and messages using macros. Simply choose the appropriate macro and pass variables or arguments to it.
 
@@ -49,6 +49,25 @@ LOGIT_INFO(someFloat, someInt);
 
 auto now = std::chrono::system_clock::now();
 LOGIT_PRINT_INFO("TimePoint example: ", now);
+```
+
+- **Log Filters and Throttling**:
+
+Reduce noise from repetitive messages with macros like `LOGIT_WARN_ONCE`, `LOGIT_INFO_EVERY_N`, and `LOGIT_ERROR_THROTTLE`.
+
+```cpp
+for (int i = 0; i < 1000; ++i) {
+    LOGIT_INFO_EVERY_N(100, "heartbeat");
+}
+```
+
+- **Tagged Logging**:
+
+Attach simple key-value attributes for easier filtering in log aggregators.
+
+```cpp
+LOGIT_INFO_TAG(({{"order_id", 123}, {"side", "BUY"}}), "sent order");
+// Output: [info] sent order order_id=123 side=BUY
 ```
 
 - **Rotating File Logs**:
