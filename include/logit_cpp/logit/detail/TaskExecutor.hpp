@@ -37,8 +37,9 @@ namespace logit { namespace detail {
 
         void add_task(std::function<void()> task) {
             if (!task) return;
+            bool schedule = false;
             for (;;) {
-                bool schedule = false;
+                schedule = false;
                 {
                     std::lock_guard<std::mutex> lk(m_mutex);
                     if (m_max_queue_size > 0 && m_tasks.size() >= m_max_queue_size) {
