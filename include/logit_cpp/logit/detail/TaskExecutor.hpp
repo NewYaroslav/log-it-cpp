@@ -36,7 +36,6 @@ namespace logit { namespace detail {
 
         void add_task(std::function<void()> task) {
             if (!task) return;
-            const bool schedule = m_tasks.empty();
             if (m_max_queue_size > 0 && m_tasks.size() >= m_max_queue_size) {
                 switch (m_overflow_policy) {
                     case QueuePolicy::DropNewest:
@@ -51,6 +50,7 @@ namespace logit { namespace detail {
                         break;
                 }
             }
+            const bool schedule = m_tasks.empty();
             m_tasks.push_back(std::move(task));
             if (schedule) {
                 emscripten_async_call(&TaskExecutor::drain_thunk, this, 0);
@@ -134,14 +134,10 @@ namespace logit { namespace detail {
 
         /// \brief Waits for all tasks in the queue to be processed.
         void wait() {
-            m_queue_condition.notify_one();
-            for (;;) {
-                std::unique_lock<std::mutex> lock(m_queue_mutex);
-                if (m_tasks_queue.empty() || m_stop_flag) break;
-                lock.unlock();
-                std::this_thread::yield();
-                std::this_thread::sleep_for(std::chrono::milliseconds(1));
-            }
+            std::unique_lock<std::mutex> lock(m_queue_mutex);
+            m_queue_condition.wait(lock, [this]() {
+                return (m_tasks_queue.empty() && m_active_tasks.load() == 0) || m_stop_flag;
+            });
         }
 
         /// \brief Shuts down the TaskExecutor by stopping the worker thread.
@@ -181,6 +177,7 @@ namespace logit { namespace detail {
         std::size_t m_max_queue_size;                     ///< Maximum number of tasks in the queue (0 for unlimited).
         QueuePolicy m_overflow_policy;                    ///< Policy for handling queue overflow.
         std::atomic<std::size_t> m_dropped_tasks;         ///< Number of discarded tasks due to overflow.
+        std::atomic<std::size_t> m_active_tasks;          ///< Number of tasks currently running.
 
         /// \brief The worker thread function that processes tasks from the queue.
         void worker_function() {
@@ -195,14 +192,21 @@ namespace logit { namespace detail {
                 }
                 task = std::move(m_tasks_queue.front());
                 m_tasks_queue.pop_front();
+                ++m_active_tasks;
                 lock.unlock();
                 m_queue_condition.notify_one();
                 task();
+                lock.lock();
+                --m_active_tasks;
+                if (m_tasks_queue.empty() && m_active_tasks == 0) {
+                    m_queue_condition.notify_all();
+                }
+                lock.unlock();
             }
         }
 
         /// \brief Private constructor to enforce the singleton pattern.
-        TaskExecutor() : m_stop_flag(false), m_max_queue_size(0), m_overflow_policy(QueuePolicy::Block), m_dropped_tasks(0) {
+        TaskExecutor() : m_stop_flag(false), m_max_queue_size(0), m_overflow_policy(QueuePolicy::Block), m_dropped_tasks(0), m_active_tasks(0) {
             m_worker_thread = std::thread(&TaskExecutor::worker_function, this);
         }
 
