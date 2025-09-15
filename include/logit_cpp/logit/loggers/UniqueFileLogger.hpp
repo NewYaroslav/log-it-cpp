@@ -10,7 +10,6 @@
 #include <fstream>
 #include <mutex>
 #include <atomic>
-#include <regex>
 #include <queue>
 #include <functional>
 #include <sstream>
@@ -19,6 +18,7 @@
 #include <random>
 #include <algorithm>
 #include <unordered_map>
+#include <regex>
 
 namespace logit {
 
@@ -396,7 +396,7 @@ namespace logit {
                 if (!fs::is_regular_file(entry.status())) continue;
                 std::string filename = entry.path().filename().string();
                 if (is_valid_log_filename(filename)) {
-                    const int64_t file_ts = get_timestamp_from_filename(filename);
+                    const int64_t file_ts = get_date_ts_from_filename(filename);
                     if (file_ts < threshold_ts) {
                         fs::remove(entry.path());
                     }
@@ -407,7 +407,7 @@ namespace logit {
             for (const auto& file_path : file_list) {
                 std::string filename = get_file_name(file_path);
                 if (is_valid_log_filename(filename)) {
-                    const int64_t file_ts = get_timestamp_from_filename(filename);
+                    const int64_t file_ts = get_date_ts_from_filename(filename);
                     if (file_ts < threshold_ts) {
 #                       if defined(_WIN32)
                         remove(utf8_to_ansi(file_path).c_str());
@@ -424,16 +424,16 @@ namespace logit {
         /// \param filename The filename to check.
         /// \return True if the filename matches the pattern, false otherwise.
         bool is_valid_log_filename(const std::string& filename) const {
-            static const std::regex pattern(R"((\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{3})-[a-zA-Z0-9]{1,}\.log)");
+            static const std::regex pattern(
+                R"(^(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{3})-[-_A-Za-z0-9]+\.log(\.gz|\.zst)?$)");
             return std::regex_match(filename, pattern);
         }
 
-        /// \brief Extracts the timestamp from the filename.
-        /// \param filename The filename to extract the timestamp from.
-        /// \return The timestamp in milliseconds.
-        int64_t get_timestamp_from_filename(const std::string& filename) const {
-            std::string datetime_str = filename.substr(0, 10); // "YYYY-MM-DD"
-            return time_shield::ts(datetime_str);
+        /// \brief Extracts the date timestamp from the filename.
+        /// \param filename The filename to extract the date from.
+        /// \return The date timestamp.
+        int64_t get_date_ts_from_filename(const std::string& filename) const {
+            return time_shield::ts(filename.substr(0, 10));
         }
 
         /// \brief Gets the current timestamp in milliseconds.

@@ -9,6 +9,7 @@
 #include <atomic>
 #if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
 #include <deque>
+#include <mutex>
 #include <emscripten/emscripten.h>
 #else
 #include <thread>
@@ -36,22 +37,40 @@ namespace logit { namespace detail {
 
         void add_task(std::function<void()> task) {
             if (!task) return;
-            if (m_max_queue_size > 0 && m_tasks.size() >= m_max_queue_size) {
-                switch (m_overflow_policy) {
-                    case QueuePolicy::DropNewest:
-                        ++m_dropped_tasks;
-                        return;
-                    case QueuePolicy::DropOldest:
-                        m_tasks.pop_front();
-                        ++m_dropped_tasks;
+            bool schedule = false;
+            for (;;) {
+                schedule = false;
+                {
+                    std::lock_guard<std::mutex> lk(m_mutex);
+                    if (m_max_queue_size > 0 && m_tasks.size() >= m_max_queue_size) {
+                        switch (m_overflow_policy) {
+                            case QueuePolicy::DropNewest:
+                                ++m_dropped_tasks;
+                                return;
+                            case QueuePolicy::DropOldest:
+                                m_tasks.pop_front();
+                                ++m_dropped_tasks;
+                                break;
+                            case QueuePolicy::Block:
+                                break; // handled after unlocking
+                        }
+                        if (m_overflow_policy == QueuePolicy::Block && m_tasks.size() >= m_max_queue_size) {
+                            // fall through to drain outside lock
+                        } else {
+                            m_tasks.emplace_back(std::move(task));
+                            schedule = !m_scheduled;
+                            m_scheduled = m_scheduled || schedule;
+                            break;
+                        }
+                    } else {
+                        m_tasks.emplace_back(std::move(task));
+                        schedule = !m_scheduled;
+                        m_scheduled = m_scheduled || schedule;
                         break;
-                    case QueuePolicy::Block:
-                        drain();
-                        break;
+                    }
                 }
+                drain();
             }
-            const bool schedule = m_tasks.empty();
-            m_tasks.push_back(std::move(task));
             if (schedule) {
                 emscripten_async_call(&TaskExecutor::drain_thunk, this, 0);
             }
@@ -60,11 +79,21 @@ namespace logit { namespace detail {
         void wait() { drain(); }
         void shutdown() { drain(); }
 
-        void set_max_queue_size(std::size_t size) { m_max_queue_size = size; }
-        void set_queue_policy(QueuePolicy policy) { m_overflow_policy = policy; }
+        void set_max_queue_size(std::size_t size) {
+            std::lock_guard<std::mutex> lk(m_mutex);
+            m_max_queue_size = size;
+        }
+        void set_queue_policy(QueuePolicy policy) {
+            std::lock_guard<std::mutex> lk(m_mutex);
+            m_overflow_policy = policy;
+        }
 
     private:
-        TaskExecutor() : m_max_queue_size(0), m_overflow_policy(QueuePolicy::Block), m_dropped_tasks(0) {}
+        TaskExecutor()
+            : m_max_queue_size(0),
+              m_overflow_policy(QueuePolicy::Block),
+              m_dropped_tasks(0),
+              m_scheduled(false) {}
         ~TaskExecutor() = default;
         TaskExecutor(const TaskExecutor&) = delete;
         TaskExecutor& operator=(const TaskExecutor&) = delete;
@@ -72,18 +101,28 @@ namespace logit { namespace detail {
         TaskExecutor& operator=(TaskExecutor&&) = delete;
 
         std::deque<std::function<void()>> m_tasks;
+        std::mutex m_mutex;
         std::size_t m_max_queue_size;
         QueuePolicy m_overflow_policy;
         std::atomic<std::size_t> m_dropped_tasks;
+        bool m_scheduled;
 
         static void drain_thunk(void* arg) {
             static_cast<TaskExecutor*>(arg)->drain();
         }
 
         void drain() {
-            while (!m_tasks.empty()) {
-                auto task = std::move(m_tasks.front());
-                m_tasks.pop_front();
+            for (;;) {
+                std::function<void()> task;
+                {
+                    std::lock_guard<std::mutex> lk(m_mutex);
+                    if (m_tasks.empty()) {
+                        m_scheduled = false;
+                        break;
+                    }
+                    task = std::move(m_tasks.front());
+                    m_tasks.pop_front();
+                }
                 task();
             }
         }
