@@ -512,6 +512,7 @@ public:
 | `LOGIT_<LEVEL>(...)` | Log a message with the given level (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). |
 | `LOGIT_PRINT_<LEVEL>(...)` | Log a pre-formatted string or stream-built message. |
 | `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | printf-style formatting with a format string and arguments. |
+| `LOGIT_STREAM_<LEVEL>()` | Stream-style logging with `<<` operators; short aliases `LOG_S_<LEVEL>()` when `LOGIT_SHORT_NAME` is defined. |
 | `LOGIT_<LEVEL>_IF(condition, ...)` | Log only when `condition` is true. |
 | `LOGIT_<LEVEL>_ONCE(...)` | Log only the first time the macro is executed. |
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Log on every `n`th invocation. |
@@ -538,8 +539,20 @@ public:
 | `LOGIT_SET_QUEUE_POLICY(mode)` | Set overflow behavior: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST`, or `LOGIT_QUEUE_BLOCK`. |
 | `LOGIT_SET_LOG_LEVEL_TO(index, level)` | Set minimum log level for a specific logger. |
 | `LOGIT_SET_LOG_LEVEL(level)` | Set minimum log level for all loggers. |
+| `LOGIT_SET_LOGGER_ENABLED(index, enabled)` | Enable or disable a logger. |
+| `LOGIT_IS_LOGGER_ENABLED(index)` | Check whether a logger is enabled. |
+| `LOGIT_SET_SINGLE_MODE(index, single_mode)` | Toggle single-message-per-file mode for a logger. |
+| `LOGIT_IS_SINGLE_MODE(index)` | Determine if a logger is in single mode. |
 | `LOGIT_SET_TIME_OFFSET(index, offset_ms)` | Adjust timestamp offset for a logger. |
+| `LOGIT_GET_STRING_PARAM(index, param)` | Retrieve a string parameter from a logger. |
 | `LOGIT_GET_INT_PARAM(index, param)` | Retrieve an integer parameter from a logger. |
+| `LOGIT_GET_FLOAT_PARAM(index, param)` | Retrieve a floating-point parameter from a logger. |
+| `LOGIT_GET_LAST_FILE_NAME(index)` | Get the last file name written by a logger. |
+| `LOGIT_GET_LAST_FILE_PATH(index)` | Get the last file path written by a logger. |
+| `LOGIT_GET_LAST_LOG_TIMESTAMP(index)` | Get the timestamp of the last log entry. |
+| `LOGIT_GET_TIME_SINCE_LAST_LOG(index)` | Seconds elapsed since the last log entry. |
+| `LOGIT_WAIT()` | Wait for all asynchronous loggers to finish. |
+| `LOGIT_SHUTDOWN()` | Shut down the logging system. |
 
 ---
 

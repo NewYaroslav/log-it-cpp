@@ -112,6 +112,7 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 | `LOGIT_<LEVEL>(...)` | Логирование с указанным уровнем (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). |
 | `LOGIT_PRINT_<LEVEL>(...)` | Логирование заранее сформированной строки или сообщения, собранного через потоки. |
 | `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | printf-подобное форматирование с форматной строкой и аргументами. |
+| `LOGIT_STREAM_<LEVEL>()` | Потоковое логирование через `<<`; короткие версии `LOG_S_<LEVEL>()` доступны при определении `LOGIT_SHORT_NAME`. |
 | `LOGIT_<LEVEL>_IF(condition, ...)` | Логирование только если условие истинно. |
 | `LOGIT_<LEVEL>_ONCE(...)` | Логирование только при первом вызове. |
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Логирование каждого `n`-го вызова. |
@@ -138,8 +139,20 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 | `LOGIT_SET_QUEUE_POLICY(mode)` | Поведение при переполнении: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST` или `LOGIT_QUEUE_BLOCK`. |
 | `LOGIT_SET_LOG_LEVEL_TO(index, level)` | Задает минимальный уровень для конкретного логгера. |
 | `LOGIT_SET_LOG_LEVEL(level)` | Задает минимальный уровень для всех логгеров. |
+| `LOGIT_SET_LOGGER_ENABLED(index, enabled)` | Включает или отключает логгер. |
+| `LOGIT_IS_LOGGER_ENABLED(index)` | Проверяет, включен ли логгер. |
+| `LOGIT_SET_SINGLE_MODE(index, single_mode)` | Включает режим «один файл — одно сообщение». |
+| `LOGIT_IS_SINGLE_MODE(index)` | Проверяет, активен ли режим «один файл — одно сообщение». |
 | `LOGIT_SET_TIME_OFFSET(index, offset_ms)` | Сдвигает временную метку логгера. |
+| `LOGIT_GET_STRING_PARAM(index, param)` | Получает строковый параметр логгера. |
 | `LOGIT_GET_INT_PARAM(index, param)` | Получает целочисленный параметр логгера. |
+| `LOGIT_GET_FLOAT_PARAM(index, param)` | Получает параметр с плавающей точкой. |
+| `LOGIT_GET_LAST_FILE_NAME(index)` | Имя последнего файла, в который писал логгер. |
+| `LOGIT_GET_LAST_FILE_PATH(index)` | Путь к последнему файлу логгера. |
+| `LOGIT_GET_LAST_LOG_TIMESTAMP(index)` | Метка времени последнего лога. |
+| `LOGIT_GET_TIME_SINCE_LAST_LOG(index)` | Время с последнего лога (в секундах). |
+| `LOGIT_WAIT()` | Ожидает завершения всех асинхронных логгеров. |
+| `LOGIT_SHUTDOWN()` | Завершает работу системы логирования. |
 
 ---
 
