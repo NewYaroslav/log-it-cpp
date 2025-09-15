@@ -425,7 +425,7 @@ namespace logit {
         /// \return True if the filename matches the pattern, false otherwise.
         bool is_valid_log_filename(const std::string& filename) const {
             static const std::regex pattern(
-                R"((\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{3})-[a-zA-Z0-9]{1,}\.log(?:\.gz|\.zst)?)");
+                R"(^(\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}-\d{3})-[-_A-Za-z0-9]+\.log(\.gz|\.zst)?$)");
             return std::regex_match(filename, pattern);
         }
 
