@@ -205,7 +205,7 @@ namespace logit {
         VariableValue(const std::string& name, const std::chrono::time_point<Clock, Duration>& time_point)
             : name(name), is_literal(is_valid_literal_name(name)), type(ValueType::TIME_POINT_VAL) {
             auto ts_ms = std::chrono::duration_cast<std::chrono::milliseconds>(time_point.time_since_epoch());
-            //string_value = time_shield::to_human_readable_ms(ts_ms.count());
+            string_value = time_shield::to_human_readable_ms(ts_ms.count());
         }
 
 #       if __cplusplus >= 201703L

@@ -32,12 +32,18 @@
 #define LOGIT_CONCAT(x, y) LOGIT_CONCAT_IMPL(x, y)
 
 #ifdef _LOGIT_ENUMS_HPP_INCLUDED
-static_assert(LOGIT_LEVEL_TRACE == static_cast<int>(logit::LogLevel::LOG_LVL_TRACE));
-static_assert(LOGIT_LEVEL_DEBUG == static_cast<int>(logit::LogLevel::LOG_LVL_DEBUG));
-static_assert(LOGIT_LEVEL_INFO  == static_cast<int>(logit::LogLevel::LOG_LVL_INFO));
-static_assert(LOGIT_LEVEL_WARN  == static_cast<int>(logit::LogLevel::LOG_LVL_WARN));
-static_assert(LOGIT_LEVEL_ERROR == static_cast<int>(logit::LogLevel::LOG_LVL_ERROR));
-static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FATAL));
+static_assert(LOGIT_LEVEL_TRACE == static_cast<int>(logit::LogLevel::LOG_LVL_TRACE),
+              "LOGIT_LEVEL_TRACE mismatch");
+static_assert(LOGIT_LEVEL_DEBUG == static_cast<int>(logit::LogLevel::LOG_LVL_DEBUG),
+              "LOGIT_LEVEL_DEBUG mismatch");
+static_assert(LOGIT_LEVEL_INFO  == static_cast<int>(logit::LogLevel::LOG_LVL_INFO),
+              "LOGIT_LEVEL_INFO mismatch");
+static_assert(LOGIT_LEVEL_WARN  == static_cast<int>(logit::LogLevel::LOG_LVL_WARN),
+              "LOGIT_LEVEL_WARN mismatch");
+static_assert(LOGIT_LEVEL_ERROR == static_cast<int>(logit::LogLevel::LOG_LVL_ERROR),
+              "LOGIT_LEVEL_ERROR mismatch");
+static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FATAL),
+              "LOGIT_LEVEL_FATAL mismatch");
 #endif // _LOGIT_ENUMS_HPP_INCLUDED
 
 #ifndef LOGIT_COMPILED_LEVEL
@@ -637,7 +643,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_THROTTLE(level, period_ms, ...)                                     \
     do {                                                                          \
         static int64_t LOGIT_CONCAT(_logit_last_, __LINE__) = 0;                  \
-        int64_t _logit_now = LOGIT_CURRENT_TIMESTAMP_MS();                        \
+        int64_t _logit_now = LOGIT_MONOTONIC_MS();                        \
         if (_logit_now - LOGIT_CONCAT(_logit_last_, __LINE__) >= (period_ms)) {   \
             LOGIT_CONCAT(_logit_last_, __LINE__) = _logit_now;                    \
             LOGIT_LOG_AND_RETURN(level, {}, #__VA_ARGS__, __VA_ARGS__);           \
@@ -665,12 +671,14 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_ERROR_THROTTLE(p, ...)   LOGIT_THROTTLE(logit::LogLevel::LOG_LVL_ERROR, p, __VA_ARGS__)
 #define LOGIT_FATAL_THROTTLE(p, ...)   LOGIT_THROTTLE(logit::LogLevel::LOG_LVL_FATAL, p, __VA_ARGS__)
 
-#define LOGIT_TRACE_TAG(tags, msg)     LOGIT_PRINT_TRACE((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
-#define LOGIT_DEBUG_TAG(tags, msg)     LOGIT_PRINT_DEBUG((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
-#define LOGIT_INFO_TAG(tags, msg)      LOGIT_PRINT_INFO((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
-#define LOGIT_WARN_TAG(tags, msg)      LOGIT_PRINT_WARN((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
-#define LOGIT_ERROR_TAG(tags, msg)     LOGIT_PRINT_ERROR((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
-#define LOGIT_FATAL_TAG(tags, msg)     LOGIT_PRINT_FATAL((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
+#define LOGIT_TAG(k, v) ::logit::detail::make_tag((k), (v))
+
+#define LOGIT_TRACE_TAG(msg, ...)      LOGIT_PRINT_TRACE(msg, ::logit::detail::format_tags({ __VA_ARGS__ }))
+#define LOGIT_DEBUG_TAG(msg, ...)      LOGIT_PRINT_DEBUG(msg, ::logit::detail::format_tags({ __VA_ARGS__ }))
+#define LOGIT_INFO_TAG(msg, ...)       LOGIT_PRINT_INFO (msg, ::logit::detail::format_tags({ __VA_ARGS__ }))
+#define LOGIT_WARN_TAG(msg, ...)       LOGIT_PRINT_WARN (msg, ::logit::detail::format_tags({ __VA_ARGS__ }))
+#define LOGIT_ERROR_TAG(msg, ...)      LOGIT_PRINT_ERROR(msg, ::logit::detail::format_tags({ __VA_ARGS__ }))
+#define LOGIT_FATAL_TAG(msg, ...)      LOGIT_PRINT_FATAL(msg, ::logit::detail::format_tags({ __VA_ARGS__ }))
 
 //------------------------------------------------------------------------------
 // Shorter versions of the macros when LOGIT_SHORT_NAME is defined

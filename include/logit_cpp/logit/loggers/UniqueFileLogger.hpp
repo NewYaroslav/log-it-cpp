@@ -124,6 +124,7 @@ namespace logit {
         void log(const LogRecord& record, const std::string& message) override {
             auto thread_id = record.thread_id;
             m_last_log_ts = record.timestamp_ms;
+            m_last_log_mono_ts = LOGIT_MONOTONIC_MS();
             if (!m_config.async) {
                 std::lock_guard<std::mutex> lock(m_mutex);
                 std::string file_path;
@@ -288,6 +289,7 @@ namespace logit {
         std::unordered_map<std::thread::id, ThreadLogInfo> m_thread_log_info; ///< Map to store log information per thread.
 
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
+        std::atomic<int64_t> m_last_log_mono_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
         std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
 
 
@@ -491,7 +493,7 @@ namespace logit {
         /// \brief Retrieves the time elapsed since the last log.
         /// \return The time in milliseconds since the last log was written.
         int64_t get_time_since_last_log() const {
-            return LOGIT_CURRENT_TIMESTAMP_MS() - m_last_log_ts;
+            return LOGIT_MONOTONIC_MS() - m_last_log_mono_ts;
         }
 
 

@@ -55,14 +55,24 @@
 #endif
 /// \}
 
+#ifndef LOGIT_WALLCLOCK_MS
+#define LOGIT_WALLCLOCK_MS() \
+  (std::chrono::duration_cast<std::chrono::milliseconds>( \
+     std::chrono::system_clock::now().time_since_epoch()).count())
+#endif
+
+#ifndef LOGIT_MONOTONIC_MS
+#define LOGIT_MONOTONIC_MS() \
+  (std::chrono::duration_cast<std::chrono::milliseconds>( \
+     std::chrono::steady_clock::now().time_since_epoch()).count())
+#endif
+
 /// \brief Macro to get the current timestamp in milliseconds.
 /// If LOGIT_CURRENT_TIMESTAMP_MS is not defined, it uses `std::chrono` to return the current time in milliseconds.
 ///
 /// This macro can be overridden to provide a custom method for generating timestamps if needed.
 #ifndef LOGIT_CURRENT_TIMESTAMP_MS
-    #define LOGIT_CURRENT_TIMESTAMP_MS() \
-        (std::chrono::duration_cast<std::chrono::milliseconds>( \
-        std::chrono::system_clock::now().time_since_epoch()).count())
+#define LOGIT_CURRENT_TIMESTAMP_MS() LOGIT_WALLCLOCK_MS()
 #endif
 
 /// \name File Logger Settings
@@ -131,6 +141,33 @@
 #endif
 
 /// \}
+
+/// \name Tag formatting
+/// Configuration of how tags are rendered after the message.
+/// \{
+
+/// \brief Separator inserted between the main message and the tag list (e.g., " | ").
+#ifndef LOGIT_TAGS_JOIN
+#define LOGIT_TAGS_JOIN " | "
+#endif
+
+/// \brief Separator between individual tag pairs (e.g., " " or "; ").
+#ifndef LOGIT_TAG_PAIR_SEP
+#define LOGIT_TAG_PAIR_SEP " "
+#endif
+
+/// \brief Separator between a tag key and its value.
+#ifndef LOGIT_TAG_KV_SEP
+#define LOGIT_TAG_KV_SEP "="
+#endif
+
+/// \brief When 1, quote values that contain spaces or special characters; 0 disables quoting.
+#ifndef LOGIT_TAG_QUOTE_VALUES
+#define LOGIT_TAG_QUOTE_VALUES 1
+#endif
+
+/// \}
+
 
 /// \}
 

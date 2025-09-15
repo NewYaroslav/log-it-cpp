@@ -157,6 +157,7 @@ namespace logit {
         /// \param message The formatted log message.
         void log(const LogRecord& record, const std::string& message) override {
             m_last_log_ts = record.timestamp_ms;
+            m_last_log_mono_ts = LOGIT_MONOTONIC_MS();
             if (!m_config.async) {
                 std::lock_guard<std::mutex> lock(m_mutex);
                 try {
@@ -247,7 +248,8 @@ namespace logit {
         uint64_t           m_current_file_size = 0; ///< Current size of the log file.
         std::unique_ptr<detail::CompressionWorker> m_compressor; ///< Background compressor.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
-        std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
+        std::atomic<int64_t> m_last_log_mono_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
+        std::atomic<int>   m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
 
         /// \brief Starts the logging process by initializing the file and directory.
         void start_logging() {
@@ -662,10 +664,11 @@ namespace logit {
 
         /// \brief Retrieves the time since the last log.
         /// \return The time in milliseconds since the last log.
-    int64_t get_time_since_last_log() const {
-        return LOGIT_CURRENT_TIMESTAMP_MS() - m_last_log_ts;
-    }
+        int64_t get_time_since_last_log() const {
+            return LOGIT_MONOTONIC_MS() - m_last_log_mono_ts;
+        }
     }; // FileLogger
+
 #endif // defined(__EMSCRIPTEN__)
 
 }; // namespace logit

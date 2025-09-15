@@ -90,7 +90,9 @@ int main() {
         LOGIT_TRACE_ONCE("Trace once example");
         LOGIT_TRACE_EVERY_N(2, "Trace every 2 iterations", i);
         LOGIT_TRACE_THROTTLE(100, "Throttled trace", i);
-        LOGIT_TRACE_TAG(({{"iteration", i}}), "Tagged trace");
+        LOGIT_TRACE_TAG("Tagged trace", LOGIT_TAG("iteration", i));
+        int id = i * 1000;
+        LOGIT_INFO_TAG("sent order", LOGIT_TAG("order_id", id), LOGIT_TAG("side", "BUY"));
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
 
