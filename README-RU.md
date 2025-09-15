@@ -118,6 +118,29 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 | `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Логирование не чаще одного раза за `period_ms` миллисекунд. |
 | `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Добавление к сообщению пар ключ-значение. |
 
+### Макросы конфигурации
+
+| Макрос | Описание |
+| ------ | -------- |
+| `LOGIT_BASE_PATH` | Базовый путь, который обрезается из `__FILE__` в сообщениях. |
+| `LOGIT_DEFAULT_COLOR` | Цвет вывода в консоль по умолчанию. |
+| `LOGIT_COLOR_<LEVEL>` | Цвет для каждого уровня логирования. |
+| `LOGIT_CONSOLE_PATTERN` | Паттерн форматирования вывода в консоль по умолчанию. |
+| `LOGIT_FILE_LOGGER_PATH` | Каталог для файловых логов. |
+| `LOGIT_UNIQUE_FILE_LOGGER_PATH` | Каталог для логов по одному сообщению в файл. |
+| `LOGIT_TAGS_JOIN` | Разделитель между сообщением и списком тегов. |
+
+### Функциональные макросы
+
+| Макрос | Описание |
+| ------ | -------- |
+| `LOGIT_SET_MAX_QUEUE(size)` | Устанавливает размер очереди задач (0 — без ограничений). |
+| `LOGIT_SET_QUEUE_POLICY(mode)` | Поведение при переполнении: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST` или `LOGIT_QUEUE_BLOCK`. |
+| `LOGIT_SET_LOG_LEVEL_TO(index, level)` | Задает минимальный уровень для конкретного логгера. |
+| `LOGIT_SET_LOG_LEVEL(level)` | Задает минимальный уровень для всех логгеров. |
+| `LOGIT_SET_TIME_OFFSET(index, offset_ms)` | Сдвигает временную метку логгера. |
+| `LOGIT_GET_INT_PARAM(index, param)` | Получает целочисленный параметр логгера. |
+
 ---
 
 ## Использование

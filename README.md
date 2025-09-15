@@ -518,6 +518,29 @@ public:
 | `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Log at most once per `period_ms` milliseconds. |
 | `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Attach key-value tags to a message. |
 
+### Configuration Macros
+
+| Macro | Description |
+| ----- | ----------- |
+| `LOGIT_BASE_PATH` | Trim this prefix from `__FILE__` paths shown in logs. |
+| `LOGIT_DEFAULT_COLOR` | Default console color for messages. |
+| `LOGIT_COLOR_<LEVEL>` | Color for each log level. |
+| `LOGIT_CONSOLE_PATTERN` | Default format pattern for console output. |
+| `LOGIT_FILE_LOGGER_PATH` | Directory for rotating file logs. |
+| `LOGIT_UNIQUE_FILE_LOGGER_PATH` | Directory for one-message-per-file logs. |
+| `LOGIT_TAGS_JOIN` | Separator inserted between the message and tag list. |
+
+### Management Macros
+
+| Macro | Description |
+| ----- | ----------- |
+| `LOGIT_SET_MAX_QUEUE(size)` | Limit the asynchronous task queue (0 for unlimited). |
+| `LOGIT_SET_QUEUE_POLICY(mode)` | Set overflow behavior: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST`, or `LOGIT_QUEUE_BLOCK`. |
+| `LOGIT_SET_LOG_LEVEL_TO(index, level)` | Set minimum log level for a specific logger. |
+| `LOGIT_SET_LOG_LEVEL(level)` | Set minimum log level for all loggers. |
+| `LOGIT_SET_TIME_OFFSET(index, offset_ms)` | Adjust timestamp offset for a logger. |
+| `LOGIT_GET_INT_PARAM(index, param)` | Retrieve an integer parameter from a logger. |
+
 ---
 
 ## Installation
