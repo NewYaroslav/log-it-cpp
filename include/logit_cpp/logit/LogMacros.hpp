@@ -1635,28 +1635,52 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::make_unique<logit::CrashLogger>(),                      \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN))
 
+/// \brief Macro for adding a syslog logger with custom configuration.
+/// \param ident Syslog identifier used to tag the log entries.
+/// \param facility Syslog facility value (e.g., `LOG_USER`).
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// This version uses `std::make_unique`, available in C++17 and later.
 #define LOGIT_ADD_SYSLOG(ident, facility, async) \
     logit::Logger::get_instance().add_logger( \
         std::make_unique<logit::SyslogLogger>(ident, facility, async), \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), false)
 
+/// \brief Macro for adding a syslog logger with custom configuration in single_mode.
+/// \param ident Syslog identifier used to tag the log entries.
+/// \param facility Syslog facility value (e.g., `LOG_USER`).
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// In single_mode, the syslog logger can only be invoked using macros like `LOGIT_TRACE_TO`.
+/// This version uses `std::make_unique`, available in C++17 and later.
 #define LOGIT_ADD_SYSLOG_SINGLE_MODE(ident, facility, async) \
     logit::Logger::get_instance().add_logger( \
         std::make_unique<logit::SyslogLogger>(ident, facility, async), \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
 
+/// \brief Macro for adding a syslog logger with default configuration.
+/// This version uses `std::make_unique`, available in C++17 and later.
 #define LOGIT_ADD_SYSLOG_DEFAULT() LOGIT_ADD_SYSLOG("log-it", LOG_USER, true)
 
+/// \brief Macro for adding a Windows Event Log logger with custom configuration.
+/// \param source_wide Wide-character name of the event source.
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// This version uses `std::make_unique`, available in C++17 and later.
 #define LOGIT_ADD_EVENT_LOG(source_wide, async) \
     logit::Logger::get_instance().add_logger( \
         std::make_unique<logit::EventLogLogger>(source_wide, async), \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), false)
 
+/// \brief Macro for adding a Windows Event Log logger with custom configuration in single_mode.
+/// \param source_wide Wide-character name of the event source.
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// In single_mode, the event log logger can only be invoked using macros like `LOGIT_TRACE_TO`.
+/// This version uses `std::make_unique`, available in C++17 and later.
 #define LOGIT_ADD_EVENT_LOG_SINGLE_MODE(source_wide, async) \
     logit::Logger::get_instance().add_logger( \
         std::make_unique<logit::EventLogLogger>(source_wide, async), \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
 
+/// \brief Macro for adding a Windows Event Log logger with default configuration.
+/// This version uses `std::make_unique`, available in C++17 and later.
 #define LOGIT_ADD_EVENT_LOG_DEFAULT() LOGIT_ADD_EVENT_LOG(L"LogIt", true)
 
 #else // C++11 fallback
@@ -1879,32 +1903,56 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::unique_ptr<logit::CrashLogger>(new logit::CrashLogger()), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)))
 
+/// \brief Macro for adding a syslog logger with custom configuration.
+/// \param ident Syslog identifier used to tag the log entries.
+/// \param facility Syslog facility value (e.g., `LOG_USER`).
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
 #define LOGIT_ADD_SYSLOG(ident, facility, async) \
     logit::Logger::get_instance().add_logger( \
         std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger(ident, facility, async)), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
         false)
 
+/// \brief Macro for adding a syslog logger with custom configuration in single_mode.
+/// \param ident Syslog identifier used to tag the log entries.
+/// \param facility Syslog facility value (e.g., `LOG_USER`).
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// In single_mode, the syslog logger can only be invoked using macros like `LOGIT_TRACE_TO`.
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
 #define LOGIT_ADD_SYSLOG_SINGLE_MODE(ident, facility, async) \
     logit::Logger::get_instance().add_logger( \
         std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger(ident, facility, async)), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
         true)
 
+/// \brief Macro for adding a syslog logger with default configuration.
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
 #define LOGIT_ADD_SYSLOG_DEFAULT() LOGIT_ADD_SYSLOG("log-it", LOG_USER, true)
 
+/// \brief Macro for adding a Windows Event Log logger with custom configuration.
+/// \param source_wide Wide-character name of the event source.
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
 #define LOGIT_ADD_EVENT_LOG(source_wide, async) \
     logit::Logger::get_instance().add_logger( \
         std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger(source_wide, async)), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
         false)
 
+/// \brief Macro for adding a Windows Event Log logger with custom configuration in single_mode.
+/// \param source_wide Wide-character name of the event source.
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// In single_mode, the event log logger can only be invoked using macros like `LOGIT_TRACE_TO`.
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
 #define LOGIT_ADD_EVENT_LOG_SINGLE_MODE(source_wide, async) \
     logit::Logger::get_instance().add_logger( \
         std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger(source_wide, async)), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
         true)
 
+/// \brief Macro for adding a Windows Event Log logger with default configuration.
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
 #define LOGIT_ADD_EVENT_LOG_DEFAULT() LOGIT_ADD_EVENT_LOG(L"LogIt", true)
 
 #endif // C++ version check
