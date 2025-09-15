@@ -38,9 +38,9 @@ try {
 > 23:59:59.128 | An example runtime error
 ```
 
-- **Macro-Based Logging**:
+ - **Macro-Based Logging**:
 
-Easily log variables and messages using macros. Simply choose the appropriate macro and pass variables or arguments to it.
+Easily log variables and messages using macros. Simply choose the appropriate macro and pass variables or arguments to it. Use `LOGIT_FORMAT_<LEVEL>` for printf-style formatting.
 
 ```
 float someFloat = 123.456f;
@@ -49,6 +49,7 @@ LOGIT_INFO(someFloat, someInt);
 
 auto now = std::chrono::system_clock::now();
 LOGIT_PRINT_INFO("TimePoint example: ", now);
+LOGIT_FORMAT_INFO("%s: %d", "status", 200); // printf-style
 ```
 
 - **Log Filters and Throttling**:
@@ -510,6 +511,7 @@ public:
 | ------------- | ----------- |
 | `LOGIT_<LEVEL>(...)` | Log a message with the given level (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). |
 | `LOGIT_PRINT_<LEVEL>(...)` | Log a pre-formatted string or stream-built message. |
+| `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | printf-style formatting with a format string and arguments. |
 | `LOGIT_<LEVEL>_IF(condition, ...)` | Log only when `condition` is true. |
 | `LOGIT_<LEVEL>_ONCE(...)` | Log only the first time the macro is executed. |
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Log on every `n`th invocation. |
