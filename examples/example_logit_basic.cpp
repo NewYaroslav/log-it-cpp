@@ -85,6 +85,20 @@ int main() {
     std::string email = "user@example.com";
     LOGIT_TRACE(auth_success, email);
 
+    {
+        LOGIT_SCOPE_INFO("load_config");
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+    {
+        LOGIT_SCOPE_INFO_T(10, "heavy_step");
+        std::this_thread::sleep_for(std::chrono::milliseconds(11));
+    }
+    {
+        int step_id = 7;
+        LOGIT_SCOPE_FMT_INFO("step_{}", step_id);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+
     // Demonstrate macros for controlling log frequency and tagging
     for (int i = 0; i < 5; ++i) {
         LOGIT_TRACE_ONCE("Trace once example");

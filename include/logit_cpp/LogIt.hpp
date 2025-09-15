@@ -10,6 +10,7 @@
 #include "logit/utils.hpp"
 #include "logit/Logger.hpp"
 #include "logit/LogStream.hpp"
+#include "logit/detail/ScopeTimer.hpp"
 #include "logit/LogMacros.hpp"
 #include "logit/formatter.hpp"
 #include "logit/loggers.hpp"
