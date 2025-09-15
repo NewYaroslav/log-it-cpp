@@ -1608,6 +1608,33 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_UNIQUE_FILE_LOGGER_PATTERN),  \
         true)
 
+/// \brief Macro for adding a crash logger with custom configuration.
+/// \param path Path where the crash log should be written.
+/// \param buffer_size Size of the in-memory buffer preserving recent messages.
+/// This version uses `std::make_unique`, available in C++17 and later.
+#define LOGIT_ADD_CRASH_LOGGER(path, buffer_size)  \
+    logit::Logger::get_instance().add_logger(      \
+        std::make_unique<logit::CrashLogger>(      \
+            logit::CrashLogger::Config{path, buffer_size}), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN))
+
+/// \brief Macro for adding a crash logger with custom configuration in single_mode.
+/// In single_mode, the crash logger can only be invoked using macros like `LOGIT_TRACE_TO`.
+/// This version uses `std::make_unique`, available in C++17 and later.
+#define LOGIT_ADD_CRASH_LOGGER_SINGLE_MODE(path, buffer_size)  \
+    logit::Logger::get_instance().add_logger(                  \
+        std::make_unique<logit::CrashLogger>(                  \
+            logit::CrashLogger::Config{path, buffer_size}),    \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN), \
+        true)
+
+/// \brief Macro for adding a crash logger with default configuration.
+/// This version uses `std::make_unique`, available in C++17 and later.
+#define LOGIT_ADD_CRASH_LOGGER_DEFAULT()                             \
+    logit::Logger::get_instance().add_logger(                        \
+        std::make_unique<logit::CrashLogger>(),                      \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN))
+
 #define LOGIT_ADD_SYSLOG(ident, facility, async) \
     logit::Logger::get_instance().add_logger( \
         std::make_unique<logit::SyslogLogger>(ident, facility, async), \
@@ -1822,6 +1849,35 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
             LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS)),                                \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_UNIQUE_FILE_LOGGER_PATTERN)), \
         true)
+
+/// \brief Macro for adding a crash logger with custom configuration.
+/// \param path Path where the crash log should be written.
+/// \param buffer_size Size of the in-memory buffer preserving recent messages.
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
+#define LOGIT_ADD_CRASH_LOGGER(path, buffer_size)  \
+    logit::Logger::get_instance().add_logger(      \
+        std::unique_ptr<logit::CrashLogger>(       \
+            new logit::CrashLogger(                \
+                logit::CrashLogger::Config{path, buffer_size})), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)))
+
+/// \brief Macro for adding a crash logger with custom configuration in single_mode.
+/// In single_mode, the crash logger can only be invoked using macros like `LOGIT_TRACE_TO`.
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
+#define LOGIT_ADD_CRASH_LOGGER_SINGLE_MODE(path, buffer_size)  \
+    logit::Logger::get_instance().add_logger(                  \
+        std::unique_ptr<logit::CrashLogger>(                   \
+            new logit::CrashLogger(                            \
+                logit::CrashLogger::Config{path, buffer_size})), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)), \
+        true)
+
+/// \brief Macro for adding a crash logger with default configuration.
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
+#define LOGIT_ADD_CRASH_LOGGER_DEFAULT()                             \
+    logit::Logger::get_instance().add_logger(                        \
+        std::unique_ptr<logit::CrashLogger>(new logit::CrashLogger()), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)))
 
 #define LOGIT_ADD_SYSLOG(ident, facility, async) \
     logit::Logger::get_instance().add_logger( \
