@@ -123,6 +123,9 @@ int main() {
     LOGIT_PRINT_ERROR("An error has occurred during processing with color: ", color);
     LOGIT_FATAL("Fatal error! Immediate attention required!");
 
+    // printf-style formatting
+    LOGIT_PRINTF_INFO("%.2f %d", someFloat, someInt);
+
     // Demonstrating formatted logging for homogeneous variables
     LOGIT_FORMAT_INFO("%.2f", someFloat, 654.321f);     // Two float values
     LOGIT_FORMAT_INFO("%.4d", someInt, 999);            // Two int values

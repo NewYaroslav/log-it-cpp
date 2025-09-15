@@ -33,7 +33,7 @@ try {
 
 \subsection macro_logging Logging with Macros
 
-Log variables and messages easily using macros. Simply select the appropriate macro and pass variables or arguments.
+Log variables and messages easily using macros. Simply select the appropriate macro and pass variables or arguments. Use `LOGIT_PRINTF_<LEVEL>` for `printf`-style formatting and `LOGIT_FORMAT_<LEVEL>` to apply the same format to every argument.
 
 \code{.cpp}
 float someFloat = 123.456f;
@@ -42,6 +42,8 @@ LOGIT_INFO(someFloat, someInt);
 
 auto now = std::chrono::system_clock::now();
 LOGIT_PRINT_INFO("TimePoint example: ", now);
+LOGIT_PRINTF_INFO("%.2f %d", someFloat, someInt); // printf-style
+LOGIT_FORMAT_INFO("%.2f", someFloat, 654.321f);   // same format for all args
 \endcode
 
 \subsection multiple_backends Support for Multiple Backends
@@ -449,15 +451,6 @@ Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc.,
 #define LOGIT_SHORT_NAME
 \endcode
 
-- **LOGIT_USE_FMT_LIB**:
-
-Enables the use of the fmt library for string formatting. If defined, the logging system will use fmt for advanced formatting of log messages.
-
-\code{.cpp}
-// Enable use of the fmt library for formatting.
-#define LOGIT_USE_FMT_LIB
-\endcode
-
 \section custom_backend_sec Custom Logger Backend and Formatter
 
 LogIt++ allows you to extend the logging system by creating your own loggers and formatters. This section explains how to implement a custom backend for logging and a custom log formatter.
@@ -574,7 +567,7 @@ LogIt++ is a header-only library, which means it can be easily included in your 
 
 \subsection step1 Step 1: Clone the Repository
 
-First, clone the LogIt++ repository from GitHub along with its submodules. The library has dependencies on other header-only libraries, such as **time-shield-cpp** (for time utilities) and **fmt** (for string formatting, if `LOGIT_USE_FMT_LIB` is enabled).
+First, clone the LogIt++ repository from GitHub along with its submodules. The library has dependencies on other header-only libraries, such as **time-shield-cpp** (for time utilities) and **fmt** (used by `LOGIT_FMT_*` macros).
 
 To clone the repository with submodules, use the following command:
 
@@ -606,13 +599,7 @@ If you are using an IDE like **Visual Studio** or **CLion**, you can add the inc
 
 \subsection step4 Step 4: Using fmt (Optional)
 
-LogIt++ supports the **fmt** library for advanced string formatting, which is also included as a submodule. To enable `fmt` in LogIt++, define the macro `LOGIT_USE_FMT_LIB` in your project:
-
-\code{cpp}
-#define LOGIT_USE_FMT_LIB
-\endcode
-
-This will allow you to use `fmt`-style formatting within your log messages. The `fmt` library is also located in the `libs` folder of the repository.
+LogIt++ ships with the **fmt** library for `{}`-style formatting. To use the `LOGIT_FMT_*` and `LOGIT_SCOPE_FMT_*` macros, build the library with the CMake option `-DLOGIT_WITH_FMT=ON`.
 
 \subsection step5 Step 5: Build and Run Your Project
 

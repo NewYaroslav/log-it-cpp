@@ -9,30 +9,17 @@
 #include <vector>
 #include <string>
 
-#ifdef LOGIT_USE_FMT_LIB
-#include <fmt/core.h>
-#endif
-
 namespace logit {
 
     /// \brief Formats a string according to the specified format.
     ///
-    /// This function formats a string using either the custom implementation
-    /// based on `vsnprintf`) or the `fmt` library, depending on whether
-    /// the macro `LOGIT_USE_FMT_LIB` is defined.
+    /// This function uses a `vsnprintf`-based implementation.
     ///
     /// \param fmt The format string (similar to printf format).
     /// \param ... A variable number of arguments matching the format string.
     /// \see https://habr.com/ru/articles/318962/
     /// \return A formatted std::string.
     inline std::string format(const char *fmt, ...) {
-#       ifdef LOGIT_USE_FMT_LIB
-        va_list args;
-        va_start(args, fmt);
-        std::string result = fmt::vformat(fmt, fmt::make_format_args(args));
-        va_end(args);
-        return result;
-#       else
         va_list args;
         va_start(args, fmt);
         std::vector<char> buffer(1024);
@@ -52,7 +39,6 @@ namespace logit {
             buffer.clear();
             buffer.resize(size);
         }
-#       endif
     }
 
 }; // namespace logit

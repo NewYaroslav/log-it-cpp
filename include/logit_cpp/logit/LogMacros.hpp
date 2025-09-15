@@ -128,16 +128,19 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_DETAIL_SCOPE_T(level, threshold_ms, phase) \
     ::logit::detail::ScopeTimer LOGIT_CONCAT(_logit_scope_, __COUNTER__)(level, (phase), __FILE__, __LINE__, LOGIT_FUNCTION, -1, (threshold_ms))
 
+#define LOGIT_DETAIL_SCOPE_PRINTF(level, fmt_str, ...) \
+    ::logit::detail::ScopeTimer LOGIT_CONCAT(_logit_scope_, __COUNTER__)(level, logit::format(fmt_str, __VA_ARGS__), __FILE__, __LINE__, LOGIT_FUNCTION, -1, 0)
+#define LOGIT_DETAIL_SCOPE_PRINTF_T(level, threshold_ms, fmt_str, ...) \
+    ::logit::detail::ScopeTimer LOGIT_CONCAT(_logit_scope_, __COUNTER__)(level, logit::format(fmt_str, __VA_ARGS__), __FILE__, __LINE__, LOGIT_FUNCTION, -1, (threshold_ms))
+
 #ifdef LOGIT_WITH_FMT
 #define LOGIT_DETAIL_SCOPE_FMT(level, fmt_str, ...) \
     ::logit::detail::ScopeTimer LOGIT_CONCAT(_logit_scope_, __COUNTER__)(level, fmt::format(fmt_str, __VA_ARGS__), __FILE__, __LINE__, LOGIT_FUNCTION, -1, 0)
 #define LOGIT_DETAIL_SCOPE_FMT_T(level, threshold_ms, fmt_str, ...) \
     ::logit::detail::ScopeTimer LOGIT_CONCAT(_logit_scope_, __COUNTER__)(level, fmt::format(fmt_str, __VA_ARGS__), __FILE__, __LINE__, LOGIT_FUNCTION, -1, (threshold_ms))
 #else
-#define LOGIT_DETAIL_SCOPE_FMT(level, fmt_str, ...) \
-    ::logit::detail::ScopeTimer LOGIT_CONCAT(_logit_scope_, __COUNTER__)(level, logit::format(fmt_str, __VA_ARGS__), __FILE__, __LINE__, LOGIT_FUNCTION, -1, 0)
-#define LOGIT_DETAIL_SCOPE_FMT_T(level, threshold_ms, fmt_str, ...) \
-    ::logit::detail::ScopeTimer LOGIT_CONCAT(_logit_scope_, __COUNTER__)(level, logit::format(fmt_str, __VA_ARGS__), __FILE__, __LINE__, LOGIT_FUNCTION, -1, (threshold_ms))
+#define LOGIT_DETAIL_SCOPE_FMT(level, fmt_str, ...) do { } while (0)
+#define LOGIT_DETAIL_SCOPE_FMT_T(level, threshold_ms, fmt_str, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
@@ -192,6 +195,66 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #else
 #define LOGIT_SCOPE_FATAL(phase)            do { } while (0)
 #define LOGIT_SCOPE_FATAL_T(threshold_ms, phase) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
+#define LOGIT_SCOPE_PRINTF_TRACE(fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF(::logit::LogLevel::LOG_LVL_TRACE, fmt_str, __VA_ARGS__)
+#define LOGIT_SCOPE_PRINTF_TRACE_T(threshold_ms, fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF_T(::logit::LogLevel::LOG_LVL_TRACE, threshold_ms, fmt_str, __VA_ARGS__)
+#else
+#define LOGIT_SCOPE_PRINTF_TRACE(fmt_str, ...) do { } while (0)
+#define LOGIT_SCOPE_PRINTF_TRACE_T(threshold_ms, fmt_str, ...) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
+#define LOGIT_SCOPE_PRINTF_DEBUG(fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF(::logit::LogLevel::LOG_LVL_DEBUG, fmt_str, __VA_ARGS__)
+#define LOGIT_SCOPE_PRINTF_DEBUG_T(threshold_ms, fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF_T(::logit::LogLevel::LOG_LVL_DEBUG, threshold_ms, fmt_str, __VA_ARGS__)
+#else
+#define LOGIT_SCOPE_PRINTF_DEBUG(fmt_str, ...) do { } while (0)
+#define LOGIT_SCOPE_PRINTF_DEBUG_T(threshold_ms, fmt_str, ...) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
+#define LOGIT_SCOPE_PRINTF_INFO(fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF(::logit::LogLevel::LOG_LVL_INFO, fmt_str, __VA_ARGS__)
+#define LOGIT_SCOPE_PRINTF_INFO_T(threshold_ms, fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF_T(::logit::LogLevel::LOG_LVL_INFO, threshold_ms, fmt_str, __VA_ARGS__)
+#else
+#define LOGIT_SCOPE_PRINTF_INFO(fmt_str, ...) do { } while (0)
+#define LOGIT_SCOPE_PRINTF_INFO_T(threshold_ms, fmt_str, ...) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
+#define LOGIT_SCOPE_PRINTF_WARN(fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF(::logit::LogLevel::LOG_LVL_WARN, fmt_str, __VA_ARGS__)
+#define LOGIT_SCOPE_PRINTF_WARN_T(threshold_ms, fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF_T(::logit::LogLevel::LOG_LVL_WARN, threshold_ms, fmt_str, __VA_ARGS__)
+#else
+#define LOGIT_SCOPE_PRINTF_WARN(fmt_str, ...) do { } while (0)
+#define LOGIT_SCOPE_PRINTF_WARN_T(threshold_ms, fmt_str, ...) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
+#define LOGIT_SCOPE_PRINTF_ERROR(fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF(::logit::LogLevel::LOG_LVL_ERROR, fmt_str, __VA_ARGS__)
+#define LOGIT_SCOPE_PRINTF_ERROR_T(threshold_ms, fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF_T(::logit::LogLevel::LOG_LVL_ERROR, threshold_ms, fmt_str, __VA_ARGS__)
+#else
+#define LOGIT_SCOPE_PRINTF_ERROR(fmt_str, ...) do { } while (0)
+#define LOGIT_SCOPE_PRINTF_ERROR_T(threshold_ms, fmt_str, ...) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
+#define LOGIT_SCOPE_PRINTF_FATAL(fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF(::logit::LogLevel::LOG_LVL_FATAL, fmt_str, __VA_ARGS__)
+#define LOGIT_SCOPE_PRINTF_FATAL_T(threshold_ms, fmt_str, ...) \
+    LOGIT_DETAIL_SCOPE_PRINTF_T(::logit::LogLevel::LOG_LVL_FATAL, threshold_ms, fmt_str, __VA_ARGS__)
+#else
+#define LOGIT_SCOPE_PRINTF_FATAL(fmt_str, ...) do { } while (0)
+#define LOGIT_SCOPE_PRINTF_FATAL_T(threshold_ms, fmt_str, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
