@@ -28,13 +28,18 @@ namespace logit { namespace detail {
 
     /// \class TaskExecutor
     /// \brief Simplified task executor for single-threaded Emscripten builds.
+    /// \thread_safety Not thread-safe.
     class TaskExecutor {
     public:
+        /// \brief Obtain singleton instance.
+        /// \return Global executor.
         static TaskExecutor& get_instance() {
             static TaskExecutor instance;
             return instance;
         }
 
+        /// \brief Enqueue task for later execution.
+        /// \param task Callable to execute.
         void add_task(std::function<void()> task) {
             if (!task) return;
             bool schedule = false;
@@ -76,13 +81,21 @@ namespace logit { namespace detail {
             }
         }
 
+        /// \brief Run all queued tasks.
         void wait() { drain(); }
+
+        /// \brief Drain queue without scheduling new tasks.
         void shutdown() { drain(); }
 
+        /// \brief Set maximum queue size.
+        /// \param size Number of tasks allowed (0 for unlimited).
         void set_max_queue_size(std::size_t size) {
             std::lock_guard<std::mutex> lk(m_mutex);
             m_max_queue_size = size;
         }
+
+        /// \brief Set overflow handling policy.
+        /// \param policy Policy to apply.
         void set_queue_policy(QueuePolicy policy) {
             std::lock_guard<std::mutex> lk(m_mutex);
             m_overflow_policy = policy;
@@ -132,6 +145,7 @@ namespace logit { namespace detail {
 
     /// \class TaskExecutor
     /// \brief A thread-safe task executor that processes tasks in a dedicated worker thread.
+    /// \thread_safety Thread-safe.
     ///
     /// This class provides a mechanism for queuing tasks (functions or lambdas) and executing them
     /// asynchronously in a background thread. It follows the singleton design pattern.

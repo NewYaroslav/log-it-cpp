@@ -40,18 +40,26 @@ namespace logit { namespace detail {
     /// \brief Background worker performing asynchronous compression.
     class CompressionWorker {
     public:
+        /// \brief Create worker thread.
+        /// \param type Compression algorithm.
+        /// \param level Compression level.
+        /// \param external_cmd External command template.
         CompressionWorker(CompressType type,
                            int level,
                            std::string external_cmd);
+
+        /// \brief Stop worker thread and finish pending tasks.
         ~CompressionWorker();
 
         /// \brief Enqueue a file for compression.
+        /// \param path Path to file.
         void enqueue(std::string path);
 
         /// \brief Wait until all queued files are processed.
         void wait();
 
     private:
+        /// \brief Worker loop processing queued files.
         void run();
 
         CompressType m_type;
@@ -66,12 +74,22 @@ namespace logit { namespace detail {
         bool m_busy = false;
     };
 
+    /// \brief Clamp value to inclusive range.
+    /// \param v Input value.
+    /// \param lo Lower bound.
+    /// \param hi Upper bound.
+    /// \return Clamped value.
     inline int clamp_level(int v, int lo, int hi) {
         if (v < lo) return lo;
         if (v > hi) return hi;
         return v;
     }
 
+    /// \brief Compress file using gzip.
+    /// \param src Source path.
+    /// \param dst_tmp Temporary output path.
+    /// \param level Compression level.
+    /// \return true on success.
     inline bool compress_file_gzip(const std::string& src,
                                    const std::string& dst_tmp,
                                    int level) {
@@ -100,6 +118,11 @@ namespace logit { namespace detail {
 #       endif
     }
 
+    /// \brief Compress file using Zstandard.
+    /// \param src Source path.
+    /// \param dst_tmp Temporary output path.
+    /// \param level Compression level.
+    /// \return true on success.
     inline bool compress_file_zstd(const std::string& src,
                                    const std::string& dst_tmp,
                                    int level) {
@@ -143,6 +166,11 @@ namespace logit { namespace detail {
 #       endif
     }
 
+    /// \brief Compress file using external command.
+    /// \param src Source path.
+    /// \param cmd_tpl Command template containing {file} and {level}.
+    /// \param level Compression level.
+    /// \return true on success.
     inline bool compress_file_external(const std::string& src,
                                        const std::string& cmd_tpl,
                                        int level) {
