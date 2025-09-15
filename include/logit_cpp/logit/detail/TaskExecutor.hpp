@@ -12,7 +12,7 @@
 #include <emscripten/emscripten.h>
 #else
 #include <thread>
-#include <queue>
+#include <deque>
 #include <mutex>
 #include <condition_variable>
 #include <chrono>
@@ -116,7 +116,7 @@ namespace logit { namespace detail {
                         ++m_dropped_tasks;
                         return;
                     case QueuePolicy::DropOldest:
-                        m_tasks_queue.pop();
+                        m_tasks_queue.pop_front();
                         ++m_dropped_tasks;
                         break;
                     case QueuePolicy::Block:
@@ -127,7 +127,7 @@ namespace logit { namespace detail {
                         break;
                 }
             }
-            m_tasks_queue.push(std::move(task));
+            m_tasks_queue.push_back(std::move(task));
             lock.unlock();
             m_queue_condition.notify_one();
         }
@@ -173,7 +173,7 @@ namespace logit { namespace detail {
         }
 
     private:
-        std::queue<std::function<void()>> m_tasks_queue;  ///< Queue holding tasks to be executed.
+        std::deque<std::function<void()>> m_tasks_queue;  ///< Queue holding tasks to be executed.
         mutable std::mutex m_queue_mutex;                 ///< Mutex to protect access to the task queue.
         std::condition_variable m_queue_condition;        ///< Condition variable to signal task availability.
         std::thread m_worker_thread;                      ///< Worker thread for executing tasks.
@@ -194,7 +194,7 @@ namespace logit { namespace detail {
                     break;
                 }
                 task = std::move(m_tasks_queue.front());
-                m_tasks_queue.pop();
+                m_tasks_queue.pop_front();
                 lock.unlock();
                 m_queue_condition.notify_one();
                 task();
