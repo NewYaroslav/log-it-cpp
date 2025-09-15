@@ -39,7 +39,23 @@ auto now = std::chrono::system_clock::now();
 LOGIT_PRINT_INFO("TimePoint example: ", now);
 ```
 
-- **Поддержка нескольких бэкендов**: 
+- **Фильтры и ограничение частоты логов**:
+
+Сократите шум от повторяющихся сообщений с помощью макросов `LOGIT_WARN_ONCE`,
+`LOGIT_INFO_EVERY_N` и `LOGIT_ERROR_THROTTLE`. Макросы с суффиксом
+`_THROTTLE` (например, `LOGIT_INFO_THROTTLE`) ограничивают вывод одним
+сообщением за заданный промежуток времени.
+
+```cpp
+for (int i = 0; i < 10; ++i) {
+    LOGIT_WARN_ONCE("initializing");                    // выводится один раз
+    LOGIT_INFO_EVERY_N(3, "heartbeat", i);              // каждое 3-е сообщение
+    LOGIT_ERROR_THROTTLE(200, "repeated error");        // не чаще 1 раза/200 мс
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+}
+```
+
+- **Поддержка нескольких бэкендов**:
 
 Легко настройте логгеры для вывода в консоль и файлы. При необходимости добавьте отправку сообщений на сервер или в базу данных, создавая собственные бэкенды.
 
@@ -87,6 +103,18 @@ public:
 
 LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 ```
+
+## Справочник макросов
+
+| Шаблон макроса | Описание |
+| --------------- | -------- |
+| `LOGIT_<LEVEL>(...)` | Логирование с указанным уровнем (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). |
+| `LOGIT_PRINT_<LEVEL>(...)` | Логирование заранее сформированной строки или сообщения, собранного через потоки. |
+| `LOGIT_<LEVEL>_IF(condition, ...)` | Логирование только если условие истинно. |
+| `LOGIT_<LEVEL>_ONCE(...)` | Логирование только при первом вызове. |
+| `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Логирование каждого `n`-го вызова. |
+| `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Логирование не чаще одного раза за `period_ms` миллисекунд. |
+| `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Добавление к сообщению пар ключ-значение. |
 
 ---
 

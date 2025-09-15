@@ -53,11 +53,17 @@ LOGIT_PRINT_INFO("TimePoint example: ", now);
 
 - **Log Filters and Throttling**:
 
-Reduce noise from repetitive messages with macros like `LOGIT_WARN_ONCE`, `LOGIT_INFO_EVERY_N`, and `LOGIT_ERROR_THROTTLE`.
+Reduce noise from repetitive messages with macros like `LOGIT_WARN_ONCE`,
+`LOGIT_INFO_EVERY_N`, and `LOGIT_ERROR_THROTTLE`. Use the `_THROTTLE`
+variants (e.g., `LOGIT_INFO_THROTTLE`) to limit output to one message per
+time period.
 
 ```cpp
-for (int i = 0; i < 1000; ++i) {
-    LOGIT_INFO_EVERY_N(100, "heartbeat");
+for (int i = 0; i < 10; ++i) {
+    LOGIT_WARN_ONCE("initializing");                     // prints once
+    LOGIT_INFO_EVERY_N(3, "heartbeat", i);               // every 3rd call
+    LOGIT_ERROR_THROTTLE(200, "repeated error");         // max once/200ms
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
 ```
 
@@ -497,6 +503,18 @@ public:
 	}
 };
 ```
+
+## Macro Reference
+
+| Macro pattern | Description |
+| ------------- | ----------- |
+| `LOGIT_<LEVEL>(...)` | Log a message with the given level (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). |
+| `LOGIT_PRINT_<LEVEL>(...)` | Log a pre-formatted string or stream-built message. |
+| `LOGIT_<LEVEL>_IF(condition, ...)` | Log only when `condition` is true. |
+| `LOGIT_<LEVEL>_ONCE(...)` | Log only the first time the macro is executed. |
+| `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Log on every `n`th invocation. |
+| `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Log at most once per `period_ms` milliseconds. |
+| `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Attach key-value tags to a message. |
 
 ---
 
