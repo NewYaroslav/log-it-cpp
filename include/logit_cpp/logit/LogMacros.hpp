@@ -2,6 +2,10 @@
 #ifndef _LOGIT_LOG_MACROS_HPP_INCLUDED
 #define _LOGIT_LOG_MACROS_HPP_INCLUDED
 
+#ifdef LOGIT_WITH_FMT
+#include <fmt/format.h>
+#endif
+
 /// \file LogMacros.hpp
 /// \brief Provides various logging macros for different log levels and options.
 
@@ -261,6 +265,47 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #endif
 
 //------------------------------------------------------------------------------
+// Macros for logging with fmt formatting
+
+#if __cplusplus >= 201703L
+#define LOGIT_LOG_AND_RETURN_FMT(level, format, arg_names, ...)                           \
+    do {                                                                                  \
+        LOGIT_IF_COMPILED_LEVEL(level)                                                    \
+            logit::Logger::get_instance().log_and_return(                                 \
+                logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                     \
+                logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
+                LOGIT_FUNCTION, format, arg_names, -1, false, true}, __VA_ARGS__);        \
+    } while (0)
+#else
+#define LOGIT_LOG_AND_RETURN_FMT(level, format, arg_names, ...)                           \
+    do {                                                                                  \
+        logit::Logger::get_instance().log_and_return(                                     \
+            logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                         \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                    \
+            LOGIT_FUNCTION, format, arg_names, -1, false, true}, __VA_ARGS__);            \
+    } while (0)
+#endif
+
+#if __cplusplus >= 201703L
+#define LOGIT_LOG_AND_RETURN_FMT_WITH_INDEX(level, index, format, arg_names, ...)         \
+    do {                                                                                  \
+        LOGIT_IF_COMPILED_LEVEL(level)                                                    \
+            logit::Logger::get_instance().log_and_return(                                 \
+                logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                     \
+                logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                \
+                LOGIT_FUNCTION, format, arg_names, index, false, true}, __VA_ARGS__);     \
+    } while (0)
+#else
+#define LOGIT_LOG_AND_RETURN_FMT_WITH_INDEX(level, index, format, arg_names, ...)         \
+    do {                                                                                  \
+        logit::Logger::get_instance().log_and_return(                                     \
+            logit::LogRecord{level, LOGIT_CURRENT_TIMESTAMP_MS(),                         \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                    \
+            LOGIT_FUNCTION, format, arg_names, index, false, true}, __VA_ARGS__);         \
+    } while (0)
+#endif
+
+//------------------------------------------------------------------------------
 // Macros for each log level
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
@@ -273,6 +318,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_TRACE(fmt, ...)    LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_TRACE(...)          LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_TRACE, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_TRACE(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_TRACE(fmt_str, ...)      LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_TRACE(fmt_str, ...)   LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_TRACE, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_TRACE(fmt_str, ...)      LOGIT_PRINTF_TRACE(fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_TRACE(fmt_str, ...)   LOGIT_FORMAT_TRACE(fmt_str, __VA_ARGS__)
+#endif
 
 // TRACE macros with index
 #define LOGIT_TRACE_TO(index, ...)      LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, {}, #__VA_ARGS__, __VA_ARGS__)
@@ -283,6 +335,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_TRACE_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_TRACE_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_TRACE_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_TRACE_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_TRACE_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_FMT_WITH_INDEX(logit::LogLevel::LOG_LVL_TRACE, index, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_TRACE_TO(index, fmt_str, ...) LOGIT_PRINTF_TRACE_TO(index, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_TRACE_TO(index, fmt_str, ...) LOGIT_FORMAT_TRACE_TO(index, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_TRACE(...)                do { } while (0)
 #define LOGIT_TRACE0()                  do { } while (0)
@@ -312,6 +371,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_INFO(fmt, ...)     LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_INFO(...)           LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_INFO, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_INFO(fmt, ...)     LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_INFO(fmt_str, ...)       LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_INFO(fmt_str, ...)    LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_INFO, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_INFO(fmt_str, ...)       LOGIT_PRINTF_INFO(fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_INFO(fmt_str, ...)    LOGIT_FORMAT_INFO(fmt_str, __VA_ARGS__)
+#endif
 
 // INFO macros with index
 #define LOGIT_INFO_TO(index, ...)       LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, {}, #__VA_ARGS__, __VA_ARGS__)
@@ -322,6 +388,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_INFO_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_INFO_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_INFO_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_INFO_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_INFO_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_FMT_WITH_INDEX(logit::LogLevel::LOG_LVL_INFO, index, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_INFO_TO(index, fmt_str, ...) LOGIT_PRINTF_INFO_TO(index, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_INFO_TO(index, fmt_str, ...) LOGIT_FORMAT_INFO_TO(index, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_INFO(...)                 do { } while (0)
 #define LOGIT_INFO0()                   do { } while (0)
@@ -351,6 +424,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_DEBUG(fmt, ...)    LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_DEBUG(...)          LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_DEBUG, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_DEBUG(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_DEBUG(fmt_str, ...)      LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_DEBUG(fmt_str, ...)   LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_DEBUG, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_DEBUG(fmt_str, ...)      LOGIT_PRINTF_DEBUG(fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_DEBUG(fmt_str, ...)   LOGIT_FORMAT_DEBUG(fmt_str, __VA_ARGS__)
+#endif
 
 // DEBUG macros with index
 #define LOGIT_DEBUG_TO(index, ...)      LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, {}, #__VA_ARGS__, __VA_ARGS__)
@@ -361,6 +441,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_DEBUG_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_DEBUG_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_DEBUG_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_DEBUG_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_DEBUG_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_FMT_WITH_INDEX(logit::LogLevel::LOG_LVL_DEBUG, index, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_DEBUG_TO(index, fmt_str, ...) LOGIT_PRINTF_DEBUG_TO(index, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_DEBUG_TO(index, fmt_str, ...) LOGIT_FORMAT_DEBUG_TO(index, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_DEBUG(...)                do { } while (0)
 #define LOGIT_DEBUG0()                  do { } while (0)
@@ -390,6 +477,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_WARN(fmt, ...)     LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_WARN(...)           LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_WARN, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_WARN(fmt, ...)     LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_WARN(fmt_str, ...)       LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_WARN(fmt_str, ...)    LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_WARN, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_WARN(fmt_str, ...)       LOGIT_PRINTF_WARN(fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_WARN(fmt_str, ...)    LOGIT_FORMAT_WARN(fmt_str, __VA_ARGS__)
+#endif
 
 // WARN macros with index
 #define LOGIT_WARN_TO(index, ...)       LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, {}, #__VA_ARGS__, __VA_ARGS__)
@@ -400,6 +494,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_WARN_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_WARN_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_WARN_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_WARN_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_WARN_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_FMT_WITH_INDEX(logit::LogLevel::LOG_LVL_WARN, index, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_WARN_TO(index, fmt_str, ...) LOGIT_PRINTF_WARN_TO(index, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_WARN_TO(index, fmt_str, ...) LOGIT_FORMAT_WARN_TO(index, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_WARN(...)                 do { } while (0)
 #define LOGIT_WARN0()                   do { } while (0)
@@ -429,6 +530,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_ERROR(fmt, ...)    LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_ERROR(...)          LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_ERROR, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_ERROR(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_ERROR(fmt_str, ...)      LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_ERROR(fmt_str, ...)   LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_ERROR, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_ERROR(fmt_str, ...)      LOGIT_PRINTF_ERROR(fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_ERROR(fmt_str, ...)   LOGIT_FORMAT_ERROR(fmt_str, __VA_ARGS__)
+#endif
 
 // ERROR macros with index
 #define LOGIT_ERROR_TO(index, ...)      LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, {}, #__VA_ARGS__, __VA_ARGS__)
@@ -439,6 +547,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_ERROR_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_ERROR_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_ERROR_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_ERROR_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_ERROR_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_FMT_WITH_INDEX(logit::LogLevel::LOG_LVL_ERROR, index, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_ERROR_TO(index, fmt_str, ...) LOGIT_PRINTF_ERROR_TO(index, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_ERROR_TO(index, fmt_str, ...) LOGIT_FORMAT_ERROR_TO(index, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_ERROR(...)                do { } while (0)
 #define LOGIT_ERROR0()                  do { } while (0)
@@ -468,6 +583,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_FATAL(fmt, ...)    LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_FATAL(...)          LOGIT_LOG_AND_RETURN_PRINT(logit::LogLevel::LOG_LVL_FATAL, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_FATAL(fmt, ...)    LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_FATAL(fmt_str, ...)      LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_FATAL(fmt_str, ...)   LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_FATAL, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_FATAL(fmt_str, ...)      LOGIT_PRINTF_FATAL(fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_FATAL(fmt_str, ...)   LOGIT_FORMAT_FATAL(fmt_str, __VA_ARGS__)
+#endif
 
 // FATAL macros with index
 #define LOGIT_FATAL_TO(index, ...)      LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, {}, #__VA_ARGS__, __VA_ARGS__)
@@ -478,6 +600,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_FATAL_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_FATAL_TO(index, ...)       LOGIT_LOG_AND_RETURN_PRINT_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINTF_FATAL_TO(index, fmt, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_FATAL_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_NOARGS_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_FATAL_TO(index, fmt_str, ...) LOGIT_LOG_AND_RETURN_FMT_WITH_INDEX(logit::LogLevel::LOG_LVL_FATAL, index, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_FATAL_TO(index, fmt_str, ...) LOGIT_PRINTF_FATAL_TO(index, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_FATAL_TO(index, fmt_str, ...) LOGIT_FORMAT_FATAL_TO(index, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_FATAL(...)                do { } while (0)
 #define LOGIT_FATAL0()                  do { } while (0)
@@ -514,6 +643,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_TRACE_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_TRACE_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, fmt)
 #define LOGIT_PRINTF_TRACE_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_TRACE_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_TRACE_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_TRACE, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_TRACE_IF(condition, fmt_str, ...) LOGIT_PRINTF_TRACE_IF(condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_TRACE_IF(condition, fmt_str, ...) LOGIT_FORMAT_TRACE_IF(condition, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_TRACE_IF(condition, ...)        do { } while (0)
 #define LOGIT_TRACE0_IF(condition)            do { } while (0)
@@ -523,6 +659,12 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_TRACE_IF(condition, fmt, ...) do { } while (0)
 #define LOGIT_PRINT_TRACE_IF(condition, fmt)  do { } while (0)
 #define LOGIT_PRINTF_TRACE_IF(condition, fmt, ...) do { } while (0)
+#define LOGITF_TRACE(fmt_str, ...)      do { } while (0)
+#define LOGIT_FMT_TRACE(fmt_str, ...)   do { } while (0)
+#define LOGITF_TRACE_TO(index, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_TRACE_TO(index, fmt_str, ...) do { } while (0)
+#define LOGITF_TRACE_IF(condition, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_TRACE_IF(condition, fmt_str, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
@@ -535,6 +677,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_INFO_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_INFO_IF(condition, fmt)   if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, fmt)
 #define LOGIT_PRINTF_INFO_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_INFO_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_INFO_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_INFO, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_INFO_IF(condition, fmt_str, ...) LOGIT_PRINTF_INFO_IF(condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_INFO_IF(condition, fmt_str, ...) LOGIT_FORMAT_INFO_IF(condition, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_INFO_IF(condition, ...)         do { } while (0)
 #define LOGIT_INFO0_IF(condition)             do { } while (0)
@@ -544,6 +693,12 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_INFO_IF(condition, fmt, ...) do { } while (0)
 #define LOGIT_PRINT_INFO_IF(condition, fmt)   do { } while (0)
 #define LOGIT_PRINTF_INFO_IF(condition, fmt, ...) do { } while (0)
+#define LOGITF_INFO(fmt_str, ...)       do { } while (0)
+#define LOGIT_FMT_INFO(fmt_str, ...)    do { } while (0)
+#define LOGITF_INFO_TO(index, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_INFO_TO(index, fmt_str, ...) do { } while (0)
+#define LOGITF_INFO_IF(condition, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_INFO_IF(condition, fmt_str, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
@@ -556,6 +711,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_DEBUG_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_DEBUG_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, fmt)
 #define LOGIT_PRINTF_DEBUG_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_DEBUG_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_DEBUG_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_DEBUG, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_DEBUG_IF(condition, fmt_str, ...) LOGIT_PRINTF_DEBUG_IF(condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_DEBUG_IF(condition, fmt_str, ...) LOGIT_FORMAT_DEBUG_IF(condition, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_DEBUG_IF(condition, ...)        do { } while (0)
 #define LOGIT_DEBUG0_IF(condition)            do { } while (0)
@@ -565,6 +727,12 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_DEBUG_IF(condition, fmt, ...) do { } while (0)
 #define LOGIT_PRINT_DEBUG_IF(condition, fmt)  do { } while (0)
 #define LOGIT_PRINTF_DEBUG_IF(condition, fmt, ...) do { } while (0)
+#define LOGITF_DEBUG(fmt_str, ...)      do { } while (0)
+#define LOGIT_FMT_DEBUG(fmt_str, ...)   do { } while (0)
+#define LOGITF_DEBUG_TO(index, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_DEBUG_TO(index, fmt_str, ...) do { } while (0)
+#define LOGITF_DEBUG_IF(condition, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_DEBUG_IF(condition, fmt_str, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
@@ -577,6 +745,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_WARN_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_WARN_IF(condition, fmt)   if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, fmt)
 #define LOGIT_PRINTF_WARN_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_WARN_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_WARN_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_WARN, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_WARN_IF(condition, fmt_str, ...) LOGIT_PRINTF_WARN_IF(condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_WARN_IF(condition, fmt_str, ...) LOGIT_FORMAT_WARN_IF(condition, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_WARN_IF(condition, ...)         do { } while (0)
 #define LOGIT_WARN0_IF(condition)             do { } while (0)
@@ -586,6 +761,12 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_WARN_IF(condition, fmt, ...) do { } while (0)
 #define LOGIT_PRINT_WARN_IF(condition, fmt)   do { } while (0)
 #define LOGIT_PRINTF_WARN_IF(condition, fmt, ...) do { } while (0)
+#define LOGITF_WARN(fmt_str, ...)       do { } while (0)
+#define LOGIT_FMT_WARN(fmt_str, ...)    do { } while (0)
+#define LOGITF_WARN_TO(index, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_WARN_TO(index, fmt_str, ...) do { } while (0)
+#define LOGITF_WARN_IF(condition, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_WARN_IF(condition, fmt_str, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
@@ -598,6 +779,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_ERROR_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_ERROR_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, fmt)
 #define LOGIT_PRINTF_ERROR_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_ERROR_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_ERROR_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_ERROR, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_ERROR_IF(condition, fmt_str, ...) LOGIT_PRINTF_ERROR_IF(condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_ERROR_IF(condition, fmt_str, ...) LOGIT_FORMAT_ERROR_IF(condition, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_ERROR_IF(condition, ...)        do { } while (0)
 #define LOGIT_ERROR0_IF(condition)            do { } while (0)
@@ -607,6 +795,12 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_ERROR_IF(condition, fmt, ...) do { } while (0)
 #define LOGIT_PRINT_ERROR_IF(condition, fmt)  do { } while (0)
 #define LOGIT_PRINTF_ERROR_IF(condition, fmt, ...) do { } while (0)
+#define LOGITF_ERROR(fmt_str, ...)      do { } while (0)
+#define LOGIT_FMT_ERROR(fmt_str, ...)   do { } while (0)
+#define LOGITF_ERROR_TO(index, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_ERROR_TO(index, fmt_str, ...) do { } while (0)
+#define LOGITF_ERROR_IF(condition, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_ERROR_IF(condition, fmt_str, ...) do { } while (0)
 #endif
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
@@ -619,6 +813,13 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, fmt, #__VA_ARGS__, __VA_ARGS__)
 #define LOGIT_PRINT_FATAL_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, fmt)
 #define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, logit::format(fmt, __VA_ARGS__))
+#ifdef LOGIT_WITH_FMT
+#define LOGITF_FATAL_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, fmt::format(fmt_str, __VA_ARGS__))
+#define LOGIT_FMT_FATAL_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_FATAL, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#else
+#define LOGITF_FATAL_IF(condition, fmt_str, ...) LOGIT_PRINTF_FATAL_IF(condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_FATAL_IF(condition, fmt_str, ...) LOGIT_FORMAT_FATAL_IF(condition, fmt_str, __VA_ARGS__)
+#endif
 #else
 #define LOGIT_FATAL_IF(condition, ...)        do { } while (0)
 #define LOGIT_FATAL0_IF(condition)            do { } while (0)
@@ -628,6 +829,12 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_FORMAT_FATAL_IF(condition, fmt, ...) do { } while (0)
 #define LOGIT_PRINT_FATAL_IF(condition, fmt)  do { } while (0)
 #define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) do { } while (0)
+#define LOGITF_FATAL(fmt_str, ...)      do { } while (0)
+#define LOGIT_FMT_FATAL(fmt_str, ...)   do { } while (0)
+#define LOGITF_FATAL_TO(index, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_FATAL_TO(index, fmt_str, ...) do { } while (0)
+#define LOGITF_FATAL_IF(condition, fmt_str, ...) do { } while (0)
+#define LOGIT_FMT_FATAL_IF(condition, fmt_str, ...) do { } while (0)
 #endif
 
 #define LOGIT_ONCE(level, ...)                                                     \

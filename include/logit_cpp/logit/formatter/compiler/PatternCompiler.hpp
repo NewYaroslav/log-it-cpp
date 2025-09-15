@@ -291,14 +291,26 @@ namespace logit {
                             case ValueType::SMART_POINTER_VAL:
                             case ValueType::VARIANT_VAL:
                             case ValueType::OPTIONAL_VAL:
+#ifdef LOGIT_WITH_FMT
+                                temp_stream << (record.fmt_mode ? arg.to_string_fmt(record.format.c_str()) : arg.to_string(record.format.c_str()));
+#else
                                 temp_stream << arg.to_string(record.format.c_str());
+#endif
                                 break;
                             default:
+#ifdef LOGIT_WITH_FMT
+                                if (arg.is_literal) {
+                                    temp_stream << arg.name << ": " << (record.fmt_mode ? arg.to_string_fmt(record.format.c_str()) : arg.to_string(record.format.c_str()));
+                                } else {
+                                    temp_stream << (record.fmt_mode ? arg.to_string_fmt(record.format.c_str()) : arg.to_string(record.format.c_str()));
+                                }
+#else
                                 if (arg.is_literal) {
                                     temp_stream << arg.name << ": " << arg.to_string(record.format.c_str());
                                 } else {
                                     temp_stream << arg.to_string(record.format.c_str());
                                 }
+#endif
                                 break;
                             };
                         }
