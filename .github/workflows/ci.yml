@@ -18,7 +18,7 @@ jobs:
           submodules: true
       - run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=ON -DLOGIT_WITH_WIN_EVENT_LOG=OFF
+        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=ON -DLOGIT_WITH_WIN_EVENT_LOG=OFF
       - name: Build
         run: cmake --build build
       - name: Install
@@ -50,7 +50,7 @@ jobs:
           submodules: true
       - run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=OFF -DLOGIT_WITH_WIN_EVENT_LOG=ON
+        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=OFF -DLOGIT_WITH_WIN_EVENT_LOG=ON
       - name: Build
         run: cmake --build build --config Release
       - name: Install
@@ -82,7 +82,7 @@ jobs:
           submodules: true
       - run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=ON -DLOGIT_WITH_WIN_EVENT_LOG=OFF
+        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=ON -DLOGIT_WITH_WIN_EVENT_LOG=OFF
       - name: Build
         run: cmake --build build
       - name: Install
@@ -111,7 +111,7 @@ jobs:
           submodules: true
       - run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_LINKER_FLAGS='-fsanitize=address,undefined'
+        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_LINKER_FLAGS='-fsanitize=address,undefined'
       - name: Build
         run: cmake --build build
       - name: Test
@@ -127,7 +127,7 @@ jobs:
           submodules: true
       - run: git submodule update --init --recursive
       - name: Configure
-        run: cmake -S . -B build -DLOG_IT_CPP_BUILD_TESTS=ON -DLOGIT_FORCE_ASYNC_OFF=OFF -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=thread' -DCMAKE_LINKER_FLAGS='-fsanitize=thread'
+        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DLOGIT_FORCE_ASYNC_OFF=OFF -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=thread' -DCMAKE_LINKER_FLAGS='-fsanitize=thread'
       - name: Build
         run: cmake --build build
       - name: Test
@@ -198,7 +198,7 @@ jobs:
         run: |
           emcmake cmake -S . -B build-ems \
             -DCMAKE_BUILD_TYPE=Release \
-            -DLOG_IT_CPP_BUILD_TESTS=ON \
+            -DLOGIT_CPP_BUILD_TESTS=ON \
             -DLOGIT_EMSCRIPTEN=ON -DLOGIT_FORCE_ASYNC_OFF=ON
       - name: Build
         run: cmake --build build-ems --target ems_console ems_async_flush -j

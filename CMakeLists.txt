@@ -1,8 +1,18 @@
 cmake_minimum_required(VERSION 3.18)
 project(log-it-cpp VERSION 1.0.0 LANGUAGES CXX)
 
-option(LOG_IT_CPP_BUILD_TESTS "Build log-it-cpp tests" ${PROJECT_IS_TOP_LEVEL})
-option(LOG_IT_CPP_BUILD_EXAMPLES "Build log-it-cpp examples" OFF)
+option(LOGIT_CPP_BUILD_TESTS "Build log-it-cpp tests" ${PROJECT_IS_TOP_LEVEL})
+option(LOGIT_CPP_BUILD_EXAMPLES "Build log-it-cpp examples" OFF)
+
+if(DEFINED LOG_IT_CPP_BUILD_TESTS AND NOT DEFINED LOGIT_CPP_BUILD_TESTS)
+    message(WARNING "LOG_IT_CPP_BUILD_TESTS is deprecated; use LOGIT_CPP_BUILD_TESTS")
+    set(LOGIT_CPP_BUILD_TESTS "${LOG_IT_CPP_BUILD_TESTS}" CACHE BOOL "" FORCE)
+endif()
+
+if(DEFINED LOG_IT_CPP_BUILD_EXAMPLES AND NOT DEFINED LOGIT_CPP_BUILD_EXAMPLES)
+    message(WARNING "LOG_IT_CPP_BUILD_EXAMPLES is deprecated; use LOGIT_CPP_BUILD_EXAMPLES")
+    set(LOGIT_CPP_BUILD_EXAMPLES "${LOG_IT_CPP_BUILD_EXAMPLES}" CACHE BOOL "" FORCE)
+endif()
 option(LOGIT_WITH_GZIP "Enable gzip via zlib" OFF)
 option(LOGIT_WITH_ZSTD "Enable zstd" OFF)
 option(LOGIT_USE_SUBMODULES "Allow bundled third_party fallback" OFF)
@@ -106,12 +116,12 @@ if(DEFINED VCPKG_TARGET_TRIPLET)
     set_property(CACHE LOGIT_USE_SUBMODULES PROPERTY VALUE OFF)
 endif()
 
-if(LOG_IT_CPP_BUILD_TESTS)
+if(LOGIT_CPP_BUILD_TESTS)
     enable_testing()
     add_subdirectory(tests)
 endif()
 
-if(LOG_IT_CPP_BUILD_EXAMPLES)
+if(LOGIT_CPP_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
