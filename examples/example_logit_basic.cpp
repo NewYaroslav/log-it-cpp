@@ -85,6 +85,15 @@ int main() {
     std::string email = "user@example.com";
     LOGIT_TRACE(auth_success, email);
 
+    // Demonstrate macros for controlling log frequency and tagging
+    for (int i = 0; i < 5; ++i) {
+        LOGIT_TRACE_ONCE("Trace once example");
+        LOGIT_TRACE_EVERY_N(2, "Trace every 2 iterations", i);
+        LOGIT_TRACE_THROTTLE(100, "Throttled trace", i);
+        LOGIT_TRACE_TAG(({{"iteration", i}}), "Tagged trace");
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    }
+
     // Log various levels of messages
     float someFloat = 123.456f;
     int someInt = 789;
