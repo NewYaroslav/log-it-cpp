@@ -17,6 +17,8 @@ int main() {
     LOGIT_FORMAT_TRACE("%d", should_not_compile<int>());
     LOGIT_PRINT_TRACE(should_not_compile<int>());
     LOGIT_PRINTF_TRACE("%d", should_not_compile<int>());
+    LOGITF_TRACE("{}", should_not_compile<int>());
+    LOGIT_FMT_TRACE("{}", should_not_compile<int>());
     LOGIT_TRACE_TO(0, should_not_compile<int>());
     LOGIT_TRACE0_TO(0);
     LOGIT_0TRACE_TO(0);
@@ -25,6 +27,8 @@ int main() {
     LOGIT_FORMAT_TRACE_TO(0, "%d", should_not_compile<int>());
     LOGIT_PRINT_TRACE_TO(0, should_not_compile<int>());
     LOGIT_PRINTF_TRACE_TO(0, "%d", should_not_compile<int>());
+    LOGITF_TRACE_TO(0, "{}", should_not_compile<int>());
+    LOGIT_FMT_TRACE_TO(0, "{}", should_not_compile<int>());
     LOGIT_TRACE_IF(false, should_not_compile<int>());
     LOGIT_TRACE0_IF(false);
     LOGIT_0TRACE_IF(false);
@@ -33,6 +37,8 @@ int main() {
     LOGIT_FORMAT_TRACE_IF(false, "%d", should_not_compile<int>());
     LOGIT_PRINT_TRACE_IF(false, should_not_compile<int>());
     LOGIT_PRINTF_TRACE_IF(false, "%d", should_not_compile<int>());
+    LOGITF_TRACE_IF(false, "{}", should_not_compile<int>());
+    LOGIT_FMT_TRACE_IF(false, "{}", should_not_compile<int>());
 
     // DEBUG macros
     LOGIT_DEBUG(should_not_compile<int>());
@@ -43,6 +49,8 @@ int main() {
     LOGIT_FORMAT_DEBUG("%d", should_not_compile<int>());
     LOGIT_PRINT_DEBUG(should_not_compile<int>());
     LOGIT_PRINTF_DEBUG("%d", should_not_compile<int>());
+    LOGITF_DEBUG("{}", should_not_compile<int>());
+    LOGIT_FMT_DEBUG("{}", should_not_compile<int>());
     LOGIT_DEBUG_TO(0, should_not_compile<int>());
     LOGIT_DEBUG0_TO(0);
     LOGIT_0DEBUG_TO(0);
@@ -51,6 +59,8 @@ int main() {
     LOGIT_FORMAT_DEBUG_TO(0, "%d", should_not_compile<int>());
     LOGIT_PRINT_DEBUG_TO(0, should_not_compile<int>());
     LOGIT_PRINTF_DEBUG_TO(0, "%d", should_not_compile<int>());
+    LOGITF_DEBUG_TO(0, "{}", should_not_compile<int>());
+    LOGIT_FMT_DEBUG_TO(0, "{}", should_not_compile<int>());
     LOGIT_DEBUG_IF(false, should_not_compile<int>());
     LOGIT_DEBUG0_IF(false);
     LOGIT_0DEBUG_IF(false);
@@ -59,5 +69,7 @@ int main() {
     LOGIT_FORMAT_DEBUG_IF(false, "%d", should_not_compile<int>());
     LOGIT_PRINT_DEBUG_IF(false, should_not_compile<int>());
     LOGIT_PRINTF_DEBUG_IF(false, "%d", should_not_compile<int>());
+    LOGITF_DEBUG_IF(false, "{}", should_not_compile<int>());
+    LOGIT_FMT_DEBUG_IF(false, "{}", should_not_compile<int>());
     return 0;
 }

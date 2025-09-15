@@ -20,6 +20,9 @@
 #include <optional>
 #include <variant>
 #endif
+#ifdef LOGIT_WITH_FMT
+#include <fmt/format.h>
+#endif
 
 namespace logit {
 
@@ -375,6 +378,44 @@ namespace logit {
             }
             return "unknown";
         }
+
+#ifdef LOGIT_WITH_FMT
+        /// \brief Method to get the value as a formatted string using fmt.
+        /// \param fmt The fmt format string.
+        /// \return Formatted string representation of the value.
+        std::string to_string_fmt(const char* fmt) const {
+            switch (type) {
+                case ValueType::INT8_VAL:    return fmt::format(fmt, pod_value.int8_value);
+                case ValueType::UINT8_VAL:   return fmt::format(fmt, pod_value.uint8_value);
+                case ValueType::INT16_VAL:   return fmt::format(fmt, pod_value.int16_value);
+                case ValueType::UINT16_VAL:  return fmt::format(fmt, pod_value.uint16_value);
+                case ValueType::INT32_VAL:   return fmt::format(fmt, pod_value.int32_value);
+                case ValueType::UINT32_VAL:  return fmt::format(fmt, pod_value.uint32_value);
+                case ValueType::INT64_VAL:   return fmt::format(fmt, pod_value.int64_value);
+                case ValueType::UINT64_VAL:  return fmt::format(fmt, pod_value.uint64_value);
+                case ValueType::BOOL_VAL:    return fmt::format(fmt, pod_value.bool_value);
+                case ValueType::CHAR_VAL:    return fmt::format(fmt, pod_value.char_value);
+                case ValueType::FLOAT_VAL:   return fmt::format(fmt, pod_value.float_value);
+                case ValueType::DOUBLE_VAL:  return fmt::format(fmt, pod_value.double_value);
+                case ValueType::LONG_DOUBLE_VAL: return fmt::format(fmt, static_cast<double>(pod_value.long_double_value));
+                case ValueType::STRING_VAL:
+                case ValueType::EXCEPTION_VAL:
+                case ValueType::ENUM_VAL:
+                case ValueType::PATH_VAL:
+                case ValueType::DURATION_VAL:
+                case ValueType::TIME_POINT_VAL:
+                case ValueType::POINTER_VAL:
+                case ValueType::SMART_POINTER_VAL:
+                case ValueType::VARIANT_VAL:
+                case ValueType::OPTIONAL_VAL:
+                    return fmt::format(fmt, string_value);
+                case ValueType::ERROR_CODE_VAL:
+                    return fmt::format(fmt, error_code_value.message(), error_code_value.value());
+                default: break;
+            }
+            return "unknown";
+        }
+#endif
 
     private:
         /// \brief Helper function to check if a name is a valid literal.

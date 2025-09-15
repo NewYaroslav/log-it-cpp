@@ -26,6 +26,7 @@ namespace logit {
         std::thread::id     thread_id;      ///< ID of the logging thread.
         const int           logger_index;   ///< Logger index (-1 to log to all).
         const bool          print_mode;     ///< Flag to determine whether arguments are printed in a raw format without special symbols.
+        const bool          fmt_mode;       ///< Flag indicating if fmt formatting should be used.
 
         /// \brief Constructor with argument names.
         /// \param log_level Log severity level.
@@ -46,7 +47,8 @@ namespace logit {
             const std::string& format,
             const std::string& arg_names,
             int logger_index,
-            bool print_mode) :
+            bool print_mode,
+            bool fmt_mode = false) :
                 log_level(log_level),
                 timestamp_ms(timestamp_ms),
                 file(file),
@@ -56,7 +58,8 @@ namespace logit {
                 arg_names(arg_names),
                 thread_id(std::this_thread::get_id()),
                 logger_index(logger_index),
-                print_mode(print_mode) {
+                print_mode(print_mode),
+                fmt_mode(fmt_mode) {
         };
     };
 
