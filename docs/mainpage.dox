@@ -46,18 +46,29 @@ LOGIT_PRINT_INFO("TimePoint example: ", now);
 
 \subsection multiple_backends Support for Multiple Backends
 
-Easily configure loggers for output to the console and files. Optionally, add support for sending messages to servers or databases by creating custom backends.
+Easily configure loggers for output to the console, files, or system logging facilities. Optionally, add support for sending messages to servers or databases by creating custom backends.
 
 \code{.cpp}
-// Adding three backends: console, file, and unique file loggers
+// Adding several backends: console, file, unique file and system loggers
 LOGIT_ADD_CONSOLE_DEFAULT();
 LOGIT_ADD_FILE_LOGGER_DEFAULT();
 LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE();
+LOGIT_ADD_SYSLOG_DEFAULT();
+LOGIT_ADD_EVENT_LOG_DEFAULT();
 \endcode
 
 \subsection async_logging Asynchronous Logging
 
 Improve application performance with asynchronous logging. All loggers handle messages in a separate thread by default.
+
+\subsection buffer_modes Queue Buffer Modes
+
+Control how the asynchronous queue behaves when full by setting a queue policy.
+\code{.cpp}
+LOGIT_SET_MAX_QUEUE(64);
+LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_BLOCK); // Block when full
+\endcode
+Available policies: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST`, `LOGIT_QUEUE_BLOCK`.
 
 \subsection stream_logging Stream-Based Logging
 

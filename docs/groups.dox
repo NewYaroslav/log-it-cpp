@@ -35,10 +35,11 @@ if (LOGIT_IS_LOGGER_ENABLED(1)) {
 \endcode
 
 \par Task Executor Configuration
-Use `LOGIT_QUEUE_DROP` or `LOGIT_QUEUE_BLOCK` with `LOGIT_SET_QUEUE_POLICY`.
+Use `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST`, or `LOGIT_QUEUE_BLOCK`
+with `LOGIT_SET_QUEUE_POLICY`.
 \code
 LOGIT_SET_MAX_QUEUE(64); // Limit queue size
-LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP); // Drop tasks when full
+LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP_OLDEST); // Drop oldest task when full
 \endcode
 */
 
@@ -72,4 +73,7 @@ log messages are processed and stored:
 - \b ConsoleLogger: Outputs logs to the console with optional color coding.
 - \b FileLogger: Logs messages to files with date-based rotation and old file deletion.
 - \b UniqueFileLogger: Writes each log message to a unique file with automatic cleanup.
+- \b SyslogLogger: Sends log messages to the POSIX syslog service.
+- \b EventLogLogger: Writes logs to the Windows Event Log.
+- \b SystemLogger: Alias that maps to the platform's system logger.
 */
