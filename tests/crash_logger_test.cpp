@@ -26,11 +26,11 @@ namespace logit_test {
 
 #ifdef _WIN32
 #    define private public
-#    include <logit_cpp/logit/loggers/CrashWindowsLogger.hpp>
+#    include <logit/loggers/CrashWindowsLogger.hpp>
 #    undef private
 #else
 #    define private public
-#    include <logit_cpp/logit/loggers/CrashPosixLogger.hpp>
+#    include <logit/loggers/CrashPosixLogger.hpp>
 #    undef private
 #endif
 
