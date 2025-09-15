@@ -1,3 +1,4 @@
+#define LOGIT_COMPILED_LEVEL LOGIT_LEVEL_TRACE
 #include <LogIt.hpp>
 #include <thread>
 #include <chrono>
