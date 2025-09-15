@@ -28,8 +28,8 @@ try {
 
 - **Логирование с использованием макросов**: 
 
-Легко логируйте переменные и сообщения с помощью макросов. Просто выберите подходящий макрос и передайте переменные или аргументы.
-	
+Легко логируйте переменные и сообщения с помощью макросов. Просто выберите подходящий макрос и передайте переменные или аргументы. Для printf-подобного форматирования используйте `LOGIT_FORMAT_<LEVEL>`.
+
 ```
 float someFloat = 123.456f;
 int someInt = 789;
@@ -37,9 +37,26 @@ LOGIT_INFO(someFloat, someInt);
 
 auto now = std::chrono::system_clock::now();
 LOGIT_PRINT_INFO("TimePoint example: ", now);
+LOGIT_FORMAT_INFO("%s: %d", "status", 200); // printf-подобное форматирование
 ```
 
-- **Поддержка нескольких бэкендов**: 
+- **Фильтры и ограничение частоты логов**:
+
+Сократите шум от повторяющихся сообщений с помощью макросов `LOGIT_WARN_ONCE`,
+`LOGIT_INFO_EVERY_N` и `LOGIT_ERROR_THROTTLE`. Макросы с суффиксом
+`_THROTTLE` (например, `LOGIT_INFO_THROTTLE`) ограничивают вывод одним
+сообщением за заданный промежуток времени.
+
+```cpp
+for (int i = 0; i < 10; ++i) {
+    LOGIT_WARN_ONCE("initializing");                    // выводится один раз
+    LOGIT_INFO_EVERY_N(3, "heartbeat", i);              // каждое 3-е сообщение
+    LOGIT_ERROR_THROTTLE(200, "repeated error");        // не чаще 1 раза/200 мс
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+}
+```
+
+- **Поддержка нескольких бэкендов**:
 
 Легко настройте логгеры для вывода в консоль и файлы. При необходимости добавьте отправку сообщений на сервер или в базу данных, создавая собственные бэкенды.
 
@@ -87,6 +104,55 @@ public:
 
 LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 ```
+
+## Справочник макросов
+
+| Шаблон макроса | Описание |
+| --------------- | -------- |
+| `LOGIT_<LEVEL>(...)` | Логирование с указанным уровнем (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). |
+| `LOGIT_PRINT_<LEVEL>(...)` | Логирование заранее сформированной строки или сообщения, собранного через потоки. |
+| `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | printf-подобное форматирование с форматной строкой и аргументами. |
+| `LOGIT_STREAM_<LEVEL>()` | Потоковое логирование через `<<`; короткие версии `LOG_S_<LEVEL>()` доступны при определении `LOGIT_SHORT_NAME`. |
+| `LOGIT_<LEVEL>_IF(condition, ...)` | Логирование только если условие истинно. |
+| `LOGIT_<LEVEL>_ONCE(...)` | Логирование только при первом вызове. |
+| `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Логирование каждого `n`-го вызова. |
+| `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Логирование не чаще одного раза за `period_ms` миллисекунд. |
+| `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Добавление к сообщению пар ключ-значение. |
+
+### Макросы конфигурации
+
+| Макрос | Описание |
+| ------ | -------- |
+| `LOGIT_BASE_PATH` | Базовый путь, который обрезается из `__FILE__` в сообщениях. |
+| `LOGIT_DEFAULT_COLOR` | Цвет вывода в консоль по умолчанию. |
+| `LOGIT_COLOR_<LEVEL>` | Цвет для каждого уровня логирования. |
+| `LOGIT_CONSOLE_PATTERN` | Паттерн форматирования вывода в консоль по умолчанию. |
+| `LOGIT_FILE_LOGGER_PATH` | Каталог для файловых логов. |
+| `LOGIT_UNIQUE_FILE_LOGGER_PATH` | Каталог для логов по одному сообщению в файл. |
+| `LOGIT_TAGS_JOIN` | Разделитель между сообщением и списком тегов. |
+
+### Функциональные макросы
+
+| Макрос | Описание |
+| ------ | -------- |
+| `LOGIT_SET_MAX_QUEUE(size)` | Устанавливает размер очереди задач (0 — без ограничений). |
+| `LOGIT_SET_QUEUE_POLICY(mode)` | Поведение при переполнении: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST` или `LOGIT_QUEUE_BLOCK`. |
+| `LOGIT_SET_LOG_LEVEL_TO(index, level)` | Задает минимальный уровень для конкретного логгера. |
+| `LOGIT_SET_LOG_LEVEL(level)` | Задает минимальный уровень для всех логгеров. |
+| `LOGIT_SET_LOGGER_ENABLED(index, enabled)` | Включает или отключает логгер. |
+| `LOGIT_IS_LOGGER_ENABLED(index)` | Проверяет, включен ли логгер. |
+| `LOGIT_SET_SINGLE_MODE(index, single_mode)` | Включает режим «один файл — одно сообщение». |
+| `LOGIT_IS_SINGLE_MODE(index)` | Проверяет, активен ли режим «один файл — одно сообщение». |
+| `LOGIT_SET_TIME_OFFSET(index, offset_ms)` | Сдвигает временную метку логгера. |
+| `LOGIT_GET_STRING_PARAM(index, param)` | Получает строковый параметр логгера. |
+| `LOGIT_GET_INT_PARAM(index, param)` | Получает целочисленный параметр логгера. |
+| `LOGIT_GET_FLOAT_PARAM(index, param)` | Получает параметр с плавающей точкой. |
+| `LOGIT_GET_LAST_FILE_NAME(index)` | Имя последнего файла, в который писал логгер. |
+| `LOGIT_GET_LAST_FILE_PATH(index)` | Путь к последнему файлу логгера. |
+| `LOGIT_GET_LAST_LOG_TIMESTAMP(index)` | Метка времени последнего лога. |
+| `LOGIT_GET_TIME_SINCE_LAST_LOG(index)` | Время с последнего лога (в секундах). |
+| `LOGIT_WAIT()` | Ожидает завершения всех асинхронных логгеров. |
+| `LOGIT_SHUTDOWN()` | Завершает работу системы логирования. |
 
 ---
 
