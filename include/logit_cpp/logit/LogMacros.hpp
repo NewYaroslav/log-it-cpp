@@ -28,6 +28,8 @@
 #define LOGIT_LEVEL_WARN  3
 #define LOGIT_LEVEL_ERROR 4
 #define LOGIT_LEVEL_FATAL 5
+#define LOGIT_CONCAT_IMPL(x, y) x##y
+#define LOGIT_CONCAT(x, y) LOGIT_CONCAT_IMPL(x, y)
 
 #ifdef _LOGIT_ENUMS_HPP_INCLUDED
 static_assert(LOGIT_LEVEL_TRACE == static_cast<int>(logit::LogLevel::LOG_LVL_TRACE));
@@ -614,6 +616,61 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_PRINT_FATAL_IF(condition, fmt)  do { } while (0)
 #define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) do { } while (0)
 #endif
+
+#define LOGIT_ONCE(level, ...)                                                     \
+    do {                                                                          \
+        static bool LOGIT_CONCAT(_logit_once_, __LINE__) = false;                 \
+        if (!LOGIT_CONCAT(_logit_once_, __LINE__)) {                              \
+            LOGIT_CONCAT(_logit_once_, __LINE__) = true;                          \
+            LOGIT_LOG_AND_RETURN(level, {}, #__VA_ARGS__, __VA_ARGS__);           \
+        }                                                                         \
+    } while (0)
+
+#define LOGIT_EVERY_N(level, n, ...)                                              \
+    do {                                                                          \
+        static unsigned LOGIT_CONCAT(_logit_count_, __LINE__) = 0;                \
+        if (++LOGIT_CONCAT(_logit_count_, __LINE__) % (n) == 0) {                 \
+            LOGIT_LOG_AND_RETURN(level, {}, #__VA_ARGS__, __VA_ARGS__);           \
+        }                                                                         \
+    } while (0)
+
+#define LOGIT_THROTTLE(level, period_ms, ...)                                     \
+    do {                                                                          \
+        static int64_t LOGIT_CONCAT(_logit_last_, __LINE__) = 0;                  \
+        int64_t _logit_now = LOGIT_CURRENT_TIMESTAMP_MS();                        \
+        if (_logit_now - LOGIT_CONCAT(_logit_last_, __LINE__) >= (period_ms)) {   \
+            LOGIT_CONCAT(_logit_last_, __LINE__) = _logit_now;                    \
+            LOGIT_LOG_AND_RETURN(level, {}, #__VA_ARGS__, __VA_ARGS__);           \
+        }                                                                         \
+    } while (0)
+
+#define LOGIT_TRACE_ONCE(...)          LOGIT_ONCE(logit::LogLevel::LOG_LVL_TRACE, __VA_ARGS__)
+#define LOGIT_DEBUG_ONCE(...)          LOGIT_ONCE(logit::LogLevel::LOG_LVL_DEBUG, __VA_ARGS__)
+#define LOGIT_INFO_ONCE(...)           LOGIT_ONCE(logit::LogLevel::LOG_LVL_INFO, __VA_ARGS__)
+#define LOGIT_WARN_ONCE(...)           LOGIT_ONCE(logit::LogLevel::LOG_LVL_WARN, __VA_ARGS__)
+#define LOGIT_ERROR_ONCE(...)          LOGIT_ONCE(logit::LogLevel::LOG_LVL_ERROR, __VA_ARGS__)
+#define LOGIT_FATAL_ONCE(...)          LOGIT_ONCE(logit::LogLevel::LOG_LVL_FATAL, __VA_ARGS__)
+
+#define LOGIT_TRACE_EVERY_N(n, ...)    LOGIT_EVERY_N(logit::LogLevel::LOG_LVL_TRACE, n, __VA_ARGS__)
+#define LOGIT_DEBUG_EVERY_N(n, ...)    LOGIT_EVERY_N(logit::LogLevel::LOG_LVL_DEBUG, n, __VA_ARGS__)
+#define LOGIT_INFO_EVERY_N(n, ...)     LOGIT_EVERY_N(logit::LogLevel::LOG_LVL_INFO, n, __VA_ARGS__)
+#define LOGIT_WARN_EVERY_N(n, ...)     LOGIT_EVERY_N(logit::LogLevel::LOG_LVL_WARN, n, __VA_ARGS__)
+#define LOGIT_ERROR_EVERY_N(n, ...)    LOGIT_EVERY_N(logit::LogLevel::LOG_LVL_ERROR, n, __VA_ARGS__)
+#define LOGIT_FATAL_EVERY_N(n, ...)    LOGIT_EVERY_N(logit::LogLevel::LOG_LVL_FATAL, n, __VA_ARGS__)
+
+#define LOGIT_TRACE_THROTTLE(p, ...)   LOGIT_THROTTLE(logit::LogLevel::LOG_LVL_TRACE, p, __VA_ARGS__)
+#define LOGIT_DEBUG_THROTTLE(p, ...)   LOGIT_THROTTLE(logit::LogLevel::LOG_LVL_DEBUG, p, __VA_ARGS__)
+#define LOGIT_INFO_THROTTLE(p, ...)    LOGIT_THROTTLE(logit::LogLevel::LOG_LVL_INFO, p, __VA_ARGS__)
+#define LOGIT_WARN_THROTTLE(p, ...)    LOGIT_THROTTLE(logit::LogLevel::LOG_LVL_WARN, p, __VA_ARGS__)
+#define LOGIT_ERROR_THROTTLE(p, ...)   LOGIT_THROTTLE(logit::LogLevel::LOG_LVL_ERROR, p, __VA_ARGS__)
+#define LOGIT_FATAL_THROTTLE(p, ...)   LOGIT_THROTTLE(logit::LogLevel::LOG_LVL_FATAL, p, __VA_ARGS__)
+
+#define LOGIT_TRACE_TAG(tags, msg)     LOGIT_PRINT_TRACE((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
+#define LOGIT_DEBUG_TAG(tags, msg)     LOGIT_PRINT_DEBUG((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
+#define LOGIT_INFO_TAG(tags, msg)      LOGIT_PRINT_INFO((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
+#define LOGIT_WARN_TAG(tags, msg)      LOGIT_PRINT_WARN((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
+#define LOGIT_ERROR_TAG(tags, msg)     LOGIT_PRINT_ERROR((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
+#define LOGIT_FATAL_TAG(tags, msg)     LOGIT_PRINT_FATAL((std::string(msg) + logit::detail::format_tags(logit::detail::make_tags(tags))))
 
 //------------------------------------------------------------------------------
 // Shorter versions of the macros when LOGIT_SHORT_NAME is defined

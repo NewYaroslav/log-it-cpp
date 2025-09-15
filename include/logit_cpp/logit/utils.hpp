@@ -16,5 +16,6 @@
 #include "utils/encoding_utils.hpp"
 #include "utils/path_utils.hpp"
 #include "utils/LogRecord.hpp"
+#include "utils/tag_utils.hpp"
 
 #endif // _LOGIT_UTILS_HPP_INCLUDED
