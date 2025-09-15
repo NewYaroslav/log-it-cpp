@@ -40,7 +40,10 @@ try {
 
  - **Macro-Based Logging**:
 
-Easily log variables and messages using macros. Simply choose the appropriate macro and pass variables or arguments to it. Use `LOGIT_FORMAT_<LEVEL>` for printf-style formatting.
+Easily log variables and messages using macros. Choose the macro that matches the desired formatting style:
+
+* `LOGIT_PRINTF_<LEVEL>` mimics `printf`, where the format string controls each argument.
+* `LOGIT_FORMAT_<LEVEL>` applies the same format to every argument in the list.
 
 ```
 float someFloat = 123.456f;
@@ -49,7 +52,8 @@ LOGIT_INFO(someFloat, someInt);
 
 auto now = std::chrono::system_clock::now();
 LOGIT_PRINT_INFO("TimePoint example: ", now);
-LOGIT_FORMAT_INFO("%s: %d", "status", 200); // printf-style
+LOGIT_PRINTF_INFO("%.2f %d", someFloat, someInt); // printf-style
+LOGIT_FORMAT_INFO("%.2f", someFloat, 654.321f);   // same format for all args
 ```
 
 - **Log Filters and Throttling**:
@@ -439,7 +443,6 @@ LogIt++ provides several macros that allow for customization and configuration. 
 
 - **LOGIT_SHORT_NAME**: Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for more concise logging statements.
 
-- **LOGIT_USE_FMT_LIB**: Enables the use of the fmt library for string formatting.
 
 ---
 
@@ -511,7 +514,8 @@ public:
 | ------------- | ----------- |
 | `LOGIT_<LEVEL>(...)` | Log a message with the given level (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). |
 | `LOGIT_PRINT_<LEVEL>(...)` | Log a pre-formatted string or stream-built message. |
-| `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | printf-style formatting with a format string and arguments. |
+| `LOGIT_PRINTF_<LEVEL>(fmt, ...)` | `printf`-style formatting with placeholders for each argument. |
+| `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | Apply the same format string to every argument. |
 | `LOGIT_STREAM_<LEVEL>()` | Stream-style logging with `<<` operators; short aliases `LOG_S_<LEVEL>()` when `LOGIT_SHORT_NAME` is defined. |
 | `LOGIT_<LEVEL>_IF(condition, ...)` | Log only when `condition` is true. |
 | `LOGIT_<LEVEL>_ONCE(...)` | Log only the first time the macro is executed. |
@@ -576,13 +580,9 @@ git clone --recurse-submodules https://github.com/NewYaroslav/log-it-cpp.git
 LogIt++ depends on **time-shield-cpp**, which is located in the `libs` folder as a submodule. Ensure that the path to `libs\time-shield-cpp\include` is added to your project's include directories.
 If you are using an IDE like **Visual Studio** or **CLion**, you can add the include path in the project settings.
 
-4. (Optional) Enable fmt support:
+4. (Optional) Enable fmt-style macros:
 
-LogIt++ supports the *fmt* library for advanced string formatting, which is also included as a submodule. To enable *fmt* in LogIt++, define the macro `LOGIT_USE_FMT_LIB` in your project:
-
-```cpp
-#define LOGIT_USE_FMT_LIB
-```
+LogIt++ includes the *fmt* library for `{}`-based formatting. To use the `LOGIT_FMT_*` and `LOGIT_SCOPE_FMT_*` macros, build the library with the CMake option `-DLOGIT_WITH_FMT=ON`.
 
 ## System Backends
 
