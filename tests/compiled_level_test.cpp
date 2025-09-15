@@ -39,6 +39,10 @@ int main() {
     LOGIT_PRINTF_TRACE_IF(false, "%d", should_not_compile<int>());
     LOGITF_TRACE_IF(false, "{}", should_not_compile<int>());
     LOGIT_FMT_TRACE_IF(false, "{}", should_not_compile<int>());
+    LOGIT_SCOPE_TRACE(should_not_compile<int>());
+    LOGIT_SCOPE_TRACE_T(0, should_not_compile<int>());
+    LOGIT_SCOPE_FMT_TRACE("{}", should_not_compile<int>());
+    LOGIT_SCOPE_FMT_TRACE_T(0, "{}", should_not_compile<int>());
 
     // DEBUG macros
     LOGIT_DEBUG(should_not_compile<int>());
@@ -71,5 +75,9 @@ int main() {
     LOGIT_PRINTF_DEBUG_IF(false, "%d", should_not_compile<int>());
     LOGITF_DEBUG_IF(false, "{}", should_not_compile<int>());
     LOGIT_FMT_DEBUG_IF(false, "{}", should_not_compile<int>());
+    LOGIT_SCOPE_DEBUG(should_not_compile<int>());
+    LOGIT_SCOPE_DEBUG_T(0, should_not_compile<int>());
+    LOGIT_SCOPE_FMT_DEBUG("{}", should_not_compile<int>());
+    LOGIT_SCOPE_FMT_DEBUG_T(0, "{}", should_not_compile<int>());
     return 0;
 }
