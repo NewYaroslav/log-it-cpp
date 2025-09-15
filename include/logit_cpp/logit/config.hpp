@@ -168,6 +168,17 @@
 
 /// \}
 
+/// \name Task executor settings
+/// Configuration options for the task executor implementation.
+/// \{
+
+/// \brief Default capacity for the task executor ring buffer when unlimited is requested.
+#ifndef LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY
+#define LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY 1024
+#endif
+
+/// \}
+
 
 /// \}
 
