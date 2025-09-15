@@ -837,19 +837,75 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 /// Macros for logging based on conditions.
 /// \{
 
+#define LOGIT_DETAIL_CONDITIONAL_CALL(condition, expression)                                  \
+    do {                                                                                      \
+        if (condition)                                                                        \
+            expression;                                                                       \
+    } while (0)
+
+#define LOGIT_DETAIL_CONDITIONAL(level, condition, ...)                                       \
+    LOGIT_DETAIL_CONDITIONAL_CALL(                                                            \
+        condition,                                                                            \
+        LOGIT_LOG_AND_RETURN(level, {}, #__VA_ARGS__, __VA_ARGS__))
+
+#define LOGIT_DETAIL_CONDITIONAL_NOARGS(level, condition)                                     \
+    LOGIT_DETAIL_CONDITIONAL_CALL(condition, LOGIT_LOG_AND_RETURN_NOARGS(level, {}))
+
+#define LOGIT_DETAIL_CONDITIONAL_FORMAT(level, condition, fmt, ...)                           \
+    LOGIT_DETAIL_CONDITIONAL_CALL(                                                            \
+        condition,                                                                            \
+        LOGIT_LOG_AND_RETURN(level, fmt, #__VA_ARGS__, __VA_ARGS__))
+
+#define LOGIT_DETAIL_CONDITIONAL_PRINT(level, condition, ...)                                 \
+    LOGIT_DETAIL_CONDITIONAL_CALL(                                                            \
+        condition,                                                                            \
+        LOGIT_LOG_AND_RETURN_PRINT(level, #__VA_ARGS__, __VA_ARGS__))
+
+#define LOGIT_DETAIL_CONDITIONAL_PRINTF(level, condition, fmt, ...)                           \
+    LOGIT_DETAIL_CONDITIONAL_CALL(                                                            \
+        condition,                                                                            \
+        LOGIT_LOG_AND_RETURN_NOARGS(level, logit::format(fmt, __VA_ARGS__)))
+
+#ifdef LOGIT_WITH_FMT
+#define LOGIT_DETAIL_CONDITIONAL_FMT_STRING(level, condition, fmt_str, ...)                   \
+    LOGIT_DETAIL_CONDITIONAL_CALL(                                                            \
+        condition,                                                                            \
+        LOGIT_LOG_AND_RETURN_NOARGS(level, fmt::format(fmt_str, __VA_ARGS__)))
+
+#define LOGIT_DETAIL_CONDITIONAL_FMT(level, condition, fmt_str, ...)                          \
+    LOGIT_DETAIL_CONDITIONAL_CALL(                                                            \
+        condition,                                                                            \
+        LOGIT_LOG_AND_RETURN_FMT(level, fmt_str, #__VA_ARGS__, __VA_ARGS__))
+#endif
+
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
 // TRACE level conditional macros
-#define LOGIT_TRACE_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, {}, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_TRACE0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
-#define LOGIT_0TRACE_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
-#define LOGIT_0_TRACE_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
-#define LOGIT_NOARGS_TRACE_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, {})
-#define LOGIT_FORMAT_TRACE_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_TRACE, fmt, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_PRINT_TRACE_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, fmt)
-#define LOGIT_PRINTF_TRACE_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, logit::format(fmt, __VA_ARGS__))
+#define LOGIT_TRACE_IF(condition, ...)                                           \
+    LOGIT_DETAIL_CONDITIONAL(logit::LogLevel::LOG_LVL_TRACE, condition, __VA_ARGS__)
+#define LOGIT_TRACE0_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_TRACE, condition)
+#define LOGIT_0TRACE_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_TRACE, condition)
+#define LOGIT_0_TRACE_IF(condition)                                              \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_TRACE, condition)
+#define LOGIT_NOARGS_TRACE_IF(condition)                                         \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_TRACE, condition)
+#define LOGIT_FORMAT_TRACE_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_FORMAT(                                             \
+        logit::LogLevel::LOG_LVL_TRACE, condition, fmt, __VA_ARGS__)
+#define LOGIT_PRINT_TRACE_IF(condition, ...)                                     \
+    LOGIT_DETAIL_CONDITIONAL_PRINT(                                              \
+        logit::LogLevel::LOG_LVL_TRACE, condition, __VA_ARGS__)
+#define LOGIT_PRINTF_TRACE_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_PRINTF(                                             \
+        logit::LogLevel::LOG_LVL_TRACE, condition, fmt, __VA_ARGS__)
 #ifdef LOGIT_WITH_FMT
-#define LOGITF_TRACE_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_TRACE, fmt::format(fmt_str, __VA_ARGS__))
-#define LOGIT_FMT_TRACE_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_TRACE, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#define LOGITF_TRACE_IF(condition, fmt_str, ...)                                 \
+    LOGIT_DETAIL_CONDITIONAL_FMT_STRING(                                         \
+        logit::LogLevel::LOG_LVL_TRACE, condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_TRACE_IF(condition, fmt_str, ...)                              \
+    LOGIT_DETAIL_CONDITIONAL_FMT(                                                \
+        logit::LogLevel::LOG_LVL_TRACE, condition, fmt_str, __VA_ARGS__)
 #else
 #define LOGITF_TRACE_IF(condition, fmt_str, ...) LOGIT_PRINTF_TRACE_IF(condition, fmt_str, __VA_ARGS__)
 #define LOGIT_FMT_TRACE_IF(condition, fmt_str, ...) LOGIT_FORMAT_TRACE_IF(condition, fmt_str, __VA_ARGS__)
@@ -861,7 +917,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_0_TRACE_IF(condition)           do { } while (0)
 #define LOGIT_NOARGS_TRACE_IF(condition)      do { } while (0)
 #define LOGIT_FORMAT_TRACE_IF(condition, fmt, ...) do { } while (0)
-#define LOGIT_PRINT_TRACE_IF(condition, fmt)  do { } while (0)
+#define LOGIT_PRINT_TRACE_IF(condition, ...)  do { } while (0)
 #define LOGIT_PRINTF_TRACE_IF(condition, fmt, ...) do { } while (0)
 #define LOGITF_TRACE(fmt_str, ...)      do { } while (0)
 #define LOGIT_FMT_TRACE(fmt_str, ...)   do { } while (0)
@@ -873,32 +929,47 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
 // INFO level conditional macros
-#define LOGIT_INFO_IF(condition, ...)         if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, {}, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_INFO0_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
-#define LOGIT_0INFO_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
-#define LOGIT_0_INFO_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
-#define LOGIT_NOARGS_INFO_IF(condition)       if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, {})
-#define LOGIT_FORMAT_INFO_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_INFO, fmt, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_PRINT_INFO_IF(condition, fmt)   if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, fmt)
-#define LOGIT_PRINTF_INFO_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, logit::format(fmt, __VA_ARGS__))
+#define LOGIT_INFO_IF(condition, ...)                                           \
+    LOGIT_DETAIL_CONDITIONAL(logit::LogLevel::LOG_LVL_INFO, condition, __VA_ARGS__)
+#define LOGIT_INFO0_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_INFO, condition)
+#define LOGIT_0INFO_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_INFO, condition)
+#define LOGIT_0_INFO_IF(condition)                                              \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_INFO, condition)
+#define LOGIT_NOARGS_INFO_IF(condition)                                         \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_INFO, condition)
+#define LOGIT_FORMAT_INFO_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_FORMAT(                                             \
+        logit::LogLevel::LOG_LVL_INFO, condition, fmt, __VA_ARGS__)
+#define LOGIT_PRINT_INFO_IF(condition, ...)                                     \
+    LOGIT_DETAIL_CONDITIONAL_PRINT(                                              \
+        logit::LogLevel::LOG_LVL_INFO, condition, __VA_ARGS__)
+#define LOGIT_PRINTF_INFO_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_PRINTF(                                             \
+        logit::LogLevel::LOG_LVL_INFO, condition, fmt, __VA_ARGS__)
 #ifdef LOGIT_WITH_FMT
-#define LOGITF_INFO_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_INFO, fmt::format(fmt_str, __VA_ARGS__))
-#define LOGIT_FMT_INFO_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_INFO, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#define LOGITF_INFO_IF(condition, fmt_str, ...)                                 \
+    LOGIT_DETAIL_CONDITIONAL_FMT_STRING(                                         \
+        logit::LogLevel::LOG_LVL_INFO, condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_INFO_IF(condition, fmt_str, ...)                              \
+    LOGIT_DETAIL_CONDITIONAL_FMT(                                                \
+        logit::LogLevel::LOG_LVL_INFO, condition, fmt_str, __VA_ARGS__)
 #else
 #define LOGITF_INFO_IF(condition, fmt_str, ...) LOGIT_PRINTF_INFO_IF(condition, fmt_str, __VA_ARGS__)
 #define LOGIT_FMT_INFO_IF(condition, fmt_str, ...) LOGIT_FORMAT_INFO_IF(condition, fmt_str, __VA_ARGS__)
 #endif
 #else
-#define LOGIT_INFO_IF(condition, ...)         do { } while (0)
-#define LOGIT_INFO0_IF(condition)             do { } while (0)
-#define LOGIT_0INFO_IF(condition)             do { } while (0)
-#define LOGIT_0_INFO_IF(condition)            do { } while (0)
-#define LOGIT_NOARGS_INFO_IF(condition)       do { } while (0)
+#define LOGIT_INFO_IF(condition, ...)        do { } while (0)
+#define LOGIT_INFO0_IF(condition)            do { } while (0)
+#define LOGIT_0INFO_IF(condition)            do { } while (0)
+#define LOGIT_0_INFO_IF(condition)           do { } while (0)
+#define LOGIT_NOARGS_INFO_IF(condition)      do { } while (0)
 #define LOGIT_FORMAT_INFO_IF(condition, fmt, ...) do { } while (0)
-#define LOGIT_PRINT_INFO_IF(condition, fmt)   do { } while (0)
+#define LOGIT_PRINT_INFO_IF(condition, ...)  do { } while (0)
 #define LOGIT_PRINTF_INFO_IF(condition, fmt, ...) do { } while (0)
-#define LOGITF_INFO(fmt_str, ...)       do { } while (0)
-#define LOGIT_FMT_INFO(fmt_str, ...)    do { } while (0)
+#define LOGITF_INFO(fmt_str, ...)      do { } while (0)
+#define LOGIT_FMT_INFO(fmt_str, ...)   do { } while (0)
 #define LOGITF_INFO_TO(index, fmt_str, ...) do { } while (0)
 #define LOGIT_FMT_INFO_TO(index, fmt_str, ...) do { } while (0)
 #define LOGITF_INFO_IF(condition, fmt_str, ...) do { } while (0)
@@ -907,17 +978,32 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
 // DEBUG level conditional macros
-#define LOGIT_DEBUG_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, {}, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_DEBUG0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
-#define LOGIT_0DEBUG_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
-#define LOGIT_0_DEBUG_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
-#define LOGIT_NOARGS_DEBUG_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, {})
-#define LOGIT_FORMAT_DEBUG_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_DEBUG, fmt, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_PRINT_DEBUG_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, fmt)
-#define LOGIT_PRINTF_DEBUG_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, logit::format(fmt, __VA_ARGS__))
+#define LOGIT_DEBUG_IF(condition, ...)                                           \
+    LOGIT_DETAIL_CONDITIONAL(logit::LogLevel::LOG_LVL_DEBUG, condition, __VA_ARGS__)
+#define LOGIT_DEBUG0_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, condition)
+#define LOGIT_0DEBUG_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, condition)
+#define LOGIT_0_DEBUG_IF(condition)                                              \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, condition)
+#define LOGIT_NOARGS_DEBUG_IF(condition)                                         \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, condition)
+#define LOGIT_FORMAT_DEBUG_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_FORMAT(                                             \
+        logit::LogLevel::LOG_LVL_DEBUG, condition, fmt, __VA_ARGS__)
+#define LOGIT_PRINT_DEBUG_IF(condition, ...)                                     \
+    LOGIT_DETAIL_CONDITIONAL_PRINT(                                              \
+        logit::LogLevel::LOG_LVL_DEBUG, condition, __VA_ARGS__)
+#define LOGIT_PRINTF_DEBUG_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_PRINTF(                                             \
+        logit::LogLevel::LOG_LVL_DEBUG, condition, fmt, __VA_ARGS__)
 #ifdef LOGIT_WITH_FMT
-#define LOGITF_DEBUG_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_DEBUG, fmt::format(fmt_str, __VA_ARGS__))
-#define LOGIT_FMT_DEBUG_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_DEBUG, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#define LOGITF_DEBUG_IF(condition, fmt_str, ...)                                 \
+    LOGIT_DETAIL_CONDITIONAL_FMT_STRING(                                         \
+        logit::LogLevel::LOG_LVL_DEBUG, condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_DEBUG_IF(condition, fmt_str, ...)                              \
+    LOGIT_DETAIL_CONDITIONAL_FMT(                                                \
+        logit::LogLevel::LOG_LVL_DEBUG, condition, fmt_str, __VA_ARGS__)
 #else
 #define LOGITF_DEBUG_IF(condition, fmt_str, ...) LOGIT_PRINTF_DEBUG_IF(condition, fmt_str, __VA_ARGS__)
 #define LOGIT_FMT_DEBUG_IF(condition, fmt_str, ...) LOGIT_FORMAT_DEBUG_IF(condition, fmt_str, __VA_ARGS__)
@@ -929,7 +1015,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_0_DEBUG_IF(condition)           do { } while (0)
 #define LOGIT_NOARGS_DEBUG_IF(condition)      do { } while (0)
 #define LOGIT_FORMAT_DEBUG_IF(condition, fmt, ...) do { } while (0)
-#define LOGIT_PRINT_DEBUG_IF(condition, fmt)  do { } while (0)
+#define LOGIT_PRINT_DEBUG_IF(condition, ...)  do { } while (0)
 #define LOGIT_PRINTF_DEBUG_IF(condition, fmt, ...) do { } while (0)
 #define LOGITF_DEBUG(fmt_str, ...)      do { } while (0)
 #define LOGIT_FMT_DEBUG(fmt_str, ...)   do { } while (0)
@@ -941,32 +1027,47 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
 // WARN level conditional macros
-#define LOGIT_WARN_IF(condition, ...)         if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, {}, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_WARN0_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
-#define LOGIT_0WARN_IF(condition)             if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
-#define LOGIT_0_WARN_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
-#define LOGIT_NOARGS_WARN_IF(condition)       if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, {})
-#define LOGIT_FORMAT_WARN_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_WARN, fmt, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_PRINT_WARN_IF(condition, fmt)   if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, fmt)
-#define LOGIT_PRINTF_WARN_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, logit::format(fmt, __VA_ARGS__))
+#define LOGIT_WARN_IF(condition, ...)                                           \
+    LOGIT_DETAIL_CONDITIONAL(logit::LogLevel::LOG_LVL_WARN, condition, __VA_ARGS__)
+#define LOGIT_WARN0_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_WARN, condition)
+#define LOGIT_0WARN_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_WARN, condition)
+#define LOGIT_0_WARN_IF(condition)                                              \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_WARN, condition)
+#define LOGIT_NOARGS_WARN_IF(condition)                                         \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_WARN, condition)
+#define LOGIT_FORMAT_WARN_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_FORMAT(                                             \
+        logit::LogLevel::LOG_LVL_WARN, condition, fmt, __VA_ARGS__)
+#define LOGIT_PRINT_WARN_IF(condition, ...)                                     \
+    LOGIT_DETAIL_CONDITIONAL_PRINT(                                              \
+        logit::LogLevel::LOG_LVL_WARN, condition, __VA_ARGS__)
+#define LOGIT_PRINTF_WARN_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_PRINTF(                                             \
+        logit::LogLevel::LOG_LVL_WARN, condition, fmt, __VA_ARGS__)
 #ifdef LOGIT_WITH_FMT
-#define LOGITF_WARN_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_WARN, fmt::format(fmt_str, __VA_ARGS__))
-#define LOGIT_FMT_WARN_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_WARN, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#define LOGITF_WARN_IF(condition, fmt_str, ...)                                 \
+    LOGIT_DETAIL_CONDITIONAL_FMT_STRING(                                         \
+        logit::LogLevel::LOG_LVL_WARN, condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_WARN_IF(condition, fmt_str, ...)                              \
+    LOGIT_DETAIL_CONDITIONAL_FMT(                                                \
+        logit::LogLevel::LOG_LVL_WARN, condition, fmt_str, __VA_ARGS__)
 #else
 #define LOGITF_WARN_IF(condition, fmt_str, ...) LOGIT_PRINTF_WARN_IF(condition, fmt_str, __VA_ARGS__)
 #define LOGIT_FMT_WARN_IF(condition, fmt_str, ...) LOGIT_FORMAT_WARN_IF(condition, fmt_str, __VA_ARGS__)
 #endif
 #else
-#define LOGIT_WARN_IF(condition, ...)         do { } while (0)
-#define LOGIT_WARN0_IF(condition)             do { } while (0)
-#define LOGIT_0WARN_IF(condition)             do { } while (0)
-#define LOGIT_0_WARN_IF(condition)            do { } while (0)
-#define LOGIT_NOARGS_WARN_IF(condition)       do { } while (0)
+#define LOGIT_WARN_IF(condition, ...)        do { } while (0)
+#define LOGIT_WARN0_IF(condition)            do { } while (0)
+#define LOGIT_0WARN_IF(condition)            do { } while (0)
+#define LOGIT_0_WARN_IF(condition)           do { } while (0)
+#define LOGIT_NOARGS_WARN_IF(condition)      do { } while (0)
 #define LOGIT_FORMAT_WARN_IF(condition, fmt, ...) do { } while (0)
-#define LOGIT_PRINT_WARN_IF(condition, fmt)   do { } while (0)
+#define LOGIT_PRINT_WARN_IF(condition, ...)  do { } while (0)
 #define LOGIT_PRINTF_WARN_IF(condition, fmt, ...) do { } while (0)
-#define LOGITF_WARN(fmt_str, ...)       do { } while (0)
-#define LOGIT_FMT_WARN(fmt_str, ...)    do { } while (0)
+#define LOGITF_WARN(fmt_str, ...)      do { } while (0)
+#define LOGIT_FMT_WARN(fmt_str, ...)   do { } while (0)
 #define LOGITF_WARN_TO(index, fmt_str, ...) do { } while (0)
 #define LOGIT_FMT_WARN_TO(index, fmt_str, ...) do { } while (0)
 #define LOGITF_WARN_IF(condition, fmt_str, ...) do { } while (0)
@@ -975,17 +1076,32 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
 // ERROR level conditional macros
-#define LOGIT_ERROR_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, {}, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_ERROR0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
-#define LOGIT_0ERROR_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
-#define LOGIT_0_ERROR_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
-#define LOGIT_NOARGS_ERROR_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, {})
-#define LOGIT_FORMAT_ERROR_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_ERROR, fmt, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_PRINT_ERROR_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, fmt)
-#define LOGIT_PRINTF_ERROR_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, logit::format(fmt, __VA_ARGS__))
+#define LOGIT_ERROR_IF(condition, ...)                                           \
+    LOGIT_DETAIL_CONDITIONAL(logit::LogLevel::LOG_LVL_ERROR, condition, __VA_ARGS__)
+#define LOGIT_ERROR0_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_ERROR, condition)
+#define LOGIT_0ERROR_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_ERROR, condition)
+#define LOGIT_0_ERROR_IF(condition)                                              \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_ERROR, condition)
+#define LOGIT_NOARGS_ERROR_IF(condition)                                         \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_ERROR, condition)
+#define LOGIT_FORMAT_ERROR_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_FORMAT(                                             \
+        logit::LogLevel::LOG_LVL_ERROR, condition, fmt, __VA_ARGS__)
+#define LOGIT_PRINT_ERROR_IF(condition, ...)                                     \
+    LOGIT_DETAIL_CONDITIONAL_PRINT(                                              \
+        logit::LogLevel::LOG_LVL_ERROR, condition, __VA_ARGS__)
+#define LOGIT_PRINTF_ERROR_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_PRINTF(                                             \
+        logit::LogLevel::LOG_LVL_ERROR, condition, fmt, __VA_ARGS__)
 #ifdef LOGIT_WITH_FMT
-#define LOGITF_ERROR_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_ERROR, fmt::format(fmt_str, __VA_ARGS__))
-#define LOGIT_FMT_ERROR_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_ERROR, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#define LOGITF_ERROR_IF(condition, fmt_str, ...)                                 \
+    LOGIT_DETAIL_CONDITIONAL_FMT_STRING(                                         \
+        logit::LogLevel::LOG_LVL_ERROR, condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_ERROR_IF(condition, fmt_str, ...)                              \
+    LOGIT_DETAIL_CONDITIONAL_FMT(                                                \
+        logit::LogLevel::LOG_LVL_ERROR, condition, fmt_str, __VA_ARGS__)
 #else
 #define LOGITF_ERROR_IF(condition, fmt_str, ...) LOGIT_PRINTF_ERROR_IF(condition, fmt_str, __VA_ARGS__)
 #define LOGIT_FMT_ERROR_IF(condition, fmt_str, ...) LOGIT_FORMAT_ERROR_IF(condition, fmt_str, __VA_ARGS__)
@@ -997,7 +1113,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_0_ERROR_IF(condition)           do { } while (0)
 #define LOGIT_NOARGS_ERROR_IF(condition)      do { } while (0)
 #define LOGIT_FORMAT_ERROR_IF(condition, fmt, ...) do { } while (0)
-#define LOGIT_PRINT_ERROR_IF(condition, fmt)  do { } while (0)
+#define LOGIT_PRINT_ERROR_IF(condition, ...)  do { } while (0)
 #define LOGIT_PRINTF_ERROR_IF(condition, fmt, ...) do { } while (0)
 #define LOGITF_ERROR(fmt_str, ...)      do { } while (0)
 #define LOGIT_FMT_ERROR(fmt_str, ...)   do { } while (0)
@@ -1009,17 +1125,32 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
 // FATAL level conditional macros
-#define LOGIT_FATAL_IF(condition, ...)        if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, {}, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_FATAL0_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
-#define LOGIT_0FATAL_IF(condition)            if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
-#define LOGIT_0_FATAL_IF(condition)           if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
-#define LOGIT_NOARGS_FATAL_IF(condition)      if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, {})
-#define LOGIT_FORMAT_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN(logit::LogLevel::LOG_LVL_FATAL, fmt, #__VA_ARGS__, __VA_ARGS__)
-#define LOGIT_PRINT_FATAL_IF(condition, fmt)  if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, fmt)
-#define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, logit::format(fmt, __VA_ARGS__))
+#define LOGIT_FATAL_IF(condition, ...)                                           \
+    LOGIT_DETAIL_CONDITIONAL(logit::LogLevel::LOG_LVL_FATAL, condition, __VA_ARGS__)
+#define LOGIT_FATAL0_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_FATAL, condition)
+#define LOGIT_0FATAL_IF(condition)                                               \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_FATAL, condition)
+#define LOGIT_0_FATAL_IF(condition)                                              \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_FATAL, condition)
+#define LOGIT_NOARGS_FATAL_IF(condition)                                         \
+    LOGIT_DETAIL_CONDITIONAL_NOARGS(logit::LogLevel::LOG_LVL_FATAL, condition)
+#define LOGIT_FORMAT_FATAL_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_FORMAT(                                             \
+        logit::LogLevel::LOG_LVL_FATAL, condition, fmt, __VA_ARGS__)
+#define LOGIT_PRINT_FATAL_IF(condition, ...)                                     \
+    LOGIT_DETAIL_CONDITIONAL_PRINT(                                              \
+        logit::LogLevel::LOG_LVL_FATAL, condition, __VA_ARGS__)
+#define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...)                               \
+    LOGIT_DETAIL_CONDITIONAL_PRINTF(                                             \
+        logit::LogLevel::LOG_LVL_FATAL, condition, fmt, __VA_ARGS__)
 #ifdef LOGIT_WITH_FMT
-#define LOGITF_FATAL_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_NOARGS(logit::LogLevel::LOG_LVL_FATAL, fmt::format(fmt_str, __VA_ARGS__))
-#define LOGIT_FMT_FATAL_IF(condition, fmt_str, ...) if (condition) LOGIT_LOG_AND_RETURN_FMT(logit::LogLevel::LOG_LVL_FATAL, fmt_str, #__VA_ARGS__, __VA_ARGS__)
+#define LOGITF_FATAL_IF(condition, fmt_str, ...)                                 \
+    LOGIT_DETAIL_CONDITIONAL_FMT_STRING(                                         \
+        logit::LogLevel::LOG_LVL_FATAL, condition, fmt_str, __VA_ARGS__)
+#define LOGIT_FMT_FATAL_IF(condition, fmt_str, ...)                              \
+    LOGIT_DETAIL_CONDITIONAL_FMT(                                                \
+        logit::LogLevel::LOG_LVL_FATAL, condition, fmt_str, __VA_ARGS__)
 #else
 #define LOGITF_FATAL_IF(condition, fmt_str, ...) LOGIT_PRINTF_FATAL_IF(condition, fmt_str, __VA_ARGS__)
 #define LOGIT_FMT_FATAL_IF(condition, fmt_str, ...) LOGIT_FORMAT_FATAL_IF(condition, fmt_str, __VA_ARGS__)
@@ -1031,7 +1162,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_0_FATAL_IF(condition)           do { } while (0)
 #define LOGIT_NOARGS_FATAL_IF(condition)      do { } while (0)
 #define LOGIT_FORMAT_FATAL_IF(condition, fmt, ...) do { } while (0)
-#define LOGIT_PRINT_FATAL_IF(condition, fmt)  do { } while (0)
+#define LOGIT_PRINT_FATAL_IF(condition, ...)  do { } while (0)
 #define LOGIT_PRINTF_FATAL_IF(condition, fmt, ...) do { } while (0)
 #define LOGITF_FATAL(fmt_str, ...)      do { } while (0)
 #define LOGIT_FMT_FATAL(fmt_str, ...)   do { } while (0)
