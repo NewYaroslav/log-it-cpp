@@ -19,10 +19,11 @@ int main() {
     if (every_n_counter != 3) return 1;
 
     int throttle_counter = 0;
-    LOGIT_ERROR_THROTTLE(50, throttle_counter++);
-    LOGIT_ERROR_THROTTLE(50, throttle_counter++);
+    auto throttle_call = [&]() { LOGIT_ERROR_THROTTLE(50, throttle_counter++); };
+    throttle_call();
+    throttle_call();
     std::this_thread::sleep_for(std::chrono::milliseconds(60));
-    LOGIT_ERROR_THROTTLE(50, throttle_counter++);
+    throttle_call();
     if (throttle_counter != 2) return 1;
 
     return 0;
