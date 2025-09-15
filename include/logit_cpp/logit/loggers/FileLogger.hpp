@@ -232,6 +232,8 @@ namespace logit {
         void wait() override {
             if (!m_config.async) return;
             detail::TaskExecutor::get_instance().wait();
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (m_file.is_open()) m_file.flush();
         }
 
     private:
@@ -333,7 +335,7 @@ namespace logit {
                 }
             }
             if (m_file.is_open()) {
-                m_file << message << std::endl;
+                m_file << message << '\n';
                 m_current_file_size += static_cast<uint64_t>(message.size() + 1);
             }
             remove_old_logs();
