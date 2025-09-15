@@ -37,14 +37,39 @@ namespace logit { namespace detail {
     
         /// \brief Destroy remaining elements, if any.
         ~MpscRingAny() {
-            T tmp;
-            while (try_pop(tmp)) {
-                // Element destroyed via move-from tmp
-            }
+            destroy_all_();
         }
-    
+
         MpscRingAny(const MpscRingAny&) = delete;
         MpscRingAny& operator=(const MpscRingAny&) = delete;
+
+        /// \brief Move construct ring, adopting producer/consumer indices.
+        MpscRingAny(MpscRingAny&& other) noexcept
+            : m_cap(other.m_cap),
+              m_cells(std::move(other.m_cells)),
+              m_enqueue_pos(other.m_enqueue_pos.load(std::memory_order_relaxed)),
+              m_dequeue_pos(other.m_dequeue_pos.load(std::memory_order_relaxed)) {
+            other.m_cap = 0;
+            other.m_enqueue_pos.store(0, std::memory_order_relaxed);
+            other.m_dequeue_pos.store(0, std::memory_order_relaxed);
+        }
+
+        /// \brief Move assign ring, draining existing payload.
+        MpscRingAny& operator=(MpscRingAny&& other) noexcept {
+            if (this != &other) {
+                destroy_all_();
+                m_cap = other.m_cap;
+                m_cells = std::move(other.m_cells);
+                m_enqueue_pos.store(other.m_enqueue_pos.load(std::memory_order_relaxed),
+                    std::memory_order_relaxed);
+                m_dequeue_pos.store(other.m_dequeue_pos.load(std::memory_order_relaxed),
+                    std::memory_order_relaxed);
+                other.m_cap = 0;
+                other.m_enqueue_pos.store(0, std::memory_order_relaxed);
+                other.m_dequeue_pos.store(0, std::memory_order_relaxed);
+            }
+            return *this;
+        }
     
         /// \brief Capacity of the ring.
         std::size_t capacity() const noexcept { return m_cap; }
@@ -117,6 +142,9 @@ namespace logit { namespace detail {
     
         /// \brief Lightweight emptiness check for current consumer position.
         bool empty() const noexcept {
+            if (!m_cells || m_cap == 0) {
+                return true;
+            }
             std::size_t pos = m_dequeue_pos.load(std::memory_order_acquire);
             const Cell& c = m_cells[pos % m_cap];
             std::size_t seq = c.m_seq.load(std::memory_order_acquire);
@@ -124,8 +152,18 @@ namespace logit { namespace detail {
                 static_cast<std::intptr_t>(seq) - static_cast<std::intptr_t>(pos + 1);
             return diff != 0;
         }
-    
+
     private:
+        void destroy_all_() noexcept {
+            if (!m_cells || m_cap == 0) {
+                return;
+            }
+            T tmp;
+            while (try_pop(tmp)) {
+                // Element destroyed via move-from tmp
+            }
+        }
+
         std::size_t                     m_cap;
         std::unique_ptr<Cell[]>         m_cells;
         alignas(64) std::atomic<std::size_t> m_enqueue_pos;
