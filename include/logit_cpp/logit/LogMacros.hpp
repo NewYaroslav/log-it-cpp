@@ -28,7 +28,14 @@
 #define LOGIT_LEVEL_WARN  3
 #define LOGIT_LEVEL_ERROR 4
 #define LOGIT_LEVEL_FATAL 5
+/// \brief Concatenate two tokens without macro expansion.
+/// \param x First token.
+/// \param y Second token.
 #define LOGIT_CONCAT_IMPL(x, y) x##y
+
+/// \brief Concatenate two tokens with macro expansion.
+/// \param x First token.
+/// \param y Second token.
 #define LOGIT_CONCAT(x, y) LOGIT_CONCAT_IMPL(x, y)
 
 #ifdef _LOGIT_ENUMS_HPP_INCLUDED
