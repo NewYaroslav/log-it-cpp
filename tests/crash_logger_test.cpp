@@ -1,14 +1,15 @@
 #include <atomic>
 #include <chrono>
+#include <cstdio>
 #include <cstdlib>
-#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iterator>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <system_error>
+
+#include <logit_cpp/logit/utils.hpp>
 
 #ifndef _WIN32
 #    include <csignal>
@@ -26,35 +27,29 @@ namespace logit_test {
 
 #ifdef _WIN32
 #    define private public
-#    include <logit/loggers/CrashWindowsLogger.hpp>
+#    include <logit_cpp/logit/loggers/CrashWindowsLogger.hpp>
 #    undef private
 #else
 #    define private public
-#    include <logit/loggers/CrashPosixLogger.hpp>
+#    include <logit_cpp/logit/loggers/CrashPosixLogger.hpp>
 #    undef private
 #endif
 
 #undef _exit
 
-#include <LogIt.hpp>
+#include <logit_cpp/LogIt.hpp>
 
 int main() {
-    namespace fs = std::filesystem;
-
     logit_test::reset_exit_code();
 
-    std::error_code ec;
-    const fs::path temp_dir = fs::temp_directory_path(ec);
-    if (ec) {
-        return 1;
-    }
-
     const auto unique_suffix = std::chrono::high_resolution_clock::now().time_since_epoch().count();
-    const fs::path log_path = temp_dir / ("logit_crash_logger_test_" + std::to_string(unique_suffix) + ".log");
-    fs::remove(log_path, ec);
+    std::ostringstream path_builder;
+    path_builder << "logit_crash_logger_test_" << unique_suffix << ".log";
+    const std::string log_path = path_builder.str();
+    std::remove(log_path.c_str());
 
     logit::CrashLogger::Config config;
-    config.log_path = log_path.string();
+    config.log_path = log_path;
     config.buffer_size = 4096;
 
     LOGIT_ADD_LOGGER(logit::CrashLogger, (config), logit::SimpleLogFormatter, ("%v"));
@@ -111,7 +106,7 @@ int main() {
 
     LOGIT_SHUTDOWN();
 
-    std::ifstream input(log_path);
+    std::ifstream input(log_path.c_str(), std::ios::binary);
     if (!input.is_open()) {
         return 1;
     }
@@ -126,7 +121,7 @@ int main() {
         return 1;
     }
 
-    fs::remove(log_path, ec);
+    std::remove(log_path.c_str());
 
     return 0;
 }
