@@ -67,7 +67,7 @@ namespace logit {
                     OPEN_ALWAYS,
                     FILE_ATTRIBUTE_NORMAL,
                     nullptr);
-            s_active_logger.store(this, std::memory_order_release);
+            active_logger().store(this, std::memory_order_release);
         }
 
         CrashWindowsLogger(const CrashWindowsLogger&) = delete;
@@ -76,7 +76,7 @@ namespace logit {
         /// \\brief Close the crash log handle on destruction.
         ~CrashWindowsLogger() override {
             CrashWindowsLogger* expected = this;
-            s_active_logger.compare_exchange_strong(
+            active_logger().compare_exchange_strong(
                     expected, nullptr, std::memory_order_release, std::memory_order_relaxed);
             if (m_file != INVALID_HANDLE_VALUE) {
                 ::CloseHandle(m_file);
@@ -180,7 +180,7 @@ namespace logit {
 
     private:
         static LONG WINAPI exception_filter(EXCEPTION_POINTERS* exception_info) {
-            CrashWindowsLogger* logger = s_active_logger.load(std::memory_order_acquire);
+            CrashWindowsLogger* logger = active_logger().load(std::memory_order_acquire);
             if (logger != nullptr) {
                 DWORD code = 0;
                 if (exception_info != nullptr && exception_info->ExceptionRecord != nullptr) {
@@ -279,7 +279,10 @@ namespace logit {
         std::atomic<int> m_log_level{static_cast<int>(LogLevel::LOG_LVL_TRACE)};
         std::array<char, kMaxBufferSize> m_buffer{};
 
-        inline static std::atomic<CrashWindowsLogger*> s_active_logger{nullptr};
+        static std::atomic<CrashWindowsLogger*>& active_logger() noexcept {
+            static std::atomic<CrashWindowsLogger*> instance(nullptr);
+            return instance;
+        }
     };
 
 #else // Stub for non-Windows systems
