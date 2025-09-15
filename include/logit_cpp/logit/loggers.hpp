@@ -13,5 +13,6 @@
 #include "loggers/SyslogLogger.hpp"
 #include "loggers/EventLogLogger.hpp"
 #include "loggers/SystemLogger.hpp"
+#include "loggers/CrashLogger.hpp"
 
 #endif // _LOGIT_LOGGERS_HPP_INCLUDED
