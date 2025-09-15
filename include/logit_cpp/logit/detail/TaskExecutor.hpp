@@ -5,6 +5,8 @@
 /// \file TaskExecutor.hpp
 /// \brief Defines the TaskExecutor class, which manages task execution in a separate thread.
 
+#include "../config.hpp"
+
 #include <functional>
 #include <atomic>
 #if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
@@ -346,7 +348,7 @@ namespace logit { namespace detail {
         std::atomic<std::size_t> m_dropped_tasks;         ///< Number of discarded tasks due to overflow.
         std::atomic<std::size_t> m_active_tasks;          ///< Number of tasks currently running.
 
-        const std::size_t m_default_ring_cap = 1024;      ///< Default capacity when unlimited requested.
+        const std::size_t m_default_ring_cap = LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY; ///< Default capacity when unlimited requested.
         MpscRingAny<std::function<void()>> m_mpsc_queue;  ///< Lock-free bounded MPSC ring.
 
 #ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
