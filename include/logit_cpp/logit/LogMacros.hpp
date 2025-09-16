@@ -6,6 +6,9 @@
 #include <fmt/format.h>
 #endif
 
+#include "config.hpp"
+#include "utils/format.hpp"
+
 /// \file LogMacros.hpp
 /// \brief Provides various logging macros for different log levels and options.
 
@@ -63,6 +66,115 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 #if __cplusplus >= 201703L
 #    define LOGIT_IF_COMPILED_LEVEL(level) if constexpr (LOGIT_COMPILED_LEVEL <= static_cast<int>(level))
+#endif
+
+//------------------------------------------------------------------------------
+// System error logging helpers
+
+#include "detail/SystemErrorMacros.hpp"
+
+//------------------------------------------------------------------------------
+// Platform-specific error logging macros
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
+#define LOGIT_PERROR_TRACE(message) LOGIT_DETAIL_PERROR(TRACE, message)
+#else
+#define LOGIT_PERROR_TRACE(message) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
+#define LOGIT_PERROR_DEBUG(message) LOGIT_DETAIL_PERROR(DEBUG, message)
+#else
+#define LOGIT_PERROR_DEBUG(message) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
+#define LOGIT_PERROR_INFO(message)  LOGIT_DETAIL_PERROR(INFO, message)
+#else
+#define LOGIT_PERROR_INFO(message)  do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
+#define LOGIT_PERROR_WARN(message)  LOGIT_DETAIL_PERROR(WARN, message)
+#else
+#define LOGIT_PERROR_WARN(message)  do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
+#define LOGIT_PERROR_ERROR(message) LOGIT_DETAIL_PERROR(ERROR, message)
+#else
+#define LOGIT_PERROR_ERROR(message) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
+#define LOGIT_PERROR_FATAL(message) LOGIT_DETAIL_PERROR(FATAL, message)
+#else
+#define LOGIT_PERROR_FATAL(message) do { } while (0)
+#endif
+
+#if defined(_WIN32)
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE
+#define LOGIT_WINERR_TRACE(message) LOGIT_DETAIL_WINERR(TRACE, message)
+#else
+#define LOGIT_WINERR_TRACE(message) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_DEBUG
+#define LOGIT_WINERR_DEBUG(message) LOGIT_DETAIL_WINERR(DEBUG, message)
+#else
+#define LOGIT_WINERR_DEBUG(message) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_INFO
+#define LOGIT_WINERR_INFO(message)  LOGIT_DETAIL_WINERR(INFO, message)
+#else
+#define LOGIT_WINERR_INFO(message)  do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_WARN
+#define LOGIT_WINERR_WARN(message)  LOGIT_DETAIL_WINERR(WARN, message)
+#else
+#define LOGIT_WINERR_WARN(message)  do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_ERROR
+#define LOGIT_WINERR_ERROR(message) LOGIT_DETAIL_WINERR(ERROR, message)
+#else
+#define LOGIT_WINERR_ERROR(message) do { } while (0)
+#endif
+
+#if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_FATAL
+#define LOGIT_WINERR_FATAL(message) LOGIT_DETAIL_WINERR(FATAL, message)
+#else
+#define LOGIT_WINERR_FATAL(message) do { } while (0)
+#endif
+
+#else // defined(_WIN32)
+
+#define LOGIT_WINERR_TRACE(message) do { } while (0)
+#define LOGIT_WINERR_DEBUG(message) do { } while (0)
+#define LOGIT_WINERR_INFO(message)  do { } while (0)
+#define LOGIT_WINERR_WARN(message)  do { } while (0)
+#define LOGIT_WINERR_ERROR(message) do { } while (0)
+#define LOGIT_WINERR_FATAL(message) do { } while (0)
+
+#endif // defined(_WIN32)
+
+#if defined(_WIN32)
+#define LOGIT_SYSERR_TRACE(message) LOGIT_WINERR_TRACE(message)
+#define LOGIT_SYSERR_DEBUG(message) LOGIT_WINERR_DEBUG(message)
+#define LOGIT_SYSERR_INFO(message)  LOGIT_WINERR_INFO(message)
+#define LOGIT_SYSERR_WARN(message)  LOGIT_WINERR_WARN(message)
+#define LOGIT_SYSERR_ERROR(message) LOGIT_WINERR_ERROR(message)
+#define LOGIT_SYSERR_FATAL(message) LOGIT_WINERR_FATAL(message)
+#else
+#define LOGIT_SYSERR_TRACE(message) LOGIT_PERROR_TRACE(message)
+#define LOGIT_SYSERR_DEBUG(message) LOGIT_PERROR_DEBUG(message)
+#define LOGIT_SYSERR_INFO(message)  LOGIT_PERROR_INFO(message)
+#define LOGIT_SYSERR_WARN(message)  LOGIT_PERROR_WARN(message)
+#define LOGIT_SYSERR_ERROR(message) LOGIT_PERROR_ERROR(message)
+#define LOGIT_SYSERR_FATAL(message) LOGIT_PERROR_FATAL(message)
 #endif
 
 //------------------------------------------------------------------------------

@@ -26,6 +26,20 @@ int x = 42;
 LOGIT_DEBUG_IF(x > 0, "x is positive: ", x);
 \endcode
 
+\par System Error Logging
+Use `LOGIT_PERROR_<LEVEL>` on POSIX and `LOGIT_WINERR_<LEVEL>` on Windows to automatically
+attach decoded system error codes to your message. The cross-platform
+`LOGIT_SYSERR_<LEVEL>` macro aliases to the appropriate variant.
+\code
+int fd = ::open("missing.cfg", O_RDONLY);
+if (fd == -1) {
+    LOGIT_SYSERR_ERROR("Failed to open configuration");
+}
+\endcode
+Customise the suffix by overriding configuration macros such as
+`LOGIT_OS_ERROR_JOIN`, `LOGIT_POSIX_ERROR_PATTERN`, or `LOGIT_WINDOWS_ERROR_PATTERN`
+before including `<LogIt.hpp>`.
+
 \par Logger Management
 \code
 LOGIT_SET_LOGGER_ENABLED(1, false); // Disable logger at index 1

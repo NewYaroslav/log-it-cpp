@@ -76,6 +76,37 @@ void short_names_demo() {
 
 For a standalone program that brings everything together and intentionally aborts after logging a fatal message, check `examples/example_logit_minimal_crash.cpp`.
 
+### System error helpers
+
+`LOGIT_SYSERR_<LEVEL>` captures the current `errno` (or `GetLastError()` on Windows) and appends the decoded information to the message, so failure details stay attached to the original context. The lower-level `LOGIT_PERROR_<LEVEL>` and `LOGIT_WINERR_<LEVEL>` families are also available if you want to explicitly choose the platform macro.
+
+```cpp
+#include <LogIt.hpp>
+#include <fcntl.h>
+
+int main() {
+    LOGIT_ADD_CONSOLE_DEFAULT();
+
+    if (::open("missing.cfg", O_RDONLY) == -1) {
+        LOGIT_SYSERR_ERROR("Failed to open configuration");
+    }
+
+    LOGIT_WAIT();
+}
+```
+
+The error suffix can be customised at compile time via `config.hpp` macros:
+
+```cpp
+#define LOGIT_OS_ERROR_JOIN " <- "
+#define LOGIT_POSIX_ERROR_PATTERN "[%s] errno=%d (%s)"
+#define LOGIT_WINDOWS_ERROR_PATTERN "[%s] GetLastError=%lu (%s)"
+#include <LogIt.hpp>
+
+// ... later in the code ...
+LOGIT_SYSERR_ERROR("Deleting temp directory failed");
+```
+
 ---
 
 ## Features

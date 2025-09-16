@@ -151,6 +151,36 @@
 #define LOGIT_TAGS_JOIN " | "
 #endif
 
+/// \brief Separator appended before platform error metadata when formatting system error messages.
+/// Override to customize how human-readable messages and error codes are joined in log output.
+#ifndef LOGIT_OS_ERROR_JOIN
+#define LOGIT_OS_ERROR_JOIN " | "
+#endif
+
+/// \brief Format string used when appending POSIX `errno` information to a log message.
+/// This macro can be overridden to change how the user message, errno value, and description are rendered.
+#ifndef LOGIT_POSIX_ERROR_PATTERN
+#define LOGIT_POSIX_ERROR_PATTERN "%s" LOGIT_OS_ERROR_JOIN "errno=%d (%s)"
+#endif
+
+/// \brief Format string used when appending Windows `GetLastError` details to a log message.
+/// This macro can be overridden to adjust how the original text, numeric code, and decoded message are displayed.
+#ifndef LOGIT_WINDOWS_ERROR_PATTERN
+#define LOGIT_WINDOWS_ERROR_PATTERN "%s" LOGIT_OS_ERROR_JOIN "GetLastError=%lu (%s)"
+#endif
+
+/// \brief Selects the default system error formatting macro for the current platform.
+/// Users may redefine this alias to integrate custom error formatting logic.
+#if defined(_WIN32)
+#ifndef LOGIT_SYSTEM_ERROR_PATTERN
+#define LOGIT_SYSTEM_ERROR_PATTERN LOGIT_WINDOWS_ERROR_PATTERN
+#endif
+#else
+#ifndef LOGIT_SYSTEM_ERROR_PATTERN
+#define LOGIT_SYSTEM_ERROR_PATTERN LOGIT_POSIX_ERROR_PATTERN
+#endif
+#endif
+
 /// \brief Separator between individual tag pairs (e.g., " " or "; ").
 #ifndef LOGIT_TAG_PAIR_SEP
 #define LOGIT_TAG_PAIR_SEP " "
