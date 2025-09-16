@@ -1,12 +1,12 @@
 #pragma once
-#ifndef _LOGIT_DETAIL_SYSTEM_ERROR_MACROS_HPP_INCLUDED
-#define _LOGIT_DETAIL_SYSTEM_ERROR_MACROS_HPP_INCLUDED
+#ifndef LOGIT_DETAIL_SYSTEM_ERROR_MACROS_HPP_INCLUDED
+#define LOGIT_DETAIL_SYSTEM_ERROR_MACROS_HPP_INCLUDED
 
 #include <errno.h>
 #include <cstring>
 #include <string>
 
-/// \file SystemErrorMacros.hpp
+/// \file system_error_macros.hpp
 /// \brief Internal helpers shared by the system error logging macros.
 
 #include "../config.hpp"
@@ -82,4 +82,4 @@ inline std::string _logit_format_winerr(DWORD code) {
 
 #endif // defined(_WIN32)
 
-#endif // _LOGIT_DETAIL_SYSTEM_ERROR_MACROS_HPP_INCLUDED
+#endif // LOGIT_DETAIL_SYSTEM_ERROR_MACROS_HPP_INCLUDED

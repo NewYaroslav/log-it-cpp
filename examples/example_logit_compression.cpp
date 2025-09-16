@@ -1,7 +1,7 @@
 /// \file example_logit_compression.cpp
 /// \brief Demonstrates file log compression using gzip.
 
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     logit::FileLogger::Config cfg;

@@ -1,4 +1,4 @@
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     LOGIT_ADD_CONSOLE_DEFAULT();

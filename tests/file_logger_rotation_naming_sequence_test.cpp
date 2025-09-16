@@ -1,4 +1,4 @@
-#include <LogIt.hpp>
+#include <logit.hpp>
 #include <regex>
 #include <string>
 #include <fstream>

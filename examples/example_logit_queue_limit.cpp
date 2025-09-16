@@ -1,7 +1,7 @@
 /// \file example_logit_queue_limit.cpp
 /// \brief Shows how to limit the log queue size.
 
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     LOGIT_ADD_CONSOLE_DEFAULT();

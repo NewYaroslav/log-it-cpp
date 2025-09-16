@@ -38,7 +38,7 @@ if (fd == -1) {
 \endcode
 Customise the suffix by overriding configuration macros such as
 `LOGIT_OS_ERROR_JOIN`, `LOGIT_POSIX_ERROR_PATTERN`, or `LOGIT_WINDOWS_ERROR_PATTERN`
-before including `<LogIt.hpp>`.
+before including `<logit.hpp>`.
 
 \par Logger Management
 \code

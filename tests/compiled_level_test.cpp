@@ -1,5 +1,5 @@
 #define LOGIT_COMPILED_LEVEL LOGIT_LEVEL_INFO
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 template <class T>
 int should_not_compile() {

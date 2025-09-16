@@ -7,7 +7,7 @@
 
 Ключевые особенности:
 
-- **Макро-ориентированный API.** Единые семейства макросов (`LOGIT_<LEVEL>`, `LOGIT_PRINTF_<LEVEL>`, `LOGIT_STREAM_<LEVEL>` и др.) покрывают мгновенные сообщения, форматирование в стиле `printf`, потоковый вывод, ограничения частоты и работу с тегами. Определите `LOGIT_SHORT_NAME` перед подключением `<LogIt.hpp>`, чтобы включить компактные алиасы `LOG_I`, `LOG_WPF`, `LOG_S_INFO` и другие.
+- **Макро-ориентированный API.** Единые семейства макросов (`LOGIT_<LEVEL>`, `LOGIT_PRINTF_<LEVEL>`, `LOGIT_STREAM_<LEVEL>` и др.) покрывают мгновенные сообщения, форматирование в стиле `printf`, потоковый вывод, ограничения частоты и работу с тегами. Определите `LOGIT_SHORT_NAME` перед подключением `<logit.hpp>`, чтобы включить компактные алиасы `LOG_I`, `LOG_WPF`, `LOG_S_INFO` и другие.
 - **Гибкое форматирование и маршрутизация.** Настраивайте шаблоны формата, комбинируйте консольные/файловые/системные бэкенды или подключайте собственные реализации логгеров.
 - **Асинхронность по умолчанию.** Каждый бэкенд обслуживается исполнителем задач с настраиваемыми размерами очереди и политиками переполнения, а макросы вроде `LOGIT_WARN_ONCE` или `LOGIT_ERROR_THROTTLE` помогают упорядочить повторяющиеся сообщения.
 
@@ -18,7 +18,7 @@
 ### Полные макросы
 
 ```cpp
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     LOGIT_ADD_CONSOLE_DEFAULT();
@@ -46,11 +46,11 @@ int main() {
 
 ### Короткие алиасы
 
-Определите `LOGIT_SHORT_NAME` перед подключением `<LogIt.hpp>`, чтобы использовать односимвольные префиксы уровней:
+Определите `LOGIT_SHORT_NAME` перед подключением `<logit.hpp>`, чтобы использовать односимвольные префиксы уровней:
 
 ```cpp
 #define LOGIT_SHORT_NAME
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 void short_names_demo() {
     LOGIT_ADD_CONSOLE_DEFAULT(); // вызывайте один раз при инициализации
@@ -72,7 +72,7 @@ void short_names_demo() {
 `LOGIT_SYSERR_<LEVEL>` захватывает текущее значение `errno` (или `GetLastError()` в Windows) и добавляет расшифровку ошибки к исходному сообщению, чтобы в логе оставался как контекст, так и код сбоя. При необходимости можно явно выбрать платформу через `LOGIT_PERROR_<LEVEL>` или `LOGIT_WINERR_<LEVEL>`.
 
 ```cpp
-#include <LogIt.hpp>
+#include <logit.hpp>
 #include <fcntl.h>
 
 int main() {
@@ -92,7 +92,7 @@ int main() {
 #define LOGIT_OS_ERROR_JOIN " <- "
 #define LOGIT_POSIX_ERROR_PATTERN "[%s] errno=%d (%s)"
 #define LOGIT_WINDOWS_ERROR_PATTERN "[%s] GetLastError=%lu (%s)"
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 // ... далее в коде ...
 LOGIT_SYSERR_ERROR("Ошибка удаления временного каталога");
@@ -258,7 +258,7 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 
 ```cpp
 #define LOGIT_SHORT_NAME
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     LOGIT_ADD_CONSOLE_DEFAULT();
@@ -569,7 +569,7 @@ LogIt++ предоставляет несколько макросов, кото
 ```cpp
 #include <fstream>
 #include <mutex>
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 class FileLogger : public logit::ILogger {
 public:
@@ -602,7 +602,7 @@ private:
 ### Пример пользовательского форматтера
 
 ```cpp
-#include <LogIt.hpp>
+#include <logit.hpp>
 #include <json/json.h>
 
 class JsonLogFormatter : public logit::ILogFormatter {
@@ -636,7 +636,7 @@ git clone --recurse-submodules https://github.com/NewYaroslav/log-it-cpp.git
 2. Включите заголовочные файлы LogIt++ в ваш проект:
 
 ```cpp
-#include <LogIt.hpp>
+#include <logit.hpp>
 ```
 
 3. Настройте пути к заголовочным файлам для зависимостей, таких как time-shield-cpp.

@@ -1,4 +1,4 @@
-#include <LogIt.hpp>
+#include <logit.hpp>
 #if defined(LOGIT_HAS_ZSTD)
 #include <zstd.h>
 #include <string>

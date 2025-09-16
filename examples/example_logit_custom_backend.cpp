@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <sstream>
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 
 /// \cond
