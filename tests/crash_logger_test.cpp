@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include <logit/utils.hpp>
+#include <logit/config.hpp>
 
 #ifndef _WIN32
 #    include <csignal>
