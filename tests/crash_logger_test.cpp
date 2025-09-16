@@ -24,20 +24,10 @@ namespace logit_test {
 } // namespace logit_test
 
 #define _exit ::logit_test::fake_exit
-
-#ifdef _WIN32
-#    define private public
-#    include <logit/loggers/CrashWindowsLogger.hpp>
-#    undef private
-#else
-#    define private public
-#    include <logit/loggers/CrashPosixLogger.hpp>
-#    undef private
-#endif
-
-#undef _exit
-
+#define private public
 #include <LogIt.hpp>
+#undef private
+#undef _exit
 
 int main() {
     logit_test::reset_exit_code();
