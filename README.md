@@ -16,7 +16,7 @@
 
 Key characteristics:
 
-- **Macro-oriented API.** Consistent macro families (`LOGIT_<LEVEL>`, `LOGIT_PRINTF_<LEVEL>`, `LOGIT_STREAM_<LEVEL>`, etc.) cover immediate messages, printf-style formatting, streaming, throttling, and tagging. Defining `LOGIT_SHORT_NAME` when including `<LogIt.hpp>` enables compact aliases like `LOG_I`, `LOG_WPF`, and `LOG_S_INFO`.
+- **Macro-oriented API.** Consistent macro families (`LOGIT_<LEVEL>`, `LOGIT_PRINTF_<LEVEL>`, `LOGIT_STREAM_<LEVEL>`, etc.) cover immediate messages, printf-style formatting, streaming, throttling, and tagging. Defining `LOGIT_SHORT_NAME` when including `<logit.hpp>` enables compact aliases like `LOG_I`, `LOG_WPF`, and `LOG_S_INFO`.
 - **Flexible formatting and routing.** Customize output patterns, mix console/file/system backends, or supply custom logger implementations.
 - **Async by default.** Each backend is served by the task executor with configurable queue sizes and overflow policies, plus helpers such as `LOGIT_WARN_ONCE` or `LOGIT_ERROR_THROTTLE` to keep repeated messages under control.
 
@@ -27,7 +27,7 @@ See the macro examples below or browse the `examples/` folder for focused demons
 ### Long-form macros
 
 ```cpp
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     LOGIT_ADD_CONSOLE_DEFAULT();
@@ -55,11 +55,11 @@ int main() {
 
 ### Short aliases
 
-Define `LOGIT_SHORT_NAME` before including `<LogIt.hpp>` to enable single-letter level prefixes:
+Define `LOGIT_SHORT_NAME` before including `<logit.hpp>` to enable single-letter level prefixes:
 
 ```cpp
 #define LOGIT_SHORT_NAME
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 void short_names_demo() {
     LOGIT_ADD_CONSOLE_DEFAULT(); // call once during initialization
@@ -81,7 +81,7 @@ For a standalone program that brings everything together and intentionally abort
 `LOGIT_SYSERR_<LEVEL>` captures the current `errno` (or `GetLastError()` on Windows) and appends the decoded information to the message, so failure details stay attached to the original context. The lower-level `LOGIT_PERROR_<LEVEL>` and `LOGIT_WINERR_<LEVEL>` families are also available if you want to explicitly choose the platform macro.
 
 ```cpp
-#include <LogIt.hpp>
+#include <logit.hpp>
 #include <fcntl.h>
 
 int main() {
@@ -101,7 +101,7 @@ The error suffix can be customised at compile time via `config.hpp` macros:
 #define LOGIT_OS_ERROR_JOIN " <- "
 #define LOGIT_POSIX_ERROR_PATTERN "[%s] errno=%d (%s)"
 #define LOGIT_WINDOWS_ERROR_PATTERN "[%s] GetLastError=%lu (%s)"
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 // ... later in the code ...
 LOGIT_SYSERR_ERROR("Deleting temp directory failed");
@@ -232,7 +232,7 @@ Here’s a simple example demonstrating how to use LogIt++ in your application. 
 
 ```cpp
 #define LOGIT_SHORT_NAME
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     // Initialize the logger with default console output
@@ -545,7 +545,7 @@ You can extend LogIt++ by implementing your own loggers and formatters. Here’s
 ```cpp
 #include <fstream>
 #include <mutex>
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 class FileLogger : public logit::ILogger {
 public:
@@ -578,7 +578,7 @@ private:
 ### Custom Formatter Example
 
 ```cpp
-#include <LogIt.hpp>
+#include <logit.hpp>
 #include <json/json.h>
 
 class JsonLogFormatter : public logit::ILogFormatter {
@@ -662,7 +662,7 @@ git clone --recurse-submodules https://github.com/NewYaroslav/log-it-cpp.git
 2. Include the LogIt++ headers in your project:
 
 ```cpp
-#include <LogIt.hpp>
+#include <logit.hpp>
 ```
 
 3. Set up include paths for dependencies like time-shield-cpp.

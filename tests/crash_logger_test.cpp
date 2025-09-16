@@ -34,7 +34,7 @@ extern "C" void logit_test::fake_exit(int code) { g_exit_code = code; }
 
 #define _exit ::logit_test::fake_exit
 #define private public
-#include <LogIt.hpp>
+#include <logit.hpp>
 #undef private
 #undef _exit
 

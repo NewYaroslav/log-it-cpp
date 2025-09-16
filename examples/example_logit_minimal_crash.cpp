@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 #define LOGIT_SHORT_NAME
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 namespace {
 

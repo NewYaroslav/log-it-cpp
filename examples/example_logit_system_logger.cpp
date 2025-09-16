@@ -1,7 +1,7 @@
 /// \file example_logit_system_logger.cpp
 /// \brief Demonstrates usage of the cross-platform SystemLogger.
 
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     LOGIT_ADD_LOGGER(logit::SystemLogger, (), logit::SimpleLogFormatter, (LOGIT_CONSOLE_PATTERN));

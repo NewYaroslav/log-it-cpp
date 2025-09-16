@@ -1,6 +1,6 @@
 #pragma once
-#ifndef _LOGIT_LOG_MACROS_HPP_INCLUDED
-#define _LOGIT_LOG_MACROS_HPP_INCLUDED
+#ifndef LOGIT_LOG_MACROS_HPP_INCLUDED
+#define LOGIT_LOG_MACROS_HPP_INCLUDED
 
 #ifdef LOGIT_WITH_FMT
 #include <fmt/format.h>
@@ -9,7 +9,7 @@
 #include "config.hpp"
 #include "utils/format.hpp"
 
-/// \file LogMacros.hpp
+/// \file log_macros.hpp
 /// \brief Provides various logging macros for different log levels and options.
 
 /// \ingroup LoggingMacros
@@ -71,7 +71,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 //------------------------------------------------------------------------------
 // System error logging helpers
 
-#include "detail/SystemErrorMacros.hpp"
+#include "detail/system_error_macros.hpp"
 
 //------------------------------------------------------------------------------
 // Platform-specific error logging macros
@@ -2199,4 +2199,4 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 /// \}
 
-#endif // _LOGIT_LOG_MACROS_HPP_INCLUDED
+#endif // LOGIT_LOG_MACROS_HPP_INCLUDED

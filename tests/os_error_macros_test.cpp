@@ -1,5 +1,5 @@
 #define LOGIT_FILE_LOGGER_PATH "."
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 #include <fstream>
 #include <string>

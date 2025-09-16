@@ -5,8 +5,17 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <LogIt.hpp>
-#include <logit/test/loggers/file/file/file/test_log_depth_3.hpp>
+#include <logit.hpp>
+
+namespace {
+
+void log_depth_fixture()
+{
+    LOGIT_TRACE0();
+    LOGIT_TRACE("This is an informational message");
+}
+
+} // namespace
 
 // Example enumeration
 enum class COLORS {
@@ -77,7 +86,7 @@ int main() {
     LOGIT_SET_MAX_QUEUE(64);
     LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP);
 
-    logit::test_log_depth_3();
+    log_depth_fixture();
 
     LOGIT_TRACE0();
     

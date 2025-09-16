@@ -1,4 +1,4 @@
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
 #if LOGIT_SYSLOG_ENABLED

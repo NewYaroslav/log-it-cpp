@@ -9,7 +9,7 @@ Version: VERSION_PLACEHOLDER
 
 Key characteristics:
 
-- **Macro-oriented API.** Consistent macro families (`LOGIT_<LEVEL>`, `LOGIT_PRINTF_<LEVEL>`, `LOGIT_STREAM_<LEVEL>`, etc.) cover immediate messages, `printf`-style formatting, streaming, throttling, and tagging. Defining `LOGIT_SHORT_NAME` when including `<LogIt.hpp>` enables compact aliases like `LOG_I`, `LOG_WPF`, and `LOG_S_INFO`.
+- **Macro-oriented API.** Consistent macro families (`LOGIT_<LEVEL>`, `LOGIT_PRINTF_<LEVEL>`, `LOGIT_STREAM_<LEVEL>`, etc.) cover immediate messages, `printf`-style formatting, streaming, throttling, and tagging. Defining `LOGIT_SHORT_NAME` when including `<logit.hpp>` enables compact aliases like `LOG_I`, `LOG_WPF`, and `LOG_S_INFO`.
 - **Flexible formatting and routing.** Customize output patterns, mix console/file/system backends, or supply custom logger implementations.
 - **Async by default.** Each backend is served by the task executor with configurable queue sizes and overflow policies, plus helpers such as `LOGIT_WARN_ONCE` or `LOGIT_ERROR_THROTTLE` to keep repeated messages under control.
 
@@ -20,7 +20,7 @@ See the macro examples below or browse the `examples/` directory for focused dem
 \subsection macro_examples_long Long-form macros
 
 \code{.cpp}
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     LOGIT_ADD_CONSOLE_DEFAULT();
@@ -48,11 +48,11 @@ int main() {
 
 \subsection macro_examples_short Short aliases
 
-Define `LOGIT_SHORT_NAME` before including `<LogIt.hpp>` to enable single-letter level prefixes:
+Define `LOGIT_SHORT_NAME` before including `<logit.hpp>` to enable single-letter level prefixes:
 
 \code{.cpp}
 #define LOGIT_SHORT_NAME
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 void short_names_demo() {
     LOGIT_ADD_CONSOLE_DEFAULT(); // call once during initialization
@@ -177,7 +177,7 @@ Here's a simple example demonstrating how to use LogIt++ in your application:
 
 \code{.cpp}
 #define LOGIT_SHORT_NAME
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 int main() {
     // Initialize the logger with default console output
@@ -521,7 +521,7 @@ To create a custom logger backend, you need to implement the `ILogger` interface
 \code{.cpp}
 #include <fstream>
 #include <mutex>
-#include <LogIt.hpp>
+#include <logit.hpp>
 
 class FileLogger : public logit::ILogger {
 public:
@@ -575,7 +575,7 @@ logit::Logger::get_instance().add_logger(
 In addition to creating custom loggers, you can also create custom formatters by implementing the `ILogFormatter` interface. Here's an example of a simple formatter that outputs log messages in JSON format:
 
 \code{.cpp}
-#include <LogIt.hpp>
+#include <logit.hpp>
 #include <json/json.h>  // Or your preferred JSON library
 
 class JsonLogFormatter : public logit::ILogFormatter {
@@ -646,7 +646,7 @@ git submodule update
 Since LogIt++ is a header-only library, you can simply include the main header in your project:
 
 \code{cpp}
-#include <LogIt.hpp>
+#include <logit.hpp>
 \endcode
 
 This will give you access to the entire logging system.
