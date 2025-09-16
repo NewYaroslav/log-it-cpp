@@ -67,6 +67,37 @@ void short_names_demo() {
 
 Самодостаточный пример, который объединяет настройки и намеренно завершает работу после fatal-сообщения, расположен в `examples/example_logit_minimal_crash.cpp`.
 
+### Макросы системных ошибок
+
+`LOGIT_SYSERR_<LEVEL>` захватывает текущее значение `errno` (или `GetLastError()` в Windows) и добавляет расшифровку ошибки к исходному сообщению, чтобы в логе оставался как контекст, так и код сбоя. При необходимости можно явно выбрать платформу через `LOGIT_PERROR_<LEVEL>` или `LOGIT_WINERR_<LEVEL>`.
+
+```cpp
+#include <LogIt.hpp>
+#include <fcntl.h>
+
+int main() {
+    LOGIT_ADD_CONSOLE_DEFAULT();
+
+    if (::open("missing.cfg", O_RDONLY) == -1) {
+        LOGIT_SYSERR_ERROR("Не удалось открыть конфигурацию");
+    }
+
+    LOGIT_WAIT();
+}
+```
+
+Формат суффикса можно изменить на этапе компиляции с помощью макросов из `config.hpp`:
+
+```cpp
+#define LOGIT_OS_ERROR_JOIN " <- "
+#define LOGIT_POSIX_ERROR_PATTERN "[%s] errno=%d (%s)"
+#define LOGIT_WINDOWS_ERROR_PATTERN "[%s] GetLastError=%lu (%s)"
+#include <LogIt.hpp>
+
+// ... далее в коде ...
+LOGIT_SYSERR_ERROR("Ошибка удаления временного каталога");
+```
+
 ## Возможности
 
 - **Гибкое форматирование логов**: 
