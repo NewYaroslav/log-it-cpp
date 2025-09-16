@@ -11,17 +11,26 @@
 
 #include <logit/config.hpp>
 
-#ifndef _WIN32
+#ifdef _WIN32
+#    include <process.h>
+#else
 #    include <csignal>
+#    include <unistd.h>
 #endif
 
 namespace logit_test {
+#if __cplusplus >= 201703L
+    inline int g_exit_code = -1;
+#else
     static int g_exit_code = -1;
+#endif
 
     inline void reset_exit_code() { g_exit_code = -1; }
 
-    inline void fake_exit(int code) { g_exit_code = code; }
+    extern "C" void fake_exit(int code);
 } // namespace logit_test
+
+extern "C" void logit_test::fake_exit(int code) { g_exit_code = code; }
 
 #define _exit ::logit_test::fake_exit
 #define private public
