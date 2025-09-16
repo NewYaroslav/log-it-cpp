@@ -1,13 +1,13 @@
 #pragma once
-#ifndef _LOGIT_LOG_STREAM_HPP_INCLUDED
-#define _LOGIT_LOG_STREAM_HPP_INCLUDED
+#ifndef _LOGIT_DETAIL_LOG_STREAM_HPP_INCLUDED
+#define _LOGIT_DETAIL_LOG_STREAM_HPP_INCLUDED
 
 /// \file LogStream.hpp
 /// \brief Defines the LogStream class for stream-like logging functionality.
 
 #include <sstream>
-#include "Logger.hpp"
-#include "utils/path_utils.hpp"
+#include "../Logger.hpp"
+#include "../utils/path_utils.hpp"
 
 namespace logit {
 
@@ -78,4 +78,4 @@ namespace logit {
 
 } // namespace logit
 
-#endif // _LOGIT_LOG_STREAM_HPP_INCLUDED
+#endif // _LOGIT_DETAIL_LOG_STREAM_HPP_INCLUDED

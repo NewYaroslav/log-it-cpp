@@ -9,7 +9,7 @@
 #include "logit/enums.hpp"
 #include "logit/utils.hpp"
 #include "logit/Logger.hpp"
-#include "logit/LogStream.hpp"
+#include "logit/detail/LogStream.hpp"
 #include "logit/detail/ScopeTimer.hpp"
 #include "logit/log_macros.hpp"
 #include "logit/formatter.hpp"
