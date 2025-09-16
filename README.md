@@ -10,12 +10,71 @@
 
 [Читать на русском](README-RU.md)
 
-## Introduction
+## Overview
 
-**LogIt++** is a flexible and versatile C++ logging library that supports various backends and stream-based output. It provides an easy-to-use interface for logging messages with different severity levels and allows customization of log formats and destinations.
+**LogIt++** is a macro-first C++ logging library that supports C++11 and newer toolchains. It pairs lightweight instrumentation macros with configurable backends (console, rotating files, syslog, Windows Event Log, or custom sinks) and routes messages through an asynchronous queue so applications remain responsive while recording detailed diagnostics. The library combines the convenience of macro-driven logging similar to **IceCream-Cpp** with the configurability of engines such as **spdlog**.
 
-The library combines the simplicity of macro-based logging similar to **IceCream-Cpp** and the configurability of logging backends and formats like **spdlog**. 
-LogIt++ is fully compatible with `C++11`.
+Key characteristics:
+
+- **Macro-oriented API.** Consistent macro families (`LOGIT_<LEVEL>`, `LOGIT_PRINTF_<LEVEL>`, `LOGIT_STREAM_<LEVEL>`, etc.) cover immediate messages, printf-style formatting, streaming, throttling, and tagging. Defining `LOGIT_SHORT_NAME` when including `<LogIt.hpp>` enables compact aliases like `LOG_I`, `LOG_WPF`, and `LOG_S_INFO`.
+- **Flexible formatting and routing.** Customize output patterns, mix console/file/system backends, or supply custom logger implementations.
+- **Async by default.** Each backend is served by the task executor with configurable queue sizes and overflow policies, plus helpers such as `LOGIT_WARN_ONCE` or `LOGIT_ERROR_THROTTLE` to keep repeated messages under control.
+
+See the macro examples below or browse the `examples/` folder for focused demonstrations, including queue tuning and crash handling.
+
+## Macro Examples
+
+### Long-form macros
+
+```cpp
+#include <LogIt.hpp>
+
+int main() {
+    LOGIT_ADD_CONSOLE_DEFAULT();
+    LOGIT_SET_MAX_QUEUE(32);
+    LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP);
+
+    const bool verbose = true;
+    int attempt = 1;
+    double latency_ms = 12.5;
+
+    LOGIT_TRACE0();
+    LOGIT_DEBUG_IF(verbose, "Verbose diagnostics enabled");
+    LOGIT_INFO("Starting service", attempt);
+    LOGIT_WARN_ONCE("initializing subsystem");
+    LOGIT_ERROR_EVERY_N(3, "retrying connection", attempt);
+    LOGIT_ERROR_THROTTLE(250, "still failing");
+    LOGIT_PRINTF_WARN("Latency %.2f ms", latency_ms);
+    LOGIT_FORMAT_INFO("%.2f", 1.23f, 4.56f);
+    LOGIT_INFO_TAG(({{"order_id", 123}, {"side", "BUY"}}), "sent order");
+    LOGIT_STREAM_INFO() << "Streaming value: " << attempt;
+
+    LOGIT_WAIT();
+}
+```
+
+### Short aliases
+
+Define `LOGIT_SHORT_NAME` before including `<LogIt.hpp>` to enable single-letter level prefixes:
+
+```cpp
+#define LOGIT_SHORT_NAME
+#include <LogIt.hpp>
+
+void short_names_demo() {
+    LOGIT_ADD_CONSOLE_DEFAULT(); // call once during initialization
+
+    int attempt = 2;
+
+    LOG_I("Short alias for info");
+    LOG_IPF("Attempt %d finished", attempt);
+    LOG_W("Warning alias");
+    LOG_WPF("Retry %d/3", attempt);
+    LOG_S_INFO() << "Streaming alias " << attempt;
+}
+```
+
+For a standalone program that brings everything together and intentionally aborts after logging a fatal message, check `examples/example_logit_minimal_crash.cpp`.
 
 ---
 
