@@ -3,12 +3,14 @@
 #define _LOGIT_UTILS_HPP_INCLUDED
 
 /// \file utils.hpp
-/// \brief Aggregates various utility modules used throughout the project.
+/// \brief Aggregates the public utilities module.
 ///
-/// This header includes modules for formatting, handling variable values, argument parsing,
-/// encoding utilities, path utilities, and log record management. Including this header
-/// provides a single point of access to common utility functions and types.
+/// This header is a self-contained entry point that exposes all utility components required
+/// by the library: configuration macros, enums, formatting helpers, value wrappers and the
+/// log record type. Include
+/// it before any header inside `utils/` to satisfy the nearest-header requirement.
 
+#include "config.hpp"
 #include "enums.hpp"
 #include "utils/format.hpp"
 #include "utils/VariableValue.hpp"

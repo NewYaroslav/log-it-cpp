@@ -6,10 +6,6 @@
 /// \brief File logger implementation that outputs logs to files with rotation and deletion of old logs.
 
 #include "ILogger.hpp"
-#include "../enums.hpp"
-#ifndef __EMSCRIPTEN__
-#include "../detail/CompressionWorker.hpp"
-#endif
 #include <iostream>
 #include <fstream>
 #include <mutex>

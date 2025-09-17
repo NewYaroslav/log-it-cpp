@@ -9,9 +9,6 @@
 /// \file system_error_macros.hpp
 /// \brief Internal helpers shared by the system error logging macros.
 
-#include "../config.hpp"
-#include "../utils/format.hpp"
-
 #if defined(_WIN32)
 #include <windows.h>
 #endif

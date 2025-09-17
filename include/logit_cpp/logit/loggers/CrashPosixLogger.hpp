@@ -6,7 +6,6 @@
 /// \brief POSIX crash logger persisting the last messages to a file descriptor.
 
 #include "ILogger.hpp"
-#include "../utils.hpp"
 
 #include <atomic>
 #include <array>

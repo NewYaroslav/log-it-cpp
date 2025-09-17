@@ -3,9 +3,19 @@
 #define _LOGIT_LOGGERS_HPP_INCLUDED
 
 /// \file loggers.hpp
-/// \brief Aggregates all logger implementations for convenient inclusion.
+/// \brief Aggregates all public logger backends.
+///
+/// This header is self-contained: it prepares common configuration, utility and detail
+/// dependencies before including each backend implementation. Include it prior to including
+/// any header under `loggers/` to satisfy the nearest-header requirement.
 
+#include "config.hpp"
+#include "utils.hpp"
 #include "detail/TaskExecutor.hpp"
+#ifndef __EMSCRIPTEN__
+#include "detail/CompressionWorker.hpp"
+#endif
+
 #include "loggers/ILogger.hpp"
 #include "loggers/ConsoleLogger.hpp"
 #include "loggers/FileLogger.hpp"

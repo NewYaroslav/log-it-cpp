@@ -6,7 +6,6 @@
 /// \\brief Windows crash logger persisting the last messages to a file handle.
 
 #include "ILogger.hpp"
-#include "../utils.hpp"
 
 #include <array>
 #include <atomic>
