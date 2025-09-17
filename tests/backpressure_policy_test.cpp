@@ -20,12 +20,16 @@ constexpr auto kSlowTaskDelay = std::chrono::milliseconds{5};
 
 struct ScenarioResult {
     std::chrono::steady_clock::duration publish_duration{};
+    std::chrono::steady_clock::duration enforced_gate_delay{};
     std::size_t processed{};
     std::size_t dropped{};
 };
 
-ScenarioResult run_single_producer_scenario(logit::detail::QueuePolicy policy,
-                                           bool hold_consumer) {
+ScenarioResult run_single_producer_scenario(
+    logit::detail::QueuePolicy policy,
+    bool hold_consumer,
+    std::chrono::steady_clock::duration gate_delay =
+        std::chrono::steady_clock::duration::zero()) {
     auto &executor = logit::detail::TaskExecutor::get_instance();
     LOGIT_SET_QUEUE_POLICY(policy);
     LOGIT_RESET_DROPPED_TASKS();
@@ -36,19 +40,28 @@ ScenarioResult run_single_producer_scenario(logit::detail::QueuePolicy policy,
     bool gate_open = !hold_consumer;
 
     const auto start = std::chrono::steady_clock::now();
-    for (std::size_t i = 0; i < kSingleProducerBurst; ++i) {
-        executor.add_task([&processed, hold_consumer, &gate_cv, &gate_mutex, &gate_open]() {
-            if (hold_consumer) {
-                std::unique_lock<std::mutex> lock(gate_mutex);
-                gate_cv.wait(lock, [&gate_open]() { return gate_open; });
-            }
-            std::this_thread::sleep_for(kSlowTaskDelay);
-            processed.fetch_add(1, std::memory_order_relaxed);
-        });
-    }
-    const auto publish_duration = std::chrono::steady_clock::now() - start;
+    std::thread publisher([&executor,
+                           &processed,
+                           hold_consumer,
+                           &gate_cv,
+                           &gate_mutex,
+                           &gate_open]() {
+        for (std::size_t i = 0; i < kSingleProducerBurst; ++i) {
+            executor.add_task([&processed, hold_consumer, &gate_cv, &gate_mutex, &gate_open]() {
+                if (hold_consumer) {
+                    std::unique_lock<std::mutex> lock(gate_mutex);
+                    gate_cv.wait(lock, [&gate_open]() { return gate_open; });
+                }
+                std::this_thread::sleep_for(kSlowTaskDelay);
+                processed.fetch_add(1, std::memory_order_relaxed);
+            });
+        }
+    });
 
     if (hold_consumer) {
+        if (gate_delay > std::chrono::steady_clock::duration::zero()) {
+            std::this_thread::sleep_for(gate_delay);
+        }
         {
             std::lock_guard<std::mutex> lock(gate_mutex);
             gate_open = true;
@@ -56,10 +69,16 @@ ScenarioResult run_single_producer_scenario(logit::detail::QueuePolicy policy,
         gate_cv.notify_all();
     }
 
+    publisher.join();
+    const auto publish_duration = std::chrono::steady_clock::now() - start;
+
     executor.wait();
 
     ScenarioResult result{};
     result.publish_duration = publish_duration;
+    if (hold_consumer) {
+        result.enforced_gate_delay = gate_delay;
+    }
     result.processed = processed.load(std::memory_order_relaxed);
     result.dropped = LOGIT_GET_DROPPED_TASKS();
     return result;
@@ -133,8 +152,12 @@ int main() {
 
     LOGIT_SET_MAX_QUEUE(kSingleProducerQueueCapacity);
 
-    const auto block_result = run_single_producer_scenario(logit::detail::QueuePolicy::Block,
-                                                          false);
+    const auto deterministic_gate_delay =
+        kSlowTaskDelay * (kSingleProducerBurst / 2);
+    const auto block_result =
+        run_single_producer_scenario(logit::detail::QueuePolicy::Block,
+                                     true,
+                                     deterministic_gate_delay);
     if (block_result.processed != kSingleProducerBurst) {
         return 1;
     }
@@ -179,9 +202,7 @@ int main() {
         return 11;
     }
 
-    const auto minimum_expected_block_duration =
-        kSlowTaskDelay * (kSingleProducerBurst / 2);
-    if (block_result.publish_duration < minimum_expected_block_duration) {
+    if (block_result.publish_duration < deterministic_gate_delay) {
         return 12;
     }
 
