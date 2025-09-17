@@ -191,8 +191,8 @@ int main() {
     if (drop_newest_result.processed + drop_newest_result.dropped != kSingleProducerBurst) {
         return 4;
     }
-    const auto single_min_survivors = std::min(kSingleProducerQueueCapacity, kSingleProducerBurst);
-    const auto single_max_survivors = std::min(kSingleProducerQueueCapacity + 1, kSingleProducerBurst);
+    const auto single_min_survivors = (std::min)(kSingleProducerQueueCapacity, kSingleProducerBurst);
+    const auto single_max_survivors = (std::min)(kSingleProducerQueueCapacity + 1, kSingleProducerBurst);
     if (drop_newest_result.processed < single_min_survivors) {
         return 5;
     }
@@ -251,8 +251,8 @@ int main() {
     if (drop_newest_multi.processed + drop_newest_multi.dropped != total_messages) {
         return 16;
     }
-    const auto multi_min_survivors = std::min(kMultiProducerQueueCapacity, total_messages);
-    const auto multi_max_survivors = std::min(kMultiProducerQueueCapacity + 1, total_messages);
+    const auto multi_min_survivors = (std::min)(kMultiProducerQueueCapacity, total_messages);
+    const auto multi_max_survivors = (std::min)(kMultiProducerQueueCapacity + 1, total_messages);
     if (drop_newest_multi.processed < multi_min_survivors) {
         return 17;
     }
