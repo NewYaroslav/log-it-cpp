@@ -1,8 +1,11 @@
 #include <logit.hpp>
 
+#include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <cstddef>
+#include <mutex>
 #include <thread>
 #include <vector>
 
@@ -21,21 +24,37 @@ struct ScenarioResult {
     std::size_t dropped{};
 };
 
-ScenarioResult run_single_producer_scenario(logit::detail::QueuePolicy policy) {
+ScenarioResult run_single_producer_scenario(logit::detail::QueuePolicy policy,
+                                           bool hold_consumer) {
     auto &executor = logit::detail::TaskExecutor::get_instance();
     LOGIT_SET_QUEUE_POLICY(policy);
     LOGIT_RESET_DROPPED_TASKS();
 
     std::atomic<std::size_t> processed{0};
+    std::condition_variable gate_cv;
+    std::mutex gate_mutex;
+    bool gate_open = !hold_consumer;
 
     const auto start = std::chrono::steady_clock::now();
     for (std::size_t i = 0; i < kSingleProducerBurst; ++i) {
-        executor.add_task([&processed]() {
+        executor.add_task([&processed, hold_consumer, &gate_cv, &gate_mutex, &gate_open]() {
+            if (hold_consumer) {
+                std::unique_lock<std::mutex> lock(gate_mutex);
+                gate_cv.wait(lock, [&gate_open]() { return gate_open; });
+            }
             std::this_thread::sleep_for(kSlowTaskDelay);
             processed.fetch_add(1, std::memory_order_relaxed);
         });
     }
     const auto publish_duration = std::chrono::steady_clock::now() - start;
+
+    if (hold_consumer) {
+        {
+            std::lock_guard<std::mutex> lock(gate_mutex);
+            gate_open = true;
+        }
+        gate_cv.notify_all();
+    }
 
     executor.wait();
 
@@ -51,24 +70,32 @@ struct MultiProducerResult {
     std::size_t dropped{};
 };
 
-MultiProducerResult run_multi_producer_scenario(logit::detail::QueuePolicy policy) {
+MultiProducerResult run_multi_producer_scenario(logit::detail::QueuePolicy policy,
+                                               bool hold_consumer) {
     auto &executor = logit::detail::TaskExecutor::get_instance();
     LOGIT_SET_QUEUE_POLICY(policy);
     LOGIT_RESET_DROPPED_TASKS();
 
     std::atomic<std::size_t> processed{0};
     std::atomic<bool> start_flag{false};
+    std::condition_variable gate_cv;
+    std::mutex gate_mutex;
+    bool gate_open = !hold_consumer;
 
     std::vector<std::thread> producers;
     producers.reserve(kMultiProducerThreads);
 
     for (std::size_t i = 0; i < kMultiProducerThreads; ++i) {
-        producers.emplace_back([&executor, &processed, &start_flag]() {
+        producers.emplace_back([&executor, &processed, &start_flag, hold_consumer, &gate_cv, &gate_mutex, &gate_open]() {
             while (!start_flag.load(std::memory_order_acquire)) {
                 std::this_thread::yield();
             }
             for (std::size_t j = 0; j < kMessagesPerProducer; ++j) {
-                executor.add_task([&processed]() {
+                executor.add_task([&processed, hold_consumer, &gate_cv, &gate_mutex, &gate_open]() {
+                    if (hold_consumer) {
+                        std::unique_lock<std::mutex> lock(gate_mutex);
+                        gate_cv.wait(lock, [&gate_open]() { return gate_open; });
+                    }
                     std::this_thread::sleep_for(kSlowTaskDelay);
                     processed.fetch_add(1, std::memory_order_relaxed);
                 });
@@ -80,6 +107,14 @@ MultiProducerResult run_multi_producer_scenario(logit::detail::QueuePolicy polic
 
     for (auto &producer : producers) {
         producer.join();
+    }
+
+    if (hold_consumer) {
+        {
+            std::lock_guard<std::mutex> lock(gate_mutex);
+            gate_open = true;
+        }
+        gate_cv.notify_all();
     }
 
     executor.wait();
@@ -98,7 +133,8 @@ int main() {
 
     LOGIT_SET_MAX_QUEUE(kSingleProducerQueueCapacity);
 
-    const auto block_result = run_single_producer_scenario(logit::detail::QueuePolicy::Block);
+    const auto block_result = run_single_producer_scenario(logit::detail::QueuePolicy::Block,
+                                                          false);
     if (block_result.processed != kSingleProducerBurst) {
         return 1;
     }
@@ -106,33 +142,43 @@ int main() {
         return 2;
     }
 
-    const auto drop_newest_result = run_single_producer_scenario(logit::detail::QueuePolicy::DropNewest);
+    const auto drop_newest_result = run_single_producer_scenario(logit::detail::QueuePolicy::DropNewest,
+                                                                true);
     if (drop_newest_result.dropped == 0) {
         return 3;
     }
-    if (drop_newest_result.processed >= kSingleProducerBurst) {
+    if (drop_newest_result.processed + drop_newest_result.dropped != kSingleProducerBurst) {
         return 4;
     }
-    if (drop_newest_result.processed + drop_newest_result.dropped != kSingleProducerBurst) {
+    const auto single_min_survivors = std::min(kSingleProducerQueueCapacity, kSingleProducerBurst);
+    const auto single_max_survivors = std::min(kSingleProducerQueueCapacity + 1, kSingleProducerBurst);
+    if (drop_newest_result.processed < single_min_survivors) {
         return 5;
     }
-
-    const auto drop_oldest_result = run_single_producer_scenario(logit::detail::QueuePolicy::DropOldest);
-    if (drop_oldest_result.dropped == 0) {
+    if (drop_newest_result.processed > single_max_survivors) {
         return 6;
     }
-    if (drop_oldest_result.processed >= kSingleProducerBurst) {
+
+    const auto drop_oldest_result = run_single_producer_scenario(logit::detail::QueuePolicy::DropOldest,
+                                                                true);
+    if (drop_oldest_result.dropped == 0) {
         return 7;
     }
     if (drop_oldest_result.processed + drop_oldest_result.dropped != kSingleProducerBurst) {
         return 8;
     }
-
-    if (block_result.publish_duration <= drop_newest_result.publish_duration) {
+    if (drop_oldest_result.processed < single_min_survivors) {
         return 9;
     }
-    if (block_result.publish_duration <= drop_oldest_result.publish_duration) {
+    if (drop_oldest_result.processed > single_max_survivors) {
         return 10;
+    }
+
+    if (block_result.publish_duration <= drop_newest_result.publish_duration) {
+        return 11;
+    }
+    if (block_result.publish_duration <= drop_oldest_result.publish_duration) {
+        return 12;
     }
 
     LOGIT_RESET_DROPPED_TASKS();
@@ -141,34 +187,45 @@ int main() {
 
     const auto total_messages = kMultiProducerThreads * kMessagesPerProducer;
 
-    const auto block_multi_result = run_multi_producer_scenario(logit::detail::QueuePolicy::Block);
+    const auto block_multi_result = run_multi_producer_scenario(logit::detail::QueuePolicy::Block,
+                                                                false);
     if (block_multi_result.processed != total_messages) {
-        return 11;
-    }
-    if (block_multi_result.dropped != 0) {
-        return 12;
-    }
-
-    const auto drop_newest_multi = run_multi_producer_scenario(logit::detail::QueuePolicy::DropNewest);
-    if (drop_newest_multi.dropped == 0) {
         return 13;
     }
-    if (drop_newest_multi.processed + drop_newest_multi.dropped != total_messages) {
+    if (block_multi_result.dropped != 0) {
         return 14;
     }
-    if (drop_newest_multi.dropped < kMultiProducerThreads) {
+
+    const auto drop_newest_multi = run_multi_producer_scenario(logit::detail::QueuePolicy::DropNewest,
+                                                               true);
+    if (drop_newest_multi.dropped == 0) {
         return 15;
     }
-
-    const auto drop_oldest_multi = run_multi_producer_scenario(logit::detail::QueuePolicy::DropOldest);
-    if (drop_oldest_multi.dropped == 0) {
+    if (drop_newest_multi.processed + drop_newest_multi.dropped != total_messages) {
         return 16;
     }
-    if (drop_oldest_multi.processed + drop_oldest_multi.dropped != total_messages) {
+    const auto multi_min_survivors = std::min(kMultiProducerQueueCapacity, total_messages);
+    const auto multi_max_survivors = std::min(kMultiProducerQueueCapacity + 1, total_messages);
+    if (drop_newest_multi.processed < multi_min_survivors) {
         return 17;
     }
-    if (drop_oldest_multi.dropped < kMultiProducerThreads) {
+    if (drop_newest_multi.processed > multi_max_survivors) {
         return 18;
+    }
+
+    const auto drop_oldest_multi = run_multi_producer_scenario(logit::detail::QueuePolicy::DropOldest,
+                                                               true);
+    if (drop_oldest_multi.dropped == 0) {
+        return 19;
+    }
+    if (drop_oldest_multi.processed + drop_oldest_multi.dropped != total_messages) {
+        return 20;
+    }
+    if (drop_oldest_multi.processed < multi_min_survivors) {
+        return 21;
+    }
+    if (drop_oldest_multi.processed > multi_max_survivors) {
+        return 22;
     }
 
     LOGIT_RESET_DROPPED_TASKS();
