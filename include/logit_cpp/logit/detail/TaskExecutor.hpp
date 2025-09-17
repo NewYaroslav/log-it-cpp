@@ -211,7 +211,7 @@ namespace logit { namespace detail {
                         }
 
                         std::unique_lock<std::mutex> lk(m_cv_mutex);
-                        m_cv.wait_for(lk, std::chrono::microseconds(50));
+                        m_cv.wait_for(lk, std::chrono::microseconds(200));
                     }
                 }
                 case QueuePolicy::DropOldest:
@@ -253,8 +253,24 @@ namespace logit { namespace detail {
                     return;
                 }
 #else
-                    ++m_dropped_tasks;
+                {
+                    std::function<void()> discarded;
+                    if (m_mpsc_queue.try_pop(discarded)) {
+                        m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
+                        if (m_mpsc_queue.try_push(local_task)) {
+                            m_cv.notify_one();
+                            return;
+                        }
+
+                        // Could not push even after evicting the oldest task;
+                        // treat the incoming task as dropped as well.
+                        m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
+                        return;
+                    }
+
+                    m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
                     return;
+                }
 #endif
             }
 #else
@@ -333,12 +349,13 @@ namespace logit { namespace detail {
         /// \param size Maximum number of tasks in the queue (0 for unlimited).
         void set_max_queue_size(std::size_t size) {
 #ifdef LOGIT_USE_MPSC_RING
+            wait();
             std::lock_guard<std::mutex> lk(m_queue_mutex);
             m_max_queue_size = size;
-            if (queue_empty_() && m_active_tasks.load(std::memory_order_relaxed) == 0) {
-                std::size_t cap = (m_max_queue_size == 0 ? m_default_ring_cap : m_max_queue_size);
-                m_mpsc_queue = MpscRingAny<std::function<void()>>(cap);
-            }
+            const std::size_t cap =
+                (m_max_queue_size == 0 ? m_default_ring_cap : m_max_queue_size);
+            m_mpsc_queue = MpscRingAny<std::function<void()>>(cap);
+            m_cv.notify_all();
 #else
             std::lock_guard<std::mutex> lock(m_queue_mutex);
             m_max_queue_size = size;
@@ -446,6 +463,7 @@ namespace logit { namespace detail {
                 if (queue_empty_() && m_active_tasks.load(std::memory_order_relaxed) == 0) {
                     std::unique_lock<std::mutex> lock(m_queue_mutex);
                     m_queue_condition.notify_all();
+                    m_cv.notify_all();
                     if (m_stop_flag.load(std::memory_order_relaxed)) {
                         break;
                     }
