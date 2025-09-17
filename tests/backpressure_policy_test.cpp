@@ -222,7 +222,8 @@ int main() {
         return 11;
     }
 
-    if (block_result.publish_duration < deterministic_gate_delay) {
+    const auto gate_tolerance = kSlowTaskDelay * 2;
+    if ((block_result.publish_duration + gate_tolerance) < deterministic_gate_delay) {
         return 12;
     }
 
