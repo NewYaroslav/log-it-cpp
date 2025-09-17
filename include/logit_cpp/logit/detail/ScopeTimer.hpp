@@ -5,10 +5,6 @@
 /// \file ScopeTimer.hpp
 /// \brief RAII timer that logs the duration of a scope.
 
-#include "../config.hpp"
-#include "../utils.hpp"
-#include "../Logger.hpp"
-
 #include <chrono>
 #include <string>
 

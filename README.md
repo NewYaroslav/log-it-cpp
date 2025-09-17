@@ -20,6 +20,26 @@ Key characteristics:
 - **Flexible formatting and routing.** Customize output patterns, mix console/file/system backends, or supply custom logger implementations.
 - **Async by default.** Each backend is served by the task executor with configurable queue sizes and overflow policies, plus helpers such as `LOGIT_WARN_ONCE` or `LOGIT_ERROR_THROTTLE` to keep repeated messages under control.
 
+## Header layout
+
+The library ships with self-contained umbrella headers that provide a predictable include order:
+
+| Entry point | Purpose |
+|-------------|---------|
+| `<logit.hpp>` | Brings in configuration macros, enums, utilities, formatters, loggers, the singleton `Logger` and public macros. |
+| `<logit/utils.hpp>` | Aggregates everything in `logit/utils/`, including `LogRecord`, formatting helpers and argument utilities. |
+| `<logit/formatter.hpp>` | Provides formatter interfaces and the default pattern compiler implementation. |
+| `<logit/loggers.hpp>` | Exposes the logger backends and prepares their internal dependencies. |
+
+Leaf headers follow the **Nearest Header Requirement (NHR)**: include the matching umbrella *first* and then the specific header you need, e.g.
+
+```cpp
+#include <logit/utils.hpp>
+#include <logit/utils/LogRecord.hpp>
+```
+
+Internal headers under `logit/detail/` are private implementation details and should not be included directly by consumers.
+
 See the macro examples below or browse the `examples/` folder for focused demonstrations, including queue tuning and crash handling.
 
 ## Macro Examples

@@ -6,8 +6,6 @@
 /// \brief Defines the LogStream class for stream-like logging functionality.
 
 #include <sstream>
-#include "../Logger.hpp"
-#include "../utils/path_utils.hpp"
 
 namespace logit {
 

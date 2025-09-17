@@ -3,17 +3,19 @@
 #define LOGIT_CPP_LOGIT_HPP
 
 /// \file logit.hpp
-/// \brief Main header file for the LogIt++ library.
+/// \brief Unified umbrella header for the LogIt++ library.
+///
+/// Including this header provides a fully self-contained entry point that
+/// aggregates configuration, utilities, formatters, loggers and the logging
+/// façade. No additional includes are required to start using the library.
 
 #include "logit/config.hpp"
 #include "logit/enums.hpp"
 #include "logit/utils.hpp"
-#include "logit/Logger.hpp"
-#include "logit/detail/LogStream.hpp"
-#include "logit/detail/ScopeTimer.hpp"
-#include "logit/log_macros.hpp"
 #include "logit/formatter.hpp"
 #include "logit/loggers.hpp"
+#include "logit/Logger.hpp"
+#include "logit/log_macros.hpp"
 
 /// \namespace logit
 /// \brief The primary namespace for the LogIt++ library.

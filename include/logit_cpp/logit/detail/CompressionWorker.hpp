@@ -21,8 +21,6 @@
 #   include <zstd.h>
 #endif
 
-#include "../enums.hpp"
-
 namespace logit { namespace detail {
 
     /// \brief Compress a file using the specified compression type.

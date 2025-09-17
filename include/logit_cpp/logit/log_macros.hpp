@@ -7,7 +7,12 @@
 #endif
 
 #include "config.hpp"
-#include "utils/format.hpp"
+#include "utils.hpp"
+#include "Logger.hpp"
+
+#include "detail/LogStream.hpp"
+#include "detail/ScopeTimer.hpp"
+#include "detail/system_error_macros.hpp"
 
 /// \file log_macros.hpp
 /// \brief Provides various logging macros for different log levels and options.
@@ -70,8 +75,6 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 //------------------------------------------------------------------------------
 // System error logging helpers
-
-#include "detail/system_error_macros.hpp"
 
 //------------------------------------------------------------------------------
 // Platform-specific error logging macros

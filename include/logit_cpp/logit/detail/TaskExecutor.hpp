@@ -5,8 +5,6 @@
 /// \file TaskExecutor.hpp
 /// \brief Defines the TaskExecutor class, which manages task execution in a separate thread.
 
-#include "../config.hpp"
-
 #include <functional>
 #include <atomic>
 #if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
