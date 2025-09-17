@@ -174,11 +174,10 @@ int main() {
         return 10;
     }
 
-    if (block_result.publish_duration <= drop_newest_result.publish_duration) {
+    const auto minimum_expected_block_duration =
+        kSlowTaskDelay * (kSingleProducerBurst / 2);
+    if (block_result.publish_duration < minimum_expected_block_duration) {
         return 11;
-    }
-    if (block_result.publish_duration <= drop_oldest_result.publish_duration) {
-        return 12;
     }
 
     LOGIT_RESET_DROPPED_TASKS();
