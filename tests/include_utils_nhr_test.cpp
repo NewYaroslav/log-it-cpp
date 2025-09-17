@@ -12,6 +12,6 @@ int main() {
         "",
         -1,
         true);
-    record.args_array.emplace_back(42);
+    record.args_array.emplace_back("answer", 42);
     return record.logger_index == -1 ? 0 : 1;
 }
