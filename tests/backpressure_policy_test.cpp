@@ -37,18 +37,20 @@ ScenarioResult run_single_producer_scenario(
     std::atomic<std::size_t> processed{0};
     std::condition_variable gate_cv;
     std::mutex gate_mutex;
-    bool gate_open = !hold_consumer;
+    const bool gating_requested = hold_consumer ||
+                                  gate_delay > std::chrono::steady_clock::duration::zero();
+    bool gate_open = !gating_requested;
 
     const auto start = std::chrono::steady_clock::now();
     std::thread publisher([&executor,
                            &processed,
-                           hold_consumer,
+                           gating_requested,
                            &gate_cv,
                            &gate_mutex,
                            &gate_open]() {
         for (std::size_t i = 0; i < kSingleProducerBurst; ++i) {
-            executor.add_task([&processed, hold_consumer, &gate_cv, &gate_mutex, &gate_open]() {
-                if (hold_consumer) {
+            executor.add_task([&processed, gating_requested, &gate_cv, &gate_mutex, &gate_open]() {
+                if (gating_requested) {
                     std::unique_lock<std::mutex> lock(gate_mutex);
                     gate_cv.wait(lock, [&gate_open]() { return gate_open; });
                 }
@@ -58,7 +60,7 @@ ScenarioResult run_single_producer_scenario(
         }
     });
 
-    if (hold_consumer) {
+    if (gating_requested) {
         if (gate_delay > std::chrono::steady_clock::duration::zero()) {
             std::this_thread::sleep_for(gate_delay);
         }
@@ -76,7 +78,7 @@ ScenarioResult run_single_producer_scenario(
 
     ScenarioResult result{};
     result.publish_duration = publish_duration;
-    if (hold_consumer) {
+    if (gate_delay > std::chrono::steady_clock::duration::zero()) {
         result.enforced_gate_delay = gate_delay;
     }
     result.processed = processed.load(std::memory_order_relaxed);
@@ -89,8 +91,11 @@ struct MultiProducerResult {
     std::size_t dropped{};
 };
 
-MultiProducerResult run_multi_producer_scenario(logit::detail::QueuePolicy policy,
-                                               bool hold_consumer) {
+MultiProducerResult run_multi_producer_scenario(
+    logit::detail::QueuePolicy policy,
+    bool hold_consumer,
+    std::chrono::steady_clock::duration gate_delay =
+        std::chrono::steady_clock::duration::zero()) {
     auto &executor = logit::detail::TaskExecutor::get_instance();
     LOGIT_SET_QUEUE_POLICY(policy);
     LOGIT_RESET_DROPPED_TASKS();
@@ -99,19 +104,27 @@ MultiProducerResult run_multi_producer_scenario(logit::detail::QueuePolicy polic
     std::atomic<bool> start_flag{false};
     std::condition_variable gate_cv;
     std::mutex gate_mutex;
-    bool gate_open = !hold_consumer;
+    const bool gating_requested = hold_consumer ||
+                                  gate_delay > std::chrono::steady_clock::duration::zero();
+    bool gate_open = !gating_requested;
 
     std::vector<std::thread> producers;
     producers.reserve(kMultiProducerThreads);
 
     for (std::size_t i = 0; i < kMultiProducerThreads; ++i) {
-        producers.emplace_back([&executor, &processed, &start_flag, hold_consumer, &gate_cv, &gate_mutex, &gate_open]() {
+        producers.emplace_back([&executor,
+                                &processed,
+                                &start_flag,
+                                gating_requested,
+                                &gate_cv,
+                                &gate_mutex,
+                                &gate_open]() {
             while (!start_flag.load(std::memory_order_acquire)) {
                 std::this_thread::yield();
             }
             for (std::size_t j = 0; j < kMessagesPerProducer; ++j) {
-                executor.add_task([&processed, hold_consumer, &gate_cv, &gate_mutex, &gate_open]() {
-                    if (hold_consumer) {
+                executor.add_task([&processed, gating_requested, &gate_cv, &gate_mutex, &gate_open]() {
+                    if (gating_requested) {
                         std::unique_lock<std::mutex> lock(gate_mutex);
                         gate_cv.wait(lock, [&gate_open]() { return gate_open; });
                     }
@@ -128,7 +141,10 @@ MultiProducerResult run_multi_producer_scenario(logit::detail::QueuePolicy polic
         producer.join();
     }
 
-    if (hold_consumer) {
+    if (gating_requested) {
+        if (gate_delay > std::chrono::steady_clock::duration::zero()) {
+            std::this_thread::sleep_for(gate_delay);
+        }
         {
             std::lock_guard<std::mutex> lock(gate_mutex);
             gate_open = true;
@@ -165,8 +181,10 @@ int main() {
         return 2;
     }
 
-    const auto drop_newest_result = run_single_producer_scenario(logit::detail::QueuePolicy::DropNewest,
-                                                                true);
+    const auto drop_newest_result =
+        run_single_producer_scenario(logit::detail::QueuePolicy::DropNewest,
+                                     true,
+                                     deterministic_gate_delay);
     if (drop_newest_result.dropped == 0) {
         return 3;
     }
@@ -182,8 +200,10 @@ int main() {
         return 6;
     }
 
-    const auto drop_oldest_result = run_single_producer_scenario(logit::detail::QueuePolicy::DropOldest,
-                                                                true);
+    const auto drop_oldest_result =
+        run_single_producer_scenario(logit::detail::QueuePolicy::DropOldest,
+                                     true,
+                                     deterministic_gate_delay);
     if (drop_oldest_result.dropped == 0) {
         return 7;
     }
@@ -221,8 +241,10 @@ int main() {
         return 14;
     }
 
-    const auto drop_newest_multi = run_multi_producer_scenario(logit::detail::QueuePolicy::DropNewest,
-                                                               true);
+    const auto drop_newest_multi = run_multi_producer_scenario(
+        logit::detail::QueuePolicy::DropNewest,
+        true,
+        deterministic_gate_delay);
     if (drop_newest_multi.dropped == 0) {
         return 15;
     }
@@ -238,8 +260,10 @@ int main() {
         return 18;
     }
 
-    const auto drop_oldest_multi = run_multi_producer_scenario(logit::detail::QueuePolicy::DropOldest,
-                                                               true);
+    const auto drop_oldest_multi = run_multi_producer_scenario(
+        logit::detail::QueuePolicy::DropOldest,
+        true,
+        deterministic_gate_delay);
     if (drop_oldest_multi.dropped == 0) {
         return 19;
     }
