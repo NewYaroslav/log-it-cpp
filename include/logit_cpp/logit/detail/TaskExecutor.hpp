@@ -114,6 +114,17 @@ namespace logit { namespace detail {
             m_overflow_policy = policy;
         }
 
+        /// \brief Retrieve the number of tasks dropped due to overflow.
+        /// \return Total count of dropped tasks.
+        std::size_t dropped_tasks() const noexcept {
+            return m_dropped_tasks.load(std::memory_order_relaxed);
+        }
+
+        /// \brief Reset the dropped tasks counter back to zero.
+        void reset_dropped_tasks() noexcept {
+            m_dropped_tasks.store(0, std::memory_order_relaxed);
+        }
+
     private:
         TaskExecutor()
             : m_max_queue_size(0),
@@ -319,6 +330,17 @@ namespace logit { namespace detail {
         void set_queue_policy(QueuePolicy policy) {
             std::lock_guard<std::mutex> lock(m_queue_mutex);
             m_overflow_policy.store(policy, std::memory_order_relaxed);
+        }
+
+        /// \brief Returns the number of tasks dropped because of overflow.
+        /// \return Total dropped tasks observed so far.
+        std::size_t dropped_tasks() const noexcept {
+            return m_dropped_tasks.load(std::memory_order_relaxed);
+        }
+
+        /// \brief Resets the dropped tasks counter back to zero.
+        void reset_dropped_tasks() noexcept {
+            m_dropped_tasks.store(0, std::memory_order_relaxed);
         }
 
     private:
