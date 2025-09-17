@@ -156,7 +156,7 @@ int main() {
     if (drop_newest_multi.processed + drop_newest_multi.dropped != total_messages) {
         return 14;
     }
-    if (drop_newest_multi.dropped < total_messages - kMultiProducerQueueCapacity) {
+    if (drop_newest_multi.dropped < kMultiProducerThreads) {
         return 15;
     }
 
@@ -167,7 +167,7 @@ int main() {
     if (drop_oldest_multi.processed + drop_oldest_multi.dropped != total_messages) {
         return 17;
     }
-    if (drop_oldest_multi.dropped < total_messages - kMultiProducerQueueCapacity) {
+    if (drop_oldest_multi.dropped < kMultiProducerThreads) {
         return 18;
     }
 

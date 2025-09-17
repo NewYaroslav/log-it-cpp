@@ -200,20 +200,19 @@ namespace logit { namespace detail {
                     ++m_dropped_tasks;
                     return;
                 case QueuePolicy::Block: {
-                    for (int i = 0; i < 2000; ++i) {
+                    for (;;) {
                         if (m_mpsc_queue.try_push(local_task)) {
                             m_cv.notify_one();
                             return;
                         }
+
+                        if (m_stop_flag.load(std::memory_order_acquire)) {
+                            return;
+                        }
+
+                        std::unique_lock<std::mutex> lk(m_cv_mutex);
+                        m_cv.wait_for(lk, std::chrono::microseconds(50));
                     }
-                    std::unique_lock<std::mutex> lk(m_cv_mutex);
-                    m_cv.wait_for(lk, std::chrono::microseconds(50));
-                    if (m_mpsc_queue.try_push(local_task)) {
-                        m_cv.notify_one();
-                        return;
-                    }
-                    ++m_dropped_tasks;
-                    return;
                 }
                 case QueuePolicy::DropOldest:
 #ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
