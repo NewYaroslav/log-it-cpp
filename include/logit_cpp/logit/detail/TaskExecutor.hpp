@@ -217,15 +217,38 @@ namespace logit { namespace detail {
                 case QueuePolicy::DropOldest:
 #ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
                 {
-                    std::unique_lock<std::mutex> lk(m_drop_mutex);
-                    const std::size_t target = ++m_drop_requested;
-                    m_cv.notify_one();
-                    m_drop_cv.wait_for(lk, std::chrono::milliseconds(2),
-                        [this, target] { return m_drop_done >= target; });
+                    std::size_t target = 0;
+                    bool request_completed = false;
+                    {
+                        std::unique_lock<std::mutex> lk(m_drop_mutex);
+                        target = ++m_drop_requested;
+                        m_cv.notify_one();
+                        request_completed = m_drop_cv.wait_for(
+                            lk, std::chrono::milliseconds(2),
+                            [this, target] { return m_drop_done >= target; });
+                    }
+
+                    auto finalize_request = [this, target]() {
+                        std::unique_lock<std::mutex> lk(m_drop_mutex);
+                        if (m_drop_done < target) {
+                            m_drop_done = target;
+                            lk.unlock();
+                            m_drop_cv.notify_all();
+                        }
+                    };
+
                     if (m_mpsc_queue.try_push(local_task)) {
+                        if (!request_completed) {
+                            finalize_request();
+                        }
                         m_cv.notify_one();
                         return;
                     }
+
+                    if (!request_completed) {
+                        finalize_request();
+                    }
+
                     ++m_dropped_tasks;
                     return;
                 }
@@ -459,6 +482,7 @@ namespace logit { namespace detail {
                 std::function<void()> dummy;
                 if (m_mpsc_queue.try_pop(dummy)) {
                     ++m_drop_done;
+                    m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
                 } else {
                     break;
                 }

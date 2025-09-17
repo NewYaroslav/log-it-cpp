@@ -167,17 +167,22 @@ int main() {
     if (drop_oldest_result.processed + drop_oldest_result.dropped != kSingleProducerBurst) {
         return 8;
     }
-    if (drop_oldest_result.processed < single_min_survivors) {
+    const auto expected_single_oldest_drops =
+        kSingleProducerBurst - drop_oldest_result.processed;
+    if (drop_oldest_result.dropped != expected_single_oldest_drops) {
         return 9;
     }
-    if (drop_oldest_result.processed > single_max_survivors) {
+    if (drop_oldest_result.processed < single_min_survivors) {
         return 10;
+    }
+    if (drop_oldest_result.processed > single_max_survivors) {
+        return 11;
     }
 
     const auto minimum_expected_block_duration =
         kSlowTaskDelay * (kSingleProducerBurst / 2);
     if (block_result.publish_duration < minimum_expected_block_duration) {
-        return 11;
+        return 12;
     }
 
     LOGIT_RESET_DROPPED_TASKS();
@@ -220,11 +225,16 @@ int main() {
     if (drop_oldest_multi.processed + drop_oldest_multi.dropped != total_messages) {
         return 20;
     }
-    if (drop_oldest_multi.processed < multi_min_survivors) {
+    const auto expected_multi_oldest_drops =
+        total_messages - drop_oldest_multi.processed;
+    if (drop_oldest_multi.dropped != expected_multi_oldest_drops) {
         return 21;
     }
-    if (drop_oldest_multi.processed > multi_max_survivors) {
+    if (drop_oldest_multi.processed < multi_min_survivors) {
         return 22;
+    }
+    if (drop_oldest_multi.processed > multi_max_survivors) {
+        return 23;
     }
 
     LOGIT_RESET_DROPPED_TASKS();
