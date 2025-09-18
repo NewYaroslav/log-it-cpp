@@ -191,6 +191,12 @@ namespace logit { namespace detail {
             lock.unlock();
             m_queue_condition.notify_one();
 #        else
+            // Барьер ресайза: пережидаем «горячее» изменение кольца.
+            if (m_resizing.load(std::memory_order_acquire)) {
+                std::unique_lock<std::mutex> lk(m_cv_mutex);
+                m_resize_cv.wait(lk, [this]{ return !m_resizing.load(std::memory_order_acquire); });
+            }
+
             if (m_stop_flag.load(std::memory_order_acquire)) {
                 return;
             }
@@ -287,6 +293,9 @@ namespace logit { namespace detail {
         /// Изменить ёмкость очереди.
         void set_max_queue_size(std::size_t size) {
 #       ifdef LOGIT_USE_MPSC_RING
+            // Сигналим продюсерам, чтобы переждали ресайз (до любых ожиданий/стопов).
+            m_resizing.store(true, std::memory_order_release);
+
             // Дождаться опустошения очереди
             wait();
         
@@ -307,15 +316,18 @@ namespace logit { namespace detail {
         	const std::size_t cap =
         		(m_max_queue_size == 0 ? m_default_ring_cap : m_max_queue_size);
         	m_mpsc_queue = MpscRingAny<std::function<void()>>(cap);
-        
         	// обнулить счётчики (не обязательно, но логично при "чистой" очереди).
         	m_active_tasks.store(0, std::memory_order_relaxed);
         	// m_dropped_tasks оставляем как есть — тесты его сами сбрасывают макросом.
         	lk.unlock();
         
-            // Снять стоп-флаг и перезапустить воркер.
+            // Снимаем стоп-флаг, перезапускаем воркер…
             m_stop_flag.store(false, std::memory_order_relaxed);
             m_worker_thread = std::thread(&TaskExecutor::worker_function, this);
+
+            // Открываем барьер для продюсеров.
+            m_resizing.store(false, std::memory_order_release);
+            m_resize_cv.notify_all();
 #       else
             std::lock_guard<std::mutex> lock(m_queue_mutex);
             m_max_queue_size = size;
@@ -352,6 +364,9 @@ namespace logit { namespace detail {
     
         std::condition_variable m_cv;              ///< Будим воркер / продюсеров.
         std::mutex m_cv_mutex;                     ///< Сон продюсеров/воркера.
+
+        std::atomic<bool> m_resizing;              ///< true — идёт ресайз кольца.
+        std::condition_variable m_resize_cv;       ///< Продюсеры ждут окончания ресайза.
     
         std::thread m_worker_thread;
         std::atomic<bool> m_stop_flag;
@@ -440,7 +455,9 @@ namespace logit { namespace detail {
               m_dropped_tasks(0),
               m_active_tasks(0)
     #else
-            : m_stop_flag(false),
+            : m_resizing(false),
+              m_worker_thread(),
+              m_stop_flag(false),
               m_max_queue_size(0),
               m_overflow_policy(QueuePolicy::Block),
               m_dropped_tasks(0),
