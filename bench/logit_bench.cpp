@@ -1,4 +1,5 @@
 #include <array>
+#include <atomic>
 #include <chrono>
 #include <condition_variable>
 #include <cstdlib>
@@ -130,10 +131,34 @@ ScenarioResult execute_scenario(
     adapter.prepare(scenario, recorder);
 
     // Warm-up (no recording, no duration).
+    std::cout << "[logit_bench] Warm-up start lib=" << adapter.library_name()
+              << " async=" << (scenario.async ? '1' : '0')
+              << " sink=" << sink_name(scenario.sink)
+              << " producers=" << scenario.producers
+              << " bytes=" << scenario.message_bytes
+              << " total=" << warmup_messages << std::endl;
     run_workload(adapter, recorder, scenario, warmup_messages, false, false);
+    std::cout << "[logit_bench] Warm-up completed lib=" << adapter.library_name()
+              << " async=" << (scenario.async ? '1' : '0')
+              << " sink=" << sink_name(scenario.sink)
+              << " producers=" << scenario.producers
+              << " bytes=" << scenario.message_bytes
+              << std::endl;
 
     // Measured run.
+    std::cout << "[logit_bench] Measure start lib=" << adapter.library_name()
+              << " async=" << (scenario.async ? '1' : '0')
+              << " sink=" << sink_name(scenario.sink)
+              << " producers=" << scenario.producers
+              << " bytes=" << scenario.message_bytes
+              << " total=" << scenario.total_messages << std::endl;
     const auto dur = run_workload(adapter, recorder, scenario, scenario.total_messages, true, true);
+    std::cout << "[logit_bench] Measure completed lib=" << adapter.library_name()
+              << " async=" << (scenario.async ? '1' : '0')
+              << " sink=" << sink_name(scenario.sink)
+              << " producers=" << scenario.producers
+              << " bytes=" << scenario.message_bytes
+              << std::endl;
     const auto sum = recorder.finalize();
 
     double thr = 0.0;
@@ -197,6 +222,8 @@ void print_summary(
 
 int main() {
     using namespace logit_bench;
+    std::atomic<bool> watchdog_done{false};
+    std::thread watchdog;
     try {
         std::vector<std::unique_ptr<ILoggerAdapter>> adapters;
         adapters.emplace_back(std::make_unique<LogItAdapter>());
@@ -213,6 +240,23 @@ int main() {
         // Totals (can be overridden by env):
         const std::size_t total_messages  = get_env_size_t("LOGIT_BENCH_TOTAL", 200000);
         const std::size_t warmup_messages = get_env_size_t("LOGIT_BENCH_WARMUP", 4096);
+        const std::size_t timeout_seconds = get_env_size_t("LOGIT_BENCH_TIMEOUT_SEC", 600);
+
+        if (timeout_seconds > 0) {
+            watchdog = std::thread([timeout_seconds, &watchdog_done]() {
+                const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(timeout_seconds);
+                while (!watchdog_done.load(std::memory_order_relaxed)) {
+                    if (std::chrono::steady_clock::now() >= deadline) {
+                        std::cerr << "[logit_bench] Timeout reached after "
+                                  << timeout_seconds
+                                  << " seconds. Terminating benchmark." << std::endl;
+                        std::cerr.flush();
+                        std::_Exit(124);
+                    }
+                    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                }
+            });
+        }
 
         for (auto& adapter : adapters) {
             for (bool async_mode : async_modes) {
@@ -226,6 +270,12 @@ int main() {
                             scenario.message_bytes  = msg_bytes;
                             scenario.total_messages = total_messages;
 
+                            std::cout << "[logit_bench] Scenario start lib=" << adapter->library_name()
+                                      << " async=" << (scenario.async ? '1' : '0')
+                                      << " sink=" << sink_name(scenario.sink)
+                                      << " producers=" << scenario.producers
+                                      << " bytes=" << scenario.message_bytes
+                                      << " total=" << scenario.total_messages << std::endl;
                             auto result = execute_scenario(*adapter, scenario, warmup_messages);
                             append_csv(adapter->library_name(), scenario, result.summary, result.throughput);
                             print_summary(adapter->library_name(), scenario, result);
@@ -234,7 +284,11 @@ int main() {
                 }
             }
         }
+        watchdog_done.store(true, std::memory_order_relaxed);
+        if (watchdog.joinable()) watchdog.join();
     } catch (const std::exception& ex) {
+        watchdog_done.store(true, std::memory_order_relaxed);
+        if (watchdog.joinable()) watchdog.join();
         std::cerr << "Benchmark failed: " << ex.what() << std::endl;
         return 1;
     }
