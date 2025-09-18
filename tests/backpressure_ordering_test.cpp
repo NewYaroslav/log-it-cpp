@@ -23,6 +23,8 @@ int main() {
     LOGIT_SET_MAX_QUEUE(kQueueCapacity);
     LOGIT_RESET_DROPPED_TASKS();
 
+    // Векторы лежат в стеке main-потока, но их изменяют воркеры.
+    // Пишем/читаем их ТОЛЬКО под одним и тем же per-producer мьютексом.
     std::array<std::vector<std::size_t>, kProducers> sequences;
     for (auto &sequence : sequences) {
         sequence.clear();
@@ -37,6 +39,7 @@ int main() {
 
     for (std::size_t producer_id = 0; producer_id < kProducers; ++producer_id) {
         producers.emplace_back([producer_id, &executor, &start, &sequence_guards, &sequences]() {
+            // Барьер запуска
             while (!start.load(std::memory_order_acquire)) {
                 std::this_thread::yield();
             }
@@ -56,13 +59,16 @@ int main() {
         producer.join();
     }
 
-    executor.wait();
+    executor.wait(); // гарантируем завершение всех задач
 
     if (LOGIT_GET_DROPPED_TASKS() != 0) {
         return 1;
     }
 
+    // Читаем под тем же мьютексом — это устраняет data race в TSAN
     for (std::size_t producer_id = 0; producer_id < kProducers; ++producer_id) {
+        std::lock_guard<std::mutex> lock(sequence_guards[producer_id]);
+
         const auto &sequence = sequences[producer_id];
         if (sequence.size() != kMessagesPerProducer) {
             return 2;
