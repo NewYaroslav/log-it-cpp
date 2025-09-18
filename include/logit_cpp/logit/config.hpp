@@ -202,6 +202,14 @@
 /// Configuration options for the task executor implementation.
 /// \{
 
+/// \brief Maximum number of tasks drained per worker iteration in ring-buffer builds.
+/// If `LOGIT_TASK_EXECUTOR_DRAIN_BUDGET` is not defined, the worker drains up to 2048
+/// tasks before yielding. Increase the value to process larger bursts before sleeping,
+/// or reduce it to prioritise lower per-iteration latency.
+#ifndef LOGIT_TASK_EXECUTOR_DRAIN_BUDGET
+#define LOGIT_TASK_EXECUTOR_DRAIN_BUDGET 2048
+#endif
+
 /// \brief Default capacity for the task executor ring buffer when unlimited is requested.
 #ifndef LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY
 #define LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY 1024
