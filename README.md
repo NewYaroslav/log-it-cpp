@@ -747,7 +747,8 @@ cmake --build build --target logit_bench
 ```
 
 Run `./build/bench/logit_bench` to record the full matrix (sync/async × null/file × producer counts × message sizes). Results
-are appended to `bench/results/latency.csv` with one row per library/combination.
+are appended to `bench/results/latency.csv` with one row per library/combination. Override the workload via `LOGIT_BENCH_TOTAL`
+and `LOGIT_BENCH_WARMUP` environment variables if you need a lighter run.
 
 ---
 

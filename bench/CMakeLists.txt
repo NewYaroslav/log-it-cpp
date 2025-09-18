@@ -1,5 +1,5 @@
 set(LOGIT_BENCH_SOURCES
-    main.cpp
+    logit_bench.cpp
     adapters/LogItAdapter.cpp
 )
 
