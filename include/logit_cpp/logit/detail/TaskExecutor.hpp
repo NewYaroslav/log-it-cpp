@@ -21,8 +21,6 @@
 
 // Enable lock-free MPSC ring integration (non-Emscripten) by defining:
 //   #define LOGIT_USE_MPSC_RING
-// Optional: enable rare DropOldest slow-path coordination:
-//   #define LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
 
 #if !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)
 #   ifdef LOGIT_USE_MPSC_RING
@@ -218,28 +216,26 @@ namespace logit { namespace detail {
                         m_cv.wait_for(lk, std::chrono::microseconds(200));
                         break;
                     }
-                    case QueuePolicy::DropOldest:
-#ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
-                    {
+                    case QueuePolicy::DropOldest: {
                         std::size_t target = 0;
                         bool request_completed = false;
                         {
                             std::unique_lock<std::mutex> lk(m_drop_mutex);
                             target = ++m_drop_requested;
-                        m_cv.notify_one();
-                        request_completed = m_drop_cv.wait_for(
-                            lk, std::chrono::milliseconds(2),
-                            [this, target] { return m_drop_done >= target; });
-                    }
-
-                    auto finalize_request = [this, target]() {
-                        std::unique_lock<std::mutex> lk(m_drop_mutex);
-                        if (m_drop_done < target) {
-                            m_drop_done = target;
-                            lk.unlock();
-                            m_drop_cv.notify_all();
+                            m_cv.notify_one();
+                            request_completed = m_drop_cv.wait_for(
+                                lk, std::chrono::milliseconds(2),
+                                [this, target] { return m_drop_done >= target; });
                         }
-                    };
+
+                        auto finalize_request = [this, target]() {
+                            std::unique_lock<std::mutex> lk(m_drop_mutex);
+                            if (m_drop_done < target) {
+                                m_drop_done = target;
+                                lk.unlock();
+                                m_drop_cv.notify_all();
+                            }
+                        };
 
                         if (m_mpsc_queue.try_push(local_task)) {
                             if (!request_completed) {
@@ -256,26 +252,6 @@ namespace logit { namespace detail {
                         m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
                         return;
                     }
-#else
-                    {
-                        std::function<void()> discarded;
-                        if (m_mpsc_queue.try_pop(discarded)) {
-                            m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
-                            if (m_mpsc_queue.try_push(local_task)) {
-                                m_cv.notify_one();
-                                return;
-                            }
-
-                            // Could not push even after evicting the oldest task;
-                            // treat the incoming task as dropped as well.
-                            m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
-                            return;
-                        }
-
-                        m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
-                        return;
-                    }
-#endif
                 }
             }
 #else
@@ -415,12 +391,10 @@ namespace logit { namespace detail {
         const std::size_t m_default_ring_cap = LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY; ///< Default capacity when unlimited requested.
         MpscRingAny<std::function<void()>> m_mpsc_queue;  ///< Lock-free bounded MPSC ring.
 
-#ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
         std::mutex m_drop_mutex;                          ///< Coordinates DropOldest slow-path.
         std::condition_variable m_drop_cv;                ///< Producer waits for confirmation.
         std::size_t m_drop_requested;                     ///< Number of requested drops.
         std::size_t m_drop_done;                          ///< Number of drops completed.
-#endif
 #endif
 
         /// \brief The worker thread function that processes tasks from the queue.
@@ -462,9 +436,7 @@ namespace logit { namespace detail {
                     m_cv.notify_one();
                 }
 
-#ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
                 handle_drop_requests_();
-#endif
 
                 if (queue_empty_() && m_active_tasks.load(std::memory_order_relaxed) == 0) {
                     std::unique_lock<std::mutex> lock(m_queue_mutex);
@@ -492,7 +464,6 @@ namespace logit { namespace detail {
             return m_mpsc_queue.empty();
         }
 
-#ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
         /// \brief Perform requested drops of oldest items (rare path).
         void handle_drop_requests_() {
             {
@@ -514,7 +485,6 @@ namespace logit { namespace detail {
             m_drop_cv.notify_all();
         }
 #endif
-#endif
 
         /// \brief Private constructor to enforce the singleton pattern.
         TaskExecutor()
@@ -530,11 +500,9 @@ namespace logit { namespace detail {
               m_overflow_policy(QueuePolicy::Block),
               m_dropped_tasks(0),
               m_active_tasks(0),
-              m_mpsc_queue(m_default_ring_cap)
-#ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
-            , m_drop_requested(0),
+              m_mpsc_queue(m_default_ring_cap),
+              m_drop_requested(0),
               m_drop_done(0)
-#endif
 #endif
         {
             m_worker_thread = std::thread(&TaskExecutor::worker_function, this);
