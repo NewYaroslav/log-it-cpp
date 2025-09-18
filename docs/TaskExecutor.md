@@ -49,7 +49,9 @@ lifetime guarantees that logger integrations rely on.
   * Uses `m_active_tasks` to count in-flight work. If the counter reaches the
     limit, producers wait. The non-MPSC build waits on
     `m_queue_condition`. The MPSC build parks on `m_cv` with short sleeps while
-    the worker drains tasks. This policy avoids loss at the expense of
+    the worker drains tasks. The sleep interval defaults to
+    `LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC` microseconds (200 by default) and can
+    be overridden at compile time. This policy avoids loss at the expense of
     producer-side backpressure.
 * `DropNewest`
   * Non-MPSC: the incoming task is discarded when the deque is full.

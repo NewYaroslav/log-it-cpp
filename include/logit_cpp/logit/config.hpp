@@ -22,6 +22,15 @@
     #define LOGIT_DEFAULT_COLOR logit::TextColor::LightGray
 #endif
 
+/// \brief Defines the sleep duration (in microseconds) used by TaskExecutor when blocking producers.
+///
+/// When `QueuePolicy::Block` is active, the TaskExecutor periodically waits for
+/// capacity to become available. Override this value to tweak the polling
+/// cadence in builds where the default wait is not appropriate.
+#ifndef LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC
+    #define LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC 200
+#endif
+
 /// \name Log Level Colors
 /// Default colors for each log level.
 /// \{
