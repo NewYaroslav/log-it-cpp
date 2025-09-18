@@ -218,45 +218,41 @@ namespace logit { namespace detail {
                     }
                     case QueuePolicy::DropOldest: {
                         std::size_t target = 0;
-                        bool request_completed = false;
+                        bool drop_completed = false;
+                        bool drop_canceled = false;
                         {
                             std::unique_lock<std::mutex> lk(m_drop_mutex);
                             target = ++m_drop_requested;
                             m_cv.notify_one();
-                            request_completed = m_drop_cv.wait_for(
+                            drop_completed = m_drop_cv.wait_for(
                                 lk, std::chrono::milliseconds(2),
                                 [this, target] { return m_drop_done >= target; });
+
+                            if (!drop_completed && m_drop_requested == target) {
+                                --m_drop_requested;
+                                drop_canceled = true;
+                            }
                         }
 
-                        auto finalize_request = [this, target]() {
-                            std::unique_lock<std::mutex> lk(m_drop_mutex);
-                            if (m_drop_done < target) {
-                                m_drop_done = target;
-                                lk.unlock();
-                                m_drop_cv.notify_all();
-                            }
-                        };
+                        if (drop_canceled) {
+                            m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
+                            return;
+                        }
 
                         if (m_mpsc_queue.try_push(local_task)) {
-                            if (!request_completed) {
-                                finalize_request();
-                            }
                             m_cv.notify_one();
                             return;
                         }
 
-                        if (!request_completed) {
-                            finalize_request();
-                        }
-
-                        m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
-                        return;
+                        std::unique_lock<std::mutex> lk(m_cv_mutex);
+                        m_cv.wait_for(lk, std::chrono::microseconds(200));
+                        break;
                     }
                 }
             }
 #else
             std::unique_lock<std::mutex> lock(m_queue_mutex);
-            if (m_stop_flag.load(std::memory_order_relaxed)) return;
+            if (m_stop_flag.load(std::memory_order_acquire)) return;
             if (m_max_queue_size > 0 && m_tasks_queue.size() >= m_max_queue_size) {
                 switch (m_overflow_policy.load(std::memory_order_relaxed)) {
                     case QueuePolicy::DropNewest:
@@ -271,9 +267,9 @@ namespace logit { namespace detail {
                     case QueuePolicy::Block:
                         m_queue_condition.wait(lock, [this]() {
                             return m_tasks_queue.size() < m_max_queue_size ||
-                                m_stop_flag.load(std::memory_order_relaxed);
+                                m_stop_flag.load(std::memory_order_acquire);
                         });
-                        if (m_stop_flag.load(std::memory_order_relaxed)) return;
+                        if (m_stop_flag.load(std::memory_order_acquire)) return;
                         break;
                 }
             }
@@ -290,14 +286,14 @@ namespace logit { namespace detail {
             m_queue_condition.wait(lock, [this]() {
                 return ((queue_empty_() &&
                         m_active_tasks.load(std::memory_order_relaxed) == 0) ||
-                    m_stop_flag.load(std::memory_order_relaxed));
+                    m_stop_flag.load(std::memory_order_acquire));
             });
 #else
             std::unique_lock<std::mutex> lock(m_queue_mutex);
             m_queue_condition.wait(lock, [this]() {
                 return ((m_tasks_queue.empty() &&
                         m_active_tasks.load(std::memory_order_relaxed) == 0) ||
-                    m_stop_flag.load(std::memory_order_relaxed));
+                    m_stop_flag.load(std::memory_order_acquire));
             });
 #endif
         }
@@ -308,7 +304,7 @@ namespace logit { namespace detail {
 #ifdef LOGIT_USE_MPSC_RING
             {
                 std::lock_guard<std::mutex> lock(m_queue_mutex);
-                m_stop_flag.store(true, std::memory_order_relaxed);
+                m_stop_flag.store(true, std::memory_order_release);
             }
             m_cv.notify_all();
             m_queue_condition.notify_all();
@@ -317,7 +313,7 @@ namespace logit { namespace detail {
             }
 #else
             std::unique_lock<std::mutex> lock(m_queue_mutex);
-            m_stop_flag.store(true, std::memory_order_relaxed);
+            m_stop_flag.store(true, std::memory_order_release);
             lock.unlock();
             m_queue_condition.notify_all();
             if (m_worker_thread.joinable()) {
@@ -404,9 +400,9 @@ namespace logit { namespace detail {
                 std::function<void()> task;
                 std::unique_lock<std::mutex> lock(m_queue_mutex);
                 m_queue_condition.wait(lock, [this]() {
-                    return !m_tasks_queue.empty() || m_stop_flag.load(std::memory_order_relaxed);
+                    return !m_tasks_queue.empty() || m_stop_flag.load(std::memory_order_acquire);
                 });
-                if (m_stop_flag.load(std::memory_order_relaxed) && m_tasks_queue.empty()) {
+                if (m_stop_flag.load(std::memory_order_acquire) && m_tasks_queue.empty()) {
                     break;
                 }
                 task = std::move(m_tasks_queue.front());
@@ -442,14 +438,14 @@ namespace logit { namespace detail {
                     std::unique_lock<std::mutex> lock(m_queue_mutex);
                     m_queue_condition.notify_all();
                     m_cv.notify_all();
-                    if (m_stop_flag.load(std::memory_order_relaxed)) {
+                    if (m_stop_flag.load(std::memory_order_acquire)) {
                         break;
                     }
                 }
 
                 if (!drained_any) {
                     std::unique_lock<std::mutex> lk(m_cv_mutex);
-                    if (m_stop_flag.load(std::memory_order_relaxed) && queue_empty_()) {
+                    if (m_stop_flag.load(std::memory_order_acquire) && queue_empty_()) {
                         break;
                     }
                     m_cv.wait_for(lk, std::chrono::milliseconds(1));
