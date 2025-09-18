@@ -198,10 +198,11 @@ const auto lost = LOGIT_GET_DROPPED_TASKS();
 * `QueuePolicy::Block` limits the number of in-flight tasks tracked by
   `m_active_tasks`. Use it to introduce producer-side backpressure when the
   downstream sinks are expensive.
-* The worker drains up to 2048 tasks per iteration when the ring is enabled.
-  Increase this "budget" in `TaskExecutor::worker_function()` if your workload
-  generates extremely large bursts and the worker sleeps too often. Reducing it
-  can lower per-iteration latency for latency-sensitive applications.
+* The worker drains up to `LOGIT_TASK_EXECUTOR_DRAIN_BUDGET` tasks per iteration
+  when the ring is enabled. Increase this "budget" in
+  `TaskExecutor::worker_function()` if your workload generates extremely large
+  bursts and the worker sleeps too often. Reducing it can lower per-iteration
+  latency for latency-sensitive applications.
 * Adjust `LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY` at compile time to select a
   different default capacity when `LOGIT_USE_MPSC_RING` is active.
 * Monitor `dropped_tasks()` during load testing to verify that the chosen policy

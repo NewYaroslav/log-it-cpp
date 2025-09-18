@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <atomic>
+#include "logit/config.hpp"
 #if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
   #include <deque>
   #include <mutex>
@@ -439,7 +440,7 @@ namespace logit { namespace detail {
                 bool drained_any = false;
                 std::function<void()> task;
     
-                int budget = 2048;
+                int budget = LOGIT_TASK_EXECUTOR_DRAIN_BUDGET;
                 while (budget-- && m_mpsc_queue.try_pop(task)) {
                     drained_any = true;
                     m_active_tasks.fetch_add(1, std::memory_order_relaxed);
