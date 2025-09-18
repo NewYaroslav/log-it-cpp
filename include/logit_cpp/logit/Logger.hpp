@@ -5,6 +5,7 @@
 /// \file Logger.hpp
 /// \brief Defines the Logger class for managing multiple loggers and formatters.
 
+#include "config.hpp"
 #include "loggers/ILogger.hpp"
 #include "formatter.hpp"
 #include "detail/TaskExecutor.hpp"

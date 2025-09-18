@@ -242,7 +242,7 @@ namespace logit { namespace detail {
                     m_active_tasks.load(std::memory_order_relaxed) >= m_max_queue_size)
                 {
                     std::unique_lock<std::mutex> lk(m_cv_mutex);
-                    m_cv.wait_for(lk, std::chrono::microseconds(200));
+                    m_cv.wait_for(lk, std::chrono::microseconds(LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC));
                     continue;
                 }
     
@@ -266,7 +266,7 @@ namespace logit { namespace detail {
     
                     case QueuePolicy::Block: {
                         std::unique_lock<std::mutex> lk(m_cv_mutex);
-                        m_cv.wait_for(lk, std::chrono::microseconds(200));
+                        m_cv.wait_for(lk, std::chrono::microseconds(LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC));
                         break;
                     }
                 }
