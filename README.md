@@ -746,8 +746,8 @@ cmake -S . -B build -DLOGIT_BENCH_ENABLE=ON -DLOGIT_BENCH_WITH_SPDLOG=ON
 cmake --build build --target logit_bench
 ```
 
-Run the executable to record the full matrix (sync/async × null/file × producer counts × message sizes). Results are appended to
-`bench/results/latency.csv` with one row per library/combination.
+Run `./build/bench/logit_bench` to record the full matrix (sync/async × null/file × producer counts × message sizes). Results
+are appended to `bench/results/latency.csv` with one row per library/combination.
 
 ---
 
