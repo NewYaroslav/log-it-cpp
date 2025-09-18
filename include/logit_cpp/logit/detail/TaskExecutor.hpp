@@ -190,38 +190,42 @@ namespace logit { namespace detail {
 
             std::function<void()> local_task = std::move(task);
 
-            if (m_mpsc_queue.try_push(local_task)) {
-                m_cv.notify_one();
-                return;
-            }
-
-            switch (m_overflow_policy.load(std::memory_order_relaxed)) {
-                case QueuePolicy::DropNewest:
-                    ++m_dropped_tasks;
+            for (;;) {
+                if (m_stop_flag.load(std::memory_order_acquire)) {
                     return;
-                case QueuePolicy::Block: {
-                    for (;;) {
-                        if (m_mpsc_queue.try_push(local_task)) {
-                            m_cv.notify_one();
-                            return;
-                        }
+                }
 
-                        if (m_stop_flag.load(std::memory_order_acquire)) {
-                            return;
-                        }
+                const auto policy = m_overflow_policy.load(std::memory_order_relaxed);
 
+                if (policy == QueuePolicy::Block && m_max_queue_size > 0 &&
+                    m_active_tasks.load(std::memory_order_relaxed) >= m_max_queue_size) {
+                    std::unique_lock<std::mutex> lk(m_cv_mutex);
+                    m_cv.wait_for(lk, std::chrono::microseconds(200));
+                    continue;
+                }
+
+                if (m_mpsc_queue.try_push(local_task)) {
+                    m_cv.notify_one();
+                    return;
+                }
+
+                switch (policy) {
+                    case QueuePolicy::DropNewest:
+                        m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
+                        return;
+                    case QueuePolicy::Block: {
                         std::unique_lock<std::mutex> lk(m_cv_mutex);
                         m_cv.wait_for(lk, std::chrono::microseconds(200));
+                        break;
                     }
-                }
-                case QueuePolicy::DropOldest:
+                    case QueuePolicy::DropOldest:
 #ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
-                {
-                    std::size_t target = 0;
-                    bool request_completed = false;
                     {
-                        std::unique_lock<std::mutex> lk(m_drop_mutex);
-                        target = ++m_drop_requested;
+                        std::size_t target = 0;
+                        bool request_completed = false;
+                        {
+                            std::unique_lock<std::mutex> lk(m_drop_mutex);
+                            target = ++m_drop_requested;
                         m_cv.notify_one();
                         request_completed = m_drop_cv.wait_for(
                             lk, std::chrono::milliseconds(2),
@@ -237,41 +241,42 @@ namespace logit { namespace detail {
                         }
                     };
 
-                    if (m_mpsc_queue.try_push(local_task)) {
-                        if (!request_completed) {
-                            finalize_request();
-                        }
-                        m_cv.notify_one();
-                        return;
-                    }
-
-                    if (!request_completed) {
-                        finalize_request();
-                    }
-
-                    ++m_dropped_tasks;
-                    return;
-                }
-#else
-                {
-                    std::function<void()> discarded;
-                    if (m_mpsc_queue.try_pop(discarded)) {
-                        m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
                         if (m_mpsc_queue.try_push(local_task)) {
+                            if (!request_completed) {
+                                finalize_request();
+                            }
                             m_cv.notify_one();
                             return;
                         }
 
-                        // Could not push even after evicting the oldest task;
-                        // treat the incoming task as dropped as well.
+                        if (!request_completed) {
+                            finalize_request();
+                        }
+
                         m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
                         return;
                     }
+#else
+                    {
+                        std::function<void()> discarded;
+                        if (m_mpsc_queue.try_pop(discarded)) {
+                            m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
+                            if (m_mpsc_queue.try_push(local_task)) {
+                                m_cv.notify_one();
+                                return;
+                            }
 
-                    m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
-                    return;
-                }
+                            // Could not push even after evicting the oldest task;
+                            // treat the incoming task as dropped as well.
+                            m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
+                            return;
+                        }
+
+                        m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
+                        return;
+                    }
 #endif
+                }
             }
 #else
             std::unique_lock<std::mutex> lock(m_queue_mutex);
@@ -454,6 +459,7 @@ namespace logit { namespace detail {
                     m_active_tasks.fetch_add(1, std::memory_order_relaxed);
                     task();
                     m_active_tasks.fetch_sub(1, std::memory_order_relaxed);
+                    m_cv.notify_one();
                 }
 
 #ifdef LOGIT_ENABLE_DROP_OLDEST_SLOWPATH
