@@ -3,6 +3,8 @@ project(log-it-cpp VERSION 1.0.0 LANGUAGES CXX)
 
 option(LOGIT_CPP_BUILD_TESTS "Build log-it-cpp tests" ${PROJECT_IS_TOP_LEVEL})
 option(LOGIT_CPP_BUILD_EXAMPLES "Build log-it-cpp examples" OFF)
+option(LOGIT_BENCH_ENABLE "Build log-it-cpp benchmarks" OFF)
+option(LOGIT_BENCH_WITH_SPDLOG "Enable spdlog comparison benchmarks" OFF)
 option(LOGIT_WITH_GZIP "Enable gzip via zlib" OFF)
 option(LOGIT_WITH_ZSTD "Enable zstd" OFF)
 option(LOGIT_WITH_FMT "Enable fmt support" OFF)
@@ -138,6 +140,10 @@ endif()
 
 if(LOGIT_CPP_BUILD_EXAMPLES)
     add_subdirectory(examples)
+endif()
+
+if(LOGIT_BENCH_ENABLE)
+    add_subdirectory(bench)
 endif()
 
 include(CMakePackageConfigHelpers)

@@ -736,6 +736,19 @@ When building with Emscripten the library runs without threads. Console logging
 works as usual while file-based loggers are replaced by stubs that warn when
 used.
 
+## Benchmarks
+
+Latency and throughput benchmarks live under `bench/`. Enable them during configuration and optionally pull in the spdlog
+adapters:
+
+```bash
+cmake -S . -B build -DLOGIT_BENCH_ENABLE=ON -DLOGIT_BENCH_WITH_SPDLOG=ON
+cmake --build build --target logit_bench
+```
+
+Run the executable to record the full matrix (sync/async × null/file × producer counts × message sizes). Results are appended to
+`bench/results/latency.csv` with one row per library/combination.
+
 ---
 
 ## Documentation
