@@ -129,6 +129,18 @@ LOGIT_SYSERR_ERROR("Deleting temp directory failed");
 
 ---
 
+## Backpressure and hot resize
+
+The asynchronous `TaskExecutor` supports both a mutex-protected deque and an
+optional lock-free MPSC ring (enable via `LOGIT_USE_MPSC_RING`). Queue overflow
+policies (`Block`, `DropNewest`, `DropOldest`) behave consistently across both
+implementations, with the MPSC build intentionally dropping the *incoming* task
+for `DropOldest` to keep accepted work ordered. The ring build also allows
+"hot" queue resizes where producers briefly wait while the worker rebuilds the
+ring buffer without losing in-flight tasks. See
+[`docs/TaskExecutor.md`](docs/TaskExecutor.md) for a full breakdown and tuning
+tips.
+
 ## Features
 
 - **Flexible Log Formatting**: 

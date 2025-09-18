@@ -3,7 +3,8 @@
 #define _LOGIT_DETAIL_TASK_EXECUTOR_HPP_INCLUDED
 
 /// \file TaskExecutor.hpp
-/// \brief Defines the TaskExecutor class, which manages task execution in a separate thread.
+/// \brief Task executor used by asynchronous loggers.
+/// \details Detailed design notes are available in docs/TaskExecutor.md.
 
 #include <functional>
 #include <atomic>
@@ -30,21 +31,31 @@
 
 namespace logit { namespace detail {
 
-    /// \brief Queue overflow handling policy.
-    enum class QueuePolicy { DropNewest, DropOldest, Block };
+    /// \brief Queue overflow handling policy used by TaskExecutor.
+    enum class QueuePolicy {
+        DropNewest, ///< Reject the incoming task when the queue is full.
+        DropOldest, ///< Drop the oldest queued task (or the incoming one in MPSC builds).
+        Block       ///< Producers wait until capacity is available.
+    };
     
 #   if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
     
     /// \class TaskExecutor
     /// \brief Simplified task executor for single-threaded Emscripten builds.
+    /// \details The Emscripten variant keeps behaviour compatible with the
+    /// browser event loop. See docs/TaskExecutor.md for the high level design.
     /// \thread_safety Not thread-safe.
     class TaskExecutor {
     public:
+        /// \brief Returns the singleton executor instance.
         static TaskExecutor& get_instance() {
             static TaskExecutor instance;
             return instance;
         }
-    
+
+        /// \brief Enqueue a task to be executed on the async drain.
+        /// \note Backpressure policies mirror the deque implementation described
+        /// in docs/TaskExecutor.md.
         void add_task(std::function<void()> task) {
             if (!task) return;
             bool schedule = false;
@@ -87,23 +98,29 @@ namespace logit { namespace detail {
                 emscripten_async_call(&TaskExecutor::drain_thunk, this, 0);
             }
         }
-    
+
+        /// \brief Drain the queue synchronously.
         void wait() { drain(); }
+        /// \brief Shut down the executor by draining all queued work.
         void shutdown() { drain(); }
-    
+
+        /// \brief Change the maximum queue size (`0` disables the limit).
         void set_max_queue_size(std::size_t size) {
             std::lock_guard<std::mutex> lk(m_mutex);
             m_max_queue_size = size;
         }
-    
+
+        /// \brief Update the queue overflow policy.
         void set_queue_policy(QueuePolicy policy) {
             std::lock_guard<std::mutex> lk(m_mutex);
             m_overflow_policy = policy;
         }
-    
+
+        /// \brief Return the number of tasks dropped by the overflow policy.
         std::size_t dropped_tasks() const noexcept {
             return m_dropped_tasks.load(std::memory_order_relaxed);
         }
+        /// \brief Reset the drop counter to zero.
         void reset_dropped_tasks() noexcept {
             m_dropped_tasks.store(0, std::memory_order_relaxed);
         }
@@ -151,17 +168,25 @@ namespace logit { namespace detail {
 #   else // !Emscripten or pthreads
     
     /// \class TaskExecutor
-    /// \brief A thread-safe task executor that processes tasks in a dedicated worker thread.
+    /// \brief Thread-safe task executor backed by a dedicated worker thread.
+    /// \details The full design, including backpressure semantics and hot
+    /// resizing, is described in docs/TaskExecutor.md.
     /// \thread_safety Thread-safe.
     class TaskExecutor {
     public:
-        /// Singleton (сохраняем вашу реализацию с new).
+        /// \brief Returns the global executor instance.
+        /// \note The pointer-based singleton intentionally outlives static
+        /// logger destructors so logging remains available during process
+        /// shutdown.
         static TaskExecutor& get_instance() {
             static TaskExecutor* instance = new TaskExecutor();
             return *instance;
         }
-    
-        /// Добавить задачу.
+
+        /// \brief Enqueue a task for asynchronous execution.
+        /// \note `QueuePolicy::DropOldest` drops the incoming task when
+        /// `LOGIT_USE_MPSC_RING` is defined. See docs/TaskExecutor.md for the
+        /// rationale.
         void add_task(std::function<void()> task) {
             if (!task) return;
 #        ifndef LOGIT_USE_MPSC_RING
@@ -191,7 +216,7 @@ namespace logit { namespace detail {
             lock.unlock();
             m_queue_condition.notify_one();
 #        else
-            // Барьер ресайза: пережидаем «горячее» изменение кольца.
+            // Hot-resize barrier: wait until the ring rebuild is finished.
             if (m_resizing.load(std::memory_order_acquire)) {
                 std::unique_lock<std::mutex> lk(m_cv_mutex);
                 m_resize_cv.wait(lk, [this]{ return !m_resizing.load(std::memory_order_acquire); });
@@ -210,7 +235,7 @@ namespace logit { namespace detail {
     
                 const auto policy = m_overflow_policy.load(std::memory_order_relaxed);
     
-                // Реальное backpressure: учитываем "висящие" задачи.
+                // Backpressure relies on the count of in-flight tasks.
                 if (policy == QueuePolicy::Block &&
                     m_max_queue_size > 0 &&
                     m_active_tasks.load(std::memory_order_relaxed) >= m_max_queue_size)
@@ -220,21 +245,21 @@ namespace logit { namespace detail {
                     continue;
                 }
     
-                // Пытаемся положить в кольцо.
+                // Try to push into the ring buffer.
                 if (m_mpsc_queue.try_push(local_task)) {
-                    m_cv.notify_one(); // разбудить воркера
+                    m_cv.notify_one(); // wake the worker
                     return;
                 }
-    
-                // Переполнение — применяем политику.
+
+                // Apply the configured overflow policy when the ring is full.
                 switch (policy) {
                     case QueuePolicy::DropNewest:
                         m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
                         return;
-    
+
                     case QueuePolicy::DropOldest:
-                        // Безопасная реализация под MPSC: дропаем входящий.
-                        // Это сохраняет порядок и исключает дедлоки при gate.
+                        // Safe MPSC behaviour: drop the incoming task.
+                        // Preserves ordering and avoids producer/consumer deadlocks.
                         m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
                         return;
     
@@ -248,7 +273,7 @@ namespace logit { namespace detail {
 #        endif
         }
     
-        /// Дождаться опустошения.
+        /// \brief Block until the queue is empty or a shutdown is requested.
         void wait() {
 #        ifndef LOGIT_USE_MPSC_RING
             std::unique_lock<std::mutex> lock(m_queue_mutex);
@@ -267,7 +292,7 @@ namespace logit { namespace detail {
 #        endif
         }
     
-        /// Остановить воркер.
+        /// \brief Stop the worker thread and drain outstanding tasks.
         void shutdown() {
 #        ifndef LOGIT_USE_MPSC_RING
             std::unique_lock<std::mutex> lock(m_queue_mutex);
@@ -290,42 +315,44 @@ namespace logit { namespace detail {
 #        endif
         }
     
-        /// Изменить ёмкость очереди.
+        /// \brief Update the maximum queue size (`0` disables the limit).
+        /// \details On MPSC builds this performs the "hot" resize described in
+        /// docs/TaskExecutor.md.
         void set_max_queue_size(std::size_t size) {
 #       ifdef LOGIT_USE_MPSC_RING
-            // Сигналим продюсерам, чтобы переждали ресайз (до любых ожиданий/стопов).
+            // Tell producers to pause before any wait()/stop conditions run.
             m_resizing.store(true, std::memory_order_release);
 
-            // Дождаться опустошения очереди
+            // Drain the queue completely.
             wait();
-        
-            // Акуратно остановить воркер и дождаться его завершения, чтобы он не трогал m_mpsc_queue, пока мы его меняем.
+
+            // Stop the worker so it cannot touch m_mpsc_queue during the resize.
             std::unique_lock<std::mutex> lk(m_queue_mutex);
             m_stop_flag.store(true, std::memory_order_relaxed);
-        	lk.unlock();
-        
+                lk.unlock();
+
             m_cv.notify_all();
             m_queue_condition.notify_all();
             if (m_worker_thread.joinable()) {
                 m_worker_thread.join();
             }
-        
-            // Переинициализировать параметры и само кольцо в единственном потоке.
-        	lk.lock();
-        	m_max_queue_size = size;
-        	const std::size_t cap =
-        		(m_max_queue_size == 0 ? m_default_ring_cap : m_max_queue_size);
-        	m_mpsc_queue = MpscRingAny<std::function<void()>>(cap);
-        	// обнулить счётчики (не обязательно, но логично при "чистой" очереди).
-        	m_active_tasks.store(0, std::memory_order_relaxed);
-        	// m_dropped_tasks оставляем как есть — тесты его сами сбрасывают макросом.
-        	lk.unlock();
-        
-            // Снимаем стоп-флаг, перезапускаем воркер…
+
+            // Reinitialise the parameters and the ring on a single thread.
+                lk.lock();
+                m_max_queue_size = size;
+                const std::size_t cap =
+                        (m_max_queue_size == 0 ? m_default_ring_cap : m_max_queue_size);
+                m_mpsc_queue = MpscRingAny<std::function<void()>>(cap);
+                // Reset counters (except drops) because the queue is empty.
+                m_active_tasks.store(0, std::memory_order_relaxed);
+                // Keep m_dropped_tasks untouched — tests manage it via macros.
+                lk.unlock();
+
+            // Clear the stop flag and restart the worker thread.
             m_stop_flag.store(false, std::memory_order_relaxed);
             m_worker_thread = std::thread(&TaskExecutor::worker_function, this);
 
-            // Открываем барьер для продюсеров.
+            // Re-open the barrier so producers can continue.
             m_resizing.store(false, std::memory_order_release);
             m_resize_cv.notify_all();
 #       else
@@ -334,15 +361,17 @@ namespace logit { namespace detail {
 #       endif
         }
     
-        /// Политика переполнения.
+        /// \brief Change the overflow policy for newly submitted tasks.
         void set_queue_policy(QueuePolicy policy) {
             std::lock_guard<std::mutex> lock(m_queue_mutex);
             m_overflow_policy.store(policy, std::memory_order_relaxed);
         }
-    
+
+        /// \brief Return the number of tasks dropped by the overflow policy.
         std::size_t dropped_tasks() const noexcept {
             return m_dropped_tasks.load(std::memory_order_relaxed);
         }
+        /// \brief Reset the overflow counter to zero.
         void reset_dropped_tasks() noexcept {
             m_dropped_tasks.store(0, std::memory_order_relaxed);
         }
@@ -359,14 +388,14 @@ namespace logit { namespace detail {
         std::atomic<std::size_t> m_dropped_tasks;
         std::atomic<std::size_t> m_active_tasks;
     #else
-        mutable std::mutex m_queue_mutex;          ///< Для wait()/смены политики.
-        std::condition_variable m_queue_condition; ///< Будим wait() на полном drain.
-    
-        std::condition_variable m_cv;              ///< Будим воркер / продюсеров.
-        std::mutex m_cv_mutex;                     ///< Сон продюсеров/воркера.
+        mutable std::mutex m_queue_mutex;          ///< Guards wait() and policy changes.
+        std::condition_variable m_queue_condition; ///< Notifies wait() once the queue drains.
 
-        std::atomic<bool> m_resizing;              ///< true — идёт ресайз кольца.
-        std::condition_variable m_resize_cv;       ///< Продюсеры ждут окончания ресайза.
+        std::condition_variable m_cv;              ///< Wakes the worker or producers.
+        std::mutex m_cv_mutex;                     ///< Protects producer/worker sleeps.
+
+        std::atomic<bool> m_resizing;              ///< true while a hot resize is in flight.
+        std::condition_variable m_resize_cv;       ///< Producers wait here during a resize.
     
         std::thread m_worker_thread;
         std::atomic<bool> m_stop_flag;
@@ -418,13 +447,13 @@ namespace logit { namespace detail {
                     task();
     
                     m_active_tasks.fetch_sub(1, std::memory_order_relaxed);
-                    m_cv.notify_one(); // освободили in-flight слот
+                    m_cv.notify_one(); // freed an in-flight slot
                 }
     
                 if (queue_empty_() && m_active_tasks.load(std::memory_order_relaxed) == 0) {
                     std::unique_lock<std::mutex> lock(m_queue_mutex);
-                    m_queue_condition.notify_all(); // для wait()
-                    m_cv.notify_all();              // разбудить продюсеров Block
+                    m_queue_condition.notify_all(); // notify wait()
+                    m_cv.notify_all();              // wake producers blocked on Block
                     if (m_stop_flag.load(std::memory_order_acquire)) {
                         break;
                     }
