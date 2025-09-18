@@ -24,7 +24,7 @@ jobs:
       - name: Install
         run: cmake --install build --prefix install
       - name: Test
-        run: ctest --test-dir build
+        run: ctest --test-dir build --output-on-failure
       - name: Configure consumer project
         run: cmake -S tests/install_consumer -B build-consumer -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install -DCMAKE_CXX_STANDARD=${{ matrix.std }}
       - name: Build consumer project
@@ -115,7 +115,7 @@ jobs:
       - name: Build
         run: cmake --build build
       - name: Test
-        run: ctest --test-dir build
+        run: ctest --test-dir build --output-on-failure
 
   tsan:
     runs-on: ubuntu-latest
@@ -131,7 +131,7 @@ jobs:
       - name: Build
         run: cmake --build build
       - name: Test
-        run: ctest --test-dir build
+        run: ctest --test-dir build --output-on-failure
 
   vcpkg-install:
     runs-on: ubuntu-latest
