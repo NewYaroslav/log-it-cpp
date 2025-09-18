@@ -1,0 +1,289 @@
+#include <logit.hpp>
+
+#include <algorithm>
+#include <atomic>
+#include <chrono>
+#include <condition_variable>
+#include <cstddef>
+#include <mutex>
+#include <thread>
+#include <vector>
+
+namespace {
+
+constexpr std::size_t kSingleProducerBurst = 32;
+constexpr std::size_t kSingleProducerQueueCapacity = 4;
+constexpr std::size_t kMultiProducerThreads = 4;
+constexpr std::size_t kMessagesPerProducer = 32;
+constexpr std::size_t kMultiProducerQueueCapacity = 16;
+constexpr auto kSlowTaskDelay = std::chrono::milliseconds{5};
+
+struct ScenarioResult {
+    std::chrono::steady_clock::duration publish_duration{};
+    std::chrono::steady_clock::duration enforced_gate_delay{};
+    std::size_t processed{};
+    std::size_t dropped{};
+};
+
+ScenarioResult run_single_producer_scenario(
+    logit::detail::QueuePolicy policy,
+    bool hold_consumer,
+    std::chrono::steady_clock::duration gate_delay =
+        std::chrono::steady_clock::duration::zero()) {
+    auto &executor = logit::detail::TaskExecutor::get_instance();
+    LOGIT_SET_QUEUE_POLICY(policy);
+    LOGIT_RESET_DROPPED_TASKS();
+
+    std::atomic<std::size_t> processed{0};
+    std::condition_variable gate_cv;
+    std::mutex gate_mutex;
+    const bool gating_requested = hold_consumer ||
+                                  gate_delay > std::chrono::steady_clock::duration::zero();
+    bool gate_open = !gating_requested;
+
+    const auto start = std::chrono::steady_clock::now();
+    std::thread publisher([&executor,
+                           &processed,
+                           gating_requested,
+                           &gate_cv,
+                           &gate_mutex,
+                           &gate_open]() {
+        for (std::size_t i = 0; i < kSingleProducerBurst; ++i) {
+            executor.add_task([&processed, gating_requested, &gate_cv, &gate_mutex, &gate_open]() {
+                if (gating_requested) {
+                    std::unique_lock<std::mutex> lock(gate_mutex);
+                    gate_cv.wait(lock, [&gate_open]() { return gate_open; });
+                }
+                std::this_thread::sleep_for(kSlowTaskDelay);
+                processed.fetch_add(1, std::memory_order_relaxed);
+            });
+        }
+    });
+
+    if (gating_requested) {
+        if (gate_delay > std::chrono::steady_clock::duration::zero()) {
+            std::this_thread::sleep_for(gate_delay);
+        }
+        {
+            std::lock_guard<std::mutex> lock(gate_mutex);
+            gate_open = true;
+        }
+        gate_cv.notify_all();
+    }
+
+    publisher.join();
+    const auto publish_duration = std::chrono::steady_clock::now() - start;
+
+    executor.wait();
+
+    ScenarioResult result{};
+    result.publish_duration = publish_duration;
+    if (gate_delay > std::chrono::steady_clock::duration::zero()) {
+        result.enforced_gate_delay = gate_delay;
+    }
+    result.processed = processed.load(std::memory_order_relaxed);
+    result.dropped = LOGIT_GET_DROPPED_TASKS();
+    return result;
+}
+
+struct MultiProducerResult {
+    std::size_t processed{};
+    std::size_t dropped{};
+};
+
+MultiProducerResult run_multi_producer_scenario(
+    logit::detail::QueuePolicy policy,
+    bool hold_consumer,
+    std::chrono::steady_clock::duration gate_delay =
+        std::chrono::steady_clock::duration::zero()) {
+    auto &executor = logit::detail::TaskExecutor::get_instance();
+    LOGIT_SET_QUEUE_POLICY(policy);
+    LOGIT_RESET_DROPPED_TASKS();
+
+    std::atomic<std::size_t> processed{0};
+    std::atomic<bool> start_flag{false};
+    std::condition_variable gate_cv;
+    std::mutex gate_mutex;
+    const bool gating_requested = hold_consumer ||
+                                  gate_delay > std::chrono::steady_clock::duration::zero();
+    bool gate_open = !gating_requested;
+
+    std::vector<std::thread> producers;
+    producers.reserve(kMultiProducerThreads);
+
+    for (std::size_t i = 0; i < kMultiProducerThreads; ++i) {
+        producers.emplace_back([&executor,
+                                &processed,
+                                &start_flag,
+                                gating_requested,
+                                &gate_cv,
+                                &gate_mutex,
+                                &gate_open]() {
+            while (!start_flag.load(std::memory_order_acquire)) {
+                std::this_thread::yield();
+            }
+            for (std::size_t j = 0; j < kMessagesPerProducer; ++j) {
+                executor.add_task([&processed, gating_requested, &gate_cv, &gate_mutex, &gate_open]() {
+                    if (gating_requested) {
+                        std::unique_lock<std::mutex> lock(gate_mutex);
+                        gate_cv.wait(lock, [&gate_open]() { return gate_open; });
+                    }
+                    std::this_thread::sleep_for(kSlowTaskDelay);
+                    processed.fetch_add(1, std::memory_order_relaxed);
+                });
+            }
+        });
+    }
+
+    start_flag.store(true, std::memory_order_release);
+
+    for (auto &producer : producers) {
+        producer.join();
+    }
+
+    if (gating_requested) {
+        if (gate_delay > std::chrono::steady_clock::duration::zero()) {
+            std::this_thread::sleep_for(gate_delay);
+        }
+        {
+            std::lock_guard<std::mutex> lock(gate_mutex);
+            gate_open = true;
+        }
+        gate_cv.notify_all();
+    }
+
+    executor.wait();
+
+    MultiProducerResult result{};
+    result.processed = processed.load(std::memory_order_relaxed);
+    result.dropped = LOGIT_GET_DROPPED_TASKS();
+    return result;
+}
+
+} // namespace
+
+int main() {
+    auto &executor = logit::detail::TaskExecutor::get_instance();
+    executor.wait();
+
+    LOGIT_SET_MAX_QUEUE(kSingleProducerQueueCapacity);
+
+    const auto deterministic_gate_delay =
+        kSlowTaskDelay * (kSingleProducerBurst / 2);
+    const auto block_result =
+        run_single_producer_scenario(logit::detail::QueuePolicy::Block,
+                                     true,
+                                     deterministic_gate_delay);
+    if (block_result.processed != kSingleProducerBurst) {
+        return 1;
+    }
+    if (block_result.dropped != 0) {
+        return 2;
+    }
+
+    const auto drop_newest_result =
+        run_single_producer_scenario(logit::detail::QueuePolicy::DropNewest,
+                                     true,
+                                     deterministic_gate_delay);
+    if (drop_newest_result.dropped == 0) {
+        return 3;
+    }
+    if (drop_newest_result.processed + drop_newest_result.dropped != kSingleProducerBurst) {
+        return 4;
+    }
+    const auto single_min_survivors = (std::min)(kSingleProducerQueueCapacity, kSingleProducerBurst);
+    const auto single_max_survivors = (std::min)(kSingleProducerQueueCapacity + 1, kSingleProducerBurst);
+    if (drop_newest_result.processed < single_min_survivors) {
+        return 5;
+    }
+    if (drop_newest_result.processed > single_max_survivors) {
+        return 6;
+    }
+
+    const auto drop_oldest_result =
+        run_single_producer_scenario(logit::detail::QueuePolicy::DropOldest,
+                                     true,
+                                     deterministic_gate_delay);
+    if (drop_oldest_result.dropped == 0) {
+        return 7;
+    }
+    if (drop_oldest_result.processed + drop_oldest_result.dropped != kSingleProducerBurst) {
+        return 8;
+    }
+    const auto expected_single_oldest_drops =
+        kSingleProducerBurst - drop_oldest_result.processed;
+    if (drop_oldest_result.dropped != expected_single_oldest_drops) {
+        return 9;
+    }
+    if (drop_oldest_result.processed < single_min_survivors) {
+        return 10;
+    }
+    if (drop_oldest_result.processed > single_max_survivors) {
+        return 11;
+    }
+
+    const auto gate_tolerance = kSlowTaskDelay * 2;
+    if ((block_result.publish_duration + gate_tolerance) < deterministic_gate_delay) {
+        return 12;
+    }
+
+    LOGIT_RESET_DROPPED_TASKS();
+
+    LOGIT_SET_MAX_QUEUE(kMultiProducerQueueCapacity);
+
+    const auto total_messages = kMultiProducerThreads * kMessagesPerProducer;
+
+    const auto block_multi_result = run_multi_producer_scenario(logit::detail::QueuePolicy::Block,
+                                                                false);
+    if (block_multi_result.processed != total_messages) {
+        return 13;
+    }
+    if (block_multi_result.dropped != 0) {
+        return 14;
+    }
+
+    const auto drop_newest_multi = run_multi_producer_scenario(
+        logit::detail::QueuePolicy::DropNewest,
+        true,
+        deterministic_gate_delay);
+    if (drop_newest_multi.dropped == 0) {
+        return 15;
+    }
+    if (drop_newest_multi.processed + drop_newest_multi.dropped != total_messages) {
+        return 16;
+    }
+    const auto multi_min_survivors = (std::min)(kMultiProducerQueueCapacity, total_messages);
+    const auto multi_max_survivors = (std::min)(kMultiProducerQueueCapacity + 1, total_messages);
+    if (drop_newest_multi.processed < multi_min_survivors) {
+        return 17;
+    }
+    if (drop_newest_multi.processed > multi_max_survivors) {
+        return 18;
+    }
+
+    const auto drop_oldest_multi = run_multi_producer_scenario(
+        logit::detail::QueuePolicy::DropOldest,
+        true,
+        deterministic_gate_delay);
+    if (drop_oldest_multi.dropped == 0) {
+        return 19;
+    }
+    if (drop_oldest_multi.processed + drop_oldest_multi.dropped != total_messages) {
+        return 20;
+    }
+    const auto expected_multi_oldest_drops =
+        total_messages - drop_oldest_multi.processed;
+    if (drop_oldest_multi.dropped != expected_multi_oldest_drops) {
+        return 21;
+    }
+    if (drop_oldest_multi.processed < multi_min_survivors) {
+        return 22;
+    }
+    if (drop_oldest_multi.processed > multi_max_survivors) {
+        return 23;
+    }
+
+    LOGIT_RESET_DROPPED_TASKS();
+    return 0;
+}
+

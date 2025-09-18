@@ -17,6 +17,14 @@ Include a body that describes the change.
 Keep diffs minimal and focused.
 Do not refactor or apply style changes beyond the lines you directly touch.
 
+## Repository setup
+Before configuring or building the project, initialize the git submodules so
+embedded dependencies such as TimeShield are present:
+
+```
+git submodule update --init --recursive
+```
+
 ## Include Policy
 - Do not use `../` in `#include` directives.
 - Within a module (`logit/utils/*`, `logit/formatter/*`, `logit/loggers/*`) only include headers located in the same sub-tree using forward paths (for example `#include "compiler/PatternCompiler.hpp"`).

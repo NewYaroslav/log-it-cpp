@@ -2190,6 +2190,14 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_SET_QUEUE_POLICY(mode) \
     logit::detail::TaskExecutor::get_instance().set_queue_policy(mode)
 
+/// \brief Returns the number of tasks dropped due to overflow.
+#define LOGIT_GET_DROPPED_TASKS() \
+    logit::detail::TaskExecutor::get_instance().dropped_tasks()
+
+/// \brief Resets the dropped-tasks counter to zero.
+#define LOGIT_RESET_DROPPED_TASKS() \
+    logit::detail::TaskExecutor::get_instance().reset_dropped_tasks()
+
 /// \}
 
 /// \brief Macro for waiting for all asynchronous loggers to finish processing.
