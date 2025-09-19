@@ -33,6 +33,11 @@ jobs:
         run: cmake --build build-bench --target logit_bench
       - name: Run latency benchmarks
         if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/stable') }}
+        timeout-minutes: 20
+        env:
+          LOGIT_BENCH_TIMEOUT_SEC: 900
+          LOGIT_BENCH_TOTAL: 20000
+          LOGIT_BENCH_WARMUP: 2000
         run: ./build-bench/logit_bench
       - name: Configure consumer project
         run: cmake -S tests/install_consumer -B build-consumer -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install -DCMAKE_CXX_STANDARD=${{ matrix.std }}
