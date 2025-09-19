@@ -3,8 +3,14 @@ name: CI
 on:
   push:
     branches: [ main, stable ]
-  pull_request:
+  pull_request_target:
     branches: [ main ]
+
+permissions:
+  actions: write
+  checks: write
+  contents: read
+  pull-requests: read
 
 jobs:
   linux:
@@ -13,7 +19,16 @@ jobs:
       matrix:
         std: [11, 17]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout pull request head
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          submodules: true
+      - name: Checkout repository
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
         with:
           submodules: true
       - run: git submodule update --init --recursive
@@ -26,13 +41,13 @@ jobs:
       - name: Test
         run: ctest --test-dir build --output-on-failure
       - name: Configure benchmarks
-        if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/stable') }}
+        if: ${{ github.event_name != 'push' || github.ref == 'refs/heads/stable' }}
         run: cmake -S . -B build-bench -DLOGIT_BENCH_ENABLE=ON -DLOGIT_BENCH_WITH_SPDLOG=ON -DCMAKE_CXX_STANDARD=${{ matrix.std }} -DLOGIT_WITH_SYSLOG=ON -DLOGIT_WITH_WIN_EVENT_LOG=OFF
       - name: Build benchmarks
-        if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/stable') }}
+        if: ${{ github.event_name != 'push' || github.ref == 'refs/heads/stable' }}
         run: cmake --build build-bench --target logit_bench
       - name: Run latency benchmarks
-        if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/stable') }}
+        if: ${{ github.event_name != 'push' || github.ref == 'refs/heads/stable' }}
         timeout-minutes: 20
         env:
           LOGIT_BENCH_TIMEOUT_SEC: 900
@@ -59,7 +74,16 @@ jobs:
       matrix:
         std: [11, 17]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout pull request head
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          submodules: true
+      - name: Checkout repository
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
         with:
           submodules: true
       - run: git submodule update --init --recursive
@@ -91,7 +115,16 @@ jobs:
       matrix:
         std: [11, 17]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout pull request head
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          submodules: true
+      - name: Checkout repository
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
         with:
           submodules: true
       - run: git submodule update --init --recursive
@@ -120,7 +153,16 @@ jobs:
   asan-ubsan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout pull request head
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          submodules: true
+      - name: Checkout repository
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
         with:
           submodules: true
       - run: git submodule update --init --recursive
@@ -136,7 +178,16 @@ jobs:
     env:
       LOGIT_PROFILE: thread
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout pull request head
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          submodules: true
+      - name: Checkout repository
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
         with:
           submodules: true
       - run: git submodule update --init --recursive
@@ -152,7 +203,16 @@ jobs:
     env:
       VCPKG_TAG: '2024.09.30'
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout pull request head
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          submodules: true
+      - name: Checkout repository
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v4
         with:
           submodules: true
       - run: git submodule update --init --recursive
