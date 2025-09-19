@@ -2,17 +2,20 @@
 #include <atomic>
 #include <chrono>
 #include <condition_variable>
+#include <cstdint>
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <ctime>
 #include <memory>
 #include <mutex>
 #include <stdexcept>
 #include <string>
 #include <thread>
 #include <vector>
+#include <sstream>
 
 #include "LatencyRecorder.hpp"
 #include "Scenario.hpp"
@@ -24,6 +27,9 @@
 
 namespace logit_bench {
 namespace {
+
+std::atomic<std::uint64_t>* g_watchdog_progress = nullptr;
+constexpr std::size_t k_watchdog_stride = 256;
 
 std::string make_message(std::size_t bytes, std::size_t index) {
     if (bytes == 0) return {};
@@ -40,6 +46,44 @@ std::size_t get_env_size_t(const char* name, std::size_t def) {
         }
     }
     return def;
+}
+
+std::uint64_t steady_now_ns() {
+    const auto now_tp = std::chrono::steady_clock::now().time_since_epoch();
+    return std::chrono::duration_cast<std::chrono::nanoseconds>(now_tp).count();
+}
+
+std::string format_timestamp() {
+    const auto now = std::chrono::system_clock::now();
+    const auto time = std::chrono::system_clock::to_time_t(now);
+    std::tm tm{};
+#ifdef _WIN32
+    localtime_s(&tm, &time);
+#else
+    localtime_r(&time, &tm);
+#endif
+    const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+            now.time_since_epoch()) % 1000;
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S")
+        << '.' << std::setw(3) << std::setfill('0') << ms.count();
+    return oss.str();
+}
+
+void touch_watchdog() {
+    if (g_watchdog_progress) {
+        g_watchdog_progress->store(steady_now_ns(), std::memory_order_relaxed);
+    }
+}
+
+void log_info(const std::string& message) {
+    std::cout << "[logit_bench " << format_timestamp() << "] " << message << std::endl;
+    touch_watchdog();
+}
+
+void log_error(const std::string& message) {
+    std::cerr << "[logit_bench " << format_timestamp() << "] " << message << std::endl;
+    touch_watchdog();
 }
 
 /**
@@ -84,6 +128,7 @@ std::chrono::nanoseconds run_workload(
     for (std::size_t i = 0; i < scenario.producers; ++i) {
         threads.emplace_back([&, i]() {
             std::string message = make_message(scenario.message_bytes, i);
+            std::size_t watchdog_counter = 0;
             {
                 std::unique_lock<std::mutex> lk(start_mx);
                 ++ready;
@@ -93,7 +138,12 @@ std::chrono::nanoseconds run_workload(
             for (std::size_t n = 0; n < per_thread[i]; ++n) {
                 auto token = recorder.begin(record_latency);
                 adapter.log(token, message);
+                ++watchdog_counter;
+                if ((watchdog_counter & (k_watchdog_stride - 1)) == 0) {
+                    touch_watchdog();
+                }
             }
+            touch_watchdog();
         });
     }
 
@@ -108,6 +158,7 @@ std::chrono::nanoseconds run_workload(
 
     for (auto& th : threads) th.join();
     adapter.flush();
+    touch_watchdog();
 
     if (!measure_duration) return std::chrono::nanoseconds(0);
     auto t1 = std::chrono::steady_clock::now();
@@ -131,34 +182,49 @@ ScenarioResult execute_scenario(
     adapter.prepare(scenario, recorder);
 
     // Warm-up (no recording, no duration).
-    std::cout << "[logit_bench] Warm-up start lib=" << adapter.library_name()
-              << " async=" << (scenario.async ? '1' : '0')
-              << " sink=" << sink_name(scenario.sink)
-              << " producers=" << scenario.producers
-              << " bytes=" << scenario.message_bytes
-              << " total=" << warmup_messages << std::endl;
+    {
+        std::ostringstream oss;
+        oss << "Warm-up start lib=" << adapter.library_name()
+            << " async=" << (scenario.async ? '1' : '0')
+            << " sink=" << sink_name(scenario.sink)
+            << " producers=" << scenario.producers
+            << " bytes=" << scenario.message_bytes
+            << " total=" << warmup_messages;
+        log_info(oss.str());
+    }
     run_workload(adapter, recorder, scenario, warmup_messages, false, false);
-    std::cout << "[logit_bench] Warm-up completed lib=" << adapter.library_name()
-              << " async=" << (scenario.async ? '1' : '0')
-              << " sink=" << sink_name(scenario.sink)
-              << " producers=" << scenario.producers
-              << " bytes=" << scenario.message_bytes
-              << std::endl;
+    {
+        std::ostringstream oss;
+        oss << "Warm-up completed lib=" << adapter.library_name()
+            << " async=" << (scenario.async ? '1' : '0')
+            << " sink=" << sink_name(scenario.sink)
+            << " producers=" << scenario.producers
+            << " bytes=" << scenario.message_bytes;
+        log_info(oss.str());
+    }
 
     // Measured run.
-    std::cout << "[logit_bench] Measure start lib=" << adapter.library_name()
-              << " async=" << (scenario.async ? '1' : '0')
-              << " sink=" << sink_name(scenario.sink)
-              << " producers=" << scenario.producers
-              << " bytes=" << scenario.message_bytes
-              << " total=" << scenario.total_messages << std::endl;
+    {
+        std::ostringstream oss;
+        oss << "Measure start lib=" << adapter.library_name()
+            << " async=" << (scenario.async ? '1' : '0')
+            << " sink=" << sink_name(scenario.sink)
+            << " producers=" << scenario.producers
+            << " bytes=" << scenario.message_bytes
+            << " total=" << scenario.total_messages;
+        log_info(oss.str());
+    }
     const auto dur = run_workload(adapter, recorder, scenario, scenario.total_messages, true, true);
-    std::cout << "[logit_bench] Measure completed lib=" << adapter.library_name()
-              << " async=" << (scenario.async ? '1' : '0')
-              << " sink=" << sink_name(scenario.sink)
-              << " producers=" << scenario.producers
-              << " bytes=" << scenario.message_bytes
-              << std::endl;
+    {
+        std::ostringstream oss;
+        oss << "Measure completed lib=" << adapter.library_name()
+            << " async=" << (scenario.async ? '1' : '0')
+            << " sink=" << sink_name(scenario.sink)
+            << " producers=" << scenario.producers
+            << " bytes=" << scenario.message_bytes;
+        log_info(oss.str());
+    }
+
     const auto sum = recorder.finalize();
 
     double thr = 0.0;
@@ -204,17 +270,19 @@ void print_summary(
         const Scenario& scenario,
         const ScenarioResult& result)
 {
-    std::cout << library
-              << " async=" << (scenario.async ? '1' : '0')
-              << " sink=" << sink_name(scenario.sink)
-              << " producers=" << scenario.producers
-              << " bytes=" << scenario.message_bytes
-              << " total=" << scenario.total_messages
-              << " p50=" << result.summary.p50_ns
-              << "ns p99=" << result.summary.p99_ns
-              << "ns p999=" << result.summary.p999_ns
-              << "ns throughput=" << std::fixed << std::setprecision(2)
-              << result.throughput << " msg/s\n";
+    std::ostringstream oss;
+    oss << library
+        << " async=" << (scenario.async ? '1' : '0')
+        << " sink=" << sink_name(scenario.sink)
+        << " producers=" << scenario.producers
+        << " bytes=" << scenario.message_bytes
+        << " total=" << scenario.total_messages
+        << " p50=" << result.summary.p50_ns
+        << "ns p99=" << result.summary.p99_ns
+        << "ns p999=" << result.summary.p999_ns
+        << "ns throughput=" << std::fixed << std::setprecision(2)
+        << result.throughput << " msg/s";
+    log_info(oss.str());
 }
 
 } // namespace
@@ -224,6 +292,9 @@ int main() {
     using namespace logit_bench;
     std::atomic<bool> watchdog_done{false};
     std::thread watchdog;
+    std::atomic<std::uint64_t> watchdog_progress{steady_now_ns()};
+    g_watchdog_progress = &watchdog_progress;
+
     try {
         std::vector<std::unique_ptr<ILoggerAdapter>> adapters;
         adapters.emplace_back(std::make_unique<LogItAdapter>());
@@ -240,16 +311,18 @@ int main() {
         // Totals (can be overridden by env):
         const std::size_t total_messages  = get_env_size_t("LOGIT_BENCH_TOTAL", 200000);
         const std::size_t warmup_messages = get_env_size_t("LOGIT_BENCH_WARMUP", 4096);
-        const std::size_t timeout_seconds = get_env_size_t("LOGIT_BENCH_TIMEOUT_SEC", 600);
+        const std::size_t timeout_seconds = get_env_size_t("LOGIT_BENCH_TIMEOUT_SEC", 1200);
 
         if (timeout_seconds > 0) {
-            watchdog = std::thread([timeout_seconds, &watchdog_done]() {
-                const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(timeout_seconds);
+            watchdog = std::thread([timeout_seconds, &watchdog_done, &watchdog_progress]() {
+                const auto timeout = std::chrono::seconds(timeout_seconds);
                 while (!watchdog_done.load(std::memory_order_relaxed)) {
-                    if (std::chrono::steady_clock::now() >= deadline) {
-                        std::cerr << "[logit_bench] Timeout reached after "
-                                  << timeout_seconds
-                                  << " seconds. Terminating benchmark." << std::endl;
+                    const auto last_ns = watchdog_progress.load(std::memory_order_relaxed);
+                    const auto last_tp = std::chrono::steady_clock::time_point(std::chrono::nanoseconds(last_ns));
+                    if (std::chrono::steady_clock::now() - last_tp >= timeout) {
+                        log_error(std::string("Timeout reached after ") + std::to_string(timeout_seconds)
+                                  + " seconds without progress. Terminating benchmark.");
+
                         std::cerr.flush();
                         std::_Exit(124);
                     }
@@ -270,12 +343,17 @@ int main() {
                             scenario.message_bytes  = msg_bytes;
                             scenario.total_messages = total_messages;
 
-                            std::cout << "[logit_bench] Scenario start lib=" << adapter->library_name()
-                                      << " async=" << (scenario.async ? '1' : '0')
-                                      << " sink=" << sink_name(scenario.sink)
-                                      << " producers=" << scenario.producers
-                                      << " bytes=" << scenario.message_bytes
-                                      << " total=" << scenario.total_messages << std::endl;
+                            {
+                                std::ostringstream oss;
+                                oss << "Scenario start lib=" << adapter->library_name()
+                                    << " async=" << (scenario.async ? '1' : '0')
+                                    << " sink=" << sink_name(scenario.sink)
+                                    << " producers=" << scenario.producers
+                                    << " bytes=" << scenario.message_bytes
+                                    << " total=" << scenario.total_messages;
+                                log_info(oss.str());
+                            }
+
                             auto result = execute_scenario(*adapter, scenario, warmup_messages);
                             append_csv(adapter->library_name(), scenario, result.summary, result.throughput);
                             print_summary(adapter->library_name(), scenario, result);
@@ -289,8 +367,10 @@ int main() {
     } catch (const std::exception& ex) {
         watchdog_done.store(true, std::memory_order_relaxed);
         if (watchdog.joinable()) watchdog.join();
-        std::cerr << "Benchmark failed: " << ex.what() << std::endl;
+        log_error(std::string("Benchmark failed: ") + ex.what());
+        g_watchdog_progress = nullptr;
         return 1;
     }
+    g_watchdog_progress = nullptr;
     return 0;
 }
