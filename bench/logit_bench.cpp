@@ -224,6 +224,7 @@ ScenarioResult execute_scenario(
             << " bytes=" << scenario.message_bytes;
         log_info(oss.str());
     }
+
     const auto sum = recorder.finalize();
 
     double thr = 0.0;
@@ -293,6 +294,7 @@ int main() {
     std::thread watchdog;
     std::atomic<std::uint64_t> watchdog_progress{steady_now_ns()};
     g_watchdog_progress = &watchdog_progress;
+
     try {
         std::vector<std::unique_ptr<ILoggerAdapter>> adapters;
         adapters.emplace_back(std::make_unique<LogItAdapter>());
@@ -320,6 +322,7 @@ int main() {
                     if (std::chrono::steady_clock::now() - last_tp >= timeout) {
                         log_error(std::string("Timeout reached after ") + std::to_string(timeout_seconds)
                                   + " seconds without progress. Terminating benchmark.");
+
                         std::cerr.flush();
                         std::_Exit(124);
                     }
@@ -350,6 +353,7 @@ int main() {
                                     << " total=" << scenario.total_messages;
                                 log_info(oss.str());
                             }
+
                             auto result = execute_scenario(*adapter, scenario, warmup_messages);
                             append_csv(adapter->library_name(), scenario, result.summary, result.throughput);
                             print_summary(adapter->library_name(), scenario, result);
