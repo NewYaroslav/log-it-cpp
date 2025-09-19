@@ -313,6 +313,8 @@ int main() {
         const std::size_t warmup_messages = get_env_size_t("LOGIT_BENCH_WARMUP", 4096);
         const std::size_t timeout_seconds = get_env_size_t("LOGIT_BENCH_TIMEOUT_SEC", 1200);
 
+        LOGIT_SET_MAX_QUEUE(total_messages);
+
         if (timeout_seconds > 0) {
             watchdog = std::thread([timeout_seconds, &watchdog_done, &watchdog_progress]() {
                 const auto timeout = std::chrono::seconds(timeout_seconds);
