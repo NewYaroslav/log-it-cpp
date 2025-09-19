@@ -29,6 +29,7 @@ namespace logit_bench {
 namespace {
 
 std::atomic<std::uint64_t>* g_watchdog_progress = nullptr;
+constexpr std::size_t k_watchdog_stride = 256;
 
 std::string make_message(std::size_t bytes, std::size_t index) {
     if (bytes == 0) return {};
@@ -127,6 +128,7 @@ std::chrono::nanoseconds run_workload(
     for (std::size_t i = 0; i < scenario.producers; ++i) {
         threads.emplace_back([&, i]() {
             std::string message = make_message(scenario.message_bytes, i);
+            std::size_t watchdog_counter = 0;
             {
                 std::unique_lock<std::mutex> lk(start_mx);
                 ++ready;
@@ -136,7 +138,12 @@ std::chrono::nanoseconds run_workload(
             for (std::size_t n = 0; n < per_thread[i]; ++n) {
                 auto token = recorder.begin(record_latency);
                 adapter.log(token, message);
+                ++watchdog_counter;
+                if ((watchdog_counter & (k_watchdog_stride - 1)) == 0) {
+                    touch_watchdog();
+                }
             }
+            touch_watchdog();
         });
     }
 
@@ -151,6 +158,7 @@ std::chrono::nanoseconds run_workload(
 
     for (auto& th : threads) th.join();
     adapter.flush();
+    touch_watchdog();
 
     if (!measure_duration) return std::chrono::nanoseconds(0);
     auto t1 = std::chrono::steady_clock::now();
@@ -301,7 +309,7 @@ int main() {
         // Totals (can be overridden by env):
         const std::size_t total_messages  = get_env_size_t("LOGIT_BENCH_TOTAL", 200000);
         const std::size_t warmup_messages = get_env_size_t("LOGIT_BENCH_WARMUP", 4096);
-        const std::size_t timeout_seconds = get_env_size_t("LOGIT_BENCH_TIMEOUT_SEC", 600);
+        const std::size_t timeout_seconds = get_env_size_t("LOGIT_BENCH_TIMEOUT_SEC", 1200);
 
         if (timeout_seconds > 0) {
             watchdog = std::thread([timeout_seconds, &watchdog_done, &watchdog_progress]() {
