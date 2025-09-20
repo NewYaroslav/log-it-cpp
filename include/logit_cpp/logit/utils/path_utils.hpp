@@ -68,7 +68,7 @@ namespace logit {
 
     /// \brief Retrieves the directory of the executable file.
     /// \return A string containing the directory path of the executable.
-    std::string get_exec_dir() {
+    inline std::string get_exec_dir() {
 #       ifdef _WIN32
         std::vector<wchar_t> buffer(MAX_PATH);
         HMODULE hModule = GetModuleHandle(NULL);
@@ -137,7 +137,7 @@ namespace logit {
     /// \brief Recursively retrieves a list of all files in a directory.
     /// \param path The directory path to search (UTF-8 encoded).
     /// \return A vector of strings (UTF-8) containing the full paths of all files found.
-    std::vector<std::string> get_list_files(const std::string& path) {
+    inline std::vector<std::string> get_list_files(const std::string& path) {
         std::vector<std::string> list_files;
 #       ifdef _WIN32
         // Use wide versions of functions to correctly handle non-ASCII characters.
@@ -222,7 +222,7 @@ namespace logit {
     /// \brief Extracts the file name from a full file path.
     /// \param file_path The full file path as a string.
     /// \return The extracted file name, or the full string if no directory separator is found.
-    std::string get_file_name(const std::string& file_path) {
+    inline std::string get_file_name(const std::string& file_path) {
 #       if __cplusplus >= 201703L
         return fs::u8path(file_path).filename().u8string();
 #       else
@@ -255,7 +255,7 @@ namespace logit {
     /// \brief Creates directories recursively for the given path using C++17 std::filesystem.
     /// \param path The directory path to create.
     /// \throws std::runtime_error if the directories cannot be created.
-    void create_directories(const std::string& path) {
+    inline void create_directories(const std::string& path) {
 #       ifdef _WIN32
         // Convert UTF-8 string to wide string for Windows
         std::wstring wide_path = utf8_to_wstring(path);
@@ -283,7 +283,7 @@ namespace logit {
     /// \brief Splits a path into its root and components.
     /// \param path The path to split.
     /// \return A PathComponents object containing the root and components of the path.
-    PathComponents split_path(const std::string& path) {
+    inline PathComponents split_path(const std::string& path) {
         PathComponents result;
         size_t i = 0;
         size_t n = path.size();
@@ -327,7 +327,7 @@ namespace logit {
     /// \param file_path The target file path.
     /// \param base_path The base path from which to compute the relative path.
     /// \return A string representing the relative path from base_path to file_path.
-    std::string make_relative(const std::string& file_path, const std::string& base_path) {
+    inline std::string make_relative(const std::string& file_path, const std::string& base_path) {
         if (base_path.empty()) return file_path;
         PathComponents file_pc = split_path(file_path);
         PathComponents base_pc = split_path(base_path);
@@ -390,7 +390,7 @@ namespace logit {
     /// \brief Creates directories recursively for the given path.
     /// \param path The directory path to create.
     /// \throws std::runtime_error if the directories cannot be created.
-    void create_directories(const std::string& path) {
+    inline void create_directories(const std::string& path) {
         if (path.empty()) return;
         PathComponents path_pc = split_path(path);
         auto &components = path_pc.components;
