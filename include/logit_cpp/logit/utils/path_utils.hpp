@@ -16,6 +16,20 @@
 #ifdef _WIN32
 // For Windows systems
 #include <direct.h>
+
+// Ensure the expected Windows architecture macros are available when consuming
+// this header from standalone translation units (MSVC normally defines the
+// `_M_*` variants while the Windows headers expect the `_X86_`/`_AMD64_` style).
+#   if defined(_M_AMD64) && !defined(_AMD64_)
+#       define _AMD64_
+#   elif defined(_M_IX86) && !defined(_X86_)
+#       define _X86_
+#   elif defined(_M_ARM) && !defined(_ARM_)
+#       define _ARM_
+#   elif defined(_M_ARM64) && !defined(_ARM64_)
+#       define _ARM64_
+#   endif
+
 #include <windows.h>
 #elif defined(__APPLE__)
 // For macOS systems
