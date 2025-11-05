@@ -29,3 +29,13 @@ jobs:
       - name: Run ConsoleApp ODR header
         run: ./app_logger
         
+      - name: Build Task Executor ODR header
+        run: |
+          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_a.cpp
+          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_b.cpp
+          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_main.cpp
+          g++ get_executor_a.o get_executor_b.o get_executor_main.o -o app_executor
+          
+      - name: Run Task Executor ODR header
+        run: ./app_executor
+        
