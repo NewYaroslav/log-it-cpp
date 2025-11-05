@@ -11,7 +11,9 @@ jobs:
         working-directory: tests/odr
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          submodules: recursive
+          
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -19,9 +21,9 @@ jobs:
           
       - name: Build Logit ODR header
         run: |
-          g++ -std=c++17 -I ../../include -c get_logger_a.cpp
-          g++ -std=c++17 -I ../../include -c get_logger_b.cpp
-          g++ -std=c++17 -I ../../include -c get_logger_main.cpp
+          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_a.cpp
+          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_b.cpp
+          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_main.cpp
           g++ get_logger_a.o get_logger_b.o get_logger_main.o -o app_logger
           
       - name: Run ConsoleApp ODR header
