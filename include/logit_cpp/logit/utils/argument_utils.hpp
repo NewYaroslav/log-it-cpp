@@ -42,7 +42,7 @@ namespace logit {
     /// \param left_it Iterator pointing to the '>' character.
     /// \param right_it Iterator pointing to the end of the string.
     /// \return true if the '>' character closes a template argument list, false otherwise.
-    bool is_closing_template(crev_it_t left_it, crev_it_t right_it) {
+    inline bool is_closing_template(crev_it_t left_it, crev_it_t right_it) {
         if (*left_it != '>' || left_it == right_it) return false;
         --left_it; // move to right
         while (left_it != right_it && (
