@@ -1,5 +1,5 @@
 #include <iostream>
-#include <logit_cpp/logger.hpp>
+#include <logit_cpp/logit/Logger.hpp>
 
 extern "C" logit::Logger* get_logger_a();
 extern "C" logit::Logger* get_logger_b();
