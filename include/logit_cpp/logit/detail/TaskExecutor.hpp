@@ -8,7 +8,6 @@
 
 #include <functional>
 #include <atomic>
-#include "logit/config.hpp"
 #if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
   #include <deque>
   #include <mutex>
