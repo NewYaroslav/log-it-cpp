@@ -1,4 +1,4 @@
-#include <logit_cpp/logit/Logger.hpp>
+#include <logit_cpp/logit.hpp>
 #include <memory>
 
 extern "C" logit::Logger* get_logger_b(){ 
