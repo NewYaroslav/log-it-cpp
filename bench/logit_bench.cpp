@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <iostream>
 #include <ctime>
+#include <optional>
 #include <memory>
 #include <mutex>
 #include <stdexcept>
@@ -46,6 +47,50 @@ std::size_t get_env_size_t(const char* name, std::size_t def) {
         }
     }
     return def;
+}
+
+struct BenchFilter {
+    std::optional<std::string> library;
+    std::optional<bool> async;
+    std::optional<SinkKind> sink;
+    std::optional<std::size_t> producers;
+    std::optional<std::size_t> bytes;
+
+    bool matches(const std::string& lib,
+                 bool async_mode,
+                 SinkKind sink_kind,
+                 std::size_t producer_count,
+                 std::size_t msg_bytes) const {
+        if (library && *library != lib) return false;
+        if (async && *async != async_mode) return false;
+        if (sink && *sink != sink_kind) return false;
+        if (producers && *producers != producer_count) return false;
+        if (bytes && *bytes != msg_bytes) return false;
+        return true;
+    }
+};
+
+BenchFilter load_filter() {
+    BenchFilter filter;
+    if (const char* v = std::getenv("LOGIT_BENCH_FILTER_LIB")) {
+        filter.library = std::string(v);
+    }
+    if (const char* v = std::getenv("LOGIT_BENCH_FILTER_ASYNC")) {
+        filter.async = std::string(v) == "1";
+    }
+    if (const char* v = std::getenv("LOGIT_BENCH_FILTER_SINK")) {
+        std::string s(v);
+        std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
+        if (s == "null") filter.sink = SinkKind::Null;
+        if (s == "file") filter.sink = SinkKind::File;
+    }
+    if (const char* v = std::getenv("LOGIT_BENCH_FILTER_PRODUCERS")) {
+        filter.producers = get_env_size_t("LOGIT_BENCH_FILTER_PRODUCERS", 0);
+    }
+    if (const char* v = std::getenv("LOGIT_BENCH_FILTER_BYTES")) {
+        filter.bytes = get_env_size_t("LOGIT_BENCH_FILTER_BYTES", 0);
+    }
+    return filter;
 }
 
 std::uint64_t steady_now_ns() {
@@ -177,10 +222,12 @@ ScenarioResult execute_scenario(
         const Scenario& scenario,
         std::size_t warmup_messages)
 {
-    LatencyRecorder recorder(scenario.total_messages);
+    auto recorder = std::make_shared<LatencyRecorder>(scenario.total_messages);
+
+    adapter.set_recorder_handle(recorder);
 
     // Adapter should keep a pointer/ref to recorder and call complete(token) from its sink.
-    adapter.prepare(scenario, recorder);
+    adapter.prepare(scenario, *recorder);
 
     // Warm-up (no recording, no duration).
     {
@@ -193,7 +240,7 @@ ScenarioResult execute_scenario(
             << " total=" << warmup_messages;
         log_info(oss.str());
     }
-    run_workload(adapter, recorder, scenario, warmup_messages, false, false);
+    run_workload(adapter, *recorder, scenario, warmup_messages, false, false);
     {
         std::ostringstream oss;
         oss << "Warm-up completed lib=" << adapter.library_name()
@@ -215,7 +262,7 @@ ScenarioResult execute_scenario(
             << " total=" << scenario.total_messages;
         log_info(oss.str());
     }
-    const auto dur = run_workload(adapter, recorder, scenario, scenario.total_messages, true, true);
+    const auto dur = run_workload(adapter, *recorder, scenario, scenario.total_messages, true, true);
     {
         std::ostringstream oss;
         oss << "Measure completed lib=" << adapter.library_name()
@@ -230,13 +277,18 @@ ScenarioResult execute_scenario(
     // destroying the recorder referenced by sinks.
     adapter.flush();
 
-    const auto sum = recorder.finalize();
+    recorder->wait_for_all();
+    const auto sum = recorder->finalize();
+
 
     double thr = 0.0;
     if (dur.count() > 0) {
         const double sec = static_cast<double>(dur.count()) / 1'000'000'000.0;
         thr = static_cast<double>(scenario.total_messages) / sec;
     }
+
+    adapter.set_recorder_handle(nullptr);
+
     return ScenarioResult{sum, thr, dur};
 }
 
@@ -318,6 +370,8 @@ int main() {
         const std::size_t warmup_messages = get_env_size_t("LOGIT_BENCH_WARMUP", 4096);
         const std::size_t timeout_seconds = get_env_size_t("LOGIT_BENCH_TIMEOUT_SEC", 1200);
 
+        const BenchFilter filter = load_filter();
+
         LOGIT_SET_MAX_QUEUE(total_messages);
 
         if (timeout_seconds > 0) {
@@ -343,6 +397,9 @@ int main() {
                 for (auto sink : sinks) {
                     for (std::size_t producers : producer_counts) {
                         for (std::size_t msg_bytes : message_sizes) {
+                            if (!filter.matches(adapter->library_name(), async_mode, sink, producers, msg_bytes)) {
+                                continue;
+                            }
                             Scenario scenario;
                             scenario.async          = async_mode;
                             scenario.sink           = sink;

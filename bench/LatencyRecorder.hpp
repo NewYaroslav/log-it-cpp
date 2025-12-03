@@ -4,7 +4,9 @@
 #include <atomic>
 #include <chrono>
 #include <cstdint>
+#include <condition_variable>
 #include <limits>
+#include <mutex>
 #include <stdexcept>
 #include <vector>
 #include <cmath>
@@ -36,7 +38,8 @@ public:
     explicit LatencyRecorder(std::size_t total)
         : m_values(total),
           m_expected(total),
-          m_next_slot(0) {}
+          m_next_slot(0),
+          m_completed(0) {}
 
     /**
      * Reserve a slot (if record==true) and capture t0 using steady_clock.
@@ -61,14 +64,24 @@ public:
         if (!token.active) return;
         const auto t1_ns = now();
         m_values[token.slot] = t1_ns - token.t0_ns; // distinct slots -> no data race
+        const auto done = m_completed.fetch_add(1, std::memory_order_acq_rel) + 1;
+        if (done == m_expected) {
+            std::lock_guard<std::mutex> lk(m_wait_mx);
+            m_wait_cv.notify_all();
+        }
     }
 
     std::size_t recorded() const {
         return m_next_slot.load(std::memory_order_relaxed);
     }
 
+    void wait_for_all() const {
+        std::unique_lock<std::mutex> lk(m_wait_mx);
+        m_wait_cv.wait(lk, [&]{ return m_completed.load(std::memory_order_acquire) >= m_expected; });
+    }
+
     Summary finalize() const {
-        if (recorded() != m_expected) {
+        if (recorded() != m_expected || m_completed.load(std::memory_order_acquire) != m_expected) {
             throw std::runtime_error("Incomplete latency capture");
         }
         std::vector<std::uint64_t> sorted = m_values;
@@ -102,6 +115,9 @@ private:
     std::vector<std::uint64_t> m_values;   // preallocated; no reallocation
     const std::size_t          m_expected; // total messages to record
     std::atomic<std::size_t>   m_next_slot;
+    std::atomic<std::size_t>   m_completed;
+    mutable std::condition_variable m_wait_cv;
+    mutable std::mutex m_wait_mx;
 };
 
 } // namespace logit_bench
