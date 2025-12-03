@@ -44,10 +44,12 @@ public:
     }
 
     void log(const spdlog::details::log_msg& msg) override {
-        const auto* payload_ptr = reinterpret_cast<const MessagePayload*>(msg.source.funcname);
-        if (!payload_ptr) {
-            return;
+        const char* func = msg.source.funcname;
+        if (msg.payload.size() == 0 || !func || *func == '\0') {
+            return; // Flush/control messages have no payload attached.
         }
+
+        const auto* payload_ptr = reinterpret_cast<const MessagePayload*>(func);
         auto* payload = const_cast<MessagePayload*>(payload_ptr);
         consume(*payload);
         delete payload;
