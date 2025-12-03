@@ -119,6 +119,7 @@ std::chrono::nanoseconds run_workload(
     // Barrier to start together.
     std::mutex start_mx;
     std::condition_variable start_cv;
+    std::condition_variable ready_cv;
     bool start_flag = false;
     std::size_t ready = 0;
 
@@ -132,7 +133,7 @@ std::chrono::nanoseconds run_workload(
             {
                 std::unique_lock<std::mutex> lk(start_mx);
                 ++ready;
-                if (ready == scenario.producers) start_cv.notify_one();
+                if (ready == scenario.producers) ready_cv.notify_one();
                 start_cv.wait(lk, [&]{ return start_flag; });
             }
             for (std::size_t n = 0; n < per_thread[i]; ++n) {
@@ -150,7 +151,7 @@ std::chrono::nanoseconds run_workload(
     std::chrono::steady_clock::time_point t0;
     {
         std::unique_lock<std::mutex> lk(start_mx);
-        start_cv.wait(lk, [&]{ return ready == scenario.producers; });
+        ready_cv.wait(lk, [&]{ return ready == scenario.producers; });
         if (measure_duration) t0 = std::chrono::steady_clock::now();
         start_flag = true;
         start_cv.notify_all();
