@@ -278,8 +278,8 @@ ScenarioResult execute_scenario(
     adapter.flush();
 
     recorder->wait_for_all();
-
     const auto sum = recorder->finalize();
+
 
     double thr = 0.0;
     if (dur.count() > 0) {
