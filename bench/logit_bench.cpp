@@ -226,6 +226,10 @@ ScenarioResult execute_scenario(
         log_info(oss.str());
     }
 
+    // Ensure async pipelines (e.g., spdlog thread pool) are fully drained before
+    // destroying the recorder referenced by sinks.
+    adapter.flush();
+
     const auto sum = recorder.finalize();
 
     double thr = 0.0;
