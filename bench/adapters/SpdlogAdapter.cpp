@@ -83,6 +83,7 @@ public:
             std::lock_guard<std::mutex> lock(m_pending_mx);
             pending.swap(m_pending);
         }
+
         std::vector<std::unique_ptr<MessagePayload>> retired;
         retired.reserve(pending.size());
         for (auto& entry : pending) {
@@ -135,6 +136,7 @@ private:
     };
     std::vector<Pending> m_pending;
     std::vector<std::unique_ptr<MessagePayload>> m_retired;
+
     std::mutex m_pending_mx;
 };
 
