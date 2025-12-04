@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string_view>
 
 #include "../LatencyRecorder.hpp"
@@ -18,6 +19,8 @@ public:
     virtual void log(const LatencyRecorder::Token& token, std::string_view message) = 0;
 
     virtual void flush() = 0;
+
+    virtual void set_recorder_handle(std::shared_ptr<LatencyRecorder>) {}
 };
 
 } // namespace logit_bench

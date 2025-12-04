@@ -24,11 +24,14 @@ public:
 
     void flush() override;
 
+    void set_recorder_handle(std::shared_ptr<LatencyRecorder> recorder) override;
+
 private:
     class MeasuringSink;
 
     std::shared_ptr<spdlog::logger> m_logger;
     std::shared_ptr<MeasuringSink> m_sink;
+    std::shared_ptr<LatencyRecorder> m_recorder_handle;
     bool m_async = false;
 };
 
