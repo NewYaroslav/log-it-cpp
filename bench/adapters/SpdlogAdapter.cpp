@@ -3,11 +3,15 @@
 #ifdef LOGIT_BENCH_HAVE_SPDLOG
 
 #include <algorithm>
+#include <chrono>
+#include <condition_variable>
 #include <filesystem>
 #include <fstream>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include <spdlog/async.h>
 #include <spdlog/async_logger.h>
@@ -32,6 +36,12 @@ public:
     void configure(const Scenario& scenario, LatencyRecorder& recorder) {
         m_sink = scenario.sink;
         m_recorder = &recorder;
+        {
+            std::lock_guard<std::mutex> lock(m_pending_mx);
+            m_pending.clear();
+            m_retired.clear();
+            m_pending_count = 0;
+        }
         if (m_sink == SinkKind::File) {
             std::filesystem::create_directories("bench/results");
             std::lock_guard<std::mutex> lock(m_mutex);
@@ -43,14 +53,21 @@ public:
         }
     }
 
+    void track_token(const LatencyRecorder::Token& token, std::unique_ptr<MessagePayload> payload) {
+        std::lock_guard<std::mutex> lock(m_pending_mx);
+        m_pending.push_back(Pending{std::move(payload), token});
+        ++m_pending_count;
+    }
+
     void log(const spdlog::details::log_msg& msg) override {
-        const auto* payload_ptr = reinterpret_cast<const MessagePayload*>(msg.source.funcname);
-        if (!payload_ptr) {
-            return;
+        const char* func = msg.source.funcname;
+        if (msg.payload.size() == 0 || !func || *func == '\0') {
+            return; // Flush/control messages have no payload attached.
         }
+
+        const auto* payload_ptr = reinterpret_cast<const MessagePayload*>(func);
         auto* payload = const_cast<MessagePayload*>(payload_ptr);
-        consume(*payload);
-        delete payload;
+        consume(*payload, payload);
     }
 
     void set_pattern(const std::string&) override {}
@@ -64,15 +81,59 @@ public:
         }
     }
 
+    void complete_pending() {
+        std::vector<Pending> pending;
+        {
+            std::unique_lock<std::mutex> lock(m_pending_mx);
+            m_pending_cv.wait_for(lock, std::chrono::milliseconds(100), [&]{ return m_pending_count == 0; });
+            pending.swap(m_pending);
+            m_pending_count = 0;
+        }
+
+        std::vector<std::unique_ptr<MessagePayload>> retired;
+        retired.reserve(pending.size());
+        for (auto& entry : pending) {
+            if (entry.token.active && m_recorder) {
+                m_recorder->complete(entry.token);
+            }
+            if (entry.payload) {
+                retired.push_back(std::move(entry.payload));
+            }
+        }
+        m_retired.insert(m_retired.end(),
+                         std::make_move_iterator(retired.begin()),
+                         std::make_move_iterator(retired.end()));
+    }
+
 private:
-    void consume(const MessagePayload& payload) {
-        if (payload.token.active && m_recorder) {
-            m_recorder->complete(payload.token);
+    void consume(const MessagePayload& payload, MessagePayload* payload_ptr) {
+        LatencyRecorder::Token token = payload.token;
+        std::unique_ptr<MessagePayload> owned;
+        {
+            std::lock_guard<std::mutex> lock(m_pending_mx);
+            auto it = std::find_if(m_pending.begin(), m_pending.end(), [&](const Pending& p){ return p.payload.get() == payload_ptr; });
+            if (it != m_pending.end()) {
+                token = it->token;
+                owned = std::move(it->payload);
+                m_pending.erase(it);
+                --m_pending_count;
+                if (m_pending_count == 0) m_pending_cv.notify_all();
+            }
+        }
+
+        const MessagePayload& msg = owned ? *owned : payload;
+
+        if (token.active && m_recorder) {
+            m_recorder->complete(token);
+        }
+        if (owned) {
+            std::lock_guard<std::mutex> lock(m_pending_mx);
+            m_retired.push_back(std::move(owned));
         }
         if (m_sink == SinkKind::File) {
             std::lock_guard<std::mutex> lock(m_mutex);
             if (m_file.is_open()) {
-                m_file << payload.text << '\n';
+                m_file << msg.text << '\n';
             }
         }
     }
@@ -81,6 +142,15 @@ private:
     LatencyRecorder* m_recorder = nullptr;
     std::ofstream m_file;
     std::mutex m_mutex;
+    struct Pending {
+        std::unique_ptr<MessagePayload> payload;
+        LatencyRecorder::Token token;
+    };
+    std::vector<Pending> m_pending;
+    std::vector<std::unique_ptr<MessagePayload>> m_retired;
+    std::size_t m_pending_count = 0;
+    std::condition_variable m_pending_cv;
+    std::mutex m_pending_mx;
 };
 
 SpdlogAdapter::SpdlogAdapter() = default;
@@ -88,6 +158,10 @@ SpdlogAdapter::SpdlogAdapter() = default;
 SpdlogAdapter::~SpdlogAdapter() {
     flush();
     spdlog::shutdown();
+}
+
+void SpdlogAdapter::set_recorder_handle(std::shared_ptr<LatencyRecorder> recorder) {
+    m_recorder_handle = std::move(recorder);
 }
 
 void SpdlogAdapter::prepare(const Scenario& scenario, LatencyRecorder& recorder) {
@@ -123,11 +197,15 @@ void SpdlogAdapter::log(const LatencyRecorder::Token& token, std::string_view me
     if (!m_logger) {
         return;
     }
-    auto* payload = new MessagePayload();
+    auto payload = std::make_unique<MessagePayload>();
     payload->token = token;
     payload->text.assign(message.data(), message.size());
-    spdlog::source_loc loc{nullptr, 0, reinterpret_cast<const char*>(payload)};
-    m_logger->log(loc, spdlog::level::info, spdlog::string_view_t(payload->text));
+    MessagePayload* payload_ptr = payload.get();
+    if (m_sink) {
+        m_sink->track_token(token, std::move(payload));
+    }
+    spdlog::source_loc loc{nullptr, 0, reinterpret_cast<const char*>(payload_ptr)};
+    m_logger->log(loc, spdlog::level::info, spdlog::string_view_t(payload_ptr->text));
 }
 
 void SpdlogAdapter::flush() {
@@ -135,6 +213,7 @@ void SpdlogAdapter::flush() {
         m_logger->flush();
     }
     if (m_sink) {
+        m_sink->complete_pending();
         m_sink->flush();
     }
 }

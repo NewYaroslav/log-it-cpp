@@ -147,6 +147,37 @@ jobs:
       - name: Test
         run: ctest --test-dir build --output-on-failure
 
+  bench-asan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - run: git submodule update --init --recursive
+      - name: Configure benchmarks (asan)
+        run: |
+          cmake -S . -B build-bench-asan \
+            -DLOGIT_BENCH_ENABLE=ON \
+            -DLOGIT_BENCH_WITH_SPDLOG=ON \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_CXX_STANDARD=17 \
+            -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer -g' \
+            -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
+      - name: Build benchmarks (asan)
+        run: cmake --build build-bench-asan --target logit_bench
+      - name: Run spdlog async null bench (asan)
+        timeout-minutes: 10
+        env:
+          LOGIT_BENCH_FILTER_LIB: spdlog
+          LOGIT_BENCH_FILTER_ASYNC: "1"
+          LOGIT_BENCH_FILTER_SINK: null
+          LOGIT_BENCH_FILTER_PRODUCERS: "4"
+          LOGIT_BENCH_FILTER_BYTES: "40"
+          LOGIT_BENCH_TOTAL: 200
+          LOGIT_BENCH_WARMUP: 20
+          LOGIT_BENCH_TIMEOUT_SEC: 120
+        run: ./build-bench-asan/logit_bench
+
   vcpkg-install:
     runs-on: ubuntu-latest
     env:

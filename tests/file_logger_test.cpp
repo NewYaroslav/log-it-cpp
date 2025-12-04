@@ -1,9 +1,21 @@
-#define LOGIT_FILE_LOGGER_PATH "."
+#define LOGIT_FILE_LOGGER_PATH "file_logger_test_logs"
 #include <logit.hpp>
 #include <fstream>
 #include <string>
 
+#if defined(_WIN32)
+#    include <direct.h>
+#else
+#    include <sys/stat.h>
+#endif
+
 int main() {
+#if defined(_WIN32)
+    _mkdir(LOGIT_FILE_LOGGER_PATH);
+#else
+    mkdir(LOGIT_FILE_LOGGER_PATH, 0777);
+#endif
+
     LOGIT_ADD_FILE_LOGGER_DEFAULT();
     const std::string message = "test log message";
     LOGIT_INFO(message);

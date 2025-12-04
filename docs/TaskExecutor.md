@@ -191,7 +191,13 @@ const auto lost = LOGIT_GET_DROPPED_TASKS();
   `set_queue_policy()`.
 * The hot-resize barrier uses `m_resizing` and `m_resize_cv` so producers never
   touch a ring buffer that is being rebuilt. This eliminates the data races that
-  TSAN previously reported on `try_pop()` vs. buffer assignment.
+  TSAN previously reported on `try_pop()` vs. buffer assignment. The barrier
+  only drops once the worker thread fully stops and the queue drains; if a sink
+  blocks the worker or `QueuePolicy::Block` keeps `m_active_tasks` above the
+  limit for more than one second, `set_max_queue_size()` abandons the hot
+  resize, clears `m_resizing`, and leaves the existing ring untouched so
+  producers cannot wait indefinitely. Non-MPSC builds perform the resize as an
+  atomic update of `m_max_queue_size`, so they are not subject to this stall.
 * Non-MPSC builds rely solely on mutexes and had no known data races.
 * The Emscripten path is single-threaded and should not be used concurrently.
 

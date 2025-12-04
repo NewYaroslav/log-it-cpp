@@ -8,17 +8,16 @@
 
 #include <functional>
 #include <atomic>
-#include "logit/config.hpp"
 #if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
   #include <deque>
   #include <mutex>
   #include <emscripten/emscripten.h>
-#else
-  #include <thread>
-  #include <deque>
-  #include <mutex>
-  #include <condition_variable>
-  #include <chrono>
+    #else
+        #include <thread>
+        #include <deque>
+        #include <mutex>
+        #include <condition_variable>
+        #include <chrono>
 #endif
 
 // Enable lock-free MPSC ring integration (non-Emscripten) by defining:
@@ -324,8 +323,18 @@ namespace logit { namespace detail {
             // Tell producers to pause before any wait()/stop conditions run.
             m_resizing.store(true, std::memory_order_release);
 
-            // Drain the queue completely.
-            wait();
+            // Drain the queue completely, but do not wait forever if the worker
+            // is stalled (e.g., blocked sink or backpressure keeping
+            // m_active_tasks > 0). If we fail to drain before the deadline,
+            // abort the resize and re-open the barrier so producers can
+            // continue.
+            const auto deadline = std::chrono::steady_clock::now() +
+                                  std::chrono::seconds(1);
+            if (!wait_until_idle_(deadline)) {
+                m_resizing.store(false, std::memory_order_release);
+                m_resize_cv.notify_all();
+                return;
+            }
 
             // Stop the worker so it cannot touch m_mpsc_queue during the resize.
             std::unique_lock<std::mutex> lk(m_queue_mutex);
@@ -474,6 +483,15 @@ namespace logit { namespace detail {
     #ifdef LOGIT_USE_MPSC_RING
         bool queue_empty_() const noexcept {
             return m_mpsc_queue.empty();
+        }
+
+        bool wait_until_idle_(std::chrono::steady_clock::time_point deadline) {
+            std::unique_lock<std::mutex> lock(m_queue_mutex);
+            return m_queue_condition.wait_until(lock, deadline, [this]() {
+                return ((queue_empty_() &&
+                         m_active_tasks.load(std::memory_order_relaxed) == 0) ||
+                        m_stop_flag.load(std::memory_order_acquire));
+            });
         }
     #endif
     

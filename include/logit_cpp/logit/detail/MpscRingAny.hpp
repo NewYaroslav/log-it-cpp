@@ -112,32 +112,35 @@ namespace logit { namespace detail {
         /// \brief Try to dequeue value into out. Non-blocking.
         /// \return true on success; false if queue is empty.
         bool try_pop(T& out) noexcept {
-            std::size_t pos = m_dequeue_pos.load(std::memory_order_relaxed);
-            Cell& c = m_cells[pos % m_cap];
-            std::size_t seq = c.m_seq.load(std::memory_order_acquire);
-    
-            // When ready, seq == pos + 1
-            std::intptr_t diff =
-                static_cast<std::intptr_t>(seq) - static_cast<std::intptr_t>(pos + 1);
-    
-            if (diff == 0) {
-                if (!m_dequeue_pos.compare_exchange_strong(
-                        pos, pos + 1,
-                        std::memory_order_relaxed,
-                        std::memory_order_relaxed)) {
-                    return false; // Single consumer: should be rare.
+            for (;;) {
+                std::size_t pos = m_dequeue_pos.load(std::memory_order_relaxed);
+                Cell& c = m_cells[pos % m_cap];
+                std::size_t seq = c.m_seq.load(std::memory_order_acquire);
+
+                // When ready, seq == pos + 1
+                std::intptr_t diff =
+                    static_cast<std::intptr_t>(seq) - static_cast<std::intptr_t>(pos + 1);
+
+                if (diff == 0) {
+                    if (!m_dequeue_pos.compare_exchange_weak(
+                            pos, pos + 1,
+                            std::memory_order_relaxed,
+                            std::memory_order_relaxed)) {
+                        // Spurious failure: retry until we own the slot.
+                        continue;
+                    }
+
+                    T* p = reinterpret_cast<T*>(&c.m_storage);
+                    out = std::move(*p);
+                    p->~T();
+
+                    // Mark cell free for next cycle.
+                    c.m_seq.store(pos + m_cap, std::memory_order_release);
+                    return true;
                 }
-    
-                T* p = reinterpret_cast<T*>(&c.m_storage);
-                out = std::move(*p);
-                p->~T();
-    
-                // Mark cell free for next cycle.
-                c.m_seq.store(pos + m_cap, std::memory_order_release);
-                return true;
+
+                return false; // Empty or not yet published.
             }
-    
-            return false; // Empty or not yet published.
         }
     
         /// \brief Lightweight emptiness check for current consumer position.
