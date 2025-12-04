@@ -39,7 +39,12 @@ public:
         : m_values(total),
           m_expected(total),
           m_next_slot(0),
-          m_completed(0) {}
+          m_completed(0),
+          m_slot_done(total) {
+        for (auto& flag : m_slot_done) {
+            flag.store(0, std::memory_order_relaxed);
+        }
+    }
 
     /**
      * Reserve a slot (if record==true) and capture t0 using steady_clock.
@@ -62,11 +67,18 @@ public:
     /// Capture t1 and store (t1 - t0) into the reserved slot.
     void complete(const Token& token) {
         if (!token.active) return;
+        if (token.slot >= m_expected) {
+            throw std::out_of_range("LatencyRecorder capacity exceeded");
+        }
+        std::uint8_t expected = 0;
+        if (!m_slot_done[token.slot].compare_exchange_strong(
+                expected, 1, std::memory_order_acq_rel)) {
+            return; // duplicate completion -> ignore
+        }
         const auto t1_ns = now();
         m_values[token.slot] = t1_ns - token.t0_ns; // distinct slots -> no data race
         const auto done = m_completed.fetch_add(1, std::memory_order_acq_rel) + 1;
         if (done == m_expected) {
-            std::lock_guard<std::mutex> lk(m_wait_mx);
             m_wait_cv.notify_all();
         }
     }
@@ -116,6 +128,7 @@ private:
     const std::size_t          m_expected; // total messages to record
     std::atomic<std::size_t>   m_next_slot;
     std::atomic<std::size_t>   m_completed;
+    std::vector<std::atomic<std::uint8_t>> m_slot_done;
     mutable std::condition_variable m_wait_cv;
     mutable std::mutex m_wait_mx;
 };

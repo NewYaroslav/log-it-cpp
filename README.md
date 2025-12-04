@@ -137,7 +137,10 @@ policies (`Block`, `DropNewest`, `DropOldest`) behave consistently across both
 implementations, with the MPSC build intentionally dropping the *incoming* task
 for `DropOldest` to keep accepted work ordered. The ring build also allows
 "hot" queue resizes where producers briefly wait while the worker rebuilds the
-ring buffer without losing in-flight tasks. See
+ring buffer without losing in-flight tasks. The default MPSC buffer holds
+`LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY` tasks (1024 by default) and can be
+retuned by combining `LOGIT_SET_MAX_QUEUE(...)` with the compile-time macro if
+your workload needs a different baseline. See
 [`docs/TaskExecutor.md`](docs/TaskExecutor.md) for a full breakdown and tuning
 tips.
 
@@ -706,6 +709,22 @@ If you are using an IDE like **Visual Studio** or **CLion**, you can add the inc
 
 LogIt++ includes the *fmt* library for `{}`-based formatting. To use the `LOGIT_FMT_*` and `LOGIT_SCOPE_FMT_*` macros, build the library with the CMake option `-DLOGIT_WITH_FMT=ON`.
 
+## CMake options
+
+The following toggles cover all build-time features:
+
+- `LOGIT_CPP_BUILD_TESTS` (default: ON when the project is the root build) — build the test suite.
+- `LOGIT_CPP_BUILD_EXAMPLES` (default: OFF) — build the example programs.
+- `LOGIT_BENCH_ENABLE` (default: OFF) — build benchmarks; `LOGIT_BENCH_WITH_SPDLOG` (default: OFF) also builds the spdlog comparisons.
+- `LOGIT_WITH_GZIP` / `LOGIT_WITH_ZSTD` (defaults: OFF) — enable gzip or zstd support for rotated files.
+- `LOGIT_WITH_FMT` (default: OFF) — include the `{}`-style formatting macros; enable `LOGIT_USE_SUBMODULES` (default: OFF) to pull the bundled fmt/time-shield fallbacks when system packages are missing.
+- `LOGIT_WITH_SYSLOG` (default: ON on Unix-like targets) — build the syslog backend.
+- `LOGIT_WITH_WIN_EVENT_LOG` (default: ON on Windows) — build the Windows Event Log backend.
+- `LOGIT_FORCE_ASYNC_OFF` (default: OFF) — force synchronous logging even in multi-threaded builds.
+- `LOGIT_USE_MPSC_RING` (default: ON) — use the lock-free task queue instead of the mutex-backed deque.
+- `LOGIT_ENABLE_DROP_OLDEST_SLOWPATH` (default: ON) — compile the slow-path used by `DropOldest` when the ring is full.
+- `LOGIT_EMSCRIPTEN` (default: ON under Emscripten toolchains) — adjust the build for single-threaded WebAssembly environments.
+
 ## System Backends
 
 LogIt++ can forward messages to system logging facilities.
@@ -749,6 +768,24 @@ cmake --build build --target logit_bench
 Run `./build/bench/logit_bench` to record the full matrix (sync/async × null/file × producer counts × message sizes). Results
 are appended to `bench/results/latency.csv` with one row per library/combination. Override the workload via `LOGIT_BENCH_TOTAL`
 and `LOGIT_BENCH_WARMUP` environment variables if you need a lighter run.
+
+### Latest snapshot (Dec 04, 2025)
+
+- Build: `Release`, `LOGIT_BENCH_ENABLE=ON`, `LOGIT_BENCH_WITH_SPDLOG=ON`, `LOGIT_USE_MPSC_RING=ON` (default).
+- Workload: `LOGIT_BENCH_TOTAL=10000`, 4 producers, message size 200 bytes for the comparison table (all other sizes/counts
+  are in `bench/results/latency-2025-12-04-10k.csv`).
+- Metrics: median (`p50`) latency in nanoseconds and achieved throughput (messages/sec).
+- Hardware: 3 vCPU VM (Intel Xeon E5-2673 v4 @ 2.30GHz), single NUMA node.
+- Data: refreshed from `bench/results/latency-2025-12-04-10k.csv` (Dec 04, 2025 @ 05:27 UTC).
+
+| Mode | Sink | LogIt++ p50 | LogIt++ throughput | spdlog p50 | spdlog throughput |
+|------|------|-------------|--------------------|------------|-------------------|
+| Sync | Null | 159 ns | 2,559,124 msg/s | 302 ns | 2,747,733 msg/s |
+| Sync | File | 108 ns | 2,081,540 msg/s | 365 ns | 1,304,177 msg/s |
+| Async | Null | 44,699 ns | 753,078 msg/s | 1,499,973 ns | 913,881 msg/s |
+| Async | File | 996,466 ns | 850,021 msg/s | 3,999,290 ns | 912,399 msg/s |
+
+**Takeaways:** In this snapshot both loggers deliver multi-million msg/s in synchronous modes (spdlog slightly higher throughput this run), with sub-microsecond p50 for both. Asynchronously, LogIt++ keeps end-to-end p50 in the tens–hundreds of microseconds while spdlog lands in the millisecond range; throughput for both clusters around 0.75–0.9M msg/s depending on sink.
 
 ---
 
