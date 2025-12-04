@@ -51,6 +51,13 @@ public:
             consume(token, message);
             return;
         }
+        if (m_sink == SinkKind::Null) {
+            logit::detail::TaskExecutor::get_instance().add_task([this, token]() {
+                consume(token, std::string_view{});
+            });
+            return;
+        }
+
         AsyncPayload payload;
         payload.token = token;
         payload.text = message;
@@ -155,14 +162,13 @@ public:
     }
 
     void log(const LatencyRecorder::Token& token, std::string_view message) {
-        std::string text(message);
         logit::LogRecord record(
             logit::LogLevel::LOG_LVL_INFO,
             0,
             std::string(),
             0,
             std::string(),
-            text,
+            std::string(message),
             std::string(),
             -1,
             false,

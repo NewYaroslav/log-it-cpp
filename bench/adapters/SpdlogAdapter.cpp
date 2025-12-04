@@ -9,7 +9,6 @@
 #include <fstream>
 #include <memory>
 #include <mutex>
-#include <sstream>
 #include <string>
 #include <string_view>
 
@@ -147,10 +146,20 @@ void SpdlogAdapter::log(const LatencyRecorder::Token& token, std::string_view me
     auto* payload = new MessagePayload();
     payload->token = token;
     payload->text.assign(message.data(), message.size());
-    std::ostringstream oss;
-    oss << std::hex << static_cast<std::uintptr_t>(reinterpret_cast<std::uintptr_t>(payload))
-        << '|' << payload->text;
-    payload->wire = oss.str();
+
+    char buf[2 + sizeof(void*) * 2];
+    const auto ptr = reinterpret_cast<std::uintptr_t>(payload);
+    const auto [end, ec] = std::to_chars(std::begin(buf), std::end(buf), ptr, 16);
+    if (ec != std::errc()) {
+        delete payload;
+        return;
+    }
+
+    payload->wire.clear();
+    payload->wire.reserve(static_cast<std::size_t>(end - buf) + 1 + payload->text.size());
+    payload->wire.append(buf, end);
+    payload->wire.push_back('|');
+    payload->wire.append(payload->text);
 
     spdlog::source_loc loc{};
     m_logger->log(loc, spdlog::level::info, spdlog::string_view_t(payload->wire));
