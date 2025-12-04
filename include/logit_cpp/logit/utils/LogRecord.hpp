@@ -23,6 +23,7 @@ namespace logit {
         const std::string   format;         ///< Format string for the message.
         const std::string   arg_names;      ///< Argument names for the log.
         std::vector<VariableValue> args_array;  ///< Argument values for the log.
+        std::uintptr_t      user_data;      ///< Opaque payload for adapters (e.g., benchmark tokens). Defaults to 0.
         std::thread::id     thread_id;      ///< ID of the logging thread.
         const int           logger_index;   ///< Logger index (-1 to log to all).
         const bool          print_mode;     ///< Flag to determine whether arguments are printed in a raw format without special symbols.
@@ -48,7 +49,8 @@ namespace logit {
             const std::string& arg_names,
             int logger_index,
             bool print_mode,
-            bool fmt_mode = false) :
+            bool fmt_mode = false,
+            std::uintptr_t user_data = 0) :
                 log_level(log_level),
                 timestamp_ms(timestamp_ms),
                 file(file),
@@ -56,6 +58,7 @@ namespace logit {
                 function(function),
                 format(format),
                 arg_names(arg_names),
+                user_data(user_data),
                 thread_id(std::this_thread::get_id()),
                 logger_index(logger_index),
                 print_mode(print_mode),

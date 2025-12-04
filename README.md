@@ -787,6 +787,22 @@ and `LOGIT_BENCH_WARMUP` environment variables if you need a lighter run.
 
 **Takeaways:** In this snapshot both loggers deliver multi-million msg/s in synchronous modes; LogIt++ keeps the lower p50 while spdlog remains ahead in throughput for the null path and trails on the file sink. Asynchronously, LogIt++ holds end-to-end p50 in the tens–hundreds of microseconds while spdlog lands in the millisecond range; throughput for both clusters around 0.75–0.9M msg/s depending on sink.
 
+### Benchmark harness notes (LatencyRecorder & `user_data`)
+
+- `bench/LatencyRecorder.hpp` preallocates slots and tracks `Token {slot, t0_ns, active}` → `Summary {p50, p99, p999}` with per-slot deduplication (duplicate `complete()` calls are ignored). It exposes `recorded()`, `wait_for_all()`, and `finalize()` for end-to-end timing across producers/consumers.
+- `logit::LogRecord` now carries an optional `user_data` field for opaque payloads (e.g., passing a benchmark token pointer without stuffing `args_array`). Leave it at `0` for normal logging; adapters/sinks may reinterpret it when present.
+- Example: attach a preallocated benchmark payload instead of pushing tokens into `args_array`:
+  ```cpp
+  struct BenchPayload { logit_bench::LatencyRecorder::Token token; };
+  BenchPayload payload{recorder.begin(true)};
+  logit::LogRecord rec(level, LOGIT_CURRENT_TIMESTAMP_MS(), file, line, func,
+                       preformatted_text, /*arg_names*/"", /*logger*/-1,
+                       /*print*/false, /*fmt*/false,
+                       reinterpret_cast<std::uintptr_t>(&payload));
+  Logger::get_instance().log(rec, preformatted_text);
+  // In your sink/adapter: if (record.user_data) { auto* p = reinterpret_cast<BenchPayload*>(record.user_data); recorder.complete(p->token); }
+  ```
+
 ---
 
 ## Documentation
