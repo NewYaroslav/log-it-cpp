@@ -142,14 +142,24 @@ namespace logit {
                 const auto& strategy = m_loggers[record.logger_index];
                 if (!strategy.enabled) return;
                 if (static_cast<int>(record.log_level) < static_cast<int>(strategy.logger->get_log_level())) return;
-                strategy.logger->log(record, strategy.formatter->format(record));
+                if (strategy.formatter && strategy.formatter->is_passthrough()) {
+                    strategy.logger->log(record, record.format);
+                } else {
+                    const std::string msg = strategy.formatter ? strategy.formatter->format(record) : std::string();
+                    strategy.logger->log(record, msg);
+                }
                 return;
             }
             for (const auto& strategy : m_loggers) {
                 if (strategy.single_mode) continue;
                 if (!strategy.enabled) continue;
                 if (static_cast<int>(record.log_level) < static_cast<int>(strategy.logger->get_log_level())) continue;
-                strategy.logger->log(record, strategy.formatter->format(record));
+                if (strategy.formatter && strategy.formatter->is_passthrough()) {
+                    strategy.logger->log(record, record.format);
+                    continue;
+                }
+                const std::string msg = strategy.formatter ? strategy.formatter->format(record) : std::string();
+                strategy.logger->log(record, msg);
             }
         }
 

@@ -24,6 +24,8 @@ public:
     std::string format(const logit::LogRecord& record) const override {
         return record.format;
     }
+
+    bool is_passthrough() const noexcept override { return true; }
 };
 
 class MeasuringSink : public logit::ILogger {
