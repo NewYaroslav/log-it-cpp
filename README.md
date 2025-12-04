@@ -776,7 +776,7 @@ and `LOGIT_BENCH_WARMUP` environment variables if you need a lighter run.
   are in `bench/results/latency-2025-12-04-10k.csv`).
 - Metrics: median (`p50`) latency in nanoseconds and achieved throughput (messages/sec).
 - Hardware: 3 vCPU VM (Intel Xeon E5-2673 v4 @ 2.30GHz), single NUMA node.
-- Data: refreshed from `bench/results/latency-2025-12-04-10k.csv` (Dec 04, 2025 @ 06:28 UTC).
+- Data: refreshed from `bench/results/latency-2025-12-04-10k.csv` (Dec 04, 2025 @ 06:53 UTC).
 
 | Mode | Sink | LogIt++ p50 | LogIt++ throughput | spdlog p50 | spdlog throughput |
 |------|------|-------------|--------------------|------------|-------------------|
