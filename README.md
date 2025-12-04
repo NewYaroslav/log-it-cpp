@@ -776,7 +776,7 @@ and `LOGIT_BENCH_WARMUP` environment variables if you need a lighter run.
   are in `bench/results/latency-2025-12-04-10k.csv`).
 - Metrics: median (`p50`) latency in nanoseconds and achieved throughput (messages/sec).
 - Hardware: 3 vCPU VM (Intel Xeon E5-2673 v4 @ 2.30GHz), single NUMA node.
-- Data: refreshed from `bench/results/latency-2025-12-04-10k.csv` (Dec 04, 2025 @ 05:53 UTC).
+- Data: refreshed from `bench/results/latency-2025-12-04-10k.csv` (Dec 04, 2025 @ 06:28 UTC).
 
 | Mode | Sink | LogIt++ p50 | LogIt++ throughput | spdlog p50 | spdlog throughput |
 |------|------|-------------|--------------------|------------|-------------------|
@@ -785,7 +785,7 @@ and `LOGIT_BENCH_WARMUP` environment variables if you need a lighter run.
 | Async | Null | 44,699 ns | 753,078 msg/s | 1,499,973 ns | 913,881 msg/s |
 | Async | File | 996,466 ns | 850,021 msg/s | 3,999,290 ns | 912,399 msg/s |
 
-**Takeaways:** In this snapshot both loggers deliver multi-million msg/s in synchronous modes; LogIt++ keeps the lower p50 while spdlog edges ahead in throughput for the null sink. Asynchronously, LogIt++ holds end-to-end p50 in the tens–hundreds of microseconds while spdlog lands in the millisecond range; throughput for both clusters around 0.75–0.9M msg/s depending on sink.
+**Takeaways:** In this snapshot both loggers deliver multi-million msg/s in synchronous modes; LogIt++ keeps the lower p50 while spdlog remains ahead in throughput for the null path and trails on the file sink. Asynchronously, LogIt++ holds end-to-end p50 in the tens–hundreds of microseconds while spdlog lands in the millisecond range; throughput for both clusters around 0.75–0.9M msg/s depending on sink.
 
 ---
 
