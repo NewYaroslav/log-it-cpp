@@ -3,6 +3,8 @@
 #ifdef LOGIT_BENCH_HAVE_SPDLOG
 
 #include <algorithm>
+#include <chrono>
+#include <condition_variable>
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -38,6 +40,7 @@ public:
             std::lock_guard<std::mutex> lock(m_pending_mx);
             m_pending.clear();
             m_retired.clear();
+            m_pending_count = 0;
         }
         if (m_sink == SinkKind::File) {
             std::filesystem::create_directories("bench/results");
@@ -53,6 +56,7 @@ public:
     void track_token(const LatencyRecorder::Token& token, std::unique_ptr<MessagePayload> payload) {
         std::lock_guard<std::mutex> lock(m_pending_mx);
         m_pending.push_back(Pending{std::move(payload), token});
+        ++m_pending_count;
     }
 
     void log(const spdlog::details::log_msg& msg) override {
@@ -80,8 +84,10 @@ public:
     void complete_pending() {
         std::vector<Pending> pending;
         {
-            std::lock_guard<std::mutex> lock(m_pending_mx);
+            std::unique_lock<std::mutex> lock(m_pending_mx);
+            m_pending_cv.wait_for(lock, std::chrono::milliseconds(100), [&]{ return m_pending_count == 0; });
             pending.swap(m_pending);
+            m_pending_count = 0;
         }
 
         std::vector<std::unique_ptr<MessagePayload>> retired;
@@ -110,6 +116,8 @@ private:
                 token = it->token;
                 owned = std::move(it->payload);
                 m_pending.erase(it);
+                --m_pending_count;
+                if (m_pending_count == 0) m_pending_cv.notify_all();
             }
         }
 
@@ -117,6 +125,10 @@ private:
 
         if (token.active && m_recorder) {
             m_recorder->complete(token);
+        }
+        if (owned) {
+            std::lock_guard<std::mutex> lock(m_pending_mx);
+            m_retired.push_back(std::move(owned));
         }
         if (m_sink == SinkKind::File) {
             std::lock_guard<std::mutex> lock(m_mutex);
@@ -136,7 +148,8 @@ private:
     };
     std::vector<Pending> m_pending;
     std::vector<std::unique_ptr<MessagePayload>> m_retired;
-
+    std::size_t m_pending_count = 0;
+    std::condition_variable m_pending_cv;
     std::mutex m_pending_mx;
 };
 
