@@ -790,17 +790,26 @@ and `LOGIT_BENCH_WARMUP` environment variables if you need a lighter run.
 ### Benchmark harness notes (LatencyRecorder & `user_data`)
 
 - `bench/LatencyRecorder.hpp` preallocates slots and tracks `Token {slot, t0_ns, active}` → `Summary {p50, p99, p999}` with per-slot deduplication (duplicate `complete()` calls are ignored). It exposes `recorded()`, `wait_for_all()`, and `finalize()` for end-to-end timing across producers/consumers.
-- `logit::LogRecord` now carries an optional `user_data` field for opaque payloads (e.g., passing a benchmark token pointer without stuffing `args_array`). Leave it at `0` for normal logging; adapters/sinks may reinterpret it when present.
-- Example: attach a preallocated benchmark payload instead of pushing tokens into `args_array`:
+- `logit::LogRecord` now carries an optional `user_data` field for opaque payloads (e.g., passing a benchmark token pointer without stuffing `args_array`). Leave it at `0` for normal logging; adapters/sinks may reinterpret it when present. The pointer must remain valid until the sink consumes the record.
+- Example: attach a preallocated benchmark payload instead of pushing tokens into `args_array` (the storage lives for the whole run):
   ```cpp
   struct BenchPayload { logit_bench::LatencyRecorder::Token token; };
-  BenchPayload payload{recorder.begin(true)};
+  std::vector<BenchPayload> payloads(total_messages);
+
+  // Producer thread
+  auto token = recorder.begin(true);
+  payloads[token.slot].token = token;
   logit::LogRecord rec(level, LOGIT_CURRENT_TIMESTAMP_MS(), file, line, func,
                        preformatted_text, /*arg_names*/"", /*logger*/-1,
                        /*print*/false, /*fmt*/false,
-                       reinterpret_cast<std::uintptr_t>(&payload));
+                       reinterpret_cast<std::uintptr_t>(&payloads[token.slot]));
   Logger::get_instance().log(rec, preformatted_text);
-  // In your sink/adapter: if (record.user_data) { auto* p = reinterpret_cast<BenchPayload*>(record.user_data); recorder.complete(p->token); }
+
+  // In your sink/adapter
+  if (record.user_data) {
+      auto* p = reinterpret_cast<BenchPayload*>(record.user_data);
+      recorder.complete(p->token);
+  }
   ```
 
 ---

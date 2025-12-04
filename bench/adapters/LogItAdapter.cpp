@@ -6,6 +6,7 @@
 #include <mutex>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include <logit.hpp>
 
@@ -98,6 +99,11 @@ private:
 
     static LatencyRecorder::Token extract(const logit::LogRecord& record) {
         LatencyRecorder::Token token;
+        if (record.user_data != 0) {
+            auto* payload = reinterpret_cast<const LatencyRecorder::Token*>(record.user_data);
+            token = *payload;
+            return token;
+        }
         if (record.args_array.size() <= kActiveIndex) {
             return token;
         }
@@ -161,6 +167,7 @@ public:
         if (sink) {
             sink->configure(scenario, recorder);
         }
+        m_tokens.assign(scenario.total_messages, {});
     }
 
     void log(const LatencyRecorder::Token& token, std::string_view message) {
@@ -175,10 +182,10 @@ public:
             -1,
             false,
             false);
-        record.args_array.reserve(3);
-        record.args_array.emplace_back("slot", static_cast<std::uint64_t>(token.slot));
-        record.args_array.emplace_back("t0", static_cast<std::uint64_t>(token.t0_ns));
-        record.args_array.emplace_back("active", static_cast<std::uint64_t>(token.active ? 1 : 0));
+        if (token.active && token.slot < m_tokens.size()) {
+            m_tokens[token.slot] = token;
+            record.user_data = reinterpret_cast<std::uintptr_t>(&m_tokens[token.slot]);
+        }
         logger.log(record);
     }
 
@@ -190,6 +197,7 @@ public:
 
     logit::Logger& logger;
     MeasuringSink* sink = nullptr;
+    std::vector<LatencyRecorder::Token> m_tokens;
 };
 
 LogItAdapter::LogItAdapter()

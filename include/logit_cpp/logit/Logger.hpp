@@ -11,6 +11,7 @@
 #include "detail/TaskExecutor.hpp"
 #include <memory>
 #include <mutex>
+#include <shared_mutex>
 #include <sstream>
 #include <atomic>
 
@@ -43,13 +44,14 @@ namespace logit {
                 std::unique_ptr<ILogFormatter> formatter,
                 bool single_mode = false) {
             if (m_shutdown) return;
-            std::lock_guard<std::mutex> lock(m_mutex);
-            m_loggers.push_back(
-                LoggerStrategy{std::move(logger),
-                std::move(formatter),
-                single_mode,
-                true // Loggers are enabled by default
-            });
+            auto strategy = std::make_shared<LoggerStrategy>();
+            strategy->logger = std::move(logger);
+            strategy->formatter = std::move(formatter);
+            strategy->single_mode = single_mode;
+            strategy->enabled = true;
+
+            std::unique_lock<std::shared_mutex> lock(m_loggers_mx);
+            m_loggers.push_back(std::move(strategy));
         }
 
         /// \brief Enables or disables a logger by index.
@@ -57,9 +59,9 @@ namespace logit {
         /// \param enabled True to enable, false to disable.
         void set_logger_enabled(int logger_index, bool enabled) {
             if (m_shutdown) return;
-            std::lock_guard<std::mutex> lock(m_mutex);
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
-                m_loggers[logger_index].enabled = enabled;
+            std::unique_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
+                m_loggers[logger_index]->enabled = enabled;
             }
         }
 
@@ -67,9 +69,9 @@ namespace logit {
         /// \param logger_index Index of logger.
         /// \return True if logger is enabled, false otherwise.
         bool is_logger_enabled(int logger_index) const {
-            std::lock_guard<std::mutex> lock(m_mutex);
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
-                return m_loggers[logger_index].enabled;
+            std::shared_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
+                return m_loggers[logger_index]->enabled;
             }
             return false;
         }
@@ -79,9 +81,9 @@ namespace logit {
         /// \param single_mode True to enable single mode, false to disable.
         void set_logger_single_mode(int logger_index, bool single_mode) {
             if (m_shutdown) return;
-            std::lock_guard<std::mutex> lock(m_mutex);
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
-                m_loggers[logger_index].single_mode = single_mode;
+            std::unique_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
+                m_loggers[logger_index]->single_mode = single_mode;
             }
         }
 
@@ -90,9 +92,10 @@ namespace logit {
         /// \param offset_ms Offset in milliseconds.
         void set_timestamp_offset(int logger_index, int64_t offset_ms) {
             if (m_shutdown) return;
-            std::lock_guard<std::mutex> lock(m_mutex);
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
-                m_loggers[logger_index].formatter->set_timestamp_offset(offset_ms);
+            std::unique_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
+                std::lock_guard<std::mutex> exec_lock(m_loggers[logger_index]->exec_mx);
+                m_loggers[logger_index]->formatter->set_timestamp_offset(offset_ms);
             }
         }
 
@@ -100,9 +103,11 @@ namespace logit {
         /// \param level Minimum log level.
         void set_log_level(LogLevel level) {
             if (m_shutdown) return;
-            std::lock_guard<std::mutex> lock(m_mutex);
+            std::shared_lock<std::shared_mutex> lock(m_loggers_mx);
             for (auto& strategy : m_loggers) {
-                strategy.logger->set_log_level(level);
+                if (!strategy) continue;
+                std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                strategy->logger->set_log_level(level);
             }
         }
 
@@ -111,9 +116,10 @@ namespace logit {
         /// \param level Minimum log level.
         void set_log_level(int logger_index, LogLevel level) {
             if (m_shutdown) return;
-            std::lock_guard<std::mutex> lock(m_mutex);
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
-                m_loggers[logger_index].logger->set_log_level(level);
+            std::unique_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
+                std::lock_guard<std::mutex> exec_lock(m_loggers[logger_index]->exec_mx);
+                m_loggers[logger_index]->logger->set_log_level(level);
             }
         }
 
@@ -122,9 +128,9 @@ namespace logit {
         /// \return True if logger is in single mode, false otherwise.
         bool is_logger_single_mode(int logger_index) const {
             if (m_shutdown) return false;
-            std::lock_guard<std::mutex> lock(m_mutex);
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
-                return m_loggers[logger_index].single_mode;
+            std::shared_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
+                return m_loggers[logger_index]->single_mode;
             }
             return false;
         }
@@ -136,30 +142,36 @@ namespace logit {
         /// \param record Log record to be logged.
         void log(const LogRecord& record) {
             if (m_shutdown) return;
-            std::lock_guard<std::mutex> lock(m_mutex);
-            // Log to the specific logger if the index is valid
-            if (record.logger_index >= 0 && record.logger_index < static_cast<int>(m_loggers.size())) {
-                const auto& strategy = m_loggers[record.logger_index];
-                if (!strategy.enabled) return;
-                if (static_cast<int>(record.log_level) < static_cast<int>(strategy.logger->get_log_level())) return;
-                if (strategy.formatter && strategy.formatter->is_passthrough()) {
-                    strategy.logger->log(record, record.format);
+            const bool targeted = record.logger_index >= 0;
+            std::vector<std::shared_ptr<LoggerStrategy>> snapshot;
+            {
+                std::shared_lock<std::shared_mutex> lock(m_loggers_mx);
+                if (targeted) {
+                    if (record.logger_index < static_cast<int>(m_loggers.size())) {
+                        snapshot.push_back(m_loggers[record.logger_index]);
+                    }
                 } else {
-                    const std::string msg = strategy.formatter ? strategy.formatter->format(record) : std::string();
-                    strategy.logger->log(record, msg);
+                    snapshot = m_loggers;
                 }
+            }
+
+            if (targeted) {
+                if (snapshot.empty() || !snapshot[0]) return;
+                auto& strategy = snapshot[0];
+                if (!strategy->enabled) return;
+                if (static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) return;
+                std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                dispatch_to_strategy(*strategy, record);
                 return;
             }
-            for (const auto& strategy : m_loggers) {
-                if (strategy.single_mode) continue;
-                if (!strategy.enabled) continue;
-                if (static_cast<int>(record.log_level) < static_cast<int>(strategy.logger->get_log_level())) continue;
-                if (strategy.formatter && strategy.formatter->is_passthrough()) {
-                    strategy.logger->log(record, record.format);
-                    continue;
-                }
-                const std::string msg = strategy.formatter ? strategy.formatter->format(record) : std::string();
-                strategy.logger->log(record, msg);
+
+            for (const auto& strategy : snapshot) {
+                if (!strategy) continue;
+                if (strategy->single_mode) continue;
+                if (!strategy->enabled) continue;
+                if (static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) continue;
+                std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                dispatch_to_strategy(*strategy, record);
             }
         }
 
@@ -169,9 +181,10 @@ namespace logit {
         /// \return Requested parameter as a string, or empty string if unsupported.
         std::string get_string_param(int logger_index, const LoggerParam& param) const {
             if (m_shutdown) return std::string();
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+            std::shared_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
                 const auto& strategy = m_loggers[logger_index];
-                return strategy.logger->get_string_param(param);
+                return strategy->logger->get_string_param(param);
             }
             return std::string();
         }
@@ -182,9 +195,10 @@ namespace logit {
         /// \return Requested parameter as an integer, or 0 if unsupported.
         int64_t get_int_param(int logger_index, const LoggerParam& param) const {
             if (m_shutdown) return 0;
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+            std::shared_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
                 const auto& strategy = m_loggers[logger_index];
-                return strategy.logger->get_int_param(param);
+                return strategy->logger->get_int_param(param);
             }
             return 0;
         }
@@ -195,9 +209,10 @@ namespace logit {
         /// \return Requested parameter as a double, or 0.0 if unsupported.
         double get_float_param(int logger_index, const LoggerParam& param) const {
             if (m_shutdown) return 0.0;
-            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size())) {
+            std::shared_lock<std::shared_mutex> lock(m_loggers_mx);
+            if (logger_index >= 0 && logger_index < static_cast<int>(m_loggers.size()) && m_loggers[logger_index]) {
                 const auto& strategy = m_loggers[logger_index];
-                return strategy.logger->get_float_param(param);
+                return strategy->logger->get_float_param(param);
             }
             return 0.0;
         }
@@ -238,8 +253,10 @@ namespace logit {
         ///
         /// Ensures that all log messages are fully processed before continuing.
         void wait() {
+            std::shared_lock<std::shared_mutex> lock(m_loggers_mx);
             for (const auto& strategy : m_loggers) {
-                strategy.logger->wait();
+                if (!strategy) continue;
+                strategy->logger->wait();
             }
         }
 
@@ -261,12 +278,22 @@ namespace logit {
         struct LoggerStrategy {
             std::unique_ptr<ILogger> logger;            ///< The logger instance.
             std::unique_ptr<ILogFormatter> formatter;   ///< The formatter instance.
-            bool single_mode;                           ///< Flag indicating if the logger is in single mode.
-            bool enabled;                               ///< Flag indicating if the logger is enabled.
+            bool single_mode = false;                   ///< Flag indicating if the logger is in single mode.
+            bool enabled = true;                        ///< Flag indicating if the logger is enabled.
+            mutable std::mutex exec_mx;                 ///< Protects formatter+logger invocation.
         };
 
-        std::vector<LoggerStrategy> m_loggers;        ///< Container for logger-formatter pairs.
-        mutable std::mutex m_mutex;                   ///< Mutex for thread safety during logging operations.
+        void dispatch_to_strategy(LoggerStrategy& strategy, const LogRecord& record) {
+            if (strategy.formatter && strategy.formatter->is_passthrough()) {
+                strategy.logger->log(record, record.format);
+                return;
+            }
+            const std::string msg = strategy.formatter ? strategy.formatter->format(record) : std::string();
+            strategy.logger->log(record, msg);
+        }
+
+        std::vector<std::shared_ptr<LoggerStrategy>> m_loggers;        ///< Container for logger-formatter pairs.
+        mutable std::shared_mutex m_loggers_mx;                        ///< Protects access to logger strategies.
         std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false); ///< Flag indicating if shutdown was requested.
 
         void print(const LogRecord& record) {

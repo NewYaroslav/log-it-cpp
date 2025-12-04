@@ -704,16 +704,25 @@ Run `./build/bench/logit_bench` to capture the full matrix (sync/async × null/f
 \subsection bench_harness Bench harness notes (LatencyRecorder & user_data)
 
 - `bench/LatencyRecorder.hpp` preallocates slots and tracks `Token {slot, t0_ns, active}` → `Summary {p50, p99, p999}` with per-slot deduplication (duplicate `complete()` calls are ignored). It exposes `recorded()`, `wait_for_all()`, and `finalize()` for end-to-end timing across producers/consumers.
-- `logit::LogRecord` includes an optional `user_data` field for opaque payloads (e.g., handing a benchmark token pointer to a sink instead of populating `args_array`). Leave it `0` for normal logging.
-- Example usage to pass a preallocated payload into the sink:
+- `logit::LogRecord` includes an optional `user_data` field for opaque payloads (e.g., handing a benchmark token pointer to a sink instead of populating `args_array`). Leave it `0` for normal logging. The pointed storage must outlive the record until the sink consumes it.
+- Example usage to pass a preallocated payload into the sink (storage lives for the entire run):
   \code{.cpp}
   struct BenchPayload { logit_bench::LatencyRecorder::Token token; };
-  BenchPayload payload{recorder.begin(true)};
+  std::vector<BenchPayload> payloads(total_messages);
+
+  // Producer
+  auto token = recorder.begin(true);
+  payloads[token.slot].token = token;
   logit::LogRecord rec(level, LOGIT_CURRENT_TIMESTAMP_MS(), file, line, func,
                        preformatted_text, "", -1, false, false,
-                       reinterpret_cast<std::uintptr_t>(&payload));
+                       reinterpret_cast<std::uintptr_t>(&payloads[token.slot]));
   Logger::get_instance().log(rec, preformatted_text);
-  // Sink side: if (record.user_data) { auto* p = reinterpret_cast<BenchPayload*>(record.user_data); recorder.complete(p->token); }
+
+  // Sink side
+  if (record.user_data) {
+      auto* p = reinterpret_cast<BenchPayload*>(record.user_data);
+      recorder.complete(p->token);
+  }
   \endcode
 
 \subsection step5 Step 5: Build and Run Your Project

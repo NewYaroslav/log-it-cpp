@@ -717,17 +717,26 @@ LogIt++ включает библиотеку *fmt* для форматиров�
 ### Как устроен бенч-харнесс (LatencyRecorder и `user_data`)
 
 - `bench/LatencyRecorder.hpp` заранее резервирует слоты и ведёт `Token {slot, t0_ns, active}` → `Summary {p50, p99, p999}` с защитой от повторных `complete()` на один слот. Доступны методы `recorded()`, `wait_for_all()` и `finalize()` для end-to-end измерений между продюсерами и консюмером.
-- В `logit::LogRecord` добавлено поле `user_data` для произвольной нагрузки (например, указатель на бенч-токен без использования `args_array`). Оставляйте `0` для обычного логирования; адаптеры/приёмники могут интерпретировать поле, если оно задано.
-- Пример: прикрепить заранее выделенный бенч-пейлоад вместо записи токена в `args_array`:
+- В `logit::LogRecord` добавлено поле `user_data` для произвольной нагрузки (например, указатель на бенч-токен без использования `args_array`). Оставляйте `0` для обычного логирования; адаптеры/приёмники могут интерпретировать поле, если оно задано. Указатель должен жить до момента, когда sink обработает запись.
+- Пример: прикрепить заранее выделенный бенч-пейлоад вместо записи токена в `args_array` (хранилище живёт весь прогон):
   ```cpp
   struct BenchPayload { logit_bench::LatencyRecorder::Token token; };
-  BenchPayload payload{recorder.begin(true)};
+  std::vector<BenchPayload> payloads(total_messages);
+
+  // В продюсере
+  auto token = recorder.begin(true);
+  payloads[token.slot].token = token;
   logit::LogRecord rec(level, LOGIT_CURRENT_TIMESTAMP_MS(), file, line, func,
                        preformatted_text, /*arg_names*/"", /*logger*/-1,
                        /*print*/false, /*fmt*/false,
-                       reinterpret_cast<std::uintptr_t>(&payload));
+                       reinterpret_cast<std::uintptr_t>(&payloads[token.slot]));
   Logger::get_instance().log(rec, preformatted_text);
-  // В приёмнике: if (record.user_data) { auto* p = reinterpret_cast<BenchPayload*>(record.user_data); recorder.complete(p->token); }
+
+  // В sink/адаптере
+  if (record.user_data) {
+      auto* p = reinterpret_cast<BenchPayload*>(record.user_data);
+      recorder.complete(p->token);
+  }
   ```
 
 ## Системные бэкенды
