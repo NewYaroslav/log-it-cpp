@@ -280,7 +280,6 @@ ScenarioResult execute_scenario(
     recorder->wait_for_all();
     const auto sum = recorder->finalize();
 
-
     double thr = 0.0;
     if (dur.count() > 0) {
         const double sec = static_cast<double>(dur.count()) / 1'000'000'000.0;

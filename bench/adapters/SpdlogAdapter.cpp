@@ -37,6 +37,7 @@ public:
         {
             std::lock_guard<std::mutex> lock(m_pending_mx);
             m_pending.clear();
+            m_retired.clear();
         }
         if (m_sink == SinkKind::File) {
             std::filesystem::create_directories("bench/results");
@@ -82,11 +83,20 @@ public:
             std::lock_guard<std::mutex> lock(m_pending_mx);
             pending.swap(m_pending);
         }
-        for (const auto& entry : pending) {
+
+        std::vector<std::unique_ptr<MessagePayload>> retired;
+        retired.reserve(pending.size());
+        for (auto& entry : pending) {
             if (entry.token.active && m_recorder) {
                 m_recorder->complete(entry.token);
             }
+            if (entry.payload) {
+                retired.push_back(std::move(entry.payload));
+            }
         }
+        m_retired.insert(m_retired.end(),
+                         std::make_move_iterator(retired.begin()),
+                         std::make_move_iterator(retired.end()));
     }
 
 private:
@@ -125,6 +135,8 @@ private:
         LatencyRecorder::Token token;
     };
     std::vector<Pending> m_pending;
+    std::vector<std::unique_ptr<MessagePayload>> m_retired;
+
     std::mutex m_pending_mx;
 };
 
