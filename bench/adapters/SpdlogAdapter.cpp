@@ -89,6 +89,7 @@ public:
             pending.swap(m_pending);
             m_pending_count = 0;
         }
+
         std::vector<std::unique_ptr<MessagePayload>> retired;
         retired.reserve(pending.size());
         for (auto& entry : pending) {
