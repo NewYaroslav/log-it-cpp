@@ -158,35 +158,40 @@ namespace logit {
         /// \param record Log record to be logged.
         void log(const LogRecord& record) {
             if (m_shutdown) return;
+
             const bool targeted = record.logger_index >= 0;
+
             std::vector<std::shared_ptr<LoggerStrategy>> snapshot;
-            {
-                LoggerReadLock lock(m_loggers_mx);
-                if (targeted) {
-                    if (record.logger_index < static_cast<int>(m_loggers.size())) {
-                        snapshot.push_back(m_loggers[record.logger_index]);
-                    }
-                } else {
-                    snapshot = m_loggers;
-                }
+            snapshot.reserve(targeted ? 1 : 0);
+
+            LoggerReadLock lock(m_loggers_mx);
+            if (targeted) {
+                if (record.logger_index < (int)m_loggers.size())
+                    snapshot.push_back(m_loggers[record.logger_index]);
+            } else {
+                snapshot = m_loggers; // copy shared_ptrs
             }
+            lock.unlock();
 
             if (targeted) {
                 if (snapshot.empty() || !snapshot[0]) return;
                 auto& strategy = snapshot[0];
-                if (!strategy->enabled) return;
-                if (static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) return;
+
                 std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                if (!strategy->enabled) return;
+                if ((int)record.log_level < (int)strategy->logger->get_log_level()) return;
                 dispatch_to_strategy(*strategy, record);
                 return;
             }
 
             for (const auto& strategy : snapshot) {
                 if (!strategy) continue;
+
+                std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
                 if (strategy->single_mode) continue;
                 if (!strategy->enabled) continue;
-                if (static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) continue;
-                std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                if ((int)record.log_level < (int)strategy->logger->get_log_level()) continue;
+
                 dispatch_to_strategy(*strategy, record);
             }
         }

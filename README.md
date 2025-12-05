@@ -769,48 +769,49 @@ Run `./build/bench/logit_bench` to record the full matrix (sync/async × null/fi
 are appended to `bench/results/latency.csv` with one row per library/combination. Override the workload via `LOGIT_BENCH_TOTAL`
 and `LOGIT_BENCH_WARMUP` environment variables if you need a lighter run.
 
-### Latest snapshot (Dec 04, 2025)
+### What this benchmark measures
+
+The harness times end-to-end latency (*log call → delivery into the sink*) and aggregate throughput. It is great for spotting
+regressions and comparing pipeline designs, but it is **not** a perfect “fastest logger wins” contest. LogIt++ intentionally does
+extra work inspired by Python’s `icecream`: a single `LOGIT_*` call can extract argument names, build `args_array` with
+`VariableValue`, and optionally format those structured values. Classic printf-style loggers such as spdlog focus on fast string
+formatting and queueing instead of this metadata path. If you want an apples-to-apples view, keep the comparison within the same
+mode:
+
+- *Text-only/passthrough* shows dispatch/queue/sink cost and is the closest to spdlog’s default path.
+- *Metadata-heavy* (`LOGIT_*` with argument capture) includes parsing and packing the structured arguments; LogIt++ will do more
+  work per call here by design.
+
+Async numbers also include enqueue + worker wakeup/scheduling + sink time; file sinks add I/O variance from buffering and flush
+policies.
+
+### Latest snapshot (Dec 05, 2025)
 
 - Build: `Release`, `LOGIT_BENCH_ENABLE=ON`, `LOGIT_BENCH_WITH_SPDLOG=ON`, `LOGIT_USE_MPSC_RING=ON` (default).
 - Workload: `LOGIT_BENCH_TOTAL=10000`, 4 producers, message size 200 bytes for the comparison table (all other sizes/counts
-  are in `bench/results/latency-2025-12-04-10k.csv`).
+  are in `bench/results/latency-2025-12-05-10k.csv`).
 - Metrics: median (`p50`) latency in nanoseconds and achieved throughput (messages/sec).
 - Hardware: 3 vCPU VM (Intel Xeon E5-2673 v4 @ 2.30GHz), single NUMA node.
-- Data: refreshed from `bench/results/latency-2025-12-04-10k.csv` (Dec 04, 2025 @ 06:53 UTC).
+- Data: refreshed from `bench/results/latency-2025-12-05-10k.csv` (Dec 05, 2025 @ 03:18 UTC).
 
 | Mode | Sink | LogIt++ p50 | LogIt++ throughput | spdlog p50 | spdlog throughput |
 |------|------|-------------|--------------------|------------|-------------------|
-| Sync | Null | 159 ns | 2,559,124 msg/s | 302 ns | 2,747,733 msg/s |
-| Sync | File | 108 ns | 2,081,540 msg/s | 365 ns | 1,304,177 msg/s |
-| Async | Null | 44,699 ns | 753,078 msg/s | 1,499,973 ns | 913,881 msg/s |
-| Async | File | 996,466 ns | 850,021 msg/s | 3,999,290 ns | 912,399 msg/s |
+| Sync | Null | 119 ns | 2,127,704 msg/s | 86 ns | 5,803,783 msg/s |
+| Sync | File | 130 ns | 1,035,690 msg/s | 87 ns | 1,593,987 msg/s |
+| Async | Null | 20,916 ns | 1,846,272 msg/s | 1,248,779 ns | 1,303,573 msg/s |
+| Async | File | 255,323 ns | 651,384 msg/s | 5,001,140 ns | 1,153,976 msg/s |
 
-**Takeaways:** In this snapshot both loggers deliver multi-million msg/s in synchronous modes; LogIt++ keeps the lower p50 while spdlog remains ahead in throughput for the null path and trails on the file sink. Asynchronously, LogIt++ holds end-to-end p50 in the tens–hundreds of microseconds while spdlog lands in the millisecond range; throughput for both clusters around 0.75–0.9M msg/s depending on sink.
+**Takeaways:** LogIt++ keeps sub-microsecond p50s in synchronous modes while carrying the IceCream-style metadata path; spdlog’s lean formatting stays faster on the null/file sinks. Asynchronously, both numbers include enqueue + worker wakeups + sink work; LogIt++ stays in the tens-to-hundreds of microseconds, while the spdlog adapter lands in low-to-mid milliseconds for this run.
 
-### Benchmark harness notes (LatencyRecorder & `user_data`)
+### Benchmark harness notes (LatencyRecorder)
 
-- `bench/LatencyRecorder.hpp` preallocates slots and tracks `Token {slot, t0_ns, active}` → `Summary {p50, p99, p999}` with per-slot deduplication (duplicate `complete()` calls are ignored). It exposes `recorded()`, `wait_for_all()`, and `finalize()` for end-to-end timing across producers/consumers.
-- `logit::LogRecord` now carries an optional `user_data` field for opaque payloads (e.g., passing a benchmark token pointer without stuffing `args_array`). Leave it at `0` for normal logging; adapters/sinks may reinterpret it when present. The pointer must remain valid until the sink consumes the record.
-- Example: attach a preallocated benchmark payload instead of pushing tokens into `args_array` (the storage lives for the whole run):
-  ```cpp
-  struct BenchPayload { logit_bench::LatencyRecorder::Token token; };
-  std::vector<BenchPayload> payloads(total_messages);
+- `bench/LatencyRecorder.hpp` preallocates slots and tracks `Token {slot, t0_ns, active}` → `Summary {p50, p99, p999}` with per-
+slot deduplication (duplicate `complete()` calls are ignored). It exposes `recorded()`, `wait_for_all()`, and `finalize()` for
+end-to-end timing across producers/consumers.
+- The LogIt adapter stores the benchmark slot in `LogRecord::line` (see `bench/adapters/LogItAdapter.cpp`). Sinks call
+  `LatencyRecorder::complete_slot()` when they observe a non-negative line number, so no extra payload is needed inside the log
+  record.
 
-  // Producer thread
-  auto token = recorder.begin(true);
-  payloads[token.slot].token = token;
-  logit::LogRecord rec(level, LOGIT_CURRENT_TIMESTAMP_MS(), file, line, func,
-                       preformatted_text, /*arg_names*/"", /*logger*/-1,
-                       /*print*/false, /*fmt*/false,
-                       reinterpret_cast<std::uintptr_t>(&payloads[token.slot]));
-  Logger::get_instance().log(rec, preformatted_text);
-
-  // In your sink/adapter
-  if (record.user_data) {
-      auto* p = reinterpret_cast<BenchPayload*>(record.user_data);
-      recorder.complete(p->token);
-  }
-  ```
 
 ---
 
