@@ -64,7 +64,7 @@ namespace logit {
             LogLevel lvl = rec.log_level;
             std::string s = msg;
             auto task = [this, lvl, s]() {
-                if ((int)lvl < m_level.load()) return;
+                if (static_cast<int>(lvl) < m_level.load()) return;
                 syslog(m_map(lvl), "%s", s.c_str());
             };
             if (m_cfg.async) { detail::TaskExecutor::get_instance().add_task(task); }
@@ -88,11 +88,11 @@ namespace logit {
 
         /// \brief Set minimal log level.
         /// \param l New level.
-        void set_log_level(LogLevel l) override { m_level.store((int)l); }
+        void set_log_level(LogLevel l) override { m_level.store(static_cast<int>(l)); }
 
         /// \brief Get current log level.
         /// \return Minimal log level.
-        LogLevel get_log_level() const override { return (LogLevel)m_level.load(); }
+        LogLevel get_log_level() const override { return static_cast<LogLevel>(m_level.load()); }
 
         /// \brief Wait for asynchronous tasks to finish.
         void wait() override { if (m_cfg.async) detail::TaskExecutor::get_instance().wait(); }
@@ -109,7 +109,7 @@ namespace logit {
             } return LOG_INFO;
         }
         Config m_cfg{};
-        std::atomic<int> m_level{(int)LogLevel::LOG_LVL_TRACE};
+        std::atomic<int> m_level{static_cast<int>(LogLevel::LOG_LVL_TRACE)};
         std::atomic<int64_t> m_last_ts{0};
     };
 

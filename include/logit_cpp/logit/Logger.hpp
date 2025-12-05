@@ -166,7 +166,7 @@ namespace logit {
 
             LoggerReadLock lock(m_loggers_mx);
             if (targeted) {
-                if (record.logger_index < (int)m_loggers.size())
+                if (record.logger_index < static_cast<int>(m_loggers.size()))
                     snapshot.push_back(m_loggers[record.logger_index]);
             } else {
                 snapshot = m_loggers; // copy shared_ptrs
@@ -179,7 +179,7 @@ namespace logit {
 
                 std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
                 if (!strategy->enabled) return;
-                if ((int)record.log_level < (int)strategy->logger->get_log_level()) return;
+                if (static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) return;
                 dispatch_to_strategy(*strategy, record);
                 return;
             }
@@ -190,7 +190,7 @@ namespace logit {
                 std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
                 if (strategy->single_mode) continue;
                 if (!strategy->enabled) continue;
-                if ((int)record.log_level < (int)strategy->logger->get_log_level()) continue;
+                if (static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) continue;
 
                 dispatch_to_strategy(*strategy, record);
             }
