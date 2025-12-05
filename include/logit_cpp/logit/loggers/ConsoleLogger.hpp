@@ -200,8 +200,10 @@ namespace logit {
         /// \return A double representing the requested parameter, or 0.0 if the parameter is unsupported.
         double get_float_param(const LoggerParam& param) const override {
             switch (param) {
-            case LoggerParam::LastLogTimestamp: return (double)get_last_log_ts() / 1000.0;
-            case LoggerParam::TimeSinceLastLog: return (double)get_time_since_last_log() / 1000.0;
+            case LoggerParam::LastLogTimestamp:
+                return static_cast<double>(get_last_log_ts()) / 1000.0;
+            case LoggerParam::TimeSinceLastLog:
+                return static_cast<double>(get_time_since_last_log()) / 1000.0;
             default:
                 break;
             };
