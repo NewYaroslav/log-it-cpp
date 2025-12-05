@@ -35,6 +35,13 @@ namespace logit {
         /// \param record The log record to be formatted.
         /// \return A string representing the formatted log message.
         virtual std::string format(const LogRecord& record) const = 0;
+
+        /// \brief Indicates whether the formatter returns the message unchanged.
+        ///
+        /// Passthrough formatters that simply forward the preformatted message can override
+        /// this to enable fast-path handling without extra string copies.
+        /// \return True if the formatter is passthrough, false otherwise.
+        virtual bool is_passthrough() const noexcept { return false; }
     }; // ILogFormatter
 
 }; // namespace logit

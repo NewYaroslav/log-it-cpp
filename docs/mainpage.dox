@@ -15,6 +15,10 @@ Key characteristics:
 
 See the macro examples below or browse the `examples/` directory for focused demonstrations, including queue tuning and crash handling.
 
+\section backpressure_sec Backpressure and queue variants
+
+The asynchronous `TaskExecutor` supports both a mutex-protected deque and an optional lock-free MPSC ring (enable via `LOGIT_USE_MPSC_RING`). Overflow policies (`Block`, `DropNewest`, `DropOldest`) behave the same in both variants, with the MPSC build intentionally dropping the **incoming** task for `DropOldest` to preserve the ordering of accepted work. The ring uses `LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY` entries (1024 by default); adjust the baseline with that macro alongside `LOGIT_SET_MAX_QUEUE(...)` if your workload needs a different buffer size. MPSC builds also allow "hot" resizes where producers briefly wait while the worker rebuilds the ring without losing in-flight tasks.
+
 \section macro_examples_sec Macro Examples
 
 \subsection macro_examples_long Long-form macros
@@ -659,6 +663,55 @@ If you are using an IDE like **Visual Studio** or **CLion**, you can add the inc
 \subsection step4 Step 4: Using fmt (Optional)
 
 LogIt++ ships with the **fmt** library for `{}`-style formatting. To use the `LOGIT_FMT_*` and `LOGIT_SCOPE_FMT_*` macros, build the library with the CMake option `-DLOGIT_WITH_FMT=ON`.
+
+\subsection cmake_options_sec CMake options
+
+All build-time toggles:
+
+- `LOGIT_CPP_BUILD_TESTS` (default: ON when this repository is the top-level project) — build the test suite.
+- `LOGIT_CPP_BUILD_EXAMPLES` (default: OFF) — build the example programs.
+- `LOGIT_BENCH_ENABLE` (default: OFF) — build the benchmarks; `LOGIT_BENCH_WITH_SPDLOG` (default: OFF) adds the spdlog comparison binaries.
+- `LOGIT_WITH_GZIP` / `LOGIT_WITH_ZSTD` (defaults: OFF) — enable gzip or zstd support for rotated files.
+- `LOGIT_WITH_FMT` (default: OFF) — include the `{}`-style formatting macros; enable `LOGIT_USE_SUBMODULES` (default: OFF) to use the bundled fmt/time-shield fallbacks if system packages are missing.
+- `LOGIT_WITH_SYSLOG` (default: ON on Unix-like targets) — build the syslog backend.
+- `LOGIT_WITH_WIN_EVENT_LOG` (default: ON on Windows) — build the Windows Event Log backend.
+- `LOGIT_FORCE_ASYNC_OFF` (default: OFF) — force synchronous logging even on multi-threaded builds.
+- `LOGIT_USE_MPSC_RING` (default: ON) — enable the lock-free task queue instead of the mutex-backed deque.
+- `LOGIT_ENABLE_DROP_OLDEST_SLOWPATH` (default: ON) — include the drop-oldest slow-path used when the ring is full.
+- `LOGIT_EMSCRIPTEN` (default: ON when building under Emscripten) — adjust the build for single-threaded WebAssembly targets.
+
+\section bench_sec Benchmarks
+
+Run `./build/bench/logit_bench` to capture the full matrix (sync/async × null/file × producer counts × message sizes). Results are appended to `bench/results/latency.csv` with one row per library/combination. Adjust the workload with `LOGIT_BENCH_TOTAL` and `LOGIT_BENCH_WARMUP` if you need a lighter pass.
+
+The harness tracks end-to-end latency (*log call → sink delivery*) and throughput. It is great for regression hunting and pipeline design comparisons, but it is **not** a perfect “which logger is fastest” race. LogIt++ intentionally mirrors Python `icecream`: a single `LOGIT_*` call may parse argument names, build `args_array` with `VariableValue`, and optionally format those values. Many printf-style loggers (e.g., spdlog) optimize for lightweight formatting and queueing instead of this metadata path. Compare implementations inside the same mode:
+
+- *Text-only/passthrough* emphasizes dispatch/queue/sink cost and is closest to the spdlog default path.
+- *Metadata-heavy* (`LOGIT_*` with argument capture) measures parsing and packing of structured arguments; LogIt++ does more per-call work here by design.
+
+Async results include enqueue + worker wakeup/scheduling + sink time. File sinks add variability from buffering and flush policy.
+
+\subsection bench_latest Latest snapshot (Dec 05, 2025)
+
+- Build: `Release`, `LOGIT_BENCH_ENABLE=ON`, `LOGIT_BENCH_WITH_SPDLOG=ON`, `LOGIT_USE_MPSC_RING=ON` (default).
+- Workload: `LOGIT_BENCH_TOTAL=10000`, 4 producers, 200-byte messages for the comparison table (see `bench/results/latency-2025-12-05-10k.csv` for other sizes/counts).
+- Metrics: median (`p50`) latency in nanoseconds and achieved throughput (messages/sec).
+- Hardware: 3 vCPU VM (Intel Xeon E5-2673 v4 @ 2.30GHz), single NUMA node.
+- Data: refreshed from `bench/results/latency-2025-12-05-10k.csv` (Dec 05, 2025 @ 03:18 UTC).
+
+| Mode | Sink | LogIt++ p50 | LogIt++ throughput | spdlog p50 | spdlog throughput |
+|------|------|-------------|--------------------|------------|-------------------|
+| Sync | Null | 119 ns | 2,127,704 msg/s | 86 ns | 5,803,783 msg/s |
+| Sync | File | 130 ns | 1,035,690 msg/s | 87 ns | 1,593,987 msg/s |
+| Async | Null | 20,916 ns | 1,846,272 msg/s | 1,248,779 ns | 1,303,573 msg/s |
+| Async | File | 255,323 ns | 651,384 msg/s | 5,001,140 ns | 1,153,976 msg/s |
+
+**Takeaways:** LogIt++ keeps sub-microsecond p50s in synchronous modes while carrying the IceCream-style metadata path; spdlog’s lean formatting stays faster on the null/file sinks. Asynchronously, both numbers include enqueue + worker wakeups + sink work; LogIt++ stays in the tens-to-hundreds of microseconds, while the spdlog adapter lands in low-to-mid milliseconds for this run.
+
+\subsection bench_harness Benchmark context (LatencyRecorder)
+
+- `bench/LatencyRecorder.hpp` preallocates slots and tracks `Token {slot, t0_ns, active}` → `Summary {p50, p99, p999}` with per-slot deduplication (duplicate `complete()` calls are ignored). It exposes `recorded()`, `wait_for_all()`, and `finalize()` for end-to-end timing across producers/consumers.
+- The LogIt adapter stores the benchmark slot in `LogRecord::line` (see `bench/adapters/LogItAdapter.cpp`). Sinks call `LatencyRecorder::complete_slot()` when they observe a non-negative line number, so no extra payload is needed inside the log record.
 
 \subsection step5 Step 5: Build and Run Your Project
 
