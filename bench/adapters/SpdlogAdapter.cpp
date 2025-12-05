@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
+#include <limits>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -128,8 +129,11 @@ namespace logit_bench {
     void SpdlogAdapter::log(const LatencyRecorder::Token& token, std::string_view message) {
         if (!m_logger) return;
     
-        // If token is inactive -> write plain message and sink will ignore (line = -1).
-        const int line = token.active ? static_cast<int>(token.slot) : -1;
+        int line = -1;
+        if (token.active && token.slot <= static_cast<std::uint64_t>(std::numeric_limits<int>::max())) {
+            // Pass slot via source_loc.line so the sink can correlate without parsing payload.
+            line = static_cast<int>(token.slot);
+        }
     
         // file/func are irrelevant here; keep them stable to avoid nullptr quirks.
         spdlog::source_loc loc{"bench", line, "bench"};
