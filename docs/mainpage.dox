@@ -686,10 +686,12 @@ Run `./build/bench/logit_bench` to capture the full matrix (sync/async × null/f
 
 The harness tracks end-to-end latency (*log call → sink delivery*) and throughput. It is great for regression hunting and pipeline design comparisons, but it is **not** a perfect “which logger is fastest” race. LogIt++ intentionally mirrors Python `icecream`: a single `LOGIT_*` call may parse argument names, build `args_array` with `VariableValue`, and optionally format those values. Many printf-style loggers (e.g., spdlog) optimize for lightweight formatting and queueing instead of this metadata path. Compare implementations inside the same mode:
 
+In this harness LogIt++ travels the “record → formatter → sink/queue” path with IceCream-inspired metadata (argument names/values), while the spdlog adapter receives an already formatted string and measures “string → queue → sink.”
+
 - *Text-only/passthrough* emphasizes dispatch/queue/sink cost and is closest to the spdlog default path.
 - *Metadata-heavy* (`LOGIT_*` with argument capture) measures parsing and packing of structured arguments; LogIt++ does more per-call work here by design.
 
-Async results include enqueue + worker wakeup/scheduling + sink time. File sinks add variability from buffering and flush policy.
+Async results include enqueue + worker wakeup/scheduling + sink time. File sinks add variability from buffering and flush policy. Async latencies depend heavily on thread pool sizing/overflow policy and sink behavior; the numbers below reflect the adapter in this repository rather than spdlog at large.
 
 \subsection bench_latest Latest snapshot (Dec 05, 2025)
 
@@ -698,6 +700,7 @@ Async results include enqueue + worker wakeup/scheduling + sink time. File sinks
 - Metrics: median (`p50`) latency in nanoseconds and achieved throughput (messages/sec).
 - Hardware: 3 vCPU VM (Intel Xeon E5-2673 v4 @ 2.30GHz), single NUMA node.
 - Data: refreshed from `bench/results/latency-2025-12-05-10k.csv` (Dec 05, 2025 @ 03:18 UTC).
+- The table reflects that single scenario; see the CSV for the full matrix.
 
 | Mode | Sink | LogIt++ p50 | LogIt++ throughput | spdlog p50 | spdlog throughput |
 |------|------|-------------|--------------------|------------|-------------------|
@@ -706,7 +709,7 @@ Async results include enqueue + worker wakeup/scheduling + sink time. File sinks
 | Async | Null | 20,916 ns | 1,846,272 msg/s | 1,248,779 ns | 1,303,573 msg/s |
 | Async | File | 255,323 ns | 651,384 msg/s | 5,001,140 ns | 1,153,976 msg/s |
 
-**Takeaways:** LogIt++ keeps sub-microsecond p50s in synchronous modes while carrying the IceCream-style metadata path; spdlog’s lean formatting stays faster on the null/file sinks. Asynchronously, both numbers include enqueue + worker wakeups + sink work; LogIt++ stays in the tens-to-hundreds of microseconds, while the spdlog adapter lands in low-to-mid milliseconds for this run.
+**Takeaways:** In synchronous modes LogIt++ shows p50 ~120–130 ns while carrying the IceCream-inspired metadata path; the spdlog adapter receives preformatted strings, so it remains faster on the null/file sinks in this scenario. Asynchronously, both sides measure enqueue + worker wakeups + sink work and are sensitive to thread-pool/overflow/sink configuration; here LogIt++ stays in the tens-to-hundreds of microseconds, while the spdlog adapter lands in low-to-mid milliseconds and would need tuning/profiling for other setups. Passthrough/fmt-only modes remain available if you want to trim the metadata cost.
 
 \subsection bench_harness Benchmark context (LatencyRecorder)
 
