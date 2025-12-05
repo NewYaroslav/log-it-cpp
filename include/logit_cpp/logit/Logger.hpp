@@ -23,15 +23,15 @@
 
 namespace logit {
 
-    #if LOGIT_HAS_SHARED_MUTEX
+#if LOGIT_HAS_SHARED_MUTEX
     using LoggerMutex = std::shared_mutex;
     using LoggerReadLock = std::shared_lock<LoggerMutex>;
     using LoggerWriteLock = std::unique_lock<LoggerMutex>;
-    #else
+#else
     using LoggerMutex = std::mutex;
     using LoggerReadLock = std::unique_lock<LoggerMutex>;
     using LoggerWriteLock = std::unique_lock<LoggerMutex>;
-    #endif
+#endif
 
     /// \class Logger
     /// \brief Singleton class managing multiple loggers and formatters.
@@ -331,10 +331,10 @@ namespace logit {
                 log(record);
                 return;
             }
-            LogRecord mutable_record = record;
-            auto var_names = split_arguments(mutable_record.arg_names);
-            mutable_record.args_array = args_to_array(var_names.begin(), args...);
-            log(mutable_record);
+            // args_array is mutable cache inside LogRecord
+            auto var_names = split_arguments(record.arg_names);
+            record.args_array = args_to_array(var_names.begin(), args...);
+            log(record);
         }
         
 #ifdef _MSC_VER
