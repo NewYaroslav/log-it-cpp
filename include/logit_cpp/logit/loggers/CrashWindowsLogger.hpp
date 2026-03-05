@@ -178,12 +178,12 @@ namespace logit {
         }
 
     private:
-        static LONG WINAPI exception_filter(EXCEPTION_POINTERS* exception_info) {
+        static LONG WINAPI exception_filter(EXCEPTION_POINTERS* ex_info) {
             CrashWindowsLogger* logger = active_logger().load(std::memory_order_acquire);
             if (logger != nullptr) {
                 DWORD code = 0;
-                if (exception_info != nullptr && exception_info->ExceptionRecord != nullptr) {
-                    code = exception_info->ExceptionRecord->ExceptionCode;
+                if (ex_info != nullptr && ex_info->ExceptionRecord != nullptr) {
+                    code = ex_info->ExceptionRecord->ExceptionCode;
                 }
                 logger->write_snapshot(code);
             }
