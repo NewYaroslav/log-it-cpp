@@ -117,81 +117,75 @@ jobs:
             build/Testing/Temporary/LastTest.log
           if-no-files-found: ignore
 
-  asan-ubsan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - run: git submodule update --init --recursive
-      - name: Configure
-        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_LINKER_FLAGS='-fsanitize=address,undefined'
-      - name: Build
-        run: cmake --build build
-      - name: Test
-        run: ctest --test-dir build --output-on-failure
-
-  tsan:
+  linux-extras:
+    name: ${{ matrix.suite }}
     runs-on: ubuntu-latest
     env:
-      LOGIT_PROFILE: thread
+      VCPKG_TAG: '2024.09.30'
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [asan-ubsan, tsan, odr, bench-asan, vcpkg-install]
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
       - run: git submodule update --init --recursive
-      - name: Configure
-        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DLOGIT_FORCE_ASYNC_OFF=OFF -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=thread' -DCMAKE_LINKER_FLAGS='-fsanitize=thread'
-      - name: Build
+
+      - name: Configure (asan-ubsan)
+        if: matrix.suite == 'asan-ubsan'
+        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined' -DCMAKE_LINKER_FLAGS='-fsanitize=address,undefined'
+      - name: Build (asan-ubsan)
+        if: matrix.suite == 'asan-ubsan'
         run: cmake --build build
-      - name: Test
+      - name: Test (asan-ubsan)
+        if: matrix.suite == 'asan-ubsan'
         run: ctest --test-dir build --output-on-failure
 
-  odr:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: tests/odr
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
+      - name: Configure (tsan)
+        if: matrix.suite == 'tsan'
+        env:
+          LOGIT_PROFILE: thread
+        run: cmake -S . -B build -DLOGIT_CPP_BUILD_TESTS=ON -DLOGIT_FORCE_ASYNC_OFF=OFF -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS='-fsanitize=thread' -DCMAKE_LINKER_FLAGS='-fsanitize=thread'
+      - name: Build (tsan)
+        if: matrix.suite == 'tsan'
+        run: cmake --build build
+      - name: Test (tsan)
+        if: matrix.suite == 'tsan'
+        run: ctest --test-dir build --output-on-failure
 
-      - run: git submodule update --init --recursive
-
-      - name: Install dependencies
+      - name: Install dependencies (odr)
+        if: matrix.suite == 'odr'
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential
-
       - name: Build Logit ODR header
+        if: matrix.suite == 'odr'
+        working-directory: tests/odr
         run: |
           g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_a.cpp
           g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_b.cpp
           g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_main.cpp
           g++ get_logger_a.o get_logger_b.o get_logger_main.o -o app_logger
-
       - name: Run ConsoleApp ODR header
+        if: matrix.suite == 'odr'
+        working-directory: tests/odr
         run: ./app_logger
-
       - name: Build Task Executor ODR header
+        if: matrix.suite == 'odr'
+        working-directory: tests/odr
         run: |
           g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_a.cpp
           g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_b.cpp
           g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_main.cpp
           g++ get_executor_a.o get_executor_b.o get_executor_main.o -o app_executor
-
       - name: Run Task Executor ODR header
+        if: matrix.suite == 'odr'
+        working-directory: tests/odr
         run: ./app_executor
 
-  bench-asan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - run: git submodule update --init --recursive
       - name: Configure benchmarks (asan)
+        if: matrix.suite == 'bench-asan'
         run: |
           cmake -S . -B build-bench-asan \
             -DLOGIT_BENCH_ENABLE=ON \
@@ -201,8 +195,10 @@ jobs:
             -DCMAKE_CXX_FLAGS='-fsanitize=address,undefined -fno-omit-frame-pointer -g' \
             -DCMAKE_EXE_LINKER_FLAGS='-fsanitize=address,undefined'
       - name: Build benchmarks (asan)
+        if: matrix.suite == 'bench-asan'
         run: cmake --build build-bench-asan --target logit_bench
       - name: Run spdlog async null bench (asan)
+        if: matrix.suite == 'bench-asan'
         timeout-minutes: 10
         env:
           LOGIT_BENCH_FILTER_LIB: spdlog
@@ -215,16 +211,8 @@ jobs:
           LOGIT_BENCH_TIMEOUT_SEC: 120
         run: ./build-bench-asan/logit_bench
 
-  vcpkg-install:
-    runs-on: ubuntu-latest
-    env:
-      VCPKG_TAG: '2024.09.30'
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - run: git submodule update --init --recursive
       - name: Restore vcpkg cache
+        if: matrix.suite == 'vcpkg-install'
         id: cache-vcpkg
         uses: actions/cache/restore@v3
         with:
@@ -234,21 +222,24 @@ jobs:
             vcpkg/installed
           key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_TAG }}-${{ hashFiles('vcpkg-overlay/ports/**', 'libs/time-shield-cpp/vcpkg-overlay/ports/**') }}
       - name: Install vcpkg
-        if: steps.cache-vcpkg.outputs.cache-hit != 'true'
+        if: matrix.suite == 'vcpkg-install' && steps.cache-vcpkg.outputs.cache-hit != 'true'
         run: |
           git clone https://github.com/microsoft/vcpkg.git --branch $VCPKG_TAG --single-branch
           ./vcpkg/bootstrap-vcpkg.sh -disableMetrics
       - name: Validate port
+        if: matrix.suite == 'vcpkg-install'
         run: |
           ./vcpkg/vcpkg install log-it-cpp \
             --overlay-ports=vcpkg-overlay/ports \
             --overlay-ports=libs/time-shield-cpp/vcpkg-overlay/ports
       - name: Configure consumer project
+        if: matrix.suite == 'vcpkg-install'
         run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
       - name: Build consumer project
+        if: matrix.suite == 'vcpkg-install'
         run: cmake --build build
       - name: Save vcpkg cache
-        if: success() && steps.cache-vcpkg.outputs.cache-hit != 'true'
+        if: matrix.suite == 'vcpkg-install' && success() && steps.cache-vcpkg.outputs.cache-hit != 'true'
         uses: actions/cache/save@v3
         with:
           path: |
@@ -260,10 +251,12 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: vcpkg-install-logs
+          name: logs-${{ matrix.suite }}
           path: |
             build/CMakeFiles/CMakeOutput.log
             build/Testing/Temporary/LastTest.log
+            build-bench-asan/CMakeFiles/CMakeOutput.log
+            build-bench-asan/Testing/Temporary/LastTest.log
           if-no-files-found: ignore
 
   emscripten:
