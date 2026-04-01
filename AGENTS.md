@@ -1,39 +1,59 @@
 # AGENTS
 
-## Header inclusion
-This project provides dedicated entry-point headers that include internal dependencies in the correct order. Use these headers instead of forward-declaring library types.
+This repository is a header-only C++ logging library with optional tests,
+examples, and benchmarks. Keep agent instructions focused on `log-it-cpp`
+itself rather than on generic product or application architecture.
 
-* `include/logit_cpp/logit.hpp` – main entry for the entire library.
-* `include/logit_cpp/logit/utils.hpp` – aggregates the utilities module.
+## Always Follow
 
-Including through these headers ensures dependencies are resolved without manual forward declarations.
+- Keep diffs minimal and focused.
+- Do not refactor or apply style changes beyond the lines you directly touch.
+- Use Conventional Commits: `type(scope): summary`.
+- Commit headers must be in English and include a descriptive body.
 
-## Commit Messages
-Use Conventional Commits format: type(scope): summary.
-The header must be in English.
-Include a body that describes the change.
+## Public Entry Headers
 
-## Changes
-Keep diffs minimal and focused.
-Do not refactor or apply style changes beyond the lines you directly touch.
+Use the project umbrella headers instead of recreating include order manually:
 
-## Repository setup
-Before configuring or building the project, initialize the git submodules so
-embedded dependencies such as TimeShield are present:
+- `include/logit_cpp/logit.hpp` - full library entry point.
+- `include/logit_cpp/logit/utils.hpp` - utilities module umbrella.
+- `include/logit_cpp/logit/formatter.hpp` - formatter module umbrella.
+- `include/logit_cpp/logit/loggers.hpp` - logger backend umbrella.
 
-```
+These headers prepare internal dependencies in the intended order.
+
+## Include Policy
+
+- Do not use `../` in `#include` directives.
+- Within a module (`logit/utils/*`, `logit/formatter/*`, `logit/loggers/*`)
+  include only headers from the same sub-tree using forward paths.
+- Cross-module dependencies must come through the nearest umbrella header
+  instead of direct sibling includes.
+- Files under `logit/detail/` may include other detail headers, but must not
+  include public `logit/...` headers.
+- Prefer the self-contained public entry points in `include/logit_cpp`.
+
+## Header Naming
+
+- If a header defines one primary class, use a PascalCase filename.
+- If a header contains mixed declarations, helpers, macros, or multiple types,
+  use a snake_case filename.
+
+## Repository Setup
+
+Before configuring or building, initialize submodules:
+
+```bash
 git submodule update --init --recursive
 ```
 
-## Include Policy
-- Do not use `../` in `#include` directives.
-- Within a module (`logit/utils/*`, `logit/formatter/*`, `logit/loggers/*`) only include headers located in the same sub-tree using forward paths (for example `#include "compiler/PatternCompiler.hpp"`).
-- Cross-module dependencies must be provided by the nearest umbrella header: include the corresponding aggregator first instead of including a sibling module directly.
-- Files under `logit/detail/` may include other detail headers, but must not include public `logit/...` headers. Their public prerequisites must be included by the parent header before they are pulled in.
-- Preferred entry points are the self-contained umbrellas in `include/logit_cpp`: `<logit.hpp>`, `<logit/utils.hpp>`, `<logit/formatter.hpp>`, and `<logit/loggers.hpp>`.
+## Detailed Playbooks
 
-## Header naming conventions
-When adding or renaming headers, follow these rules:
+Read the matching file in `agents/` when the task needs more detail:
 
-* If the file defines a single primary class (with optional supporting enums or helper functions dedicated to that class), use a PascalCase filename.
-* If the file hosts multiple classes, macros, free functions, or otherwise represents a mixed collection of declarations, use a snake_case filename.
+- `agents/README.md` - index of available agent instructions.
+- `agents/commit-conventions.md` - commit message rules.
+- `agents/cpp-development-guidelines.md` - naming and style guidance.
+- `agents/header-implementation-guidelines.md` - `.hpp` / `.ipp` / `.tpp`
+  ownership and include-structure rules.
+- `agents/build-and-test.md` - submodules, configure/build/test/bench flow.
