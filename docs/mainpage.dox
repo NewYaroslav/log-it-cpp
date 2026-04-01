@@ -15,6 +15,20 @@ Key characteristics:
 
 See the macro examples below or browse the `examples/` directory for focused demonstrations, including queue tuning and crash handling.
 
+\section macro_first_usage_sec Macro-first usage
+
+For normal application logging, prefer the public macros from `<logit.hpp>` or
+`<logit/log_macros.hpp>`. Choose the matching family
+(`LOGIT_<LEVEL>`, `LOGIT_PRINTF_<LEVEL>`, `LOGIT_STREAM_<LEVEL>`,
+`LOGIT_<LEVEL>_IF`, `LOGIT_<LEVEL>_TO`, `LOGIT_SCOPE_<LEVEL>`, and related
+helpers) and pass the data directly to that macro.
+
+Avoid manually constructing `logit::LogRecord`, filling `args_array`, or
+calling `logit::Logger::get_instance()` just to emit an ordinary log message.
+Those low-level entry points are intended for extension work such as custom
+`ILogger` / `ILogFormatter` implementations, backend registration, tests,
+benchmarks, adapters, or internal maintenance.
+
 \section backpressure_sec Backpressure and queue variants
 
 The asynchronous `TaskExecutor` supports both a mutex-protected deque and an optional lock-free MPSC ring (enable via `LOGIT_USE_MPSC_RING`). Overflow policies (`Block`, `DropNewest`, `DropOldest`) behave the same in both variants, with the MPSC build intentionally dropping the **incoming** task for `DropOldest` to preserve the ordering of accepted work. The ring uses `LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY` entries (1024 by default); adjust the baseline with that macro alongside `LOGIT_SET_MAX_QUEUE(...)` if your workload needs a different buffer size. MPSC builds also allow "hot" resizes where producers briefly wait while the worker rebuilds the ring without losing in-flight tasks.
@@ -73,6 +87,29 @@ void short_names_demo() {
 
 For a standalone program that brings everything together and intentionally aborts after logging a fatal message, check `examples/example_logit_minimal_crash.cpp`.
 
+\subsection macro_examples_targeted Targeted, conditional, and scope helpers
+
+Beyond the base logging calls, LogIt++ exposes canonical helper families for
+addressing a specific backend, applying conditions, and measuring scope
+duration.
+
+\code{.cpp}
+#include <logit.hpp>
+
+void process_request(bool verbose, double latency_ms) {
+    LOGIT_ADD_CONSOLE_DEFAULT();
+    LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE();
+
+    LOGIT_INFO_TO(1, "Only logger index 1 receives this message");
+    LOGIT_PRINTF_INFO_IF(verbose, "Latency %.2f ms", latency_ms);
+
+    LOGIT_SCOPE_INFO("process_request");
+    LOGIT_SCOPE_PRINTF_WARN_T(50, "slow path latency=%.2f ms", latency_ms);
+
+    LOGIT_WAIT();
+}
+\endcode
+
 \section features_sec Features
 
 LogIt++ provides a robust and flexible set of features to accommodate various logging needs.
@@ -108,6 +145,19 @@ LOGIT_PRINT_INFO("TimePoint example: ", now);
 LOGIT_PRINTF_INFO("%.2f %d", someFloat, someInt); // printf-style
 LOGIT_FORMAT_INFO("%.2f", someFloat, 654.321f);   // same format for all args
 \endcode
+
+Canonical public macro families also include:
+
+- Targeted families such as `LOGIT_<LEVEL>_TO`, `LOGIT_PRINTF_<LEVEL>_TO`, `LOGIT_FMT_<LEVEL>_TO`, and `LOGIT_STREAM_<LEVEL>_TO`.
+- Conditional families such as `LOGIT_<LEVEL>_IF`, `LOGIT_PRINTF_<LEVEL>_IF`, `LOGIT_FORMAT_<LEVEL>_IF`, and `LOGIT_FMT_<LEVEL>_IF`.
+- Scope-duration families such as `LOGIT_SCOPE_<LEVEL>`, `LOGIT_SCOPE_PRINTF_<LEVEL>`, and `LOGIT_SCOPE_FMT_<LEVEL>`, including their `_T` threshold variants.
+- System-error helpers `LOGIT_PERROR_<LEVEL>`, `LOGIT_WINERR_<LEVEL>`, and `LOGIT_SYSERR_<LEVEL>`.
+- Backend registration helpers such as `LOGIT_ADD_LOGGER(...)` and the built-in `LOGIT_ADD_*` backend macros.
+- Management and query helpers such as `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()`, `LOGIT_GET_DROPPED_TASKS()`, and `LOGIT_RESET_DROPPED_TASKS()`.
+
+Pattern-consistent aliases exist for short-name and compatibility paths, but the
+families above are the canonical public surface to document and prefer in
+examples.
 
 \subsection multiple_backends Support for Multiple Backends
 
@@ -432,6 +482,25 @@ Available log levels:
 #define LOGIT_COLOR_ERROR TextColor::Cyan
 \endcode
 
+- **LOGIT_COLOR_DEFAULT**:
+
+Defines the fallback console color used when a message does not map to a
+severity-specific override.
+
+\code{.cpp}
+#define LOGIT_COLOR_DEFAULT TextColor::White
+\endcode
+
+- **LOGIT_WALLCLOCK_MS** / **LOGIT_MONOTONIC_MS**:
+
+Override the wall-clock or monotonic timestamp helpers used internally by the
+library. This is useful when integrating platform-specific clock sources.
+
+\code{.cpp}
+#define LOGIT_WALLCLOCK_MS() my_wallclock_ms()
+#define LOGIT_MONOTONIC_MS() my_monotonic_ms()
+\endcode
+
 - **LOGIT_CURRENT_TIMESTAMP_MS**:
 
 Macro to get the current timestamp in milliseconds. By default, it uses `std::chrono` for time calculation. You can override this to customize the timestamp generation.
@@ -476,6 +545,23 @@ Defines the default log pattern for file-based loggers. If `LOGIT_FILE_LOGGER_PA
 #define LOGIT_FILE_LOGGER_PATTERN "[%Y-%m-%d %H:%M:%S.%e] [%l] %v"
 \endcode
 
+- **LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES**:
+
+Defines the optional size threshold for rotating file loggers. Set it to a
+non-zero value to enable size-based rotation.
+
+\code{.cpp}
+#define LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES (10 * 1024 * 1024)
+\endcode
+
+- **LOGIT_FILE_LOGGER_MAX_ROTATED_FILES**:
+
+Defines how many rotated files are retained when size-based rotation is active.
+
+\code{.cpp}
+#define LOGIT_FILE_LOGGER_MAX_ROTATED_FILES 5
+\endcode
+
 - **LOGIT_UNIQUE_FILE_LOGGER_PATH**:
 
 Defines the default directory path for unique log files. If `LOGIT_UNIQUE_FILE_LOGGER_PATH` is not defined, it defaults to "data/logs/unique_logs".
@@ -505,6 +591,57 @@ This macro controls the length of the hash part in the filenames for unique log 
 #define LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH 12
 \endcode
 
+- **LOGIT_OS_ERROR_JOIN**, **LOGIT_POSIX_ERROR_PATTERN**,
+  **LOGIT_WINDOWS_ERROR_PATTERN**, **LOGIT_SYSTEM_ERROR_PATTERN**:
+
+Control how decoded `errno` / `GetLastError()` information is appended by the
+system-error macro families (`LOGIT_PERROR_*`, `LOGIT_WINERR_*`,
+`LOGIT_SYSERR_*`).
+
+\code{.cpp}
+#define LOGIT_OS_ERROR_JOIN " <- "
+#define LOGIT_SYSTEM_ERROR_PATTERN "%s <- code=%d (%s)"
+\endcode
+
+- **LOGIT_TAGS_JOIN**, **LOGIT_TAG_PAIR_SEP**, **LOGIT_TAG_KV_SEP**,
+  **LOGIT_TAG_QUOTE_VALUES**:
+
+Customize how key-value tags are rendered after the main message.
+
+\code{.cpp}
+#define LOGIT_TAGS_JOIN " || "
+#define LOGIT_TAG_PAIR_SEP "; "
+#define LOGIT_TAG_KV_SEP ":"
+#define LOGIT_TAG_QUOTE_VALUES 0
+\endcode
+
+- **LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC**:
+
+Controls how frequently blocking producers poll for capacity while
+`LOGIT_QUEUE_BLOCK` is active.
+
+\code{.cpp}
+#define LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC 500
+\endcode
+
+- **LOGIT_TASK_EXECUTOR_DRAIN_BUDGET**:
+
+Defines how many queued tasks a worker drains per iteration in ring-buffer
+builds before yielding.
+
+\code{.cpp}
+#define LOGIT_TASK_EXECUTOR_DRAIN_BUDGET 4096
+\endcode
+
+- **LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY**:
+
+Defines the default MPSC ring capacity used when unlimited queue mode still
+needs a backing ring size.
+
+\code{.cpp}
+#define LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY 2048
+\endcode
+
 - **LOGIT_SHORT_NAME**:
 
 Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc., for concise logging.
@@ -517,6 +654,11 @@ Enables short names for logging macros, such as `LOG_T`, `LOG_D`, `LOG_E`, etc.,
 \section custom_backend_sec Custom Logger Backend and Formatter
 
 LogIt++ allows you to extend the logging system by creating your own loggers and formatters. This section explains how to implement a custom backend for logging and a custom log formatter.
+
+Normal application code should continue to use the public `LOGIT_*` / `LOG_*`
+macros for emitting messages. The low-level APIs in this section are for
+extension points only: custom backends, custom formatters, tests, adapters, and
+other infrastructure code that intentionally works below the macro layer.
 
 \subsection custom_logger Custom Logger Example
 
@@ -567,12 +709,16 @@ LOGIT_ADD_LOGGER(
     FileLogger, ("logfile.txt"),
     logit::SimpleLogFormatter, ());
 
-// or...
+// or, if you intentionally need the lower-level equivalent...
 
 logit::Logger::get_instance().add_logger(
     std::make_unique<FileLogger>("logfile.txt"),
     std::make_unique<logit::SimpleLogFormatter>());
 \endcode
+
+Prefer `LOGIT_ADD_LOGGER(...)` when it fits your use case; calling
+`logit::Logger::get_instance().add_logger(...)` directly is mainly useful when
+an extension scenario cannot be expressed through the registration macro.
 
 \subsection custom_formatter Custom Formatter Example
 
@@ -607,7 +753,7 @@ LOGIT_ADD_LOGGER(
     FileLogger, ("logfile.json"),
     logit::JsonLogFormatter, ());
 
-// or...
+// or, if you intentionally need the lower-level equivalent...
 
 logit::Logger::get_instance().add_logger(
     std::make_unique<FileLogger>("logfile.json"),
@@ -622,7 +768,7 @@ Here's a quick summary:
 
 - **ILogger**: Defines where the logs should be sent (e.g., file, console, database, network).
 - **ILogFormatter**: Defines how the logs should be formatted (e.g., plain text, JSON, XML).
-- **Adding to Logger**: Use `logit::Logger::get_instance().add_logger()` to add your custom logger and formatter to the logging system.
+- **Registering custom backends**: Prefer `LOGIT_ADD_LOGGER(...)` for the common extension path; `logit::Logger::get_instance().add_logger()` is the lower-level equivalent when you need direct control.
 
 \section install_sec Installation
 

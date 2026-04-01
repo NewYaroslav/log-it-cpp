@@ -11,6 +11,8 @@ Agent-specific instruction files for `log-it-cpp`.
   and `.tpp` files, with the project umbrella-header policy.
 - `header-implementation-guidelines-RU.md` - Russian localization of the header
   ownership playbook.
+- `logging-macro-guidelines.md` - macro-first logging guidance for agents and
+  maintainers working above the low-level internals.
 - `build-and-test.md` - submodule setup and common CMake build, test, example,
   and benchmark flows.
 

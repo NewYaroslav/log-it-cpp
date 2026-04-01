@@ -11,6 +11,11 @@
 - **Гибкое форматирование и маршрутизация.** Настраивайте шаблоны формата, комбинируйте консольные/файловые/системные бэкенды или подключайте собственные реализации логгеров.
 - **Асинхронность по умолчанию.** Каждый бэкенд обслуживается исполнителем задач с настраиваемыми размерами очереди и политиками переполнения, а макросы вроде `LOGIT_WARN_ONCE` или `LOGIT_ERROR_THROTTLE` помогают упорядочить повторяющиеся сообщения.
 
+Обычное использование библиотеки строится вокруг публичных семейств макросов
+`LOGIT_*` / `LOG_*`. Выбирайте семейство под нужный стиль логирования:
+обычный вызов, `printf`, потоковый вывод, условие, таргетирование или
+scope-замер.
+
 ## Структура заголовков
 
 Библиотека включает несколько самодостаточных «зонтичных» заголовков, которые подготавливают зависимости в правильном порядке:
@@ -116,6 +121,29 @@ int main() {
 
 // ... далее в коде ...
 LOGIT_SYSERR_ERROR("Ошибка удаления временного каталога");
+```
+
+### Таргетированные, условные и scope-макросы
+
+Помимо базовых вызовов, библиотека предоставляет канонические семейства для
+адресного логирования в конкретный бэкенд, условного вывода и измерения
+длительности scope.
+
+```cpp
+#include <logit.hpp>
+
+void process_request(bool verbose, double latency_ms) {
+    LOGIT_ADD_CONSOLE_DEFAULT();
+    LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE();
+
+    LOGIT_INFO_TO(1, "Сообщение только для логгера с индексом 1");
+    LOGIT_PRINTF_INFO_IF(verbose, "Latency %.2f ms", latency_ms);
+
+    LOGIT_SCOPE_INFO("process_request");
+    LOGIT_SCOPE_PRINTF_WARN_T(50, "slow path latency=%.2f ms", latency_ms);
+
+    LOGIT_WAIT();
+}
 ```
 
 ## Обратное давление и горячее изменение размера
@@ -236,26 +264,53 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 | --------------- | -------- |
 | `LOGIT_<LEVEL>(...)` | Логирование с указанным уровнем (`TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `FATAL`). |
 | `LOGIT_PRINT_<LEVEL>(...)` | Логирование заранее сформированной строки или сообщения, собранного через потоки. |
-| `LOGIT_PRINTF_<LEVEL>(fmt, ...)` | форматирование в стиле `printf` с плейсхолдерами для каждого аргумента. |
-| `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | применение одного и того же формата ко всем аргументам. |
+| `LOGIT_PRINTF_<LEVEL>(fmt, ...)` | Форматирование в стиле `printf` с плейсхолдерами для каждого аргумента. |
+| `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | Применение одного и того же формата ко всем аргументам. |
+| `LOGIT_FMT_<LEVEL>(fmt, ...)` | Форматирование через `fmt`, если включён `LOGIT_WITH_FMT`. |
 | `LOGIT_STREAM_<LEVEL>()` | Потоковое логирование через `<<`; короткие версии `LOG_S_<LEVEL>()` доступны при определении `LOGIT_SHORT_NAME`. |
 | `LOGIT_<LEVEL>_IF(condition, ...)` | Логирование только если условие истинно. |
+| `LOGIT_PRINT_<LEVEL>_IF(...)`, `LOGIT_PRINTF_<LEVEL>_IF(...)`, `LOGIT_FORMAT_<LEVEL>_IF(...)`, `LOGIT_FMT_<LEVEL>_IF(...)` | Условные варианты для семейств print/printf/format/fmt. |
 | `LOGIT_<LEVEL>_ONCE(...)` | Логирование только при первом вызове. |
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Логирование каждого `n`-го вызова. |
 | `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Логирование не чаще одного раза за `period_ms` миллисекунд. |
 | `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Добавление к сообщению пар ключ-значение. |
+| `LOGIT_<LEVEL>_TO(index, ...)` | Логирование только в логгер с указанным индексом, включая single-mode бэкенды. |
+| `LOGIT_PRINT_<LEVEL>_TO(...)`, `LOGIT_PRINTF_<LEVEL>_TO(...)`, `LOGIT_FORMAT_<LEVEL>_TO(...)`, `LOGIT_FMT_<LEVEL>_TO(...)`, `LOGIT_STREAM_<LEVEL>_TO(...)` | Таргетированные варианты для print/printf/format/fmt/stream. |
+| `LOGIT_SCOPE_<LEVEL>(phase)` / `LOGIT_SCOPE_<LEVEL>_T(threshold_ms, phase)` | RAII-макросы для логирования длительности scope, опционально только при превышении порога. |
+| `LOGIT_SCOPE_PRINTF_<LEVEL>(...)` / `LOGIT_SCOPE_PRINTF_<LEVEL>_T(...)` | Scope-таймеры с форматированием в стиле `printf`. |
+| `LOGIT_SCOPE_FMT_<LEVEL>(...)` / `LOGIT_SCOPE_FMT_<LEVEL>_T(...)` | Scope-таймеры с форматированием через `fmt`. |
+| `LOGIT_PERROR_<LEVEL>(msg)`, `LOGIT_WINERR_<LEVEL>(msg)`, `LOGIT_SYSERR_<LEVEL>(msg)` | Добавляют к сообщению расшифрованную платформенную ошибку. |
+| `LOGIT_ADD_LOGGER(...)` и backend-макросы семейства `LOGIT_ADD_*` | Регистрируют консольные, файловые, unique-file, crash, syslog, event-log и пользовательские бэкенды. |
+| `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()` | Управление состоянием логгеров и исполнителя задач. |
+| `LOGIT_QUEUE_*`, `LOGIT_GET_DROPPED_TASKS()`, `LOGIT_RESET_DROPPED_TASKS()` | Константы политики очереди и счётчики отброшенных задач. |
+
+Согласованные алиасы для коротких имён и совместимости тоже существуют, но
+в таблице выше перечислены канонические публичные семейства.
 
 ### Макросы конфигурации
 
 | Макрос | Описание |
 | ------ | -------- |
 | `LOGIT_BASE_PATH` | Базовый путь, который обрезается из `__FILE__` в сообщениях. |
-| `LOGIT_DEFAULT_COLOR` | Цвет вывода в консоль по умолчанию. |
-| `LOGIT_COLOR_<LEVEL>` | Цвет для каждого уровня логирования. |
+| `LOGIT_DEFAULT_COLOR` | Цвет сообщений по умолчанию. |
+| `LOGIT_COLOR_TRACE`, `LOGIT_COLOR_DEBUG`, `LOGIT_COLOR_INFO`, `LOGIT_COLOR_WARN`, `LOGIT_COLOR_ERROR`, `LOGIT_COLOR_FATAL`, `LOGIT_COLOR_DEFAULT` | Переопределяют цвета по уровням и цвет по умолчанию для консоли. |
+| `LOGIT_WALLCLOCK_MS()` / `LOGIT_MONOTONIC_MS()` | Позволяют заменить источники wall-clock и monotonic времени, используемые библиотекой. |
+| `LOGIT_CURRENT_TIMESTAMP_MS()` | Переопределяет основной хук получения timestamp для лог-записей. |
 | `LOGIT_CONSOLE_PATTERN` | Паттерн форматирования вывода в консоль по умолчанию. |
 | `LOGIT_FILE_LOGGER_PATH` | Каталог для файловых логов. |
+| `LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS` | Срок хранения файловых логов перед автоочисткой. |
+| `LOGIT_FILE_LOGGER_PATTERN` | Паттерн форматирования файлового логгера по умолчанию. |
+| `LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES` | Порог ротации по размеру для файлового логгера. |
+| `LOGIT_FILE_LOGGER_MAX_ROTATED_FILES` | Максимальное количество сохранённых ротированных файлов. |
 | `LOGIT_UNIQUE_FILE_LOGGER_PATH` | Каталог для логов по одному сообщению в файл. |
-| `LOGIT_TAGS_JOIN` | Разделитель между сообщением и списком тегов. |
+| `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` | Паттерн unique-file логгера по умолчанию. |
+| `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` | Длина хеша в именах unique-file логов. |
+| `LOGIT_OS_ERROR_JOIN`, `LOGIT_POSIX_ERROR_PATTERN`, `LOGIT_WINDOWS_ERROR_PATTERN`, `LOGIT_SYSTEM_ERROR_PATTERN` | Управляют тем, как к сообщению добавляется расшифровка системной ошибки. |
+| `LOGIT_TAGS_JOIN`, `LOGIT_TAG_PAIR_SEP`, `LOGIT_TAG_KV_SEP`, `LOGIT_TAG_QUOTE_VALUES` | Управляют отображением key-value тегов после сообщения. |
+| `LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC` | Частота ожидания для блокирующих продюсеров при переполнении очереди. |
+| `LOGIT_TASK_EXECUTOR_DRAIN_BUDGET` | Сколько задач worker может вычитать за одну итерацию в ring-режиме. |
+| `LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY` | Ёмкость MPSC-ring по умолчанию для очереди без лимита. |
+| `LOGIT_SHORT_NAME` | Включает компактные алиасы вроде `LOG_I`, `LOG_WPF`, `LOG_S_INFO`. |
 
 ### Функциональные макросы
 
@@ -591,6 +646,12 @@ LogIt++ предоставляет несколько макросов, кото
 ---
 
 ## Пример пользовательского логгера и форматтера
+
+Для обычного прикладного логирования продолжайте использовать публичные
+макросы `LOGIT_*` / `LOG_*`. Низкоуровневый API в этом разделе нужен для
+точек расширения: собственных `ILogger` / `ILogFormatter`, регистрации
+бэкендов, тестов и другого инфраструктурного кода, который намеренно работает
+ниже макро-слоя.
 
 Вы можете расширить возможности LogIt++ с помощью реализации собственных логгеров и форматтеров. Вот как это сделать:
 

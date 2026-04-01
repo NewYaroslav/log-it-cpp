@@ -20,6 +20,10 @@ Key characteristics:
 - **Flexible formatting and routing.** Customize output patterns, mix console/file/system backends, or supply custom logger implementations.
 - **Async by default.** Each backend is served by the task executor with configurable queue sizes and overflow policies, plus helpers such as `LOGIT_WARN_ONCE` or `LOGIT_ERROR_THROTTLE` to keep repeated messages under control.
 
+Normal usage goes through the public `LOGIT_*` / `LOG_*` macro families. Pick
+the family that matches your logging style: plain, `printf`, stream,
+conditional, targeted, or scope-based.
+
 ## Header layout
 
 The library ships with self-contained umbrella headers that provide a predictable include order:
@@ -125,6 +129,30 @@ The error suffix can be customised at compile time via `config.hpp` macros:
 
 // ... later in the code ...
 LOGIT_SYSERR_ERROR("Deleting temp directory failed");
+```
+
+### Targeted, conditional, and scope helpers
+
+The public macro surface also includes targeted logger variants, conditional
+variants, and RAII scope timers:
+
+```cpp
+#include <logit.hpp>
+
+int main() {
+    LOGIT_ADD_CONSOLE_DEFAULT();                         // index 0
+    LOGIT_ADD_UNIQUE_FILE_LOGGER_DEFAULT_SINGLE_MODE(); // index 1
+
+    const bool verbose = true;
+    int retry = 3;
+
+    LOGIT_INFO_TO(1, "write directly to the single-mode logger");
+    LOGIT_PRINTF_INFO_IF(verbose, "retry=%d", retry);
+    LOGIT_SCOPE_INFO("load_config");
+    LOGIT_SCOPE_PRINTF_WARN_T(10, "slow step %d", retry);
+
+    LOGIT_WAIT();
+}
 ```
 
 ---
@@ -573,6 +601,11 @@ LogIt++ provides several macros that allow for customization and configuration. 
 
 ## Custom Logger Backend and Formatter
 
+Normal application code should keep using the public `LOGIT_*` / `LOG_*`
+macros. The low-level API shown below is for extension points: custom
+`ILogger` / `ILogFormatter` implementations, backend registration, tests, and
+other infrastructure code that intentionally works below the macro layer.
+
 You can extend LogIt++ by implementing your own loggers and formatters. Here’s how:
 
 ### Custom Logger Example
@@ -641,12 +674,26 @@ public:
 | `LOGIT_PRINT_<LEVEL>(...)` | Log a pre-formatted string or stream-built message. |
 | `LOGIT_PRINTF_<LEVEL>(fmt, ...)` | `printf`-style formatting with placeholders for each argument. |
 | `LOGIT_FORMAT_<LEVEL>(fmt, ...)` | Apply the same format string to every argument. |
+| `LOGIT_FMT_<LEVEL>(fmt, ...)` | `fmt`-style formatting when `LOGIT_WITH_FMT` is enabled. |
 | `LOGIT_STREAM_<LEVEL>()` | Stream-style logging with `<<` operators; short aliases `LOG_S_<LEVEL>()` when `LOGIT_SHORT_NAME` is defined. |
 | `LOGIT_<LEVEL>_IF(condition, ...)` | Log only when `condition` is true. |
+| `LOGIT_PRINT_<LEVEL>_IF(...)`, `LOGIT_PRINTF_<LEVEL>_IF(...)`, `LOGIT_FORMAT_<LEVEL>_IF(...)`, `LOGIT_FMT_<LEVEL>_IF(...)` | Conditional variants for the formatting families. |
 | `LOGIT_<LEVEL>_ONCE(...)` | Log only the first time the macro is executed. |
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Log on every `n`th invocation. |
 | `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Log at most once per `period_ms` milliseconds. |
 | `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Attach key-value tags to a message. |
+| `LOGIT_<LEVEL>_TO(index, ...)` | Target a specific logger index, including single-mode backends. |
+| `LOGIT_PRINT_<LEVEL>_TO(...)`, `LOGIT_PRINTF_<LEVEL>_TO(...)`, `LOGIT_FORMAT_<LEVEL>_TO(...)`, `LOGIT_FMT_<LEVEL>_TO(...)`, `LOGIT_STREAM_<LEVEL>_TO(...)` | Targeted variants for the print/printf/format/fmt/stream families. |
+| `LOGIT_SCOPE_<LEVEL>(phase)` / `LOGIT_SCOPE_<LEVEL>_T(threshold_ms, phase)` | RAII scope-duration logging, optionally only when a threshold is exceeded. |
+| `LOGIT_SCOPE_PRINTF_<LEVEL>(...)` / `LOGIT_SCOPE_PRINTF_<LEVEL>_T(...)` | Scope timers with `printf`-style formatting. |
+| `LOGIT_SCOPE_FMT_<LEVEL>(...)` / `LOGIT_SCOPE_FMT_<LEVEL>_T(...)` | Scope timers with `fmt`-style formatting. |
+| `LOGIT_PERROR_<LEVEL>(msg)`, `LOGIT_WINERR_<LEVEL>(msg)`, `LOGIT_SYSERR_<LEVEL>(msg)` | Append decoded platform error information to a message. |
+| `LOGIT_ADD_LOGGER(...)` and `LOGIT_ADD_*` backend macros | Register console, file, unique-file, crash, syslog, event-log, or custom backends. |
+| `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()` | Query and manage logger/task-executor state. |
+| `LOGIT_QUEUE_*`, `LOGIT_GET_DROPPED_TASKS()`, `LOGIT_RESET_DROPPED_TASKS()` | Queue policy constants and dropped-task counters. |
+
+Pattern-consistent aliases also exist for short-name and compatibility paths;
+the rows above document the canonical public families.
 
 ### Configuration Macros
 
@@ -654,11 +701,24 @@ public:
 | ----- | ----------- |
 | `LOGIT_BASE_PATH` | Trim this prefix from `__FILE__` paths shown in logs. |
 | `LOGIT_DEFAULT_COLOR` | Default console color for messages. |
-| `LOGIT_COLOR_<LEVEL>` | Color for each log level. |
+| `LOGIT_COLOR_TRACE`, `LOGIT_COLOR_DEBUG`, `LOGIT_COLOR_INFO`, `LOGIT_COLOR_WARN`, `LOGIT_COLOR_ERROR`, `LOGIT_COLOR_FATAL`, `LOGIT_COLOR_DEFAULT` | Override per-level and default console colors. |
+| `LOGIT_WALLCLOCK_MS()` / `LOGIT_MONOTONIC_MS()` | Override the wall-clock or monotonic time source helpers used by the library. |
+| `LOGIT_CURRENT_TIMESTAMP_MS()` | Override the main timestamp hook used in log records. |
 | `LOGIT_CONSOLE_PATTERN` | Default format pattern for console output. |
 | `LOGIT_FILE_LOGGER_PATH` | Directory for rotating file logs. |
+| `LOGIT_FILE_LOGGER_AUTO_DELETE_DAYS` | Retention window for file logger cleanup. |
+| `LOGIT_FILE_LOGGER_PATTERN` | Default message pattern for file loggers. |
+| `LOGIT_FILE_LOGGER_MAX_FILE_SIZE_BYTES` | Rotation threshold for size-based file rotation. |
+| `LOGIT_FILE_LOGGER_MAX_ROTATED_FILES` | Maximum number of rotated files to retain. |
 | `LOGIT_UNIQUE_FILE_LOGGER_PATH` | Directory for one-message-per-file logs. |
-| `LOGIT_TAGS_JOIN` | Separator inserted between the message and tag list. |
+| `LOGIT_UNIQUE_FILE_LOGGER_PATTERN` | Default message pattern for unique-file loggers. |
+| `LOGIT_UNIQUE_FILE_LOGGER_HASH_LENGTH` | Hash length used in unique-file logger names. |
+| `LOGIT_OS_ERROR_JOIN`, `LOGIT_POSIX_ERROR_PATTERN`, `LOGIT_WINDOWS_ERROR_PATTERN`, `LOGIT_SYSTEM_ERROR_PATTERN` | Control how decoded system errors are appended to messages. |
+| `LOGIT_TAGS_JOIN`, `LOGIT_TAG_PAIR_SEP`, `LOGIT_TAG_KV_SEP`, `LOGIT_TAG_QUOTE_VALUES` | Control how key-value tags are rendered after the message. |
+| `LOGIT_TASK_EXECUTOR_BLOCK_WAIT_USEC` | Polling cadence used by blocking producers when the queue is full. |
+| `LOGIT_TASK_EXECUTOR_DRAIN_BUDGET` | Maximum number of queued tasks drained per worker iteration in ring mode. |
+| `LOGIT_TASK_EXECUTOR_DEFAULT_RING_CAPACITY` | Default MPSC ring capacity used when unlimited queue mode needs a backing size. |
+| `LOGIT_SHORT_NAME` | Enable compact aliases such as `LOG_I`, `LOG_WPF`, and `LOG_S_INFO`. |
 
 ### Management Macros
 
