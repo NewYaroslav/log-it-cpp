@@ -1750,6 +1750,32 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::make_unique<logit::CrashLogger>(),                      \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_FILE_LOGGER_PATTERN))
 
+/// \brief Macro for adding an in-memory logger with explicit limits.
+/// \param max_records Maximum number of buffered entries (0 = unlimited).
+/// \param max_bytes Maximum total buffered message bytes (0 = unlimited).
+/// \param max_age_ms Maximum age of buffered entries in milliseconds (0 = unlimited).
+#define LOGIT_ADD_MEMORY_LOGGER(max_records, max_bytes, max_age_ms)         \
+    logit::Logger::get_instance().add_logger(                               \
+        std::make_unique<logit::MemoryLogger>(                              \
+            logit::MemoryLogger::Config{max_records, max_bytes, max_age_ms}), \
+        std::make_unique<logit::SimpleLogFormatter>("%v"))
+
+/// \brief Macro for adding an in-memory logger in single_mode with explicit limits.
+#define LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(max_records, max_bytes, max_age_ms) \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::make_unique<logit::MemoryLogger>(                                  \
+            logit::MemoryLogger::Config{max_records, max_bytes, max_age_ms}),   \
+        std::make_unique<logit::SimpleLogFormatter>("%v"),                      \
+        true)
+
+/// \brief Macro for adding an in-memory logger with default retention settings.
+#define LOGIT_ADD_MEMORY_LOGGER_DEFAULT() \
+    LOGIT_ADD_MEMORY_LOGGER(1000, 1024 * 1024, 24LL * 60 * 60 * 1000)
+
+/// \brief Macro for adding an in-memory logger in single_mode with default retention settings.
+#define LOGIT_ADD_MEMORY_LOGGER_DEFAULT_SINGLE_MODE() \
+    LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(1000, 1024 * 1024, 24LL * 60 * 60 * 1000)
+
 /// \brief Macro for adding a syslog logger with custom configuration.
 /// \param ident Syslog identifier used to tag the log entries.
 /// \param facility Syslog facility value (e.g., `LOG_USER`).
@@ -2018,6 +2044,32 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::unique_ptr<logit::CrashLogger>(new logit::CrashLogger()), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_FILE_LOGGER_PATTERN)))
 
+/// \brief Macro for adding an in-memory logger with explicit limits.
+/// \param max_records Maximum number of buffered entries (0 = unlimited).
+/// \param max_bytes Maximum total buffered message bytes (0 = unlimited).
+/// \param max_age_ms Maximum age of buffered entries in milliseconds (0 = unlimited).
+#define LOGIT_ADD_MEMORY_LOGGER(max_records, max_bytes, max_age_ms)              \
+    logit::Logger::get_instance().add_logger(                                    \
+        std::unique_ptr<logit::MemoryLogger>(new logit::MemoryLogger(            \
+            logit::MemoryLogger::Config{max_records, max_bytes, max_age_ms})),   \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter("%v")))
+
+/// \brief Macro for adding an in-memory logger in single_mode with explicit limits.
+#define LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(max_records, max_bytes, max_age_ms)  \
+    logit::Logger::get_instance().add_logger(                                     \
+        std::unique_ptr<logit::MemoryLogger>(new logit::MemoryLogger(             \
+            logit::MemoryLogger::Config{max_records, max_bytes, max_age_ms})),    \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter("%v")), \
+        true)
+
+/// \brief Macro for adding an in-memory logger with default retention settings.
+#define LOGIT_ADD_MEMORY_LOGGER_DEFAULT() \
+    LOGIT_ADD_MEMORY_LOGGER(1000, 1024 * 1024, 24LL * 60 * 60 * 1000)
+
+/// \brief Macro for adding an in-memory logger in single_mode with default retention settings.
+#define LOGIT_ADD_MEMORY_LOGGER_DEFAULT_SINGLE_MODE() \
+    LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(1000, 1024 * 1024, 24LL * 60 * 60 * 1000)
+
 /// \brief Macro for adding a syslog logger with custom configuration.
 /// \param ident Syslog identifier used to tag the log entries.
 /// \param facility Syslog facility value (e.g., `LOG_USER`).
@@ -2121,6 +2173,18 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_GET_TIME_SINCE_LAST_LOG(logger_index) \
     logit::Logger::get_instance().get_float_param(logger_index, logit::LoggerParam::TimeSinceLastLog)
 
+/// \brief Retrieves buffered formatted messages from a specific logger.
+/// \param logger_index Index of logger.
+/// \return Buffered formatted messages in chronological order.
+#define LOGIT_GET_BUFFERED_STRINGS(logger_index) \
+    logit::Logger::get_instance().get_buffered_strings(logger_index)
+
+/// \brief Retrieves buffered structured entries from a specific logger.
+/// \param logger_index Index of logger.
+/// \return Buffered structured entries in chronological order.
+#define LOGIT_GET_BUFFERED_ENTRIES(logger_index) \
+    logit::Logger::get_instance().get_buffered_entries(logger_index)
+
 /// \brief Enables or disables a logger.
 /// \param logger_index Index of logger.
 /// \param enabled True to enable, false to disable.
@@ -2155,6 +2219,12 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 /// \param level Minimum log level.
 #define LOGIT_SET_LOG_LEVEL(level) \
     logit::Logger::get_instance().set_log_level(level)
+
+/// \brief Retrieves minimal log level for a specific logger.
+/// \param logger_index Index of logger.
+/// \return Current minimum log level for the logger.
+#define LOGIT_GET_LOG_LEVEL(logger_index) \
+    logit::Logger::get_instance().get_log_level(logger_index)
 
 /// \brief Checks if a logger is in single mode.
 /// \param logger_index Index of logger.

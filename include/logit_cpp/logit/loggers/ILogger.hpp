@@ -8,7 +8,13 @@
 /// \ingroup LogBackends Logging Backends
 /// \{
 
+#include <string>
+#include <vector>
+
 namespace logit {
+
+    /// \brief Optional buffered snapshot access returns empty results by default.
+    /// Custom loggers may override these methods when they keep recent history.
 
     /// \interface ILogger
     /// \brief Interface for loggers that handle log message output.
@@ -50,6 +56,22 @@ namespace logit {
         /// \brief Gets the minimal log level for this logger.
         /// \return Current minimal log level.
         virtual LogLevel get_log_level() const = 0;
+
+        /// \brief Returns buffered formatted messages in chronological order.
+        /// \details Override only if the logger keeps recent history and can
+        /// safely serve snapshots while `log()` may run concurrently.
+        /// \return Buffered messages, or an empty vector if unsupported.
+        virtual std::vector<std::string> get_buffered_strings() const {
+            return std::vector<std::string>();
+        }
+
+        /// \brief Returns buffered structured entries in chronological order.
+        /// \details Override only if the logger keeps recent history and can
+        /// safely serve snapshots while `log()` may run concurrently.
+        /// \return Buffered entries, or an empty vector if unsupported.
+        virtual std::vector<BufferedLogEntry> get_buffered_entries() const {
+            return std::vector<BufferedLogEntry>();
+        }
 
         /// \brief Waits for all asynchronous logging operations to complete.
         ///

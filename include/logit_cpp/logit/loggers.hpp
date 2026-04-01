@@ -18,6 +18,7 @@
 
 #include "loggers/ILogger.hpp"
 #include "loggers/ConsoleLogger.hpp"
+#include "loggers/MemoryLogger.hpp"
 #include "loggers/FileLogger.hpp"
 #include "loggers/UniqueFileLogger.hpp"
 #include "loggers/SyslogLogger.hpp"

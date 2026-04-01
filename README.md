@@ -155,6 +155,38 @@ int main() {
 }
 ```
 
+### In-memory snapshot logger
+
+For remote control panels, diagnostics endpoints, or operator tooling, you can
+register a dedicated in-memory backend and fetch the latest buffered logs by
+logger index.
+
+```cpp
+#include <logit.hpp>
+
+int main() {
+    LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(1000, 1024 * 1024, 24LL * 60 * 60 * 1000); // index 0
+
+    LOGIT_INFO_TO(0, "remote-ready info");
+    LOGIT_WARN_TO(0, "latest warning");
+
+    const auto lines = LOGIT_GET_BUFFERED_STRINGS(0);
+    const auto entries = LOGIT_GET_BUFFERED_ENTRIES(0);
+    const auto level = LOGIT_GET_LOG_LEVEL(0);
+
+    (void)lines;
+    (void)entries;
+    (void)level;
+}
+```
+
+`MemoryLogger` snapshots are returned in chronological order. The retention
+budget uses `max_bytes` as buffered formatted-message payload bytes, not the
+full object footprint of each `BufferedLogEntry`. Snapshot reads are lightweight
+at the `Logger` layer and do not take the per-backend execution mutex, but they
+still synchronize on the memory backend's own mutex while copying the current
+buffer.
+
 ---
 
 ## Backpressure and hot resize
@@ -354,6 +386,10 @@ g++ -DLOGIT_COMPILED_LEVEL=logit::LogLevel::LOG_LVL_WARN ...
 ```
 
 With the example above, `TRACE`, `DEBUG`, and `INFO` macros are turned into no-ops at compile time.
+
+Runtime level changes via `LOGIT_SET_LOG_LEVEL(...)` and
+`LOGIT_SET_LOG_LEVEL_TO(...)` still work for compiled-in severities, but they
+cannot re-enable log statements that were removed by `LOGIT_COMPILED_LEVEL`.
 
 ---
 
@@ -688,7 +724,7 @@ public:
 | `LOGIT_SCOPE_PRINTF_<LEVEL>(...)` / `LOGIT_SCOPE_PRINTF_<LEVEL>_T(...)` | Scope timers with `printf`-style formatting. |
 | `LOGIT_SCOPE_FMT_<LEVEL>(...)` / `LOGIT_SCOPE_FMT_<LEVEL>_T(...)` | Scope timers with `fmt`-style formatting. |
 | `LOGIT_PERROR_<LEVEL>(msg)`, `LOGIT_WINERR_<LEVEL>(msg)`, `LOGIT_SYSERR_<LEVEL>(msg)` | Append decoded platform error information to a message. |
-| `LOGIT_ADD_LOGGER(...)` and `LOGIT_ADD_*` backend macros | Register console, file, unique-file, crash, syslog, event-log, or custom backends. |
+| `LOGIT_ADD_LOGGER(...)` and `LOGIT_ADD_*` backend macros | Register console, memory, file, unique-file, crash, syslog, event-log, or custom backends. |
 | `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()` | Query and manage logger/task-executor state. |
 | `LOGIT_QUEUE_*`, `LOGIT_GET_DROPPED_TASKS()`, `LOGIT_RESET_DROPPED_TASKS()` | Queue policy constants and dropped-task counters. |
 
@@ -728,6 +764,7 @@ the rows above document the canonical public families.
 | `LOGIT_SET_QUEUE_POLICY(mode)` | Set overflow behavior: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST`, or `LOGIT_QUEUE_BLOCK`. |
 | `LOGIT_SET_LOG_LEVEL_TO(index, level)` | Set minimum log level for a specific logger. |
 | `LOGIT_SET_LOG_LEVEL(level)` | Set minimum log level for all loggers. |
+| `LOGIT_GET_LOG_LEVEL(index)` | Read the current minimum log level of a specific logger. |
 | `LOGIT_SET_LOGGER_ENABLED(index, enabled)` | Enable or disable a logger. |
 | `LOGIT_IS_LOGGER_ENABLED(index)` | Check whether a logger is enabled. |
 | `LOGIT_SET_SINGLE_MODE(index, single_mode)` | Toggle single-message-per-file mode for a logger. |
@@ -740,6 +777,8 @@ the rows above document the canonical public families.
 | `LOGIT_GET_LAST_FILE_PATH(index)` | Get the last file path written by a logger. |
 | `LOGIT_GET_LAST_LOG_TIMESTAMP(index)` | Get the timestamp of the last log entry. |
 | `LOGIT_GET_TIME_SINCE_LAST_LOG(index)` | Seconds elapsed since the last log entry. |
+| `LOGIT_GET_BUFFERED_STRINGS(index)` | Return buffered formatted messages from a logger that supports snapshots. |
+| `LOGIT_GET_BUFFERED_ENTRIES(index)` | Return buffered structured entries from a logger that supports snapshots. |
 | `LOGIT_WAIT()` | Wait for all asynchronous loggers to finish. |
 | `LOGIT_SHUTDOWN()` | Shut down the logging system. |
 

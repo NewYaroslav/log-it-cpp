@@ -110,6 +110,37 @@ void process_request(bool verbose, double latency_ms) {
 }
 \endcode
 
+\subsection macro_examples_memory In-memory snapshot logger
+
+For remote control surfaces, diagnostics endpoints, or embedded operator tools,
+LogIt++ can register a dedicated in-memory backend and expose the latest logs as
+either formatted strings or structured entries.
+
+\code{.cpp}
+#include <logit.hpp>
+
+int main() {
+    LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(1000, 1024 * 1024, 24LL * 60 * 60 * 1000); // index 0
+
+    LOGIT_INFO_TO(0, "remote-ready info");
+    LOGIT_WARN_TO(0, "latest warning");
+
+    const auto lines = LOGIT_GET_BUFFERED_STRINGS(0);
+    const auto entries = LOGIT_GET_BUFFERED_ENTRIES(0);
+    const auto level = LOGIT_GET_LOG_LEVEL(0);
+
+    (void)lines;
+    (void)entries;
+    (void)level;
+}
+\endcode
+
+`MemoryLogger` snapshots are returned oldest-to-newest. The `max_bytes`
+retention budget counts buffered formatted-message payload bytes rather than the
+full object footprint of each `BufferedLogEntry`. Snapshot reads avoid the
+`Logger` execution mutex, but they still synchronize on the memory backend's
+own mutex while copying the current buffer.
+
 \section features_sec Features
 
 LogIt++ provides a robust and flexible set of features to accommodate various logging needs.
@@ -153,7 +184,8 @@ Canonical public macro families also include:
 - Scope-duration families such as `LOGIT_SCOPE_<LEVEL>`, `LOGIT_SCOPE_PRINTF_<LEVEL>`, and `LOGIT_SCOPE_FMT_<LEVEL>`, including their `_T` threshold variants.
 - System-error helpers `LOGIT_PERROR_<LEVEL>`, `LOGIT_WINERR_<LEVEL>`, and `LOGIT_SYSERR_<LEVEL>`.
 - Backend registration helpers such as `LOGIT_ADD_LOGGER(...)` and the built-in `LOGIT_ADD_*` backend macros.
-- Management and query helpers such as `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()`, `LOGIT_GET_DROPPED_TASKS()`, and `LOGIT_RESET_DROPPED_TASKS()`.
+- Management and query helpers such as `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_GET_LOG_LEVEL(index)`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()`, `LOGIT_GET_DROPPED_TASKS()`, and `LOGIT_RESET_DROPPED_TASKS()`.
+- Snapshot helpers such as `LOGIT_GET_BUFFERED_STRINGS(index)` and `LOGIT_GET_BUFFERED_ENTRIES(index)` for backends that keep recent history.
 
 Pattern-consistent aliases exist for short-name and compatibility paths, but the
 families above are the canonical public surface to document and prefer in
@@ -202,6 +234,10 @@ g++ -DLOGIT_COMPILED_LEVEL=logit::LogLevel::LOG_LVL_WARN ...
 \endcode
 
 With this configuration, `TRACE`, `DEBUG`, and `INFO` macros are disabled at compile time.
+
+Runtime filtering via `LOGIT_SET_LOG_LEVEL(...)` and
+`LOGIT_SET_LOG_LEVEL_TO(...)` still works for compiled-in severities, but it
+cannot re-enable macros removed earlier by `LOGIT_COMPILED_LEVEL`.
 
 \subsection extensibility Extensibility
 

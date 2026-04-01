@@ -146,6 +146,38 @@ void process_request(bool verbose, double latency_ms) {
 }
 ```
 
+### Буфер последних логов в памяти
+
+Для удалённого управления, диагностических endpoint-ов и операторских
+инструментов можно зарегистрировать отдельный in-memory backend и получать
+снимок последних логов по индексу логгера.
+
+```cpp
+#include <logit.hpp>
+
+int main() {
+    LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(1000, 1024 * 1024, 24LL * 60 * 60 * 1000); // индекс 0
+
+    LOGIT_INFO_TO(0, "remote-ready info");
+    LOGIT_WARN_TO(0, "latest warning");
+
+    const auto lines = LOGIT_GET_BUFFERED_STRINGS(0);
+    const auto entries = LOGIT_GET_BUFFERED_ENTRIES(0);
+    const auto level = LOGIT_GET_LOG_LEVEL(0);
+
+    (void)lines;
+    (void)entries;
+    (void)level;
+}
+```
+
+`MemoryLogger` возвращает снимки в хронологическом порядке: от старых записей к
+новым. Параметр `max_bytes` ограничивает суммарный объём именно
+отформатированных текстов сообщений, а не полный memory footprint каждого
+`BufferedLogEntry`. Snapshot-чтение не берёт глобальный `exec_mx` из `Logger`,
+но по-прежнему синхронизируется на собственном mutex самого memory-backend-а,
+пока копирует текущий буфер.
+
 ## Обратное давление и горячее изменение размера
 
 Асинхронный `TaskExecutor` поддерживает как очередь на основе `std::deque` под мьютексом, так и опциональный lock-free MPSC ring
@@ -280,7 +312,7 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 | `LOGIT_SCOPE_PRINTF_<LEVEL>(...)` / `LOGIT_SCOPE_PRINTF_<LEVEL>_T(...)` | Scope-таймеры с форматированием в стиле `printf`. |
 | `LOGIT_SCOPE_FMT_<LEVEL>(...)` / `LOGIT_SCOPE_FMT_<LEVEL>_T(...)` | Scope-таймеры с форматированием через `fmt`. |
 | `LOGIT_PERROR_<LEVEL>(msg)`, `LOGIT_WINERR_<LEVEL>(msg)`, `LOGIT_SYSERR_<LEVEL>(msg)` | Добавляют к сообщению расшифрованную платформенную ошибку. |
-| `LOGIT_ADD_LOGGER(...)` и backend-макросы семейства `LOGIT_ADD_*` | Регистрируют консольные, файловые, unique-file, crash, syslog, event-log и пользовательские бэкенды. |
+| `LOGIT_ADD_LOGGER(...)` и backend-макросы семейства `LOGIT_ADD_*` | Регистрируют консольные, memory, файловые, unique-file, crash, syslog, event-log и пользовательские бэкенды. |
 | `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()` | Управление состоянием логгеров и исполнителя задач. |
 | `LOGIT_QUEUE_*`, `LOGIT_GET_DROPPED_TASKS()`, `LOGIT_RESET_DROPPED_TASKS()` | Константы политики очереди и счётчики отброшенных задач. |
 
@@ -320,6 +352,7 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 | `LOGIT_SET_QUEUE_POLICY(mode)` | Поведение при переполнении: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST` или `LOGIT_QUEUE_BLOCK`. |
 | `LOGIT_SET_LOG_LEVEL_TO(index, level)` | Задает минимальный уровень для конкретного логгера. |
 | `LOGIT_SET_LOG_LEVEL(level)` | Задает минимальный уровень для всех логгеров. |
+| `LOGIT_GET_LOG_LEVEL(index)` | Читает текущий минимальный уровень логирования конкретного логгера. |
 | `LOGIT_SET_LOGGER_ENABLED(index, enabled)` | Включает или отключает логгер. |
 | `LOGIT_IS_LOGGER_ENABLED(index)` | Проверяет, включен ли логгер. |
 | `LOGIT_SET_SINGLE_MODE(index, single_mode)` | Включает режим «один файл — одно сообщение». |
@@ -332,6 +365,8 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 | `LOGIT_GET_LAST_FILE_PATH(index)` | Путь к последнему файлу логгера. |
 | `LOGIT_GET_LAST_LOG_TIMESTAMP(index)` | Метка времени последнего лога. |
 | `LOGIT_GET_TIME_SINCE_LAST_LOG(index)` | Время с последнего лога (в секундах). |
+| `LOGIT_GET_BUFFERED_STRINGS(index)` | Возвращает буферизованные готовые строки из логгера, который поддерживает snapshots. |
+| `LOGIT_GET_BUFFERED_ENTRIES(index)` | Возвращает буферизованные структурированные записи из логгера, который поддерживает snapshots. |
 | `LOGIT_WAIT()` | Ожидает завершения всех асинхронных логгеров. |
 | `LOGIT_SHUTDOWN()` | Завершает работу системы логирования. |
 
@@ -399,6 +434,10 @@ g++ -DLOGIT_COMPILED_LEVEL=logit::LogLevel::LOG_LVL_WARN ...
 ```
 
 В этом примере макросы `TRACE`, `DEBUG` и `INFO` будут отключены на этапе компиляции.
+
+Runtime-смена уровня через `LOGIT_SET_LOG_LEVEL(...)` и
+`LOGIT_SET_LOG_LEVEL_TO(...)` продолжает работать для уровней, которые попали в
+бинарник, но не может вернуть логи, вырезанные `LOGIT_COMPILED_LEVEL`.
 
 ---
 

@@ -15,6 +15,7 @@
 #include "utils/format.hpp"
 #include "utils/VariableValue.hpp"
 #include "utils/argument_utils.hpp"
+#include "utils/BufferedLogEntry.hpp"
 #include "utils/encoding_utils.hpp"
 #include "utils/path_utils.hpp"
 #include "utils/LogRecord.hpp"

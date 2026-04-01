@@ -238,6 +238,48 @@ namespace logit {
             return 0.0;
         }
 
+        /// \brief Retrieves buffered formatted messages from a logger.
+        /// \param logger_index Index of logger.
+        /// \return Buffered messages in chronological order, or an empty vector if unsupported.
+        std::vector<std::string> get_buffered_strings(int logger_index) const {
+            if (m_shutdown) return std::vector<std::string>();
+
+            auto strategy = get_strategy_snapshot(logger_index);
+            if (!strategy) {
+                return std::vector<std::string>();
+            }
+
+            return strategy->logger->get_buffered_strings();
+        }
+
+        /// \brief Retrieves buffered structured entries from a logger.
+        /// \param logger_index Index of logger.
+        /// \return Buffered entries in chronological order, or an empty vector if unsupported.
+        std::vector<BufferedLogEntry> get_buffered_entries(int logger_index) const {
+            if (m_shutdown) return std::vector<BufferedLogEntry>();
+
+            auto strategy = get_strategy_snapshot(logger_index);
+            if (!strategy) {
+                return std::vector<BufferedLogEntry>();
+            }
+
+            return strategy->logger->get_buffered_entries();
+        }
+
+        /// \brief Retrieves the current minimal log level for a logger.
+        /// \param logger_index Index of logger.
+        /// \return Current minimal log level, or TRACE when the logger index is invalid.
+        LogLevel get_log_level(int logger_index) const {
+            if (m_shutdown) return LogLevel::LOG_LVL_TRACE;
+
+            auto strategy = get_strategy_snapshot(logger_index);
+            if (!strategy) {
+                return LogLevel::LOG_LVL_TRACE;
+            }
+
+            return strategy->logger->get_log_level();
+        }
+
         /// \brief Logs message and returns tuple of arguments.
         /// \tparam Ts Types of arguments.
         /// \param record Log record.
@@ -311,6 +353,16 @@ namespace logit {
             }
             const std::string msg = strategy.formatter ? strategy.formatter->format(record) : std::string();
             strategy.logger->log(record, msg);
+        }
+
+        std::shared_ptr<LoggerStrategy> get_strategy_snapshot(int logger_index) const {
+            LoggerReadLock lock(m_loggers_mx);
+            if (logger_index >= 0 &&
+                logger_index < static_cast<int>(m_loggers.size()) &&
+                m_loggers[logger_index]) {
+                return m_loggers[logger_index];
+            }
+            return std::shared_ptr<LoggerStrategy>();
         }
 
         std::vector<std::shared_ptr<LoggerStrategy>> m_loggers;        ///< Container for logger-formatter pairs.
