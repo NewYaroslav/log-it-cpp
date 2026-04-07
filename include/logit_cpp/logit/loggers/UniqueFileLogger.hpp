@@ -379,6 +379,126 @@ namespace logit {
             return hash;
         }
 
+        bool try_make_log_file_info(const std::string& file_path, LogFileInfo& info) const {
+            if (!is_direct_child_path(file_path, get_directory_path())) {
+                return false;
+            }
+
+            const std::string filename = get_file_name(file_path);
+            if (!is_valid_log_filename(filename)) {
+                return false;
+            }
+
+            info.path = file_path;
+            info.name = filename;
+            info.day_start_ms = time_shield::sec_to_ms(get_date_ts_from_filename(filename));
+            info.is_current = false;
+            info.is_compressed = is_compressed_log_filename(filename);
+            return true;
+        }
+
+        LogFileReadResult read_log_file_from_info(const LogFileInfo& info) const {
+            LogFileReadResult result;
+            result.file = info;
+            if (info.is_compressed) {
+                result.ok = false;
+                return result;
+            }
+
+            result.ok = read_plain_file(info.path, result.content);
+            return result;
+        }
+
+        bool read_plain_file(const std::string& file_path, std::string& out) const {
+#           if defined(_WIN32)
+            std::ifstream in(utf8_to_ansi(file_path).c_str(), std::ios_base::binary);
+#           else
+            std::ifstream in(file_path.c_str(), std::ios_base::binary);
+#           endif
+            if (!in.is_open()) {
+                out.clear();
+                return false;
+            }
+
+            std::ostringstream stream;
+            stream << in.rdbuf();
+            out = stream.str();
+            return !in.bad();
+        }
+
+        bool is_direct_child_path(const std::string& file_path, const std::string& directory_path) const {
+#           if __cplusplus >= 201703L
+#               if defined(_WIN32)
+            return fs::u8path(file_path).parent_path().lexically_normal() ==
+                   fs::u8path(directory_path).lexically_normal();
+#               else
+            return fs::path(file_path).parent_path().lexically_normal() ==
+                   fs::path(directory_path).lexically_normal();
+#               endif
+#           else
+            const size_t pos = file_path.find_last_of("/\\");
+            if (pos == std::string::npos) return false;
+            std::string parent = file_path.substr(0, pos);
+            return parent == directory_path;
+#           endif
+        }
+
+        bool same_path(const std::string& lhs, const std::string& rhs) const {
+#           if __cplusplus >= 201703L
+#               if defined(_WIN32)
+            return fs::u8path(lhs).lexically_normal() == fs::u8path(rhs).lexically_normal();
+#               else
+            return fs::path(lhs).lexically_normal() == fs::path(rhs).lexically_normal();
+#               endif
+#           else
+            return normalize_path_separators(lhs) == normalize_path_separators(rhs);
+#           endif
+        }
+
+        std::string normalize_path_separators(const std::string& path) const {
+            std::string normalized = path;
+            for (size_t i = 0; i < normalized.size(); ++i) {
+                if (normalized[i] == '\\') normalized[i] = '/';
+            }
+            return normalized;
+        }
+
+        struct UniqueFileSortKey {
+            std::string timestamp_prefix;
+            std::string artifact_name;
+        };
+
+        static UniqueFileSortKey make_file_sort_key(const LogFileInfo& info) {
+            UniqueFileSortKey key;
+            key.artifact_name = strip_compression_suffix_impl(info.name);
+            key.timestamp_prefix =
+                key.artifact_name.size() >= 23 ? key.artifact_name.substr(0, 23) : key.artifact_name;
+            return key;
+        }
+
+        bool is_compressed_log_filename(const std::string& filename) const {
+            return ends_with(filename, ".gz") || ends_with(filename, ".zst");
+        }
+
+        bool ends_with(const std::string& value, const std::string& suffix) const {
+            return ends_with_impl(value, suffix);
+        }
+
+        static bool ends_with_impl(const std::string& value, const std::string& suffix) {
+            return value.size() >= suffix.size() &&
+                   value.compare(value.size() - suffix.size(), suffix.size(), suffix) == 0;
+        }
+
+        static std::string strip_compression_suffix_impl(const std::string& filename) {
+            if (ends_with_impl(filename, ".gz")) {
+                return filename.substr(0, filename.size() - 3);
+            }
+            if (ends_with_impl(filename, ".zst")) {
+                return filename.substr(0, filename.size() - 4);
+            }
+            return filename;
+        }
+
         /// \brief Removes old log files based on the auto-delete days configuration.
         void remove_old_logs() {
             const int64_t threshold_ts =
@@ -496,6 +616,111 @@ namespace logit {
         /// \return The time in milliseconds since the last log was written.
         int64_t get_time_since_last_log() const {
             return LOGIT_MONOTONIC_MS() - m_last_log_mono_ts;
+        }
+
+    public:
+        /// \brief Lists persisted log files owned by this backend.
+        /// \return Persisted unique-log files sorted newest-first.
+        std::vector<LogFileInfo> list_log_files() const override {
+            const std::string directory = get_directory_path();
+            std::vector<LogFileInfo> files;
+
+#           if __cplusplus >= 201703L
+#               if defined(_WIN32)
+            fs::path dir_path = fs::u8path(directory);
+#               else
+            fs::path dir_path(directory);
+#               endif
+            if (!fs::exists(dir_path) || !fs::is_directory(dir_path)) {
+                return files;
+            }
+
+            for (const auto& entry : fs::directory_iterator(dir_path)) {
+                if (!fs::is_regular_file(entry.status())) continue;
+#               if defined(_WIN32)
+                const std::string file_path = entry.path().u8string();
+#               else
+                const std::string file_path = entry.path().string();
+#               endif
+                LogFileInfo info;
+                if (try_make_log_file_info(file_path, info)) {
+                    files.push_back(info);
+                }
+            }
+#           else
+            const std::vector<std::string> file_list = get_list_files(directory);
+            for (size_t i = 0; i < file_list.size(); ++i) {
+                LogFileInfo info;
+                if (try_make_log_file_info(file_list[i], info)) {
+                    files.push_back(info);
+                }
+            }
+#           endif
+
+            std::sort(files.begin(), files.end(), [this](const LogFileInfo& lhs, const LogFileInfo& rhs) {
+                const UniqueFileSortKey lhs_key = make_file_sort_key(lhs);
+                const UniqueFileSortKey rhs_key = make_file_sort_key(rhs);
+                if (lhs_key.timestamp_prefix != rhs_key.timestamp_prefix) {
+                    return lhs_key.timestamp_prefix > rhs_key.timestamp_prefix;
+                }
+                if (lhs_key.artifact_name == rhs_key.artifact_name &&
+                    lhs.is_compressed != rhs.is_compressed) {
+                    return !lhs.is_compressed && rhs.is_compressed;
+                }
+                if (lhs_key.artifact_name != rhs_key.artifact_name) {
+                    return lhs_key.artifact_name > rhs_key.artifact_name;
+                }
+                return normalize_path_separators(lhs.path) > normalize_path_separators(rhs.path);
+            });
+            return files;
+        }
+
+        /// \brief Reads one persisted log file owned by this backend.
+        /// \param path Full path returned by `list_log_files()`.
+        /// \return Read result. Compressed files are listed but unreadable in v1.
+        LogFileReadResult read_log_file(const std::string& path) const override {
+            const std::vector<LogFileInfo> files = list_log_files();
+            for (size_t i = 0; i < files.size(); ++i) {
+                if (same_path(files[i].path, path)) {
+                    return read_log_file_from_info(files[i]);
+                }
+            }
+
+            LogFileReadResult result;
+            result.file.path = path;
+            result.file.name = get_file_name(path);
+            result.ok = false;
+            return result;
+        }
+
+        /// \brief Reads several persisted log files owned by this backend.
+        /// \param paths Full paths returned by `list_log_files()`.
+        /// \return Per-file results in the same order as the request.
+        std::vector<LogFileReadResult> read_log_files(const std::vector<std::string>& paths) const override {
+            const std::vector<LogFileInfo> files = list_log_files();
+            std::vector<LogFileReadResult> results;
+            results.reserve(paths.size());
+
+            for (size_t i = 0; i < paths.size(); ++i) {
+                bool found = false;
+                for (size_t j = 0; j < files.size(); ++j) {
+                    if (same_path(files[j].path, paths[i])) {
+                        results.push_back(read_log_file_from_info(files[j]));
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    LogFileReadResult result;
+                    result.file.path = paths[i];
+                    result.file.name = get_file_name(paths[i]);
+                    result.ok = false;
+                    results.push_back(result);
+                }
+            }
+
+            return results;
         }
 
 

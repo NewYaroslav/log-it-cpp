@@ -75,7 +75,7 @@ int main() {
     unlimited.log(make_record(logit::LogLevel::LOG_LVL_INFO, 500, 50, "u1"), "alpha");
     g_now_ms = 600;
     unlimited.log(make_record(logit::LogLevel::LOG_LVL_INFO, 600, 60, "u2"), "beta");
-    g_now_ms = 10'000;
+    g_now_ms = 10000;
     const auto unlimited_entries = unlimited.get_buffered_entries();
     if (unlimited_entries.size() != 2 ||
         unlimited_entries[0].message != "alpha" ||

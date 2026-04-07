@@ -187,6 +187,14 @@ at the `Logger` layer and do not take the per-backend execution mutex, but they
 still synchronize on the memory backend's own mutex while copying the current
 buffer.
 
+File-based backends also expose persisted-file access through
+`LOGIT_LIST_LOG_FILES(index)`, `LOGIT_READ_LOG_FILE(index, path)`, and
+`LOGIT_READ_LOG_FILES(index, paths)`. These helpers read only what has already
+reached disk, do not drain async queues, and currently treat compressed rotated
+files as metadata-only entries. Use `MemoryLogger` for near-real-time snapshots
+and the file APIs for operational reads of today's or previous days' persisted
+logs.
+
 ---
 
 ## Backpressure and hot resize
@@ -779,6 +787,9 @@ the rows above document the canonical public families.
 | `LOGIT_GET_TIME_SINCE_LAST_LOG(index)` | Seconds elapsed since the last log entry. |
 | `LOGIT_GET_BUFFERED_STRINGS(index)` | Return buffered formatted messages from a logger that supports snapshots. |
 | `LOGIT_GET_BUFFERED_ENTRIES(index)` | Return buffered structured entries from a logger that supports snapshots. |
+| `LOGIT_LIST_LOG_FILES(index)` | List persisted log files exposed by a file-based logger. |
+| `LOGIT_READ_LOG_FILE(index, path)` | Read one persisted plain-text log file owned by a file-based logger. |
+| `LOGIT_READ_LOG_FILES(index, paths)` | Read several persisted plain-text log files and preserve request order. |
 | `LOGIT_WAIT()` | Wait for all asynchronous loggers to finish. |
 | `LOGIT_SHUTDOWN()` | Shut down the logging system. |
 

@@ -31,6 +31,13 @@ namespace logit {
             std::size_t max_records = 1000;            ///< Maximum number of buffered entries (0 = unlimited).
             std::size_t max_bytes   = 1024 * 1024;    ///< Maximum buffered formatted-message bytes (0 = unlimited).
             int64_t     max_age_ms  = 24LL * 60 * 60 * 1000; ///< Maximum age of buffered entries (0 = unlimited).
+
+            Config() {}
+
+            Config(std::size_t max_records, std::size_t max_bytes, int64_t max_age_ms) :
+                    max_records(max_records),
+                    max_bytes(max_bytes),
+                    max_age_ms(max_age_ms) {}
         };
 
         /// \brief Construct with default retention settings.

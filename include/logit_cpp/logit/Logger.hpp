@@ -266,6 +266,76 @@ namespace logit {
             return strategy->logger->get_buffered_entries();
         }
 
+        /// \brief Lists persisted log files exposed by a logger backend.
+        /// \param logger_index Index of logger.
+        /// \return Persisted file metadata, or an empty vector if unsupported.
+        std::vector<LogFileInfo> list_log_files(int logger_index) const {
+            if (m_shutdown) return std::vector<LogFileInfo>();
+
+            auto strategy = get_strategy_snapshot(logger_index);
+            if (!strategy) {
+                return std::vector<LogFileInfo>();
+            }
+
+            return strategy->logger->list_log_files();
+        }
+
+        /// \brief Reads one persisted log file exposed by a logger backend.
+        /// \param logger_index Index of logger.
+        /// \param path Full path returned by `list_log_files()`.
+        /// \return Read result with `ok=false` when unavailable or unsupported.
+        LogFileReadResult read_log_file(int logger_index, const std::string& path) const {
+            if (m_shutdown) {
+                LogFileReadResult result;
+                result.file.path = path;
+                result.ok = false;
+                return result;
+            }
+
+            auto strategy = get_strategy_snapshot(logger_index);
+            if (!strategy) {
+                LogFileReadResult result;
+                result.file.path = path;
+                result.ok = false;
+                return result;
+            }
+
+            return strategy->logger->read_log_file(path);
+        }
+
+        /// \brief Reads several persisted log files exposed by a logger backend.
+        /// \param logger_index Index of logger.
+        /// \param paths Full paths returned by `list_log_files()`.
+        /// \return Per-file read results in request order.
+        std::vector<LogFileReadResult> read_log_files(int logger_index, const std::vector<std::string>& paths) const {
+            if (m_shutdown) {
+                std::vector<LogFileReadResult> results;
+                results.reserve(paths.size());
+                for (size_t i = 0; i < paths.size(); ++i) {
+                    LogFileReadResult result;
+                    result.file.path = paths[i];
+                    result.ok = false;
+                    results.push_back(result);
+                }
+                return results;
+            }
+
+            auto strategy = get_strategy_snapshot(logger_index);
+            if (!strategy) {
+                std::vector<LogFileReadResult> results;
+                results.reserve(paths.size());
+                for (size_t i = 0; i < paths.size(); ++i) {
+                    LogFileReadResult result;
+                    result.file.path = paths[i];
+                    result.ok = false;
+                    results.push_back(result);
+                }
+                return results;
+            }
+
+            return strategy->logger->read_log_files(paths);
+        }
+
         /// \brief Retrieves the current minimal log level for a logger.
         /// \param logger_index Index of logger.
         /// \return Current minimal log level, or TRACE when the logger index is invalid.

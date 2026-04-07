@@ -30,13 +30,15 @@ int main() {
 
     std::thread reader([&]() {
         while (!done.load()) {
-            const auto strings = logger.get_buffered_strings();
             const auto entries = logger.get_buffered_entries();
-            if (strings.size() != entries.size()) {
-                failed = true;
-                done = true;
-                return;
+            for (size_t i = 1; i < entries.size(); ++i) {
+                if (entries[i - 1].timestamp_ms > entries[i].timestamp_ms) {
+                    failed = true;
+                    done = true;
+                    return;
+                }
             }
+            (void)logger.get_buffered_strings();
         }
     });
 

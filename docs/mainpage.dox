@@ -141,6 +141,14 @@ full object footprint of each `BufferedLogEntry`. Snapshot reads avoid the
 `Logger` execution mutex, but they still synchronize on the memory backend's
 own mutex while copying the current buffer.
 
+File-based backends also expose persisted-file access through
+`LOGIT_LIST_LOG_FILES(index)`, `LOGIT_READ_LOG_FILE(index, path)`, and
+`LOGIT_READ_LOG_FILES(index, paths)`. These helpers return only what has
+already reached disk; they do not drain async queues, and compressed rotated
+files are listed as metadata-only artifacts in v1. Use `MemoryLogger` for
+near-real-time snapshots and the file APIs for operational reads of persisted
+daily logs.
+
 \section features_sec Features
 
 LogIt++ provides a robust and flexible set of features to accommodate various logging needs.
@@ -184,7 +192,7 @@ Canonical public macro families also include:
 - Scope-duration families such as `LOGIT_SCOPE_<LEVEL>`, `LOGIT_SCOPE_PRINTF_<LEVEL>`, and `LOGIT_SCOPE_FMT_<LEVEL>`, including their `_T` threshold variants.
 - System-error helpers `LOGIT_PERROR_<LEVEL>`, `LOGIT_WINERR_<LEVEL>`, and `LOGIT_SYSERR_<LEVEL>`.
 - Backend registration helpers such as `LOGIT_ADD_LOGGER(...)` and the built-in `LOGIT_ADD_*` backend macros.
-- Management and query helpers such as `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_GET_LOG_LEVEL(index)`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()`, `LOGIT_GET_DROPPED_TASKS()`, and `LOGIT_RESET_DROPPED_TASKS()`.
+- Management and query helpers such as `LOGIT_GET_*`, `LOGIT_SET_*`, `LOGIT_IS_*`, `LOGIT_GET_LOG_LEVEL(index)`, `LOGIT_LIST_LOG_FILES(index)`, `LOGIT_READ_LOG_FILE(index, path)`, `LOGIT_READ_LOG_FILES(index, paths)`, `LOGIT_WAIT()`, `LOGIT_SHUTDOWN()`, `LOGIT_GET_DROPPED_TASKS()`, and `LOGIT_RESET_DROPPED_TASKS()`.
 - Snapshot helpers such as `LOGIT_GET_BUFFERED_STRINGS(index)` and `LOGIT_GET_BUFFERED_ENTRIES(index)` for backends that keep recent history.
 
 Pattern-consistent aliases exist for short-name and compatibility paths, but the

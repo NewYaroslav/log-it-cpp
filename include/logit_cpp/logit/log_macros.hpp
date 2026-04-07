@@ -2185,6 +2185,26 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_GET_BUFFERED_ENTRIES(logger_index) \
     logit::Logger::get_instance().get_buffered_entries(logger_index)
 
+/// \brief Lists persisted log files for a specific file-based logger.
+/// \param logger_index Index of logger.
+/// \return Metadata for persisted log files owned by the logger.
+#define LOGIT_LIST_LOG_FILES(logger_index) \
+    logit::Logger::get_instance().list_log_files(logger_index)
+
+/// \brief Reads one persisted log file from a specific file-based logger.
+/// \param logger_index Index of logger.
+/// \param path Full path returned by `LOGIT_LIST_LOG_FILES`.
+/// \return Read result with metadata, content and success flag.
+#define LOGIT_READ_LOG_FILE(logger_index, path) \
+    logit::Logger::get_instance().read_log_file(logger_index, path)
+
+/// \brief Reads several persisted log files from a specific file-based logger.
+/// \param logger_index Index of logger.
+/// \param paths Full paths returned by `LOGIT_LIST_LOG_FILES`.
+/// \return Per-file read results in the same order as the requested paths.
+#define LOGIT_READ_LOG_FILES(logger_index, paths) \
+    logit::Logger::get_instance().read_log_files(logger_index, paths)
+
 /// \brief Enables or disables a logger.
 /// \param logger_index Index of logger.
 /// \param enabled True to enable, false to disable.

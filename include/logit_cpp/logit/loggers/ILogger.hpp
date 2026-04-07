@@ -73,6 +73,41 @@ namespace logit {
             return std::vector<BufferedLogEntry>();
         }
 
+        /// \brief Lists persisted log files owned by this backend.
+        /// \details Override only for file-based backends that can safely
+        /// enumerate their own persisted files while `log()` may run
+        /// concurrently.
+        /// \return File metadata list, or an empty vector if unsupported.
+        virtual std::vector<LogFileInfo> list_log_files() const {
+            return std::vector<LogFileInfo>();
+        }
+
+        /// \brief Reads one persisted log file owned by this backend.
+        /// \details This API is intended for persisted-file access only. It
+        /// must not drain async queues or wait for pending writes to finish.
+        /// \param path Full path returned by `list_log_files()`.
+        /// \return Read result. `ok` is false when unsupported or unavailable.
+        virtual LogFileReadResult read_log_file(const std::string& path) const {
+            LogFileReadResult result;
+            result.file.path = path;
+            result.ok = false;
+            return result;
+        }
+
+        /// \brief Reads several persisted log files owned by this backend.
+        /// \details Default implementation preserves request order by calling
+        /// `read_log_file()` for each requested path.
+        /// \param paths Full paths returned by `list_log_files()`.
+        /// \return Per-file results in the same order as `paths`.
+        virtual std::vector<LogFileReadResult> read_log_files(const std::vector<std::string>& paths) const {
+            std::vector<LogFileReadResult> results;
+            results.reserve(paths.size());
+            for (size_t i = 0; i < paths.size(); ++i) {
+                results.push_back(read_log_file(paths[i]));
+            }
+            return results;
+        }
+
         /// \brief Waits for all asynchronous logging operations to complete.
         ///
         /// This pure virtual function must be implemented by derived logger classes.
