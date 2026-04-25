@@ -274,6 +274,21 @@ LOGIT_INFO_TAG(({{"order_id", 123}, {"side", "BUY"}}), "sent order");
 // Output: [info] sent order order_id=123 side=BUY
 ```
 
+- **Raw and Section Logging**:
+
+Write human-readable diagnostic snapshots without level or formatter prefixes.
+Raw records bypass log-level filters, but still use the configured backends,
+queues, file rotation, and targeted logger routing.
+
+```cpp
+LOGIT_SECTION("App");
+LOGIT_RAW("Name: sample.desktop.app");
+LOGIT_RAW("Version: 3.3.106.wzr");
+
+LOGIT_SECTION("Proxy");
+LOGIT_RAW("Proxy enabled: False");
+```
+
 - **Rotating File Logs**:
 
   Automatic file rotation based on size with optional asynchronous compression using gzip or zstd.
@@ -726,6 +741,8 @@ public:
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Log on every `n`th invocation. |
 | `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Log at most once per `period_ms` milliseconds. |
 | `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Attach key-value tags to a message. |
+| `LOGIT_RAW(msg)`, `LOGIT_RAW_TO(index, msg)`, `LOGIT_RAW_IF(condition, msg)` | Write already formatted text without applying level filters or formatter patterns. |
+| `LOGIT_SECTION(name)`, `LOGIT_SECTION_TO(index, name)`, `LOGIT_SECTION_IF(condition, name)` | Write raw section headers such as `[Proxy]`. |
 | `LOGIT_<LEVEL>_TO(index, ...)` | Target a specific logger index, including single-mode backends. |
 | `LOGIT_PRINT_<LEVEL>_TO(...)`, `LOGIT_PRINTF_<LEVEL>_TO(...)`, `LOGIT_FORMAT_<LEVEL>_TO(...)`, `LOGIT_FMT_<LEVEL>_TO(...)`, `LOGIT_STREAM_<LEVEL>_TO(...)` | Targeted variants for the print/printf/format/fmt/stream families. |
 | `LOGIT_SCOPE_<LEVEL>(phase)` / `LOGIT_SCOPE_<LEVEL>_T(threshold_ms, phase)` | RAII scope-duration logging, optionally only when a threshold is exceeded. |

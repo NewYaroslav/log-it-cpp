@@ -61,10 +61,11 @@ namespace logit {
         /// \param rec Log metadata.
         /// \param msg Formatted message.
         void log(const LogRecord& rec, const std::string& msg) override {
-            LogLevel lvl = rec.log_level;
+            LogLevel lvl = rec.raw_mode ? LogLevel::LOG_LVL_INFO : rec.log_level;
+            bool raw_mode = rec.raw_mode;
             std::string s = msg;
-            auto task = [this, lvl, s]() {
-                if (static_cast<int>(lvl) < m_level.load()) return;
+            auto task = [this, lvl, raw_mode, s]() {
+                if (!raw_mode && static_cast<int>(lvl) < m_level.load()) return;
                 syslog(m_map(lvl), "%s", s.c_str());
             };
             if (m_cfg.async) { detail::TaskExecutor::get_instance().add_task(task); }

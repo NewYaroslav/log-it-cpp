@@ -625,6 +625,59 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #endif
 
 //------------------------------------------------------------------------------
+// Raw logging macros
+
+/// \brief Logs an already formatted raw message without applying logger formatter patterns or level filters.
+/// \param message Raw message text.
+#define LOGIT_RAW(message)                                                                 \
+    do {                                                                                   \
+        logit::Logger::get_instance().log_and_return(                                      \
+            logit::LogRecord{logit::LogLevel::LOG_LVL_INFO, LOGIT_CURRENT_TIMESTAMP_MS(),  \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                     \
+            LOGIT_FUNCTION, message, {}, -1, false, false, true});                         \
+    } while (0)
+
+/// \brief Logs an already formatted raw message to a specific logger.
+/// \param index Logger index.
+/// \param message Raw message text.
+#define LOGIT_RAW_TO(index, message)                                                       \
+    do {                                                                                   \
+        logit::Logger::get_instance().log_and_return(                                      \
+            logit::LogRecord{logit::LogLevel::LOG_LVL_INFO, LOGIT_CURRENT_TIMESTAMP_MS(),  \
+            logit::make_relative(__FILE__, LOGIT_BASE_PATH), __LINE__,                     \
+            LOGIT_FUNCTION, message, {}, index, false, false, true});                      \
+    } while (0)
+
+/// \brief Logs a raw message when the condition is true.
+/// \param condition Condition controlling emission.
+/// \param message Raw message text.
+#define LOGIT_RAW_IF(condition, message)                                                   \
+    do {                                                                                   \
+        if (condition) {                                                                    \
+            LOGIT_RAW(message);                                                            \
+        }                                                                                  \
+    } while (0)
+
+/// \brief Logs a raw section header in `[name]` form.
+/// \param name Section name.
+#define LOGIT_SECTION(name) LOGIT_RAW(::logit::detail::make_section(name))
+
+/// \brief Logs a raw section header to a specific logger.
+/// \param index Logger index.
+/// \param name Section name.
+#define LOGIT_SECTION_TO(index, name) LOGIT_RAW_TO(index, ::logit::detail::make_section(name))
+
+/// \brief Logs a raw section header when the condition is true.
+/// \param condition Condition controlling emission.
+/// \param name Section name.
+#define LOGIT_SECTION_IF(condition, name)                                                  \
+    do {                                                                                   \
+        if (condition) {                                                                    \
+            LOGIT_SECTION(name);                                                           \
+        }                                                                                  \
+    } while (0)
+
+//------------------------------------------------------------------------------
 // Macros for each log level
 
 #if LOGIT_COMPILED_LEVEL <= LOGIT_LEVEL_TRACE

@@ -43,10 +43,10 @@ namespace logit { namespace detail {
                 logit::make_relative(file_, LOGIT_BASE_PATH),
                 line_,
                 function_,
-                std::string(), std::string(),
+                msg, std::string(),
                 logger_index_,
                 false
-            }, msg);
+            });
         }
 
     private:

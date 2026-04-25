@@ -78,6 +78,15 @@ namespace logit { namespace detail {
         return oss.str();
     }
 
+    /// \brief Format a raw section name as `[name]`.
+    /// \tparam T Section name type supporting operator<<.
+    /// \param name Section name.
+    /// \return Section header text.
+    template <typename T>
+    inline std::string make_section(const T& name) {
+        return "[" + to_string_any(name) + "]";
+    }
+
 }} // namespace logit::detail
 
 #endif

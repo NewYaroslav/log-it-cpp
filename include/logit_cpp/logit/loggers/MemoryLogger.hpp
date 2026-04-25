@@ -52,7 +52,8 @@ namespace logit {
 
         /// \brief Store a formatted message in the buffer and evict old entries.
         void log(const LogRecord& record, const std::string& message) override {
-            if (static_cast<int>(record.log_level) < m_log_level.load(std::memory_order_relaxed)) {
+            if (!record.raw_mode &&
+                static_cast<int>(record.log_level) < m_log_level.load(std::memory_order_relaxed)) {
                 return;
             }
 

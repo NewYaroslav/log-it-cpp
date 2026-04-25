@@ -26,8 +26,9 @@ namespace logit {
         mutable std::vector<VariableValue> args_array;  ///< Argument values for the log.
         std::thread::id     thread_id;      ///< ID of the logging thread.
         const int           logger_index;   ///< Logger index (-1 to log to all).
-        const bool          print_mode;     ///< Flag to determine whether arguments are printed in a raw format without special symbols.
-        const bool          fmt_mode;       ///< Flag indicating if fmt formatting should be used.
+        const bool          print_mode : 1; ///< Flag to determine whether arguments are printed in a raw format without special symbols.
+        const bool          fmt_mode   : 1; ///< Flag indicating if fmt formatting should be used.
+        const bool          raw_mode   : 1; ///< Flag indicating if formatter and level filters should be bypassed.
 
         /// \brief Constructor with argument names.
         /// \param log_level Log severity level.
@@ -39,6 +40,8 @@ namespace logit {
         /// \param arg_names Names of the log arguments.
         /// \param logger_index Logger index (-1 for all loggers).
         /// \param print_mode Flag indicating if the log should print arguments in a raw format (true) or use formatted output (false).
+        /// \param fmt_mode Flag indicating if fmt formatting should be used.
+        /// \param raw_mode Flag indicating if formatter and level filters should be bypassed.
         LogRecord(
             LogLevel log_level,
             int64_t timestamp_ms,
@@ -49,7 +52,8 @@ namespace logit {
             const std::string& arg_names,
             int logger_index,
             bool print_mode,
-            bool fmt_mode = false) :
+            bool fmt_mode = false,
+            bool raw_mode = false) :
                 log_level(log_level),
                 timestamp_ms(timestamp_ms),
                 file(file),
@@ -60,7 +64,8 @@ namespace logit {
                 thread_id(std::this_thread::get_id()),
                 logger_index(logger_index),
                 print_mode(print_mode),
-                fmt_mode(fmt_mode) {
+                fmt_mode(fmt_mode),
+                raw_mode(raw_mode) {
         };
     };
 

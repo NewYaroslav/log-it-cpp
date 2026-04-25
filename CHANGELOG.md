@@ -8,9 +8,15 @@
   to previous mutex-only releases.
 - Hot queue resizing for the MPSC build guarded by `m_resizing` and
   `m_resize_cv`, allowing capacity changes without dropping accepted tasks.
+- Raw and section logging macros for unformatted diagnostic snapshots that
+  bypass log-level filters while still using configured backends and queues.
 
 ### Changed
 - `QueuePolicy::DropOldest` now drops the incoming task when
   `LOGIT_USE_MPSC_RING` is defined. This preserves FIFO execution of accepted
   work, avoids producer/consumer contention, and keeps the implementation
   TSAN-friendly.
+
+### Fixed
+- `LOGIT_SCOPE_*` timers no longer crash when logging duration messages without
+  argument names.

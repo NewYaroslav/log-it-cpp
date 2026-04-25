@@ -86,6 +86,12 @@ int main() {
     LOGIT_SET_MAX_QUEUE(64);
     LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_DROP);
 
+    LOGIT_SECTION("App");
+    LOGIT_RAW("Name: sample.desktop.app");
+    LOGIT_RAW("Version: 3.3.106.wzr");
+    LOGIT_SECTION("Proxy");
+    LOGIT_RAW("Proxy enabled: False");
+
     log_depth_fixture();
 
     LOGIT_TRACE0();
@@ -149,6 +155,7 @@ int main() {
 
     // Wait for all logs to flush
     LOGIT_WAIT();
+    std::cout << "Default log was written to file: " << LOGIT_GET_LAST_FILE_PATH(1) << std::endl;
 
     // Logging exceptions
     try {

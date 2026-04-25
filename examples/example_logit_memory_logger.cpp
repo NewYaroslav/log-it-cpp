@@ -12,6 +12,10 @@ int main() {
     LOGIT_INFO("This goes to the regular backends");
     LOGIT_INFO_TO(1, "Remote control can fetch this later");
     LOGIT_WARN_TO(1, "Latest warning for the control plane");
+    LOGIT_SECTION_TO(1, "Network Settings");
+    LOGIT_RAW_TO(1, "Protocol: https");
+    LOGIT_RAW_TO(1, "Transport Mode: standard");
+    LOGIT_RAW_TO(1, "DNS Server: 1.1.1.1");
 
     const auto recent_lines = LOGIT_GET_BUFFERED_STRINGS(1);
     const auto recent_entries = LOGIT_GET_BUFFERED_ENTRIES(1);

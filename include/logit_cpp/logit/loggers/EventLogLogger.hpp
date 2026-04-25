@@ -57,10 +57,11 @@ namespace logit {
         /// \param rec Log metadata.
         /// \param msg UTF-8 message text.
         void log(const LogRecord& rec, const std::string& msg) override {
-            LogLevel lvl = rec.log_level;
+            LogLevel lvl = rec.raw_mode ? LogLevel::LOG_LVL_INFO : rec.log_level;
+            bool raw_mode = rec.raw_mode;
             std::string s = msg;
-            auto task = [this, lvl, s]() {
-                if (static_cast<int>(lvl) < m_level.load()) return;
+            auto task = [this, lvl, raw_mode, s]() {
+                if (!raw_mode && static_cast<int>(lvl) < m_level.load()) return;
                 if (!m_hsrc) return;
                 WORD type = m_map(lvl);
                 int n = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), static_cast<int>(s.size()), nullptr, 0);

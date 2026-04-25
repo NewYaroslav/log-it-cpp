@@ -179,7 +179,8 @@ namespace logit {
 
                 std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
                 if (!strategy->enabled) return;
-                if (static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) return;
+                if (!record.raw_mode &&
+                    static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) return;
                 dispatch_to_strategy(*strategy, record);
                 return;
             }
@@ -190,7 +191,8 @@ namespace logit {
                 std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
                 if (strategy->single_mode) continue;
                 if (!strategy->enabled) continue;
-                if (static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) continue;
+                if (!record.raw_mode &&
+                    static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) continue;
 
                 dispatch_to_strategy(*strategy, record);
             }
@@ -417,6 +419,10 @@ namespace logit {
         };
 
         void dispatch_to_strategy(LoggerStrategy& strategy, const LogRecord& record) {
+            if (record.raw_mode) {
+                strategy.logger->log(record, record.format);
+                return;
+            }
             if (strategy.formatter && strategy.formatter->is_passthrough()) {
                 strategy.logger->log(record, record.format);
                 return;

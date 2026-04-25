@@ -63,6 +63,8 @@ int main() {
     LOGIT_PRINTF_WARN("Задержка %.2f ms", latency_ms);
     LOGIT_FORMAT_INFO("%.2f", 1.23f, 4.56f);
     LOGIT_INFO_TAG(({{"order_id", 123}, {"side", "BUY"}}), "отправлен ордер");
+    LOGIT_SECTION("Proxy");
+    LOGIT_RAW("Proxy enabled: False");
     LOGIT_STREAM_INFO() << "Потоковый вывод: " << attempt;
 
     LOGIT_WAIT();
@@ -314,6 +316,8 @@ LOGIT_ADD_LOGGER(CustomLogger, (), logit::SimpleLogFormatter, ("%v"));
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Логирование каждого `n`-го вызова. |
 | `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Логирование не чаще одного раза за `period_ms` миллисекунд. |
 | `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Добавление к сообщению пар ключ-значение. |
+| `LOGIT_RAW(msg)`, `LOGIT_RAW_TO(index, msg)`, `LOGIT_RAW_IF(condition, msg)` | Вывод готового текста без фильтрации по уровню и без применения formatter-паттерна. |
+| `LOGIT_SECTION(name)`, `LOGIT_SECTION_TO(index, name)`, `LOGIT_SECTION_IF(condition, name)` | Вывод raw-секций вида `[Proxy]`. |
 | `LOGIT_<LEVEL>_TO(index, ...)` | Логирование только в логгер с указанным индексом, включая single-mode бэкенды. |
 | `LOGIT_PRINT_<LEVEL>_TO(...)`, `LOGIT_PRINTF_<LEVEL>_TO(...)`, `LOGIT_FORMAT_<LEVEL>_TO(...)`, `LOGIT_FMT_<LEVEL>_TO(...)`, `LOGIT_STREAM_<LEVEL>_TO(...)` | Таргетированные варианты для print/printf/format/fmt/stream. |
 | `LOGIT_SCOPE_<LEVEL>(phase)` / `LOGIT_SCOPE_<LEVEL>_T(threshold_ms, phase)` | RAII-макросы для логирования длительности scope, опционально только при превышении порога. |

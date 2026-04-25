@@ -86,7 +86,8 @@ namespace logit {
         /// \\param record Log metadata.
         /// \\param message Formatted message text.
         void log(const LogRecord& record, const std::string& message) override {
-            if (static_cast<int>(record.log_level) < m_log_level.load(std::memory_order_relaxed)) {
+            if (!record.raw_mode &&
+                static_cast<int>(record.log_level) < m_log_level.load(std::memory_order_relaxed)) {
                 return;
             }
 
