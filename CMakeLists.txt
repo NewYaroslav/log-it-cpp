@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.18)
-project(log-it-cpp VERSION 1.0.0 LANGUAGES CXX)
+project(log-it-cpp VERSION 1.0.2 LANGUAGES CXX)
 
 option(LOGIT_CPP_BUILD_TESTS "Build log-it-cpp tests" ${PROJECT_IS_TOP_LEVEL})
 option(LOGIT_CPP_BUILD_EXAMPLES "Build log-it-cpp examples" OFF)

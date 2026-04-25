@@ -1,6 +1,6 @@
 {
   "name": "log-it-cpp",
-  "version-string": "1.0.0",
+  "version-string": "1.0.1",
   "description": "LogIt++ logging library",
   "homepage": "https://github.com/NewYaroslav/log-it-cpp",
   "dependencies": [
