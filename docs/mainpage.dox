@@ -820,7 +820,7 @@ LogIt++ is a header-only library, which means it can be easily included in your 
 
 \subsection step1 Step 1: Clone the Repository
 
-First, clone the LogIt++ repository from GitHub along with its submodules. The library has dependencies on other header-only libraries, such as **time-shield-cpp** (for time utilities) and **fmt** (used by `LOGIT_FMT_*` macros).
+First, clone the LogIt++ repository from GitHub along with its submodules. The required dependency is **time-shield-cpp** (for time utilities); optional features may also use **fmt**, **zlib**, or **zstd**.
 
 To clone the repository with submodules, use the following command:
 
@@ -845,10 +845,11 @@ Since LogIt++ is a header-only library, you can simply include the main header i
 
 This will give you access to the entire logging system.
 
-\subsection step3 Step 3: Configure the Path for Dependencies
+\subsection step3 Step 3: Configure Dependencies
 
-LogIt++ depends on **time-shield-cpp**, which is located in the `libs` folder as a submodule. Ensure that the path to `libs\time-shield-cpp\include` is added to your project's include directories.
-If you are using an IDE like **Visual Studio** or **CLion**, you can add the include path in the project settings.
+CMake builds first look for the required **TimeShield** package and then fall back to this repository's bundled `external/time-shield-cpp` submodule when it is present. If you vendor dependencies inside your own project, use your own install or vendor paths; the directory does not need to be named `external`.
+
+Optional dependencies are needed only for the features you enable: **fmt** for `LOGIT_WITH_FMT`, **zlib** for `LOGIT_WITH_GZIP`, and **zstd** for `LOGIT_WITH_ZSTD`. Install them as packages, provide them from your own dependency layout, or set `LOGIT_USE_SUBMODULES=ON` to let CMake use the bundled copies from this repository.
 
 \subsection step4 Step 4: Using fmt (Optional)
 
@@ -862,7 +863,7 @@ All build-time toggles:
 - `LOGIT_CPP_BUILD_EXAMPLES` (default: OFF) — build the example programs.
 - `LOGIT_BENCH_ENABLE` (default: OFF) — build the benchmarks; `LOGIT_BENCH_WITH_SPDLOG` (default: OFF) adds the spdlog comparison binaries.
 - `LOGIT_WITH_GZIP` / `LOGIT_WITH_ZSTD` (defaults: OFF) — enable gzip or zstd support for rotated files.
-- `LOGIT_WITH_FMT` (default: OFF) — include the `{}`-style formatting macros; enable `LOGIT_USE_SUBMODULES` (default: OFF) to use the bundled fmt/time-shield fallbacks if system packages are missing.
+- `LOGIT_WITH_FMT` (default: OFF) — include the `{}`-style formatting macros; `LOGIT_USE_SUBMODULES` (default: OFF) allows bundled optional dependency fallbacks such as fmt, zlib, and zstd when system packages are missing.
 - `LOGIT_WITH_SYSLOG` (default: ON on Unix-like targets) — build the syslog backend.
 - `LOGIT_WITH_WIN_EVENT_LOG` (default: ON on Windows) — build the Windows Event Log backend.
 - `LOGIT_FORCE_ASYNC_OFF` (default: OFF) — force synchronous logging even on multi-threaded builds.

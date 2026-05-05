@@ -163,9 +163,9 @@ jobs:
         if: matrix.suite == 'odr'
         working-directory: tests/odr
         run: |
-          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_a.cpp
-          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_b.cpp
-          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_logger_main.cpp
+          g++ -std=c++17 -I ../../include -I ../../external/time-shield-cpp/include -c get_logger_a.cpp
+          g++ -std=c++17 -I ../../include -I ../../external/time-shield-cpp/include -c get_logger_b.cpp
+          g++ -std=c++17 -I ../../include -I ../../external/time-shield-cpp/include -c get_logger_main.cpp
           g++ get_logger_a.o get_logger_b.o get_logger_main.o -o app_logger
       - name: Run ConsoleApp ODR header
         if: matrix.suite == 'odr'
@@ -175,9 +175,9 @@ jobs:
         if: matrix.suite == 'odr'
         working-directory: tests/odr
         run: |
-          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_a.cpp
-          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_b.cpp
-          g++ -std=c++17 -I ../../include -I ../../libs/time-shield-cpp/include -c get_executor_main.cpp
+          g++ -std=c++17 -I ../../include -I ../../external/time-shield-cpp/include -c get_executor_a.cpp
+          g++ -std=c++17 -I ../../include -I ../../external/time-shield-cpp/include -c get_executor_b.cpp
+          g++ -std=c++17 -I ../../include -I ../../external/time-shield-cpp/include -c get_executor_main.cpp
           g++ get_executor_a.o get_executor_b.o get_executor_main.o -o app_executor
       - name: Run Task Executor ODR header
         if: matrix.suite == 'odr'
@@ -220,7 +220,7 @@ jobs:
             vcpkg
             vcpkg/downloads
             vcpkg/installed
-          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_TAG }}-${{ hashFiles('vcpkg-overlay/ports/**', 'libs/time-shield-cpp/vcpkg-overlay/ports/**') }}
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_TAG }}-${{ hashFiles('vcpkg-overlay/ports/**', 'external/time-shield-cpp/vcpkg-overlay/ports/**') }}
       - name: Install vcpkg
         if: matrix.suite == 'vcpkg-install' && steps.cache-vcpkg.outputs.cache-hit != 'true'
         run: |
@@ -231,7 +231,7 @@ jobs:
         run: |
           ./vcpkg/vcpkg install log-it-cpp \
             --overlay-ports=vcpkg-overlay/ports \
-            --overlay-ports=libs/time-shield-cpp/vcpkg-overlay/ports
+            --overlay-ports=external/time-shield-cpp/vcpkg-overlay/ports
       - name: Configure consumer project
         if: matrix.suite == 'vcpkg-install'
         run: cmake -B build -S tests/install_consumer -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
@@ -246,7 +246,7 @@ jobs:
             vcpkg
             vcpkg/downloads
             vcpkg/installed
-          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_TAG }}-${{ hashFiles('vcpkg-overlay/ports/**', 'libs/time-shield-cpp/vcpkg-overlay/ports/**') }}
+          key: ${{ runner.os }}-vcpkg-${{ env.VCPKG_TAG }}-${{ hashFiles('vcpkg-overlay/ports/**', 'external/time-shield-cpp/vcpkg-overlay/ports/**') }}
       - name: Upload logs
         if: failure()
         uses: actions/upload-artifact@v4

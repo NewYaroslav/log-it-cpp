@@ -52,6 +52,8 @@ git submodule update --init --recursive
 Read the matching file in `agents/` when the task needs more detail:
 
 - `agents/README.md` - index of available agent instructions.
+- `agents/codebase-orientation.md` - project map, subsystem model, extension
+  recipes, and safety invariants for AI agents.
 - `agents/commit-conventions.md` - commit message rules.
 - `agents/cpp-development-guidelines.md` - naming and style guidance.
 - `agents/header-implementation-guidelines.md` - `.hpp` / `.ipp` / `.tpp`

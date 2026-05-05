@@ -11,8 +11,8 @@ Before configuring or building, make sure submodules are present:
 git submodule update --init --recursive
 ```
 
-This repository depends on bundled submodules such as `libs/time-shield-cpp`,
-and optional builds may also use `libs/fmt`, `libs/zlib`, or `libs/zstd`.
+This repository depends on bundled submodules such as `external/time-shield-cpp`,
+and optional builds may also use `external/fmt`, `external/zlib`, or `external/zstd`.
 
 ## General build expectations
 
@@ -32,8 +32,8 @@ From `CMakeLists.txt` and `README.md`, the most relevant toggles are:
 - `LOGIT_BENCH_WITH_SPDLOG` - include the spdlog comparison benchmarks.
 - `LOGIT_WITH_FMT` - enable `{}`-style formatting support.
 - `LOGIT_WITH_GZIP` / `LOGIT_WITH_ZSTD` - enable rotated-file compression.
-- `LOGIT_USE_SUBMODULES` - allow bundled dependency fallbacks when system
-  packages are missing.
+- `LOGIT_USE_SUBMODULES` - allow bundled optional dependency fallbacks when
+  system packages are missing.
 - `LOGIT_WITH_SYSLOG` - enable the POSIX syslog backend on supported targets.
 - `LOGIT_WITH_WIN_EVENT_LOG` - enable the Windows Event Log backend on Windows.
 - `LOGIT_FORCE_ASYNC_OFF` - force synchronous logging.

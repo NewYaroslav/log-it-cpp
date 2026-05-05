@@ -1,15 +1,15 @@
-[submodule "libs/time-shield-cpp"]
-	path = libs/time-shield-cpp
+[submodule "external/time-shield-cpp"]
+	path = external/time-shield-cpp
 	url = https://github.com/NewYaroslav/time-shield-cpp.git
-[submodule "libs/fmt"]
-	path = libs/fmt
+[submodule "external/fmt"]
+	path = external/fmt
 	url = https://github.com/fmtlib/fmt.git
 [submodule ".github/doxygen-awesome-css"]
 	path = .github/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
-[submodule "libs/zstd"]
-	path = libs/zstd
+[submodule "external/zstd"]
+	path = external/zstd
 	url = https://github.com/facebook/zstd.git
-[submodule "libs/zlib"]
-	path = libs/zlib
+[submodule "external/zlib"]
+	path = external/zlib
 	url = https://github.com/madler/zlib

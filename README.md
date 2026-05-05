@@ -35,11 +35,11 @@ The library ships with self-contained umbrella headers that provide a predictabl
 | `<logit/formatter.hpp>` | Provides formatter interfaces and the default pattern compiler implementation. |
 | `<logit/loggers.hpp>` | Exposes the logger backends and prepares their internal dependencies. |
 
-Leaf headers follow the **Nearest Header Requirement (NHR)**: include the matching umbrella *first* and then the specific header you need, e.g.
+Most application code should include `<logit.hpp>`. If you work directly with a module class and need a leaf header, follow the **Nearest Header Requirement (NHR)**: include the matching umbrella *first* and then the specific header, e.g. for direct use of `MemoryLogger`:
 
 ```cpp
-#include <logit/utils.hpp>
-#include <logit/utils/LogRecord.hpp>
+#include <logit/loggers.hpp>
+#include <logit/loggers/MemoryLogger.hpp>
 ```
 
 Internal headers under `logit/detail/` are private implementation details and should not be included directly by consumers.
@@ -827,10 +827,11 @@ git clone --recurse-submodules https://github.com/NewYaroslav/log-it-cpp.git
 #include <logit.hpp>
 ```
 
-3. Set up include paths for dependencies like time-shield-cpp.
+3. Configure dependencies.
 
-LogIt++ depends on **time-shield-cpp**, which is located in the `libs` folder as a submodule. Ensure that the path to `libs\time-shield-cpp\include` is added to your project's include directories.
-If you are using an IDE like **Visual Studio** or **CLion**, you can add the include path in the project settings.
+CMake builds first look for the required **TimeShield** package and then fall back to this repository's bundled `external/time-shield-cpp` submodule when it is present. If you vendor dependencies inside your own project, use your own install or vendor paths; the directory does not need to be named `external`.
+
+Optional dependencies are needed only for the features you enable: **fmt** for `LOGIT_WITH_FMT`, **zlib** for `LOGIT_WITH_GZIP`, and **zstd** for `LOGIT_WITH_ZSTD`. Install them as packages, provide them from your own dependency layout, or set `LOGIT_USE_SUBMODULES=ON` to let CMake use the bundled copies from this repository.
 
 4. (Optional) Enable fmt-style macros:
 
@@ -844,7 +845,7 @@ The following toggles cover all build-time features:
 - `LOGIT_CPP_BUILD_EXAMPLES` (default: OFF) — build the example programs.
 - `LOGIT_BENCH_ENABLE` (default: OFF) — build benchmarks; `LOGIT_BENCH_WITH_SPDLOG` (default: OFF) also builds the spdlog comparisons.
 - `LOGIT_WITH_GZIP` / `LOGIT_WITH_ZSTD` (defaults: OFF) — enable gzip or zstd support for rotated files.
-- `LOGIT_WITH_FMT` (default: OFF) — include the `{}`-style formatting macros; enable `LOGIT_USE_SUBMODULES` (default: OFF) to pull the bundled fmt/time-shield fallbacks when system packages are missing.
+- `LOGIT_WITH_FMT` (default: OFF) — include the `{}`-style formatting macros; `LOGIT_USE_SUBMODULES` (default: OFF) allows bundled optional dependency fallbacks such as fmt, zlib, and zstd when system packages are missing.
 - `LOGIT_WITH_SYSLOG` (default: ON on Unix-like targets) — build the syslog backend.
 - `LOGIT_WITH_WIN_EVENT_LOG` (default: ON on Windows) — build the Windows Event Log backend.
 - `LOGIT_FORCE_ASYNC_OFF` (default: OFF) — force synchronous logging even in multi-threaded builds.

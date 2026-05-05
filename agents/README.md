@@ -5,6 +5,8 @@ Agent-specific instruction files for `log-it-cpp`.
 ## Files
 
 - `commit-conventions.md` - Conventional Commit format and commit-body rules.
+- `codebase-orientation.md` - project map, subsystem model, extension recipes,
+  safety invariants, and practical guidance for AI agents.
 - `cpp-development-guidelines.md` - naming, comments, file naming, include
   ordering, and small style rules for this library.
 - `header-implementation-guidelines.md` - ownership rules for `.hpp`, `.ipp`,
