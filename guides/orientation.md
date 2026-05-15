@@ -1,7 +1,7 @@
 # Codebase Orientation
 
 Use this file when you need a fast, project-specific mental model before
-changing `log-it-cpp`. It complements the narrower playbooks in `agents/` and
+changing `log-it-cpp`. It complements the narrower playbooks in `guides/` and
 does not replace them.
 
 ## Quick Model
@@ -40,8 +40,7 @@ needed, include the nearest umbrella first:
 #include <logit/loggers/MemoryLogger.hpp>
 ```
 
-See `agents/header-implementation-guidelines.md` before changing include
-structure.
+See `guides/header-impl.md` before changing include structure.
 
 ## Subsystems
 
@@ -125,7 +124,7 @@ Be cautious copying:
 
 ## Style Notes
 
-The canonical style rules live in `agents/cpp-development-guidelines.md`.
+The canonical style rules live in `guides/cpp_style.md`.
 Important project-specific points:
 
 - Classes, structs, and enum types use `CamelCase`; methods use `snake_case`.
@@ -331,7 +330,7 @@ changing async behavior, run the relevant backpressure tests and prefer a full
 | Path | Purpose | Edit when |
 | --- | --- | --- |
 | `AGENTS.md` | Root agent rules and playbook index. | Agent workflow or repository-wide guidance changes. |
-| `agents/` | Detailed agent playbooks. | A recurring agent workflow needs documented project-specific rules. |
+| `guides/` | Detailed agent playbooks. | A recurring agent workflow needs documented project-specific rules. |
 | `include/logit_cpp/logit.hpp` | Full umbrella header. | Public entry-point composition changes. |
 | `include/logit_cpp/logit/config.hpp` | Config macros and default paths/patterns. | Adding compile-time knobs or default settings. |
 | `include/logit_cpp/logit/enums.hpp` | Public enums and enum-to-string helpers. | Adding public enum values or logger parameters. |
@@ -366,8 +365,8 @@ changing async behavior, run the relevant backpressure tests and prefer a full
 ## Final Checklist For Agents
 
 - Read the narrow playbook that matches the task:
-  `logging-macro-guidelines.md`, `header-implementation-guidelines.md`,
-  `build-and-test.md`, or `commit-conventions.md`.
+  `guides/logging-macros.md`, `guides/header-impl.md`,
+  `guides/build.md`, or `guides/commits.md`.
 - Use umbrella headers and preserve include policy.
 - Keep C++11 compatibility unless the code path is explicitly C++17-gated.
 - Keep async and snapshot APIs thread-safe.

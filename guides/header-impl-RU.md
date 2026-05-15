@@ -4,7 +4,7 @@
 
 Канонической версией является английская:
 
-- `agents/header-implementation-guidelines.md`
+- `guides/header-impl.md`
 
 ## Сначала выберите модель подсистемы
 

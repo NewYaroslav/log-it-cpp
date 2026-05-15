@@ -5,7 +5,7 @@ Use this document when you are changing `.hpp`, `.ipp`, or `.tpp` structure.
 English is the canonical version.
 
 Russian localization:
-- `agents/header-implementation-guidelines-RU.md`
+- `guides/header-impl-RU.md`
 
 ## Decide the subsystem model first
 

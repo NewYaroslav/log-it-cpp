@@ -43,7 +43,7 @@
 
 ## Header / implementation ownership
 
-- Use `header-implementation-guidelines.md` for `.hpp` / `.ipp` / `.tpp` ownership and include-structure policy.
+- Use `guides/header-impl.md` for `.hpp` / `.ipp` / `.tpp` ownership and include-structure policy.
 - Keep this file focused on naming and formatting rather than duplicating the full header policy.
 
 ## Constants and macros

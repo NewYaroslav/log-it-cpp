@@ -49,15 +49,18 @@ git submodule update --init --recursive
 
 ## Detailed Playbooks
 
-Read the matching file in `agents/` when the task needs more detail:
+Read the matching file in `guides/` when the task needs more detail:
 
-- `agents/README.md` - index of available agent instructions.
-- `agents/codebase-orientation.md` - project map, subsystem model, extension
+- `guides/README.md` - index of available agent instructions.
+- `guides/orientation.md` - project map, subsystem model, extension
   recipes, and safety invariants for AI agents.
-- `agents/commit-conventions.md` - commit message rules.
-- `agents/cpp-development-guidelines.md` - naming and style guidance.
-- `agents/header-implementation-guidelines.md` - `.hpp` / `.ipp` / `.tpp`
+- `guides/commits.md` - commit message rules.
+- `guides/cpp_style.md` - naming and style guidance.
+- `guides/header-impl.md` - `.hpp` / `.ipp` / `.tpp`
   ownership and include-structure rules.
-- `agents/logging-macro-guidelines.md` - macro-first logging guidance for
+- `guides/header-impl-RU.md` - Russian localization of the header ownership playbook.
+- `guides/logging-macros.md` - macro-first logging guidance for
   normal application code and agent behavior.
-- `agents/build-and-test.md` - submodules, configure/build/test/bench flow.
+- `guides/concurrency.md` - thread-safety contracts, callback dispatch,
+  mutex ordering, and shutdown invariants.
+- `guides/build.md` - submodules, configure/build/test/bench flow.
