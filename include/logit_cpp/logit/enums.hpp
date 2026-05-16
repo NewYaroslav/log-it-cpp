@@ -132,7 +132,39 @@ namespace logit {
             "\033[96m",   // Cyan
             "\033[97m"    // White
         };
-        return ansi_codes[static_cast<size_t>(color)];
+
+        // Convert TextColor to a string with an ANSI code
+        return ansi_codes[static_cast<int>(color)];
+    }
+
+    /// \brief Convert TextColor to a std::string (ANSI escape codes).
+    /// \param color The text color.
+    /// \return std::string representing the ANSI escape code for the color.
+    inline std::string to_string(TextColor color) {
+        return std::string(to_c_str(color));
+    }
+
+    /// \brief Get the ANSI color code associated with a log level.
+    /// \param log_level The log level.
+    /// \return ANSI escape code string representing the color for the log level.
+    inline std::string get_log_level_color(LogLevel log_level) {
+        switch (log_level) {
+            case LogLevel::LOG_LVL_TRACE:
+                return to_string(LOGIT_COLOR_TRACE);
+            case LogLevel::LOG_LVL_DEBUG:
+                return to_string(LOGIT_COLOR_DEBUG);
+            case LogLevel::LOG_LVL_INFO:
+                return to_string(LOGIT_COLOR_INFO);
+            case LogLevel::LOG_LVL_WARN:
+                return to_string(LOGIT_COLOR_WARN);
+            case LogLevel::LOG_LVL_ERROR:
+                return to_string(LOGIT_COLOR_ERROR);
+            case LogLevel::LOG_LVL_FATAL:
+                return to_string(LOGIT_COLOR_FATAL);
+            default:
+                break;
+        }
+        return to_string(LOGIT_COLOR_DEFAULT);
     }
 
 }; // namespace logit
