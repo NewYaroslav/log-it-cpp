@@ -26,4 +26,8 @@
 #include "loggers/SystemLogger.hpp"
 #include "loggers/CrashLogger.hpp"
 
+#ifdef LOGIT_WITH_OTLP
+#include "loggers/OtlpHttpLogger.hpp"
+#endif
+
 #endif // _LOGIT_LOGGERS_HPP_INCLUDED
