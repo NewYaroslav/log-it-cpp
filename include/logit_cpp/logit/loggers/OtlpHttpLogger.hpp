@@ -12,7 +12,6 @@
 #include "ILogger.hpp"
 #include "otlp/OtlpHttpLoggerConfig.hpp"
 #include "otlp/OtlpJsonSerializer.hpp"
-#include "../config.hpp"
 
 #ifndef KURLYK_WEBSOCKET_SUPPORT
 #   define KURLYK_WEBSOCKET_SUPPORT 0
