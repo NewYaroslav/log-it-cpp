@@ -27,6 +27,7 @@
 #include <cstdint>
 #include <deque>
 #include <future>
+#include <limits>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -126,6 +127,8 @@ namespace logit {
             switch (param) {
             case LoggerParam::LastLogTimestamp: return std::to_string(get_last_log_ts());
             case LoggerParam::TimeSinceLastLog: return std::to_string(get_time_since_last_log());
+            case LoggerParam::DroppedLogCount: return std::to_string(dropped_count());
+            case LoggerParam::FailedExportCount: return std::to_string(failed_export_count());
             default:
                 break;
             }
@@ -139,6 +142,8 @@ namespace logit {
             switch (param) {
             case LoggerParam::LastLogTimestamp: return get_last_log_ts();
             case LoggerParam::TimeSinceLastLog: return get_time_since_last_log();
+            case LoggerParam::DroppedLogCount: return counter_to_int64(dropped_count());
+            case LoggerParam::FailedExportCount: return counter_to_int64(failed_export_count());
             default:
                 break;
             }
@@ -147,13 +152,17 @@ namespace logit {
 
         /// \brief Retrieves a floating-point parameter from the logger.
         /// \param param Parameter to retrieve.
-        /// \return Parameter value in seconds, or 0.0 when unsupported.
+        /// \return Parameter value in seconds for time params, raw count for counter params, or 0.0 when unsupported.
         double get_float_param(const LoggerParam& param) const override {
             switch (param) {
             case LoggerParam::LastLogTimestamp:
                 return static_cast<double>(get_last_log_ts()) / 1000.0;
             case LoggerParam::TimeSinceLastLog:
                 return static_cast<double>(get_time_since_last_log()) / 1000.0;
+            case LoggerParam::DroppedLogCount:
+                return static_cast<double>(dropped_count());
+            case LoggerParam::FailedExportCount:
+                return static_cast<double>(failed_export_count());
             default:
                 break;
             }
@@ -316,6 +325,14 @@ namespace logit {
             }
             const int64_t now = LOGIT_CURRENT_TIMESTAMP_MS();
             return now > last ? now - last : 0;
+        }
+
+        /// \brief Converts unsigned counter value to int64_t with saturation.
+        /// \param value Counter value.
+        /// \return Counter value clamped to int64_t max.
+        static int64_t counter_to_int64(uint64_t value) {
+            const uint64_t max_value = static_cast<uint64_t>((std::numeric_limits<int64_t>::max)());
+            return value > max_value ? (std::numeric_limits<int64_t>::max)() : static_cast<int64_t>(value);
         }
     };
 

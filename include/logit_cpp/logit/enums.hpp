@@ -48,7 +48,9 @@ namespace logit {
         LastFileName,          ///< The name of the last file written to.
         LastFilePath,          ///< The full path of the last file written to.
         LastLogTimestamp,      ///< The timestamp of the last log.
-        TimeSinceLastLog       ///< The time elapsed since the last log in seconds.
+        TimeSinceLastLog,      ///< The time elapsed since the last log in seconds.
+        DroppedLogCount,       ///< Number of log records dropped by the backend.
+        FailedExportCount      ///< Number of failed export attempts reported by the backend.
     };
 
     /// \enum CompressType
