@@ -64,6 +64,24 @@ LogIt++ -> OtlpHttpLogger -> kurlyk::HttpClient -> OpenTelemetry Collector / Lok
 
 Resource attributes are configured through `OtlpHttpLoggerConfig`, including `service.name`, `service.namespace`, `service.instance.id`, and `deployment.environment.name`.
 
+## Diagnostics
+
+`OtlpHttpLogger` exposes its internal counters through the generic logger parameter API:
+
+```cpp
+const auto dropped = LOGIT_GET_INT_PARAM(otlp_index, logit::LoggerParam::DroppedLogCount);
+const auto failed = LOGIT_GET_INT_PARAM(otlp_index, logit::LoggerParam::FailedExportCount);
+```
+
+Available diagnostic params:
+
+| Parameter | Meaning |
+| --- | --- |
+| `LoggerParam::DroppedLogCount` | Number of records dropped because the backend queue overflowed or the logger was stopping. |
+| `LoggerParam::FailedExportCount` | Number of failed OTLP export attempts. |
+
+These values are also available through `get_string_param()` and `get_float_param()`. Integer retrieval saturates at `int64_t` max if the underlying unsigned counter ever exceeds that range.
+
 ## Notes
 
 - `OtlpHttpLogger` is an outbound client/exporter, not a server.
