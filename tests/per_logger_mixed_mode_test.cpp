@@ -28,7 +28,7 @@ public:
     }
 
     ~CountingLogger() override {
-        if (m_executor) m_executor->shutdown();
+        shutdown();
     }
 
     void log(const LogRecord& record, const std::string& message) override {
@@ -54,6 +54,11 @@ public:
         if (!m_cfg.async) return;
         if (m_executor) m_executor->wait();
         else logit::detail::TaskExecutor::get_instance().wait();
+    }
+
+    void shutdown() override {
+        wait();
+        if (m_executor) m_executor->shutdown();
     }
 
     std::size_t count() const { return m_count.load(std::memory_order_relaxed); }
