@@ -388,8 +388,8 @@ namespace logit {
         ///
         /// Ensures that all log messages are fully processed before continuing.
         void wait() {
-            LoggerReadLock lock(m_loggers_mx);
-            for (const auto& strategy : m_loggers) {
+            const auto snapshot = get_all_strategy_snapshots();
+            for (const auto& strategy : snapshot) {
                 if (!strategy) continue;
                 strategy->logger->wait();
             }
@@ -400,9 +400,14 @@ namespace logit {
         /// Disables further logging, waits for asynchronous tasks to complete,
         /// and shuts down TaskExecutor.
         void shutdown() {
-            if (m_shutdown) return;
-            m_shutdown = true;
-            wait();
+            if (m_shutdown.exchange(true)) return;
+
+            const auto snapshot = get_all_strategy_snapshots();
+            for (const auto& strategy : snapshot) {
+                if (!strategy) continue;
+                std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                strategy->logger->shutdown();
+            }
             detail::TaskExecutor::get_instance().shutdown();
         }
 
@@ -439,6 +444,11 @@ namespace logit {
                 return m_loggers[logger_index];
             }
             return std::shared_ptr<LoggerStrategy>();
+        }
+
+        std::vector<std::shared_ptr<LoggerStrategy>> get_all_strategy_snapshots() const {
+            LoggerReadLock lock(m_loggers_mx);
+            return m_loggers;
         }
 
         std::vector<std::shared_ptr<LoggerStrategy>> m_loggers;        ///< Container for logger-formatter pairs.

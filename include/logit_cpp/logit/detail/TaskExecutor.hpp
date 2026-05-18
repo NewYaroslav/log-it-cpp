@@ -29,15 +29,10 @@
   #endif
 #endif
 
+#include "QueuePolicy.hpp"
+
 namespace logit { namespace detail {
 
-    /// \brief Queue overflow handling policy used by TaskExecutor.
-    enum class QueuePolicy {
-        DropNewest, ///< Reject the incoming task when the queue is full.
-        DropOldest, ///< Drop the oldest queued task (or the incoming one in MPSC builds).
-        Block       ///< Producers wait until capacity is available.
-    };
-    
 #   if defined(__EMSCRIPTEN__) && !defined(__EMSCRIPTEN_PTHREADS__)
     
     /// \class TaskExecutor
@@ -531,4 +526,3 @@ namespace logit { namespace detail {
 }} // namespace logit::detail
 
 #endif // _LOGIT_DETAIL_TASK_EXECUTOR_HPP_INCLUDED
-

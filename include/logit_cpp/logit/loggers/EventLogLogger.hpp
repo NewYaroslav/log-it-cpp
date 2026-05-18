@@ -5,6 +5,7 @@
 #include "ILogger.hpp"
 #include <atomic>
 #include <string>
+#include <memory>
 
 /// \file EventLogLogger.hpp
 /// \brief Logger writing to Windows Event Log.
@@ -29,6 +30,9 @@ namespace logit {
         struct Config {
             const wchar_t* source; ///< Event source name.
             bool async;           ///< Use TaskExecutor when true.
+            bool use_dedicated_executor = false; ///< Use a dedicated executor instead of the global TaskExecutor; native builds create one worker thread per logger.
+            std::size_t queue_capacity = 0;       ///< Maximum queue size for the dedicated executor (0 = unlimited).
+            detail::QueuePolicy queue_policy = detail::QueuePolicy::Block; ///< Overflow policy for the dedicated executor.
             /// \brief Initialize configuration.
             /// \param s Source name.
             /// \param a Run asynchronously.
@@ -42,6 +46,11 @@ namespace logit {
         /// \param c Configuration options.
         explicit EventLogLogger(const Config& c) : m_cfg(c) {
             m_hsrc = RegisterEventSourceW(nullptr, m_cfg.source);
+            if (m_cfg.async && m_cfg.use_dedicated_executor) {
+                m_executor.reset(new detail::SingleThreadExecutor());
+                m_executor->set_max_queue_size(m_cfg.queue_capacity);
+                m_executor->set_queue_policy(m_cfg.queue_policy);
+            }
         }
 
         /// \brief Construct with explicit parameters.
@@ -50,8 +59,22 @@ namespace logit {
         EventLogLogger(const wchar_t* source, bool async)
             : EventLogLogger(Config(source, async)) {}
 
+        /// \brief Construct with explicit parameters and dedicated executor options.
+        EventLogLogger(
+                const wchar_t* source,
+                bool async,
+                bool use_dedicated_executor,
+                std::size_t queue_capacity,
+                detail::QueuePolicy queue_policy)
+            : EventLogLogger(make_config(
+                    source,
+                    async,
+                    use_dedicated_executor,
+                    queue_capacity,
+                    queue_policy)) {}
+
         /// \brief Deregister event source on destruction.
-        ~EventLogLogger() override { if (m_hsrc) DeregisterEventSource(m_hsrc); }
+        ~EventLogLogger() override { shutdown(); if (m_hsrc) DeregisterEventSource(m_hsrc); }
 
         /// \brief Send message to Event Log.
         /// \param rec Log metadata.
@@ -70,7 +93,7 @@ namespace logit {
                 LPCWSTR arr[1] = { wmsg.c_str() };
                 ReportEventW(m_hsrc, type, 0, 0, nullptr, 1, 0, arr, nullptr);
             };
-            if (m_cfg.async) { detail::TaskExecutor::get_instance().add_task(task); }
+            if (m_cfg.async) { if (m_executor) { m_executor->add_task(task); } else { detail::TaskExecutor::get_instance().add_task(task); } }
             else { task(); }
             m_last_ts.store(rec.timestamp_ms);
         }
@@ -99,7 +122,10 @@ namespace logit {
         LogLevel get_log_level() const override { return static_cast<LogLevel>(m_level.load()); }
 
         /// \brief Wait for asynchronous tasks to finish.
-        void wait() override { if (m_cfg.async) detail::TaskExecutor::get_instance().wait(); }
+        void wait() override { if (m_cfg.async) { if (m_executor) { m_executor->wait(); } else { detail::TaskExecutor::get_instance().wait(); } } }
+
+        /// \brief Stops logger-owned asynchronous resources after draining pending messages.
+        void shutdown() override { if (m_executor) { m_executor->shutdown(); } else if (m_cfg.async) { detail::TaskExecutor::get_instance().wait(); } }
 
     private:
         static WORD m_map(LogLevel l) {
@@ -116,6 +142,20 @@ namespace logit {
         HANDLE m_hsrc = nullptr;
         std::atomic<int> m_level{static_cast<int>(LogLevel::LOG_LVL_TRACE)};
         std::atomic<int64_t> m_last_ts{0};
+        std::unique_ptr<detail::SingleThreadExecutor> m_executor;
+
+        static Config make_config(
+                const wchar_t* source,
+                bool async,
+                bool use_dedicated_executor,
+                std::size_t queue_capacity,
+                detail::QueuePolicy queue_policy) {
+            Config config(source, async);
+            config.use_dedicated_executor = use_dedicated_executor;
+            config.queue_capacity = queue_capacity;
+            config.queue_policy = queue_policy;
+            return config;
+        }
     };
 
 #   else // stub
@@ -127,6 +167,9 @@ namespace logit {
         struct Config {
             const wchar_t* source; ///< Unused source name.
             bool async;           ///< Unused flag.
+            bool use_dedicated_executor = false; ///< Unused flag.
+            std::size_t queue_capacity = 0;       ///< Unused.
+            detail::QueuePolicy queue_policy = detail::QueuePolicy::Block; ///< Unused.
             Config(const wchar_t* s = L"", bool a = false) : source(s), async(a) {}
         };
 
@@ -141,6 +184,13 @@ namespace logit {
         /// \param source Ignored source name.
         /// \param async Ignored flag.
         EventLogLogger(const wchar_t* source, bool async) { (void)source; (void)async; }
+
+        /// \brief Construct with parameters and ignored dedicated executor options.
+        EventLogLogger(const wchar_t* source, bool async, bool use_dedicated_executor,
+                       std::size_t queue_capacity, detail::QueuePolicy queue_policy) {
+            (void)source; (void)async; (void)use_dedicated_executor;
+            (void)queue_capacity; (void)queue_policy;
+        }
 
         /// \brief Ignore log request.
         /// \param rec Log metadata.

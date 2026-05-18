@@ -113,6 +113,14 @@ namespace logit {
         /// This pure virtual function must be implemented by derived logger classes.
         /// It ensures that any pending log messages are fully processed, especially when logging asynchronously.
         virtual void wait() = 0;
+
+        /// \brief Stops logger-owned asynchronous resources after draining pending work.
+        /// \details Custom loggers may override this when they own worker
+        /// threads or queues. The default implementation preserves the
+        /// existing custom logger contract by delegating to `wait()`.
+        virtual void shutdown() {
+            wait();
+        }
     }; // ILogger
 
 }; // namespace logit

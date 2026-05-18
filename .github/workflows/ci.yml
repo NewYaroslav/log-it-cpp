@@ -276,11 +276,12 @@ jobs:
             -DLOGIT_CPP_BUILD_TESTS=ON \
             -DLOGIT_EMSCRIPTEN=ON -DLOGIT_FORCE_ASYNC_OFF=ON
       - name: Build
-        run: cmake --build build-ems --target ems_console ems_async_flush -j
+        run: cmake --build build-ems --target ems_console ems_async_flush ems_single_thread_executor -j
       - name: Run smoke tests
         run: |
           node --no-experimental-fetch build-ems/tests/ems_console.js
           node --no-experimental-fetch build-ems/tests/ems_async_flush.js
+          node --no-experimental-fetch build-ems/tests/ems_single_thread_executor.js
       - name: Upload logs
         if: failure()
         uses: actions/upload-artifact@v4

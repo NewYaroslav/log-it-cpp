@@ -6,7 +6,9 @@
 /// \brief Console logger implementation that outputs logs to the console with color support.
 
 #include "ILogger.hpp"
+#include <condition_variable>
 #include <iostream>
+#include <memory>
 #if defined(_WIN32)
 #include <windows.h>
 #endif
@@ -69,6 +71,9 @@ namespace logit {
 #else
             bool async = true;  ///< Flag indicating whether logging should be asynchronous.
 #endif
+            bool use_dedicated_executor = false; ///< Use a dedicated executor instead of the global TaskExecutor; native builds create one worker thread per logger.
+            std::size_t queue_capacity = 0;       ///< Maximum queue size for the dedicated executor (0 = unlimited).
+            detail::QueuePolicy queue_policy = detail::QueuePolicy::Block; ///< Overflow policy for the dedicated executor.
         };
 
         /// \brief Default constructor that uses default configuration.
@@ -80,6 +85,10 @@ namespace logit {
         /// \param config The configuration for the logger.
         ConsoleLogger(const Config& config) : m_config(config) {
             reset_color();
+            if (m_config.async && m_config.use_dedicated_executor) {
+                m_executor.reset(new detail::SingleThreadExecutor());
+                configure_executor(m_executor, m_config);
+            }
         }
 
         /// \brief Constructor with asynchronous flag.
@@ -89,14 +98,44 @@ namespace logit {
             reset_color();
         }
 
-        virtual ~ConsoleLogger() = default;
+        /// \brief Constructor with asynchronous and dedicated executor options.
+        ConsoleLogger(
+                bool async,
+                bool use_dedicated_executor,
+                std::size_t queue_capacity = 0,
+                detail::QueuePolicy queue_policy = detail::QueuePolicy::Block)
+            : ConsoleLogger(make_config(
+                    async,
+                    use_dedicated_executor,
+                    queue_capacity,
+                    queue_policy)) {}
+
+        virtual ~ConsoleLogger() {
+            shutdown();
+        }
 
         /// \brief Sets the logger configuration.
         /// This method sets the logger's configuration and ensures thread safety with a mutex lock.
         /// \param config The new configuration.
         void set_config(const Config& config) {
-            std::lock_guard<std::mutex> lock(m_mutex);
-            m_config = config;
+            std::shared_ptr<detail::SingleThreadExecutor> old_executor;
+            {
+                std::unique_lock<std::mutex> lock(m_mutex);
+                wait_for_pending_enqueues(lock);
+                m_config = config;
+                if (m_config.async && m_config.use_dedicated_executor) {
+                    if (!m_executor) {
+                        m_executor.reset(new detail::SingleThreadExecutor());
+                    }
+                    configure_executor(m_executor, m_config);
+                } else if (m_executor) {
+                    old_executor = m_executor;
+                    m_executor.reset();
+                }
+            }
+            if (old_executor) {
+                old_executor->shutdown();
+            }
         }
 
         /// \brief Gets the current logger configuration.
@@ -119,6 +158,7 @@ namespace logit {
 #ifdef __EMSCRIPTEN__
             std::unique_lock<std::mutex> lock(m_mutex);
             const int lvl = static_cast<int>(record.log_level);
+            std::shared_ptr<detail::SingleThreadExecutor> executor = m_executor;
             if (!m_config.async) {
 #   if defined(LOGIT_EM_BROWSER_COLORS)
                 log_ansi_js(lvl, message.c_str(), text_color_to_css(m_config.default_color));
@@ -129,18 +169,32 @@ namespace logit {
             }
             auto msg_copy = std::string(message);
             const auto def_color = m_config.default_color;
+            ++m_pending_enqueues;
             lock.unlock();
-            detail::TaskExecutor::get_instance().add_task([this, lvl, msg_copy, def_color]() {
-                std::lock_guard<std::mutex> inner_lock(m_mutex);
+            PendingEnqueue pending_enqueue(*this);
+            if (executor) {
+                executor->add_task([this, lvl, msg_copy, def_color]() {
+                    std::lock_guard<std::mutex> inner_lock(m_mutex);
 #   if defined(LOGIT_EM_BROWSER_COLORS)
-                log_ansi_js(lvl, msg_copy.c_str(), text_color_to_css(def_color));
+                    log_ansi_js(lvl, msg_copy.c_str(), text_color_to_css(def_color));
 #   else
-                log_level(lvl, msg_copy.c_str());
+                    log_level(lvl, msg_copy.c_str());
 #   endif
-            });
+                });
+            } else {
+                detail::TaskExecutor::get_instance().add_task([this, lvl, msg_copy, def_color]() {
+                    std::lock_guard<std::mutex> inner_lock(m_mutex);
+#   if defined(LOGIT_EM_BROWSER_COLORS)
+                    log_ansi_js(lvl, msg_copy.c_str(), text_color_to_css(def_color));
+#   else
+                    log_level(lvl, msg_copy.c_str());
+#   endif
+                });
+            }
             return;
 #else
             std::unique_lock<std::mutex> lock(m_mutex);
+            std::shared_ptr<detail::SingleThreadExecutor> executor = m_executor;
             if (!m_config.async) {
 #               if defined(_WIN32)
                 // For Windows, parse the message for ANSI color codes and apply them
@@ -151,17 +205,32 @@ namespace logit {
 #               endif
                 return;
             }
+            ++m_pending_enqueues;
             lock.unlock();
-            detail::TaskExecutor::get_instance().add_task([this, message](){
-                std::lock_guard<std::mutex> lock(m_mutex);
+            PendingEnqueue pending_enqueue(*this);
+            if (executor) {
+                executor->add_task([this, message](){
+                    std::lock_guard<std::mutex> lock(m_mutex);
 #               if defined(_WIN32)
-                // For Windows, parse the message for ANSI color codes and apply them
-                handle_ansi_colors_windows(message);
+                    // For Windows, parse the message for ANSI color codes and apply them
+                    handle_ansi_colors_windows(message);
 #               else
-                // For other systems, output the message as is
-                std::cout << message << std::endl;
+                    // For other systems, output the message as is
+                    std::cout << message << std::endl;
 #               endif
-            });
+                });
+            } else {
+                detail::TaskExecutor::get_instance().add_task([this, message](){
+                    std::lock_guard<std::mutex> lock(m_mutex);
+#               if defined(_WIN32)
+                    // For Windows, parse the message for ANSI color codes and apply them
+                    handle_ansi_colors_windows(message);
+#               else
+                    // For other systems, output the message as is
+                    std::cout << message << std::endl;
+#               endif
+                });
+            }
 #endif
         }
 
@@ -224,9 +293,33 @@ namespace logit {
         /// If asynchronous logging is enabled, waits for all pending log messages to be written.
         void wait() override {
             std::unique_lock<std::mutex> lock(m_mutex);
+            wait_for_pending_enqueues(lock);
+            std::shared_ptr<detail::SingleThreadExecutor> executor = m_executor;
             if (!m_config.async) return;
             lock.unlock();
-            detail::TaskExecutor::get_instance().wait();
+            if (executor) {
+                executor->wait();
+            } else {
+                detail::TaskExecutor::get_instance().wait();
+            }
+        }
+
+        /// \brief Stops the dedicated executor after draining pending messages.
+        void shutdown() override {
+            std::shared_ptr<detail::SingleThreadExecutor> executor;
+            bool async = false;
+            {
+                std::unique_lock<std::mutex> lock(m_mutex);
+                wait_for_pending_enqueues(lock);
+                async = m_config.async;
+                executor = m_executor;
+                m_executor.reset();
+            }
+            if (executor) {
+                executor->shutdown();
+            } else if (async) {
+                detail::TaskExecutor::get_instance().wait();
+            }
         }
 
     private:
@@ -234,6 +327,59 @@ namespace logit {
         Config             m_config;    ///< Configuration for the console logger.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
         std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
+        std::shared_ptr<detail::SingleThreadExecutor> m_executor;
+        std::condition_variable m_enqueue_cv;
+        std::size_t m_pending_enqueues = 0;
+
+        static void configure_executor(
+                const std::shared_ptr<detail::SingleThreadExecutor>& executor,
+                const Config& config) {
+            if (!executor) return;
+            executor->set_max_queue_size(config.queue_capacity);
+            executor->set_queue_policy(config.queue_policy);
+        }
+
+        static Config make_config(
+                bool async,
+                bool use_dedicated_executor,
+                std::size_t queue_capacity,
+                detail::QueuePolicy queue_policy) {
+            Config config;
+            config.async = async;
+            config.use_dedicated_executor = use_dedicated_executor;
+            config.queue_capacity = queue_capacity;
+            config.queue_policy = queue_policy;
+            return config;
+        }
+
+        class PendingEnqueue {
+        public:
+            explicit PendingEnqueue(ConsoleLogger& logger) : m_logger(&logger) {}
+            ~PendingEnqueue() {
+                if (m_logger) {
+                    m_logger->finish_pending_enqueue();
+                }
+            }
+            PendingEnqueue(const PendingEnqueue&) = delete;
+            PendingEnqueue& operator=(const PendingEnqueue&) = delete;
+
+        private:
+            ConsoleLogger* m_logger;
+        };
+
+        void wait_for_pending_enqueues(std::unique_lock<std::mutex>& lock) {
+            m_enqueue_cv.wait(lock, [this]() { return m_pending_enqueues == 0; });
+        }
+
+        void finish_pending_enqueue() {
+            std::lock_guard<std::mutex> lock(m_mutex);
+            if (m_pending_enqueues > 0) {
+                --m_pending_enqueues;
+            }
+            if (m_pending_enqueues == 0) {
+                m_enqueue_cv.notify_all();
+            }
+        }
 
 #       ifdef __EMSCRIPTEN__
         /// \brief Convert TextColor to a CSS color name.
