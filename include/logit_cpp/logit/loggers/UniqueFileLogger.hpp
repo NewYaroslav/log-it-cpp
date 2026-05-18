@@ -19,6 +19,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <regex>
+#include <memory>
 
 namespace logit {
 
@@ -31,11 +32,16 @@ namespace logit {
             bool        async     = false;
             int         auto_delete_days = 30;
             size_t      hash_length = 8;
+            bool        use_dedicated_executor = false;
+            std::size_t queue_capacity = 0;
+            detail::QueuePolicy queue_policy = detail::QueuePolicy::Block;
         };
 
         UniqueFileLogger() { warn(); }
         UniqueFileLogger(const Config&) { warn(); }
         UniqueFileLogger(const std::string&, bool = true, int = 30, size_t = 8) { warn(); }
+        UniqueFileLogger(const std::string&, bool, int, size_t, bool, std::size_t,
+                         detail::QueuePolicy) { warn(); }
 
         void log(const LogRecord&, const std::string&) override { warn(); }
         std::string get_string_param(const LoggerParam&) const override { return {}; }
@@ -80,6 +86,9 @@ namespace logit {
             bool        async               = true; ///< Flag indicating whether logging should be asynchronous.
             int         auto_delete_days    = 30;   ///< Number of days after which old log files are deleted.
             size_t      hash_length         = 8;    ///< Length of the hash used in filenames.
+            bool        use_dedicated_executor = false; ///< Use a dedicated executor instead of the global TaskExecutor; native builds create one worker thread per logger.
+            std::size_t queue_capacity = 0;       ///< Maximum queue size for the dedicated executor (0 = unlimited).
+            detail::QueuePolicy queue_policy = detail::QueuePolicy::Block; ///< Overflow policy for the dedicated executor.
         };
 
         /// \brief Default constructor that uses default configuration.
@@ -90,6 +99,11 @@ namespace logit {
         /// \brief Constructor with custom configuration.
         /// \param config The configuration for the logger.
         UniqueFileLogger(const Config& config) : m_config(config) {
+            if (m_config.async && m_config.use_dedicated_executor) {
+                m_executor.reset(new detail::SingleThreadExecutor());
+                m_executor->set_max_queue_size(m_config.queue_capacity);
+                m_executor->set_queue_policy(m_config.queue_policy);
+            }
             start_logging();
         }
 
@@ -110,7 +124,26 @@ namespace logit {
             start_logging();
         }
 
+        /// \brief Constructor with directory, async flag, and dedicated executor options.
+        UniqueFileLogger(
+            const std::string& directory,
+            bool async,
+            int auto_delete_days,
+            size_t hash_length,
+            bool use_dedicated_executor,
+            std::size_t queue_capacity,
+            detail::QueuePolicy queue_policy)
+            : UniqueFileLogger(make_config(
+                    directory,
+                    async,
+                    auto_delete_days,
+                    hash_length,
+                    use_dedicated_executor,
+                    queue_capacity,
+                    queue_policy)) {}
+
         virtual ~UniqueFileLogger() {
+            shutdown();
             stop_logging();
         }
 
@@ -170,7 +203,7 @@ namespace logit {
             info_lock.unlock();
 
             auto timestamp_ms = record.timestamp_ms;
-            detail::TaskExecutor::get_instance().add_task([this, message, timestamp_ms, thread_id]() {
+            auto async_task = [this, message, timestamp_ms, thread_id]() {
                 std::lock_guard<std::mutex> lock(m_mutex);
                 std::string file_path;
                 try {
@@ -203,7 +236,12 @@ namespace logit {
                 } catch (const std::exception& e) {
                     std::cerr << "Async log error: " << e.what() << std::endl;
                 }
-            });
+            };
+            if (m_executor) {
+                m_executor->add_task(std::move(async_task));
+            } else {
+                detail::TaskExecutor::get_instance().add_task(std::move(async_task));
+            }
         }
 
         /// \brief Retrieves a string parameter from the logger.
@@ -262,12 +300,26 @@ namespace logit {
         /// \brief Waits for all asynchronous tasks to complete.
         void wait() override {
             if (!m_config.async) return;
-            detail::TaskExecutor::get_instance().wait();
+            if (m_executor) {
+                m_executor->wait();
+            } else {
+                detail::TaskExecutor::get_instance().wait();
+            }
+        }
+
+        /// \brief Stops logger-owned asynchronous resources after draining pending writes.
+        void shutdown() override {
+            if (m_executor) {
+                m_executor->shutdown();
+            } else if (m_config.async) {
+                detail::TaskExecutor::get_instance().wait();
+            }
         }
 
     private:
         mutable std::mutex m_mutex;    ///< Mutex to protect file operations.
         Config             m_config;   ///< Configuration for the unique file logger.
+        std::unique_ptr<detail::SingleThreadExecutor> m_executor; ///< Dedicated executor (null = use global).
 
         struct ThreadLogInfo {
             int pending_logs;
@@ -294,6 +346,24 @@ namespace logit {
         std::atomic<int64_t> m_last_log_mono_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
         std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
 
+        static Config make_config(
+                const std::string& directory,
+                bool async,
+                int auto_delete_days,
+                size_t hash_length,
+                bool use_dedicated_executor,
+                std::size_t queue_capacity,
+                detail::QueuePolicy queue_policy) {
+            Config config;
+            config.directory = directory;
+            config.async = async;
+            config.auto_delete_days = auto_delete_days;
+            config.hash_length = hash_length;
+            config.use_dedicated_executor = use_dedicated_executor;
+            config.queue_capacity = queue_capacity;
+            config.queue_policy = queue_policy;
+            return config;
+        }
 
         /// \brief Starts the logging process by initializing the directory and removing old logs.
         void start_logging() {

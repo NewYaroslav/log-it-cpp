@@ -212,6 +212,40 @@ your workload needs a different baseline. See
 [`docs/TaskExecutor.md`](docs/TaskExecutor.md) for a full breakdown and tuning
 tips.
 
+Logger backend `Config` structs can opt into `use_dedicated_executor=true` when
+one slow sink must not delay other async loggers. On native builds this creates
+one worker thread per configured logger, so use it deliberately for expensive or
+isolated backends. Single-threaded Emscripten builds keep the same per-instance
+queue semantics but drain cooperatively on the browser event loop.
+
+You can always pass a configured backend through the generic macro:
+
+```cpp
+logit::ConsoleLogger::Config cfg;
+cfg.async = true;
+cfg.use_dedicated_executor = true;
+cfg.queue_capacity = 1024;
+cfg.queue_policy = logit::detail::QueuePolicy::Block;
+
+LOGIT_ADD_LOGGER(
+    logit::ConsoleLogger,
+    (cfg),
+    logit::SimpleLogFormatter,
+    (LOGIT_CONSOLE_PATTERN)
+);
+```
+
+Built-in helpers also expose config-first and short dedicated forms:
+
+```cpp
+LOGIT_ADD_CONSOLE_CONFIG(cfg, LOGIT_CONSOLE_PATTERN);
+LOGIT_ADD_CONSOLE_DEDICATED(
+    LOGIT_CONSOLE_PATTERN,
+    1024,
+    logit::detail::QueuePolicy::DropNewest
+);
+```
+
 ## Features
 
 - **Flexible Log Formatting**: 

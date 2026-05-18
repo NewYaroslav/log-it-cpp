@@ -1640,6 +1640,42 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::make_unique<logit::SimpleLogFormatter>(pattern),               \
         true)
 
+/// \brief Add a console logger from an explicit ConsoleLogger::Config.
+#define LOGIT_ADD_CONSOLE_CONFIG(config, pattern)                            \
+    logit::Logger::get_instance().add_logger(                                \
+        std::make_unique<logit::ConsoleLogger>(config),                      \
+        std::make_unique<logit::SimpleLogFormatter>(pattern))
+
+/// \brief Add a console logger from an explicit ConsoleLogger::Config in single_mode.
+#define LOGIT_ADD_CONSOLE_CONFIG_SINGLE_MODE(config, pattern)                \
+    logit::Logger::get_instance().add_logger(                                \
+        std::make_unique<logit::ConsoleLogger>(config),                      \
+        std::make_unique<logit::SimpleLogFormatter>(pattern),                \
+        true)
+
+/// \brief Add a console logger with explicit async executor settings.
+#define LOGIT_ADD_CONSOLE_EX(pattern, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                                \
+        std::make_unique<logit::ConsoleLogger>(                              \
+            (async), (use_dedicated_executor), (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(pattern))
+
+/// \brief Add a console logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_CONSOLE_EX_SINGLE_MODE(pattern, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                                \
+        std::make_unique<logit::ConsoleLogger>(                              \
+            (async), (use_dedicated_executor), (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(pattern),                \
+        true)
+
+/// \brief Add an async console logger backed by a dedicated executor.
+#define LOGIT_ADD_CONSOLE_DEDICATED(pattern, queue_capacity, queue_policy)   \
+    LOGIT_ADD_CONSOLE_EX((pattern), true, true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async console logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_CONSOLE_DEDICATED_SINGLE_MODE(pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_CONSOLE_EX_SINGLE_MODE((pattern), true, true, (queue_capacity), (queue_policy))
+
 /// \brief Macro for adding the default console logger.
 /// This logger uses the default format pattern and asynchronous logging.
 /// This version uses `std::make_unique`, available in C++17 and later.
@@ -1683,6 +1719,44 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::make_unique<logit::SimpleLogFormatter>(pattern),                           \
         true)
 
+/// \brief Add a file logger from an explicit FileLogger::Config.
+#define LOGIT_ADD_FILE_LOGGER_CONFIG(config, pattern)                    \
+    logit::Logger::get_instance().add_logger(                            \
+        std::make_unique<logit::FileLogger>(config),                     \
+        std::make_unique<logit::SimpleLogFormatter>(pattern))
+
+/// \brief Add a file logger from an explicit FileLogger::Config in single_mode.
+#define LOGIT_ADD_FILE_LOGGER_CONFIG_SINGLE_MODE(config, pattern)        \
+    logit::Logger::get_instance().add_logger(                            \
+        std::make_unique<logit::FileLogger>(config),                     \
+        std::make_unique<logit::SimpleLogFormatter>(pattern),            \
+        true)
+
+/// \brief Add a file logger with explicit async executor settings.
+#define LOGIT_ADD_FILE_LOGGER_EX(directory, async, auto_delete_days, pattern, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::make_unique<logit::FileLogger>(                             \
+            (directory), (async), (auto_delete_days), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy)),                           \
+        std::make_unique<logit::SimpleLogFormatter>(pattern))
+
+/// \brief Add a file logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_FILE_LOGGER_EX_SINGLE_MODE(directory, async, auto_delete_days, pattern, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::make_unique<logit::FileLogger>(                             \
+            (directory), (async), (auto_delete_days), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy)),                           \
+        std::make_unique<logit::SimpleLogFormatter>(pattern),            \
+        true)
+
+/// \brief Add an async file logger backed by a dedicated executor.
+#define LOGIT_ADD_FILE_LOGGER_DEDICATED(directory, auto_delete_days, pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_FILE_LOGGER_EX((directory), true, (auto_delete_days), (pattern), true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async file logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_FILE_LOGGER_DEDICATED_SINGLE_MODE(directory, auto_delete_days, pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_FILE_LOGGER_EX_SINGLE_MODE((directory), true, (auto_delete_days), (pattern), true, (queue_capacity), (queue_policy))
+
 /// \brief Macro for adding the default file logger.
 /// This logger writes logs to the default file path and deletes logs older than the default number of days.
 /// This version uses `std::make_unique`, available in C++17 and later.
@@ -1714,6 +1788,27 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::make_unique<logit::FileLogger>(dir, async, days, max_bytes, max_files), \
         std::make_unique<logit::SimpleLogFormatter>(pattern), \
         true)
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_EX(dir, async, days, pattern, max_bytes, max_files, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::FileLogger>( \
+            (dir), (async), (days), (max_bytes), (max_files), \
+            (use_dedicated_executor), (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(pattern))
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_EX_SINGLE_MODE(dir, async, days, pattern, max_bytes, max_files, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::FileLogger>( \
+            (dir), (async), (days), (max_bytes), (max_files), \
+            (use_dedicated_executor), (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(pattern), \
+        true)
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_DEDICATED(dir, days, pattern, max_bytes, max_files, queue_capacity, queue_policy) \
+    LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_EX((dir), true, (days), (pattern), (max_bytes), (max_files), true, (queue_capacity), (queue_policy))
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_DEDICATED_SINGLE_MODE(dir, days, pattern, max_bytes, max_files, queue_capacity, queue_policy) \
+    LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_EX_SINGLE_MODE((dir), true, (days), (pattern), (max_bytes), (max_files), true, (queue_capacity), (queue_policy))
 
 #define LOGIT_ADD_FILE_LOGGER_DEFAULT_WITH_ROTATION() \
     logit::Logger::get_instance().add_logger( \
@@ -1749,6 +1844,44 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
             directory, async, auto_delete_days, hash_length),                                                \
         std::make_unique<logit::SimpleLogFormatter>(pattern),                                                \
         true)
+
+/// \brief Add a unique file logger from an explicit UniqueFileLogger::Config.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_CONFIG(config, pattern)             \
+    logit::Logger::get_instance().add_logger(                            \
+        std::make_unique<logit::UniqueFileLogger>(config),               \
+        std::make_unique<logit::SimpleLogFormatter>(pattern))
+
+/// \brief Add a unique file logger from an explicit UniqueFileLogger::Config in single_mode.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_CONFIG_SINGLE_MODE(config, pattern) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::make_unique<logit::UniqueFileLogger>(config),               \
+        std::make_unique<logit::SimpleLogFormatter>(pattern),            \
+        true)
+
+/// \brief Add a unique file logger with explicit async executor settings.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_EX(directory, async, auto_delete_days, hash_length, pattern, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::make_unique<logit::UniqueFileLogger>(                       \
+            (directory), (async), (auto_delete_days), (hash_length),      \
+            (use_dedicated_executor), (queue_capacity), (queue_policy)),  \
+        std::make_unique<logit::SimpleLogFormatter>(pattern))
+
+/// \brief Add a unique file logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_EX_SINGLE_MODE(directory, async, auto_delete_days, hash_length, pattern, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::make_unique<logit::UniqueFileLogger>(                       \
+            (directory), (async), (auto_delete_days), (hash_length),      \
+            (use_dedicated_executor), (queue_capacity), (queue_policy)),  \
+        std::make_unique<logit::SimpleLogFormatter>(pattern),            \
+        true)
+
+/// \brief Add an async unique file logger backed by a dedicated executor.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_DEDICATED(directory, auto_delete_days, hash_length, pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_UNIQUE_FILE_LOGGER_EX((directory), true, (auto_delete_days), (hash_length), (pattern), true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async unique file logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_DEDICATED_SINGLE_MODE(directory, auto_delete_days, hash_length, pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_UNIQUE_FILE_LOGGER_EX_SINGLE_MODE((directory), true, (auto_delete_days), (hash_length), (pattern), true, (queue_capacity), (queue_policy))
 
 /// \brief Macro for adding a unique file logger with default parameters.
 /// This macro adds a `UniqueFileLogger` with default settings, which writes each log message to a new file.
@@ -1829,6 +1962,63 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_ADD_MEMORY_LOGGER_DEFAULT_SINGLE_MODE() \
     LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(1000, 1024 * 1024, 24LL * 60 * 60 * 1000)
 
+/// \brief Macro for adding a Windows debug logger.
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// This version uses `std::make_unique`, available in C++17 and later.
+#define LOGIT_ADD_WINDOWS_DEBUG(async) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::WindowsDebugLogger>(logit::WindowsDebugLogger::Config{async}), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN))
+
+/// \brief Macro for adding a Windows debug logger in single_mode.
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// This version uses `std::make_unique`, available in C++17 and later.
+#define LOGIT_ADD_WINDOWS_DEBUG_SINGLE_MODE(async) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::WindowsDebugLogger>(logit::WindowsDebugLogger::Config{async}), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), \
+        true)
+
+/// \brief Add a Windows debug logger from an explicit WindowsDebugLogger::Config.
+#define LOGIT_ADD_WINDOWS_DEBUG_CONFIG(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::WindowsDebugLogger>(config), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN))
+
+/// \brief Add a Windows debug logger from an explicit WindowsDebugLogger::Config in single_mode.
+#define LOGIT_ADD_WINDOWS_DEBUG_CONFIG_SINGLE_MODE(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::WindowsDebugLogger>(config), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), \
+        true)
+
+/// \brief Add a Windows debug logger with explicit async executor settings.
+#define LOGIT_ADD_WINDOWS_DEBUG_EX(async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::WindowsDebugLogger>( \
+            (async), (use_dedicated_executor), (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN))
+
+/// \brief Add a Windows debug logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_WINDOWS_DEBUG_EX_SINGLE_MODE(async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::WindowsDebugLogger>( \
+            (async), (use_dedicated_executor), (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), \
+        true)
+
+/// \brief Add an async Windows debug logger backed by a dedicated executor.
+#define LOGIT_ADD_WINDOWS_DEBUG_DEDICATED(queue_capacity, queue_policy) \
+    LOGIT_ADD_WINDOWS_DEBUG_EX(true, true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async Windows debug logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_WINDOWS_DEBUG_DEDICATED_SINGLE_MODE(queue_capacity, queue_policy) \
+    LOGIT_ADD_WINDOWS_DEBUG_EX_SINGLE_MODE(true, true, (queue_capacity), (queue_policy))
+
+/// \brief Macro for adding a Windows debug logger with default settings.
+#define LOGIT_ADD_WINDOWS_DEBUG_DEFAULT() \
+    LOGIT_ADD_WINDOWS_DEBUG(true)
+
 /// \brief Macro for adding a syslog logger with custom configuration.
 /// \param ident Syslog identifier used to tag the log entries.
 /// \param facility Syslog facility value (e.g., `LOG_USER`).
@@ -1849,6 +2039,42 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
     logit::Logger::get_instance().add_logger( \
         std::make_unique<logit::SyslogLogger>(ident, facility, async), \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
+
+/// \brief Add a syslog logger from an explicit SyslogLogger::Config.
+#define LOGIT_ADD_SYSLOG_CONFIG(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::SyslogLogger>(config), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), false)
+
+/// \brief Add a syslog logger from an explicit SyslogLogger::Config in single_mode.
+#define LOGIT_ADD_SYSLOG_CONFIG_SINGLE_MODE(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::SyslogLogger>(config), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
+
+/// \brief Add a syslog logger with explicit async executor settings.
+#define LOGIT_ADD_SYSLOG_EX(ident, facility, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::SyslogLogger>( \
+            (ident), (facility), (async), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), false)
+
+/// \brief Add a syslog logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_SYSLOG_EX_SINGLE_MODE(ident, facility, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::SyslogLogger>( \
+            (ident), (facility), (async), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
+
+/// \brief Add an async syslog logger backed by a dedicated executor.
+#define LOGIT_ADD_SYSLOG_DEDICATED(ident, facility, queue_capacity, queue_policy) \
+    LOGIT_ADD_SYSLOG_EX((ident), (facility), true, true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async syslog logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_SYSLOG_DEDICATED_SINGLE_MODE(ident, facility, queue_capacity, queue_policy) \
+    LOGIT_ADD_SYSLOG_EX_SINGLE_MODE((ident), (facility), true, true, (queue_capacity), (queue_policy))
 
 /// \brief Macro for adding a syslog logger with default configuration.
 /// This version uses `std::make_unique`, available in C++17 and later.
@@ -1872,6 +2098,42 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
     logit::Logger::get_instance().add_logger( \
         std::make_unique<logit::EventLogLogger>(source_wide, async), \
         std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
+
+/// \brief Add a Windows Event Log logger from an explicit EventLogLogger::Config.
+#define LOGIT_ADD_EVENT_LOG_CONFIG(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::EventLogLogger>(config), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), false)
+
+/// \brief Add a Windows Event Log logger from an explicit EventLogLogger::Config in single_mode.
+#define LOGIT_ADD_EVENT_LOG_CONFIG_SINGLE_MODE(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::EventLogLogger>(config), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
+
+/// \brief Add a Windows Event Log logger with explicit async executor settings.
+#define LOGIT_ADD_EVENT_LOG_EX(source_wide, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::EventLogLogger>( \
+            (source_wide), (async), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), false)
+
+/// \brief Add a Windows Event Log logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_EVENT_LOG_EX_SINGLE_MODE(source_wide, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::make_unique<logit::EventLogLogger>( \
+            (source_wide), (async), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy)), \
+        std::make_unique<logit::SimpleLogFormatter>(LOGIT_CONSOLE_PATTERN), true)
+
+/// \brief Add an async Windows Event Log logger backed by a dedicated executor.
+#define LOGIT_ADD_EVENT_LOG_DEDICATED(source_wide, queue_capacity, queue_policy) \
+    LOGIT_ADD_EVENT_LOG_EX((source_wide), true, true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async Windows Event Log logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_EVENT_LOG_DEDICATED_SINGLE_MODE(source_wide, queue_capacity, queue_policy) \
+    LOGIT_ADD_EVENT_LOG_EX_SINGLE_MODE((source_wide), true, true, (queue_capacity), (queue_policy))
 
 /// \brief Macro for adding a Windows Event Log logger with default configuration.
 /// This version uses `std::make_unique`, available in C++17 and later.
@@ -1925,6 +2187,44 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
         true)
 
+/// \brief Add a console logger from an explicit ConsoleLogger::Config.
+#define LOGIT_ADD_CONSOLE_CONFIG(config, pattern)                               \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        false)
+
+/// \brief Add a console logger from an explicit ConsoleLogger::Config in single_mode.
+#define LOGIT_ADD_CONSOLE_CONFIG_SINGLE_MODE(config, pattern)                   \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+/// \brief Add a console logger with explicit async executor settings.
+#define LOGIT_ADD_CONSOLE_EX(pattern, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(         \
+            (async), (use_dedicated_executor), (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        false)
+
+/// \brief Add a console logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_CONSOLE_EX_SINGLE_MODE(pattern, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(         \
+            (async), (use_dedicated_executor), (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+/// \brief Add an async console logger backed by a dedicated executor.
+#define LOGIT_ADD_CONSOLE_DEDICATED(pattern, queue_capacity, queue_policy)      \
+    LOGIT_ADD_CONSOLE_EX((pattern), true, true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async console logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_CONSOLE_DEDICATED_SINGLE_MODE(pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_CONSOLE_EX_SINGLE_MODE((pattern), true, true, (queue_capacity), (queue_policy))
+
 /// \brief Macro for adding the default console logger.
 /// This logger uses the default format pattern and asynchronous logging.
 /// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
@@ -1971,6 +2271,44 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
         true)
 
+/// \brief Add a file logger from an explicit FileLogger::Config.
+#define LOGIT_ADD_FILE_LOGGER_CONFIG(config, pattern)                    \
+    logit::Logger::get_instance().add_logger(                            \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)))
+
+/// \brief Add a file logger from an explicit FileLogger::Config in single_mode.
+#define LOGIT_ADD_FILE_LOGGER_CONFIG_SINGLE_MODE(config, pattern)        \
+    logit::Logger::get_instance().add_logger(                            \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+/// \brief Add a file logger with explicit async executor settings.
+#define LOGIT_ADD_FILE_LOGGER_EX(directory, async, auto_delete_days, pattern, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger(        \
+            (directory), (async), (auto_delete_days), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy))),                          \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)))
+
+/// \brief Add a file logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_FILE_LOGGER_EX_SINGLE_MODE(directory, async, auto_delete_days, pattern, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger(        \
+            (directory), (async), (auto_delete_days), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy))),                          \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+/// \brief Add an async file logger backed by a dedicated executor.
+#define LOGIT_ADD_FILE_LOGGER_DEDICATED(directory, auto_delete_days, pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_FILE_LOGGER_EX((directory), true, (auto_delete_days), (pattern), true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async file logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_FILE_LOGGER_DEDICATED_SINGLE_MODE(directory, auto_delete_days, pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_FILE_LOGGER_EX_SINGLE_MODE((directory), true, (auto_delete_days), (pattern), true, (queue_capacity), (queue_policy))
+
 /// \brief Macro for adding the default file logger.
 /// This logger writes logs to the default file path and deletes logs older than the default number of days.
 /// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
@@ -2007,6 +2345,27 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
         true)
 
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_EX(dir, async, days, pattern, max_bytes, max_files, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger( \
+            (dir), (async), (days), (max_bytes), (max_files), \
+            (use_dedicated_executor), (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)))
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_EX_SINGLE_MODE(dir, async, days, pattern, max_bytes, max_files, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::FileLogger>(new logit::FileLogger( \
+            (dir), (async), (days), (max_bytes), (max_files), \
+            (use_dedicated_executor), (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_DEDICATED(dir, days, pattern, max_bytes, max_files, queue_capacity, queue_policy) \
+    LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_EX((dir), true, (days), (pattern), (max_bytes), (max_files), true, (queue_capacity), (queue_policy))
+
+#define LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_DEDICATED_SINGLE_MODE(dir, days, pattern, max_bytes, max_files, queue_capacity, queue_policy) \
+    LOGIT_ADD_FILE_LOGGER_WITH_ROTATION_EX_SINGLE_MODE((dir), true, (days), (pattern), (max_bytes), (max_files), true, (queue_capacity), (queue_policy))
+
 #define LOGIT_ADD_FILE_LOGGER_DEFAULT_WITH_ROTATION() \
     logit::Logger::get_instance().add_logger( \
         std::unique_ptr<logit::FileLogger>(new logit::FileLogger( \
@@ -2041,6 +2400,44 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
             directory, async, auto_delete_days, hash_length)),                                              \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)),                 \
         true)
+
+/// \brief Add a unique file logger from an explicit UniqueFileLogger::Config.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_CONFIG(config, pattern)             \
+    logit::Logger::get_instance().add_logger(                            \
+        std::unique_ptr<logit::UniqueFileLogger>(new logit::UniqueFileLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)))
+
+/// \brief Add a unique file logger from an explicit UniqueFileLogger::Config in single_mode.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_CONFIG_SINGLE_MODE(config, pattern) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::unique_ptr<logit::UniqueFileLogger>(new logit::UniqueFileLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+/// \brief Add a unique file logger with explicit async executor settings.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_EX(directory, async, auto_delete_days, hash_length, pattern, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::unique_ptr<logit::UniqueFileLogger>(new logit::UniqueFileLogger( \
+            (directory), (async), (auto_delete_days), (hash_length),      \
+            (use_dedicated_executor), (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)))
+
+/// \brief Add a unique file logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_EX_SINGLE_MODE(directory, async, auto_delete_days, hash_length, pattern, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger(                            \
+        std::unique_ptr<logit::UniqueFileLogger>(new logit::UniqueFileLogger( \
+            (directory), (async), (auto_delete_days), (hash_length),      \
+            (use_dedicated_executor), (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+/// \brief Add an async unique file logger backed by a dedicated executor.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_DEDICATED(directory, auto_delete_days, hash_length, pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_UNIQUE_FILE_LOGGER_EX((directory), true, (auto_delete_days), (hash_length), (pattern), true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async unique file logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_UNIQUE_FILE_LOGGER_DEDICATED_SINGLE_MODE(directory, auto_delete_days, hash_length, pattern, queue_capacity, queue_policy) \
+    LOGIT_ADD_UNIQUE_FILE_LOGGER_EX_SINGLE_MODE((directory), true, (auto_delete_days), (hash_length), (pattern), true, (queue_capacity), (queue_policy))
 
 /// \brief Macro for adding the default unique file logger.
 /// This macro adds a `UniqueFileLogger` with default settings, which writes each log message to a new file.
@@ -2123,6 +2520,65 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_ADD_MEMORY_LOGGER_DEFAULT_SINGLE_MODE() \
     LOGIT_ADD_MEMORY_LOGGER_SINGLE_MODE(1000, 1024 * 1024, 24LL * 60 * 60 * 1000)
 
+/// \brief Macro for adding a Windows debug logger.
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
+#define LOGIT_ADD_WINDOWS_DEBUG(async) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::WindowsDebugLogger>(new logit::WindowsDebugLogger( \
+            logit::WindowsDebugLogger::Config{async})), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)))
+
+/// \brief Macro for adding a Windows debug logger in single_mode.
+/// \param async Boolean indicating whether logging should be asynchronous (`true`) or synchronous (`false`).
+/// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
+#define LOGIT_ADD_WINDOWS_DEBUG_SINGLE_MODE(async) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::WindowsDebugLogger>(new logit::WindowsDebugLogger( \
+            logit::WindowsDebugLogger::Config{async})), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+/// \brief Add a Windows debug logger from an explicit WindowsDebugLogger::Config.
+#define LOGIT_ADD_WINDOWS_DEBUG_CONFIG(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::WindowsDebugLogger>(new logit::WindowsDebugLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)))
+
+/// \brief Add a Windows debug logger from an explicit WindowsDebugLogger::Config in single_mode.
+#define LOGIT_ADD_WINDOWS_DEBUG_CONFIG_SINGLE_MODE(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::WindowsDebugLogger>(new logit::WindowsDebugLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+/// \brief Add a Windows debug logger with explicit async executor settings.
+#define LOGIT_ADD_WINDOWS_DEBUG_EX(async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::WindowsDebugLogger>(new logit::WindowsDebugLogger( \
+            (async), (use_dedicated_executor), (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)))
+
+/// \brief Add a Windows debug logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_WINDOWS_DEBUG_EX_SINGLE_MODE(async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::WindowsDebugLogger>(new logit::WindowsDebugLogger( \
+            (async), (use_dedicated_executor), (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+/// \brief Add an async Windows debug logger backed by a dedicated executor.
+#define LOGIT_ADD_WINDOWS_DEBUG_DEDICATED(queue_capacity, queue_policy) \
+    LOGIT_ADD_WINDOWS_DEBUG_EX(true, true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async Windows debug logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_WINDOWS_DEBUG_DEDICATED_SINGLE_MODE(queue_capacity, queue_policy) \
+    LOGIT_ADD_WINDOWS_DEBUG_EX_SINGLE_MODE(true, true, (queue_capacity), (queue_policy))
+
+/// \brief Macro for adding a Windows debug logger with default settings.
+#define LOGIT_ADD_WINDOWS_DEBUG_DEFAULT() \
+    LOGIT_ADD_WINDOWS_DEBUG(true)
+
 /// \brief Macro for adding a syslog logger with custom configuration.
 /// \param ident Syslog identifier used to tag the log entries.
 /// \param facility Syslog facility value (e.g., `LOG_USER`).
@@ -2145,6 +2601,46 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger(ident, facility, async)), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
         true)
+
+/// \brief Add a syslog logger from an explicit SyslogLogger::Config.
+#define LOGIT_ADD_SYSLOG_CONFIG(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        false)
+
+/// \brief Add a syslog logger from an explicit SyslogLogger::Config in single_mode.
+#define LOGIT_ADD_SYSLOG_CONFIG_SINGLE_MODE(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+/// \brief Add a syslog logger with explicit async executor settings.
+#define LOGIT_ADD_SYSLOG_EX(ident, facility, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger( \
+            (ident), (facility), (async), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        false)
+
+/// \brief Add a syslog logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_SYSLOG_EX_SINGLE_MODE(ident, facility, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::SyslogLogger>(new logit::SyslogLogger( \
+            (ident), (facility), (async), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+/// \brief Add an async syslog logger backed by a dedicated executor.
+#define LOGIT_ADD_SYSLOG_DEDICATED(ident, facility, queue_capacity, queue_policy) \
+    LOGIT_ADD_SYSLOG_EX((ident), (facility), true, true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async syslog logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_SYSLOG_DEDICATED_SINGLE_MODE(ident, facility, queue_capacity, queue_policy) \
+    LOGIT_ADD_SYSLOG_EX_SINGLE_MODE((ident), (facility), true, true, (queue_capacity), (queue_policy))
 
 /// \brief Macro for adding a syslog logger with default configuration.
 /// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
@@ -2170,6 +2666,46 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger(source_wide, async)), \
         std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
         true)
+
+/// \brief Add a Windows Event Log logger from an explicit EventLogLogger::Config.
+#define LOGIT_ADD_EVENT_LOG_CONFIG(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        false)
+
+/// \brief Add a Windows Event Log logger from an explicit EventLogLogger::Config in single_mode.
+#define LOGIT_ADD_EVENT_LOG_CONFIG_SINGLE_MODE(config) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger(config)), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+/// \brief Add a Windows Event Log logger with explicit async executor settings.
+#define LOGIT_ADD_EVENT_LOG_EX(source_wide, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger( \
+            (source_wide), (async), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        false)
+
+/// \brief Add a Windows Event Log logger with explicit async executor settings in single_mode.
+#define LOGIT_ADD_EVENT_LOG_EX_SINGLE_MODE(source_wide, async, use_dedicated_executor, queue_capacity, queue_policy) \
+    logit::Logger::get_instance().add_logger( \
+        std::unique_ptr<logit::EventLogLogger>(new logit::EventLogLogger( \
+            (source_wide), (async), (use_dedicated_executor), \
+            (queue_capacity), (queue_policy))), \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(LOGIT_CONSOLE_PATTERN)), \
+        true)
+
+/// \brief Add an async Windows Event Log logger backed by a dedicated executor.
+#define LOGIT_ADD_EVENT_LOG_DEDICATED(source_wide, queue_capacity, queue_policy) \
+    LOGIT_ADD_EVENT_LOG_EX((source_wide), true, true, (queue_capacity), (queue_policy))
+
+/// \brief Add an async Windows Event Log logger backed by a dedicated executor in single_mode.
+#define LOGIT_ADD_EVENT_LOG_DEDICATED_SINGLE_MODE(source_wide, queue_capacity, queue_policy) \
+    LOGIT_ADD_EVENT_LOG_EX_SINGLE_MODE((source_wide), true, true, (queue_capacity), (queue_policy))
 
 /// \brief Macro for adding a Windows Event Log logger with default configuration.
 /// This version uses `new` and `std::unique_ptr` for C++11 compatibility.

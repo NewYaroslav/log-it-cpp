@@ -108,6 +108,13 @@ outlive static destructors inside logger components. Applications may call
 `shutdown()` explicitly (for example during test teardown), but the singleton
 remains valid until the process terminates.
 
+Logger backends with `Config::use_dedicated_executor=true` own a
+`SingleThreadExecutor` instead of using this singleton. Native builds create one
+worker thread per configured logger, while single-threaded Emscripten builds use
+a cooperative per-instance queue. `Logger::shutdown()` calls each backend's
+`ILogger::shutdown()` hook before stopping the global executor so these
+logger-owned workers drain and stop cleanly.
+
 ## 6. Emscripten (no pthreads)
 
 When targeting Emscripten without pthread support:
@@ -118,6 +125,8 @@ When targeting Emscripten without pthread support:
 * Tasks are executed by `emscripten_async_call`, which schedules a drain on the
   browser event loop. This keeps logging compatible with the cooperative
   execution model used in WebAssembly UI scenarios.
+* Dedicated logger executors use the same cooperative scheduling model in this
+  build; no OS thread is created.
 * Typical use cases: browser-hosted tools or demos that need asynchronous-style
   logging without pulling in pthread support.
 

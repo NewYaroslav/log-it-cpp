@@ -4,6 +4,9 @@ if(LOGIT_EMSCRIPTEN)
 
     add_executable(ems_async_flush ems/async_flush.cpp)
     target_link_libraries(ems_async_flush PRIVATE log-it-cpp)
+
+    add_executable(ems_single_thread_executor ems/single_thread_executor.cpp)
+    target_link_libraries(ems_single_thread_executor PRIVATE log-it-cpp)
 else()
     file(GLOB TEST_SOURCES CONFIGURE_DEPENDS *.cpp)
     if(NOT LOGIT_WITH_GZIP)

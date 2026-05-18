@@ -12,6 +12,7 @@
 #include "config.hpp"
 #include "utils.hpp"
 #include "detail/TaskExecutor.hpp"
+#include "detail/SingleThreadExecutor.hpp"
 #ifndef __EMSCRIPTEN__
 #include "detail/CompressionWorker.hpp"
 #endif
@@ -25,6 +26,7 @@
 #include "loggers/EventLogLogger.hpp"
 #include "loggers/SystemLogger.hpp"
 #include "loggers/CrashLogger.hpp"
+#include "loggers/WindowsDebugLogger.hpp"
 
 #ifdef LOGIT_WITH_OTLP
 #include "loggers/OtlpHttpLogger.hpp"

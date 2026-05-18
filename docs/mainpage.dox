@@ -225,6 +225,33 @@ LOGIT_SET_QUEUE_POLICY(LOGIT_QUEUE_BLOCK); // Block when full
 \endcode
 Available policies: `LOGIT_QUEUE_DROP_NEWEST`, `LOGIT_QUEUE_DROP_OLDEST`, `LOGIT_QUEUE_BLOCK`.
 
+Backend `Config` structs can set `use_dedicated_executor=true` to isolate a slow
+async sink from the global task executor. Native builds create one worker thread
+per configured logger; single-threaded Emscripten builds use a cooperative
+per-instance queue instead.
+
+\code{.cpp}
+logit::ConsoleLogger::Config cfg;
+cfg.async = true;
+cfg.use_dedicated_executor = true;
+cfg.queue_capacity = 1024;
+cfg.queue_policy = logit::detail::QueuePolicy::Block;
+
+LOGIT_ADD_LOGGER(
+    logit::ConsoleLogger,
+    (cfg),
+    logit::SimpleLogFormatter,
+    (LOGIT_CONSOLE_PATTERN)
+);
+
+LOGIT_ADD_CONSOLE_CONFIG(cfg, LOGIT_CONSOLE_PATTERN);
+LOGIT_ADD_CONSOLE_DEDICATED(
+    LOGIT_CONSOLE_PATTERN,
+    1024,
+    logit::detail::QueuePolicy::DropNewest
+);
+\endcode
+
 \subsection stream_logging Stream-Based Logging
 
 Use stream operators for complex messages.
