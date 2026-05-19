@@ -403,7 +403,7 @@ namespace logit {
         /// Disables further logging, waits for asynchronous tasks to complete,
         /// and shuts down TaskExecutor.
         void shutdown() {
-            if (m_shutdown.exchange(true)) return;
+            if (m_shutdown.exchange(true, std::memory_order_acq_rel)) return;
 
             const auto snapshot = get_all_strategy_snapshots();
             for (const auto& strategy : snapshot) {

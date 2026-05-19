@@ -72,12 +72,11 @@ namespace logit {
         /// \param record Structured log record.
         /// \param message Formatted log message used as OTLP body.
         void log(const LogRecord& record, const std::string& message) override {
-            {
-                std::lock_guard<std::mutex> lock(m_mutex);
-                if (m_stopping) {
-                    ++m_dropped;
-                    return;
-                }
+            std::unique_lock<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+
+            if (m_stopping) {
+                ++m_dropped;
+                return;
             }
             m_last_log_ts = record.timestamp_ms;
 
@@ -92,31 +91,39 @@ namespace logit {
                 return;
             }
 
-            std::unique_lock<std::mutex> lock(m_mutex);
-            if (m_stopping) {
-                ++m_dropped;
-                return;
-            }
-
-            if (m_queue.size() >= m_config.max_queue_size) {
-                if (m_config.drop_on_overflow) {
-                    ++m_dropped;
-                    return;
-                }
-
-                m_cv_space.wait(lock, [this]() {
-                    return m_stopping || m_queue.size() < m_config.max_queue_size;
-                });
-
+            for (;;) {
+                std::unique_lock<std::mutex> lock(m_mutex);
                 if (m_stopping) {
                     ++m_dropped;
                     return;
                 }
-            }
 
-            m_queue.push_back(item);
-            lock.unlock();
-            m_cv.notify_one();
+                if (m_queue.size() >= m_config.max_queue_size) {
+                    if (m_config.drop_on_overflow) {
+                        ++m_dropped;
+                        return;
+                    }
+
+                    lifecycle_lock.unlock();
+                    m_cv_space.wait(lock, [this]() {
+                        return m_stopping || m_queue.size() < m_config.max_queue_size;
+                    });
+                    lock.unlock();
+                    lifecycle_lock.lock();
+
+                    if (m_stopping) {
+                        ++m_dropped;
+                        return;
+                    }
+
+                    continue;
+                }
+
+                m_queue.push_back(item);
+                lock.unlock();
+                m_cv.notify_one();
+                return;
+            }
         }
 
         /// \brief Waits until queued and in-flight exports finish.
@@ -213,6 +220,7 @@ namespace logit {
         OtlpHttpLoggerConfig m_config;       ///< Export configuration.
         kurlyk::HttpClient   m_client;       ///< HTTP client used for OTLP export.
 
+        mutable std::mutex m_lifecycle_mutex;///< Serializes log() with shutdown.
         mutable std::mutex m_mutex;          ///< Protects queue and worker state.
         std::condition_variable m_cv;        ///< Signals queued records.
         std::condition_variable m_cv_space;  ///< Signals available queue space.
@@ -220,7 +228,7 @@ namespace logit {
         std::deque<OtlpLogItem> m_queue;     ///< Pending records.
 
         std::thread m_worker;                ///< Export worker thread.
-        bool m_stopping = false;             ///< Stop flag protected by m_mutex.
+        bool m_stopping = false;             ///< Stop flag protected by lifecycle/mutex locks.
         std::size_t m_in_flight = 0;         ///< Number of batches currently being exported.
 
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
@@ -305,6 +313,7 @@ namespace logit {
 
         /// \brief Stops worker and cancels pending requests.
         void stop() {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
             {
                 std::lock_guard<std::mutex> lock(m_mutex);
                 if (m_stopping) {

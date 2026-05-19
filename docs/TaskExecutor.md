@@ -89,8 +89,9 @@ application.
 
 While the resize is in progress, new producers briefly wait on `m_resize_cv`.
 No accepted tasks are lost, and the consumer thread never observes partially
-initialised ring buffers. Calling `set_max_queue_size()` after shutdown is a
-no-op; it must not restart the singleton worker.
+initialised ring buffers. Calling `set_max_queue_size()` or
+`set_queue_policy()` after shutdown is a no-op; these calls must not restart or
+mutate the stopped singleton worker.
 
 ## 4. Ordering and completion guarantees
 

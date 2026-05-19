@@ -374,6 +374,8 @@ namespace logit { namespace detail {
     
         /// \brief Change the overflow policy for newly submitted tasks.
         void set_queue_policy(QueuePolicy policy) {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+            if (m_stop_flag.load(std::memory_order_acquire)) return;
             std::lock_guard<std::mutex> lock(m_queue_mutex);
             m_overflow_policy.store(policy, std::memory_order_relaxed);
         }
