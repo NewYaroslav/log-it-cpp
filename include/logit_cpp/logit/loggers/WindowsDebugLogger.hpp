@@ -10,6 +10,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <mutex>
 
 #if defined(_WIN32)
 #include <windows.h>
@@ -86,6 +87,8 @@ namespace logit {
         /// \param record The log record containing log information.
         /// \param message The formatted log message.
         void log(const LogRecord& record, const std::string& message) override {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+            if (m_shutdown.load(std::memory_order_acquire)) return;
             if (m_config.async) {
                 if (m_executor) {
                     m_executor->add_task([message]() {
@@ -163,6 +166,10 @@ namespace logit {
 
         /// \brief Stops logger-owned asynchronous resources after draining pending messages.
         void shutdown() override {
+            {
+                std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+                if (m_shutdown.exchange(true, std::memory_order_acq_rel)) return;
+            }
             if (m_executor) {
                 m_executor->shutdown();
             } else if (m_config.async) {
@@ -172,8 +179,10 @@ namespace logit {
 
     private:
         Config m_config;
+        std::mutex m_lifecycle_mutex;
         std::atomic<int> m_log_level{static_cast<int>(LogLevel::LOG_LVL_TRACE)};
         std::atomic<int64_t> m_last_log_ts{0};
+        std::atomic<bool> m_shutdown{false};
         std::unique_ptr<detail::SingleThreadExecutor> m_executor;
 
         static Config make_config(

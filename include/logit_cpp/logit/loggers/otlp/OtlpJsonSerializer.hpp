@@ -7,7 +7,6 @@
 
 #include "OtlpHttpLoggerConfig.hpp"
 #include "OtlpRecordSnapshot.hpp"
-#include "../../enums.hpp"
 #include <cstdint>
 #include <sstream>
 #include <string>

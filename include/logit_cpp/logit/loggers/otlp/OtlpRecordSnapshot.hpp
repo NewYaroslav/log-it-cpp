@@ -5,7 +5,7 @@
 /// \file OtlpRecordSnapshot.hpp
 /// \brief Defines a stable snapshot of LogRecord data for asynchronous OTLP export.
 
-#include "../../utils.hpp"
+#include <logit/utils.hpp>
 #include <sstream>
 #include <string>
 #include <thread>

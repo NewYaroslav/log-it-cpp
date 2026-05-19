@@ -75,19 +75,23 @@ end users through `LOGIT_GET_DROPPED_TASKS()`.
 application.
 
 1. `m_resizing` is set to `true` with release semantics.
-2. `wait()` drains the queue and ensures `m_active_tasks == 0`.
-3. The worker is stopped by setting `m_stop_flag`, notifying sleepers, and
+2. Producers that already entered `add_task()` are allowed to finish or the
+   resize is abandoned after the bounded resize deadline.
+3. `wait()` drains the queue and ensures `m_active_tasks == 0`.
+4. The worker is stopped by setting `m_stop_flag`, notifying sleepers, and
    joining the thread so it no longer touches `m_mpsc_queue`.
-4. In a single thread the ring is rebuilt with the new capacity. The resize
+5. In a single thread the ring is rebuilt with the new capacity. The resize
    keeps `m_dropped_tasks` intact but resets `m_active_tasks` to 0 because the
    queue is empty.
-5. The worker thread is restarted and the stop flag cleared.
-6. `m_resizing` flips back to `false` and `m_resize_cv.notify_all()` wakes
+6. The worker thread is restarted and the stop flag cleared.
+7. `m_resizing` flips back to `false` and `m_resize_cv.notify_all()` wakes
    producers that parked at the start of `add_task()`.
 
-While the resize is in progress, producers briefly wait on `m_resize_cv`. No
-accepted tasks are lost, and the consumer thread never observes partially
-initialised ring buffers.
+While the resize is in progress, new producers briefly wait on `m_resize_cv`.
+No accepted tasks are lost, and the consumer thread never observes partially
+initialised ring buffers. Calling `set_max_queue_size()` or
+`set_queue_policy()` after shutdown is a no-op; these calls must not restart or
+mutate the stopped singleton worker.
 
 ## 4. Ordering and completion guarantees
 
@@ -96,7 +100,9 @@ initialised ring buffers.
 * When the ring build is enabled, `DropNewest` and `DropOldest` both drop the
   incoming task; accepted tasks keep their order.
 * `wait()` returns once the queue is empty and `m_active_tasks == 0`, or when a
-  shutdown is requested.
+  shutdown is requested. In MPSC builds the worker marks a pop attempt active
+  before removing a task, so `wait()` cannot return in the narrow window between
+  a dequeued cell becoming free and the task body starting.
 * `shutdown()` blocks until the worker thread terminates. It is safe to call
   multiple times.
 
@@ -198,15 +204,16 @@ const auto lost = LOGIT_GET_DROPPED_TASKS();
 * All public methods on non-Emscripten builds are thread-safe. Producers may
   call `add_task()` concurrently with `set_max_queue_size()` and
   `set_queue_policy()`.
-* The hot-resize barrier uses `m_resizing` and `m_resize_cv` so producers never
-  touch a ring buffer that is being rebuilt. This eliminates the data races that
-  TSAN previously reported on `try_pop()` vs. buffer assignment. The barrier
-  only drops once the worker thread fully stops and the queue drains; if a sink
-  blocks the worker or `QueuePolicy::Block` keeps `m_active_tasks` above the
-  limit for more than one second, `set_max_queue_size()` abandons the hot
-  resize, clears `m_resizing`, and leaves the existing ring untouched so
-  producers cannot wait indefinitely. Non-MPSC builds perform the resize as an
-  atomic update of `m_max_queue_size`, so they are not subject to this stall.
+* The hot-resize barrier uses `m_resizing`, `m_resize_cv`, and an active-producer
+  counter so producers never touch a ring buffer that is being rebuilt. This
+  eliminates the data races that TSAN previously reported on `try_pop()` vs.
+  buffer assignment. The barrier only proceeds once producers have paused, the
+  worker thread fully stops, and the queue drains; if a sink blocks the worker
+  or `QueuePolicy::Block` prevents producers from reaching the pause point for
+  more than one second, `set_max_queue_size()` abandons the hot resize, clears
+  `m_resizing`, and leaves the existing ring untouched so producers cannot wait
+  indefinitely. Non-MPSC builds perform the resize as an atomic update of
+  `m_max_queue_size`, so they are not subject to this stall.
 * Non-MPSC builds rely solely on mutexes and had no known data races.
 * The Emscripten path is single-threaded and should not be used concurrently.
 

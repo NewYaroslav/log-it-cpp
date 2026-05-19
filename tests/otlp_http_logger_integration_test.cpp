@@ -111,6 +111,8 @@ int main() {
     assert(captured.body.find("\"severityNumber\":13") != std::string::npos);
     assert(captured.body.find("OTLP integration test message") != std::string::npos);
 
+    LOGIT_SHUTDOWN();
+
     return 0;
 }
 

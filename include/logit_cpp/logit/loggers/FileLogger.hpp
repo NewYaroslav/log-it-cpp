@@ -207,6 +207,8 @@ namespace logit {
         /// \param record The log record containing log information.
         /// \param message The formatted log message.
         void log(const LogRecord& record, const std::string& message) override {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+            if (m_shutdown.load(std::memory_order_acquire)) return;
             m_last_log_ts = record.timestamp_ms;
             m_last_log_mono_ts = LOGIT_MONOTONIC_MS();
             if (!m_config.async) {
@@ -400,6 +402,10 @@ namespace logit {
 
         /// \brief Stops logger-owned asynchronous resources after draining pending writes.
         void shutdown() override {
+            {
+                std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+                if (m_shutdown.exchange(true, std::memory_order_acq_rel)) return;
+            }
             if (m_executor) {
                 m_executor->shutdown();
                 std::lock_guard<std::mutex> lock(m_mutex);
@@ -411,6 +417,7 @@ namespace logit {
 
     private:
         mutable std::mutex m_mutex;    ///< Mutex to protect file operations.
+        std::mutex         m_lifecycle_mutex; ///< Serializes direct log() calls with shutdown().
         Config             m_config;   ///< Configuration for the file logger.
         mutable std::ofstream m_file;     ///< Output file stream for logging.
         mutable std::mutex m_file_path_mutex; ///< Mutex to protect file path operations.
@@ -423,6 +430,7 @@ namespace logit {
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
         std::atomic<int64_t> m_last_log_mono_ts = ATOMIC_VAR_INIT(0); ///< Timestamp of the last log.
         std::atomic<int>   m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
+        std::atomic<bool>  m_shutdown = ATOMIC_VAR_INIT(false);
 
         static Config make_config(
                 const std::string& directory,
