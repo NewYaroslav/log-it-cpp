@@ -455,9 +455,17 @@ namespace logit { namespace detail {
                 std::function<void()> task;
     
                 int budget = LOGIT_TASK_EXECUTOR_DRAIN_BUDGET;
-                while (budget-- && m_mpsc_queue.try_pop(task)) {
-                    drained_any = true;
+                while (budget--) {
+                    // Count the pop attempt as active so wait() cannot observe
+                    // an empty ring between try_pop() freeing a cell and the
+                    // dequeued task starting execution.
                     m_active_tasks.fetch_add(1, std::memory_order_relaxed);
+                    if (!m_mpsc_queue.try_pop(task)) {
+                        m_active_tasks.fetch_sub(1, std::memory_order_relaxed);
+                        break;
+                    }
+
+                    drained_any = true;
     
                     task();
     

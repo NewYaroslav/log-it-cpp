@@ -100,7 +100,9 @@ mutate the stopped singleton worker.
 * When the ring build is enabled, `DropNewest` and `DropOldest` both drop the
   incoming task; accepted tasks keep their order.
 * `wait()` returns once the queue is empty and `m_active_tasks == 0`, or when a
-  shutdown is requested.
+  shutdown is requested. In MPSC builds the worker marks a pop attempt active
+  before removing a task, so `wait()` cannot return in the narrow window between
+  a dequeued cell becoming free and the task body starting.
 * `shutdown()` blocks until the worker thread terminates. It is safe to call
   multiple times.
 
