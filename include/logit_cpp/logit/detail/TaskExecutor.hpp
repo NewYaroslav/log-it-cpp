@@ -390,7 +390,7 @@ namespace logit { namespace detail {
         }
     
     private:
-        mutable std::mutex m_lifecycle_mutex;      ///< Serializes shutdown with hot resize.
+        mutable std::mutex m_lifecycle_mutex;      ///< Serializes shutdown with lifecycle-changing operations.
     #ifndef LOGIT_USE_MPSC_RING
         std::deque<std::function<void()>> m_tasks_queue;
         mutable std::mutex m_queue_mutex;
