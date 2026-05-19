@@ -308,6 +308,65 @@ static bool test_post_shutdown_rejection() {
     return counter.load() == 1;
 }
 
+static bool test_wait_drains_after_shutdown_start() {
+    SingleThreadExecutor ex;
+    std::atomic<int> counter{0};
+    std::atomic<bool> wait_done{false};
+
+    std::mutex gate_mutex;
+    std::condition_variable gate_cv;
+    bool first_task_started = false;
+    bool gate_open = false;
+
+    ex.add_task([&]() {
+        std::unique_lock<std::mutex> lk(gate_mutex);
+        first_task_started = true;
+        gate_cv.notify_all();
+        gate_cv.wait(lk, [&]() { return gate_open; });
+        counter.fetch_add(1, std::memory_order_relaxed);
+    });
+    ex.add_task([&]() {
+        counter.fetch_add(1, std::memory_order_relaxed);
+    });
+
+    {
+        std::unique_lock<std::mutex> lk(gate_mutex);
+        if (!gate_cv.wait_for(lk, std::chrono::seconds(1), [&]() {
+                return first_task_started;
+            })) {
+            gate_open = true;
+            gate_cv.notify_all();
+            return false;
+        }
+    }
+
+    std::thread waiter([&]() {
+        ex.wait();
+        wait_done.store(true, std::memory_order_release);
+    });
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    std::thread stopper([&]() {
+        ex.shutdown();
+    });
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    const bool returned_while_blocked = wait_done.load(std::memory_order_acquire);
+
+    {
+        std::lock_guard<std::mutex> lk(gate_mutex);
+        gate_open = true;
+    }
+    gate_cv.notify_all();
+
+    stopper.join();
+    waiter.join();
+
+    return !returned_while_blocked &&
+           wait_done.load(std::memory_order_acquire) &&
+           counter.load(std::memory_order_relaxed) == 2;
+}
+
 int main() {
     int passed = 0;
     int failed = 0;
@@ -328,6 +387,7 @@ int main() {
     run("exception_in_task", test_exception_in_task());
     run("concurrent_producers", test_concurrent_producers());
     run("post_shutdown_rejection", test_post_shutdown_rejection());
+    run("wait_drains_after_shutdown_start", test_wait_drains_after_shutdown_start());
 
     std::cout << "\n" << passed << " passed, " << failed << " failed" << std::endl;
     return failed > 0 ? 1 : 0;
