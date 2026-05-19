@@ -119,7 +119,9 @@ Logger backends with `Config::use_dedicated_executor=true` own a
 worker thread per configured logger, while single-threaded Emscripten builds use
 a cooperative per-instance queue. `Logger::shutdown()` calls each backend's
 `ILogger::shutdown()` hook before stopping the global executor so these
-logger-owned workers drain and stop cleanly.
+logger-owned workers drain and stop cleanly. For `SingleThreadExecutor`,
+`wait()` waits for already accepted tasks to drain, while `shutdown()` rejects
+new tasks and joins the worker on native builds.
 
 ## 6. Emscripten (no pthreads)
 

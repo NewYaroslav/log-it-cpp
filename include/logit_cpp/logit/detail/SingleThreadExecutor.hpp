@@ -89,9 +89,8 @@ public:
     void wait() {
         std::unique_lock<std::mutex> lock(m_mutex);
         m_cv.wait(lock, [this]() {
-            return (m_queue.empty() &&
-                    m_active_tasks.load(std::memory_order_relaxed) == 0) ||
-                   m_stop.load(std::memory_order_acquire);
+            return m_queue.empty() &&
+                   m_active_tasks.load(std::memory_order_relaxed) == 0;
         });
     }
 
@@ -127,6 +126,7 @@ public:
     /// \brief Change the queue overflow policy.
     void set_queue_policy(QueuePolicy policy) {
         std::lock_guard<std::mutex> lock(m_mutex);
+        if (m_stop.load(std::memory_order_acquire)) return;
         m_overflow_policy = policy;
     }
 
@@ -274,6 +274,7 @@ public:
 
     void set_queue_policy(QueuePolicy policy) {
         std::lock_guard<std::mutex> lock(m_state->mutex);
+        if (m_state->shutdown_requested) return;
         m_state->overflow_policy = policy;
     }
 
