@@ -59,7 +59,7 @@ namespace logit {
                 std::unique_ptr<ILogger> logger,
                 std::unique_ptr<ILogFormatter> formatter,
                 bool single_mode = false) {
-            if (m_shutdown) return;
+            if (m_shutdown.load(std::memory_order_acquire)) return;
             auto strategy = std::make_shared<LoggerStrategy>();
             strategy->logger = std::move(logger);
             strategy->formatter = std::move(formatter);
@@ -67,6 +67,7 @@ namespace logit {
             strategy->enabled = true;
 
             LoggerWriteLock lock(m_loggers_mx);
+            if (m_shutdown.load(std::memory_order_acquire)) return;
             m_loggers.push_back(std::move(strategy));
         }
 
@@ -157,7 +158,7 @@ namespace logit {
         /// the formatted message to the logger.
         /// \param record Log record to be logged.
         void log(const LogRecord& record) {
-            if (m_shutdown) return;
+            if (m_shutdown.load(std::memory_order_acquire)) return;
 
             const bool targeted = record.logger_index >= 0;
 
@@ -178,6 +179,7 @@ namespace logit {
                 auto& strategy = snapshot[0];
 
                 std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                if (m_shutdown.load(std::memory_order_acquire)) return;
                 if (!strategy->enabled) return;
                 if (!record.raw_mode &&
                     static_cast<int>(record.log_level) < static_cast<int>(strategy->logger->get_log_level())) return;
@@ -189,6 +191,7 @@ namespace logit {
                 if (!strategy) continue;
 
                 std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                if (m_shutdown.load(std::memory_order_acquire)) return;
                 if (strategy->single_mode) continue;
                 if (!strategy->enabled) continue;
                 if (!record.raw_mode &&

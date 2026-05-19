@@ -121,6 +121,7 @@ namespace logit {
             std::shared_ptr<detail::SingleThreadExecutor> old_executor;
             {
                 std::unique_lock<std::mutex> lock(m_mutex);
+                if (m_shutdown.load(std::memory_order_acquire)) return;
                 wait_for_pending_enqueues(lock);
                 m_config = config;
                 if (m_config.async && m_config.use_dedicated_executor) {
@@ -154,9 +155,11 @@ namespace logit {
         /// \param record The log record containing log information.
         /// \param message The formatted log message.
         void log(const LogRecord& record, const std::string& message) override {
-            m_last_log_ts = record.timestamp_ms;
+            if (m_shutdown.load(std::memory_order_acquire)) return;
 #ifdef __EMSCRIPTEN__
             std::unique_lock<std::mutex> lock(m_mutex);
+            if (m_shutdown.load(std::memory_order_acquire)) return;
+            m_last_log_ts = record.timestamp_ms;
             const int lvl = static_cast<int>(record.log_level);
             std::shared_ptr<detail::SingleThreadExecutor> executor = m_executor;
             if (!m_config.async) {
@@ -194,6 +197,8 @@ namespace logit {
             return;
 #else
             std::unique_lock<std::mutex> lock(m_mutex);
+            if (m_shutdown.load(std::memory_order_acquire)) return;
+            m_last_log_ts = record.timestamp_ms;
             std::shared_ptr<detail::SingleThreadExecutor> executor = m_executor;
             if (!m_config.async) {
 #               if defined(_WIN32)
@@ -306,6 +311,7 @@ namespace logit {
 
         /// \brief Stops the dedicated executor after draining pending messages.
         void shutdown() override {
+            if (m_shutdown.exchange(true, std::memory_order_acq_rel)) return;
             std::shared_ptr<detail::SingleThreadExecutor> executor;
             bool async = false;
             {
@@ -327,6 +333,7 @@ namespace logit {
         Config             m_config;    ///< Configuration for the console logger.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
         std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
+        std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false);
         std::shared_ptr<detail::SingleThreadExecutor> m_executor;
         std::condition_variable m_enqueue_cv;
         std::size_t m_pending_enqueues = 0;

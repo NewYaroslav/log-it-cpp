@@ -6,6 +6,7 @@
 #include <atomic>
 #include <string>
 #include <memory>
+#include <mutex>
 
 /// \file EventLogLogger.hpp
 /// \brief Logger writing to Windows Event Log.
@@ -80,6 +81,8 @@ namespace logit {
         /// \param rec Log metadata.
         /// \param msg UTF-8 message text.
         void log(const LogRecord& rec, const std::string& msg) override {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+            if (m_shutdown.load(std::memory_order_acquire)) return;
             LogLevel lvl = rec.raw_mode ? LogLevel::LOG_LVL_INFO : rec.log_level;
             bool raw_mode = rec.raw_mode;
             std::string s = msg;
@@ -125,7 +128,17 @@ namespace logit {
         void wait() override { if (m_cfg.async) { if (m_executor) { m_executor->wait(); } else { detail::TaskExecutor::get_instance().wait(); } } }
 
         /// \brief Stops logger-owned asynchronous resources after draining pending messages.
-        void shutdown() override { if (m_executor) { m_executor->shutdown(); } else if (m_cfg.async) { detail::TaskExecutor::get_instance().wait(); } }
+        void shutdown() override {
+            {
+                std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+                if (m_shutdown.exchange(true, std::memory_order_acq_rel)) return;
+            }
+            if (m_executor) {
+                m_executor->shutdown();
+            } else if (m_cfg.async) {
+                detail::TaskExecutor::get_instance().wait();
+            }
+        }
 
     private:
         static WORD m_map(LogLevel l) {
@@ -139,9 +152,11 @@ namespace logit {
             } return EVENTLOG_INFORMATION_TYPE;
         }
         Config m_cfg{};
+        std::mutex m_lifecycle_mutex;
         HANDLE m_hsrc = nullptr;
         std::atomic<int> m_level{static_cast<int>(LogLevel::LOG_LVL_TRACE)};
         std::atomic<int64_t> m_last_ts{0};
+        std::atomic<bool> m_shutdown{false};
         std::unique_ptr<detail::SingleThreadExecutor> m_executor;
 
         static Config make_config(
@@ -227,4 +242,3 @@ namespace logit {
 
 } // namespace logit
 #endif
-

@@ -72,6 +72,13 @@ namespace logit {
         /// \param record Structured log record.
         /// \param message Formatted log message used as OTLP body.
         void log(const LogRecord& record, const std::string& message) override {
+            {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                if (m_stopping) {
+                    ++m_dropped;
+                    return;
+                }
+            }
             m_last_log_ts = record.timestamp_ms;
 
             OtlpLogItem item;
@@ -86,6 +93,10 @@ namespace logit {
             }
 
             std::unique_lock<std::mutex> lock(m_mutex);
+            if (m_stopping) {
+                ++m_dropped;
+                return;
+            }
 
             if (m_queue.size() >= m_config.max_queue_size) {
                 if (m_config.drop_on_overflow) {
@@ -118,6 +129,11 @@ namespace logit {
             m_cv_drained.wait(lock, [this]() {
                 return m_queue.empty() && m_in_flight == 0;
             });
+        }
+
+        /// \brief Stops the OTLP worker after draining queued exports.
+        void shutdown() override {
+            stop();
         }
 
         /// \brief Retrieves a string parameter from the logger.

@@ -211,21 +211,14 @@ namespace logit { namespace detail {
             lock.unlock();
             m_queue_condition.notify_one();
 #        else
-            // Hot-resize barrier: wait until the ring rebuild is finished.
-            if (m_resizing.load(std::memory_order_acquire)) {
-                std::unique_lock<std::mutex> lk(m_cv_mutex);
-                m_resize_cv.wait(lk, [this]{ return !m_resizing.load(std::memory_order_acquire); });
-            }
-
-            if (m_stop_flag.load(std::memory_order_acquire)) {
-                return;
-            }
+            enter_producer_();
     
             std::function<void()> local_task = std::move(task);
+            bool done = false;
     
-            for (;;) {
+            while (!done) {
                 if (m_stop_flag.load(std::memory_order_acquire)) {
-                    return;
+                    break;
                 }
     
                 const auto policy = m_overflow_policy.load(std::memory_order_relaxed);
@@ -243,20 +236,22 @@ namespace logit { namespace detail {
                 // Try to push into the ring buffer.
                 if (m_mpsc_queue.try_push(local_task)) {
                     m_cv.notify_one(); // wake the worker
-                    return;
+                    break;
                 }
 
                 // Apply the configured overflow policy when the ring is full.
                 switch (policy) {
                     case QueuePolicy::DropNewest:
                         m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
-                        return;
+                        done = true;
+                        break;
 
                     case QueuePolicy::DropOldest:
                         // Safe MPSC behaviour: drop the incoming task.
                         // Preserves ordering and avoids producer/consumer deadlocks.
                         m_dropped_tasks.fetch_add(1, std::memory_order_relaxed);
-                        return;
+                        done = true;
+                        break;
     
                     case QueuePolicy::Block: {
                         std::unique_lock<std::mutex> lk(m_cv_mutex);
@@ -265,6 +260,7 @@ namespace logit { namespace detail {
                     }
                 }
             }
+            leave_producer_();
 #        endif
         }
     
@@ -289,6 +285,7 @@ namespace logit { namespace detail {
     
         /// \brief Stop the worker thread and drain outstanding tasks.
         void shutdown() {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
 #        ifndef LOGIT_USE_MPSC_RING
             std::unique_lock<std::mutex> lock(m_queue_mutex);
             m_stop_flag.store(true, std::memory_order_release);
@@ -314,17 +311,26 @@ namespace logit { namespace detail {
         /// \details On MPSC builds this performs the "hot" resize described in
         /// docs/TaskExecutor.md.
         void set_max_queue_size(std::size_t size) {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+            if (m_stop_flag.load(std::memory_order_acquire)) return;
 #       ifdef LOGIT_USE_MPSC_RING
             // Tell producers to pause before any wait()/stop conditions run.
             m_resizing.store(true, std::memory_order_release);
+            const auto deadline = std::chrono::steady_clock::now() +
+                                  std::chrono::seconds(1);
+            // Existing producers may be blocked by backpressure, so do not
+            // wait forever for the resize barrier.
+            if (!wait_until_producers_paused_(deadline)) {
+                m_resizing.store(false, std::memory_order_release);
+                m_resize_cv.notify_all();
+                return;
+            }
 
             // Drain the queue completely, but do not wait forever if the worker
             // is stalled (e.g., blocked sink or backpressure keeping
             // m_active_tasks > 0). If we fail to drain before the deadline,
             // abort the resize and re-open the barrier so producers can
             // continue.
-            const auto deadline = std::chrono::steady_clock::now() +
-                                  std::chrono::seconds(1);
             if (!wait_until_idle_(deadline)) {
                 m_resizing.store(false, std::memory_order_release);
                 m_resize_cv.notify_all();
@@ -334,7 +340,7 @@ namespace logit { namespace detail {
             // Stop the worker so it cannot touch m_mpsc_queue during the resize.
             std::unique_lock<std::mutex> lk(m_queue_mutex);
             m_stop_flag.store(true, std::memory_order_relaxed);
-                lk.unlock();
+            lk.unlock();
 
             m_cv.notify_all();
             m_queue_condition.notify_all();
@@ -343,15 +349,15 @@ namespace logit { namespace detail {
             }
 
             // Reinitialise the parameters and the ring on a single thread.
-                lk.lock();
-                m_max_queue_size = size;
-                const std::size_t cap =
-                        (m_max_queue_size == 0 ? m_default_ring_cap : m_max_queue_size);
-                m_mpsc_queue = MpscRingAny<std::function<void()>>(cap);
-                // Reset counters (except drops) because the queue is empty.
-                m_active_tasks.store(0, std::memory_order_relaxed);
-                // Keep m_dropped_tasks untouched — tests manage it via macros.
-                lk.unlock();
+            lk.lock();
+            m_max_queue_size = size;
+            const std::size_t cap =
+                    (m_max_queue_size == 0 ? m_default_ring_cap : m_max_queue_size);
+            m_mpsc_queue = MpscRingAny<std::function<void()>>(cap);
+            // Reset counters (except drops) because the queue is empty.
+            m_active_tasks.store(0, std::memory_order_relaxed);
+            // Keep m_dropped_tasks untouched; tests manage it via macros.
+            lk.unlock();
 
             // Clear the stop flag and restart the worker thread.
             m_stop_flag.store(false, std::memory_order_relaxed);
@@ -382,6 +388,7 @@ namespace logit { namespace detail {
         }
     
     private:
+        mutable std::mutex m_lifecycle_mutex;      ///< Serializes shutdown with hot resize.
     #ifndef LOGIT_USE_MPSC_RING
         std::deque<std::function<void()>> m_tasks_queue;
         mutable std::mutex m_queue_mutex;
@@ -401,6 +408,7 @@ namespace logit { namespace detail {
 
         std::atomic<bool> m_resizing;              ///< true while a hot resize is in flight.
         std::condition_variable m_resize_cv;       ///< Producers wait here during a resize.
+        std::atomic<std::size_t> m_active_producers; ///< Producers currently touching the ring.
     
         std::thread m_worker_thread;
         std::atomic<bool> m_stop_flag;
@@ -488,6 +496,38 @@ namespace logit { namespace detail {
                         m_stop_flag.load(std::memory_order_acquire));
             });
         }
+
+        void enter_producer_() {
+            for (;;) {
+                if (m_resizing.load(std::memory_order_acquire)) {
+                    std::unique_lock<std::mutex> lk(m_cv_mutex);
+                    m_resize_cv.wait(lk, [this]() {
+                        return !m_resizing.load(std::memory_order_acquire);
+                    });
+                    continue;
+                }
+
+                m_active_producers.fetch_add(1, std::memory_order_acq_rel);
+                if (!m_resizing.load(std::memory_order_acquire)) {
+                    return;
+                }
+                leave_producer_();
+            }
+        }
+
+        void leave_producer_() {
+            if (m_active_producers.fetch_sub(1, std::memory_order_acq_rel) == 1 &&
+                m_resizing.load(std::memory_order_acquire)) {
+                m_resize_cv.notify_all();
+            }
+        }
+
+        bool wait_until_producers_paused_(std::chrono::steady_clock::time_point deadline) {
+            std::unique_lock<std::mutex> lk(m_cv_mutex);
+            return m_resize_cv.wait_until(lk, deadline, [this]() {
+                return m_active_producers.load(std::memory_order_acquire) == 0;
+            });
+        }
     #endif
     
         TaskExecutor()
@@ -499,6 +539,7 @@ namespace logit { namespace detail {
               m_active_tasks(0)
     #else
             : m_resizing(false),
+              m_active_producers(0),
               m_worker_thread(),
               m_stop_flag(false),
               m_max_queue_size(0),
