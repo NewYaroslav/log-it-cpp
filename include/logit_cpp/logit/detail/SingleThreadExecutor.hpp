@@ -22,13 +22,21 @@ namespace logit {
 namespace detail {
 
 /// \class SingleThreadExecutor
-/// \brief Simplified per-logger task executor.
-/// \details Provides the same public API as TaskExecutor (add_task, wait, shutdown,
-/// set_max_queue_size, set_queue_policy, dropped_tasks, reset_dropped_tasks) so
-/// loggers can use either executor interchangeably. Unlike the global TaskExecutor
-/// singleton, each native instance owns its own worker thread, providing isolation
-/// between loggers. Single-threaded Emscripten builds use a per-instance
-/// cooperative queue drained through the browser event loop.
+/// \brief Per-instance single-thread executor for isolated async logging.
+/// \details Provides the same public API as TaskExecutor so loggers can use either
+/// executor interchangeably. Unlike the global TaskExecutor singleton, each native
+/// instance owns its own worker thread, providing isolation between loggers.
+///
+/// Lifecycle guarantees (native builds):
+/// - wait() blocks until the queue drains and no active tasks remain.
+/// - shutdown() rejects new tasks, drains the remaining queue, and joins the
+///   worker thread. Safe to call multiple times.
+/// - set_max_queue_size() and set_queue_policy() are no-ops after shutdown().
+/// - The destructor calls shutdown() automatically.
+///
+/// Single-threaded Emscripten builds use a per-instance cooperative queue
+/// drained through the browser event loop instead of a worker thread.
+/// See docs/TaskExecutor.md for full semantics.
 #if !defined(__EMSCRIPTEN__) || defined(__EMSCRIPTEN_PTHREADS__)
 class SingleThreadExecutor {
 public:
@@ -86,6 +94,9 @@ public:
     }
 
     /// \brief Block until the queue is empty and no active tasks remain.
+    ///
+    /// Returns once every task that was already accepted by add_task() has
+    /// completed. Does not prevent new tasks from arriving while waiting.
     void wait() {
         std::unique_lock<std::mutex> lock(m_mutex);
         m_cv.wait(lock, [this]() {
@@ -95,6 +106,10 @@ public:
     }
 
     /// \brief Stop accepting new tasks, drain remaining, and join the worker thread.
+    ///
+    /// After shutdown() returns, add_task() is a no-op and the worker thread
+    /// has been joined (native) or the queue has been drained (Emscripten).
+    /// Safe to call multiple times; subsequent calls are no-ops.
     void shutdown() {
         bool notify_worker = false;
         {
@@ -114,6 +129,8 @@ public:
     }
 
     /// \brief Change the maximum queue size (0 disables the limit).
+    ///
+    /// No-op if shutdown() has already been called.
     void set_max_queue_size(std::size_t size) {
         {
             std::lock_guard<std::mutex> lock(m_mutex);
@@ -124,6 +141,8 @@ public:
     }
 
     /// \brief Change the queue overflow policy.
+    ///
+    /// No-op if shutdown() has already been called.
     void set_queue_policy(QueuePolicy policy) {
         std::lock_guard<std::mutex> lock(m_mutex);
         if (m_stop.load(std::memory_order_acquire)) return;
@@ -188,6 +207,15 @@ private:
 };
 
 #else // single-threaded Emscripten: cooperative per-instance queue
+/// \class SingleThreadExecutor
+/// \brief Cooperative per-instance task executor for single-threaded Emscripten.
+/// \details Uses emscripten_async_call to drain a per-instance queue on the browser
+/// event loop. No worker thread is created. Lifecycle guarantees:
+/// - wait() synchronously drains all pending tasks.
+/// - shutdown() rejects new tasks and drains the remaining queue.
+/// - set_max_queue_size() and set_queue_policy() are no-ops after shutdown().
+/// - The destructor calls shutdown() automatically.
+/// See docs/TaskExecutor.md for full semantics.
 class SingleThreadExecutor {
 public:
     SingleThreadExecutor()
@@ -202,6 +230,7 @@ public:
     SingleThreadExecutor(SingleThreadExecutor&&) = delete;
     SingleThreadExecutor& operator=(SingleThreadExecutor&&) = delete;
 
+    /// \brief Enqueue a task for asynchronous execution.
     void add_task(std::function<void()> task) {
         if (!task) return;
         const std::shared_ptr<State> state = m_state;
@@ -252,10 +281,17 @@ public:
         }
     }
 
+    /// \brief Synchronously drain all pending tasks.
+    ///
+    /// Runs every queued task immediately on the calling thread.
     void wait() {
         drain_state(m_state);
     }
 
+    /// \brief Reject new tasks and drain the remaining queue.
+    ///
+    /// After shutdown() returns, add_task() is a no-op and the queue has been
+    /// drained. Safe to call multiple times; subsequent calls are no-ops.
     void shutdown() {
         const std::shared_ptr<State> state = m_state;
         {
@@ -266,12 +302,18 @@ public:
         drain_state(state);
     }
 
+    /// \brief Change the maximum queue size (0 disables the limit).
+    ///
+    /// No-op if shutdown() has already been called.
     void set_max_queue_size(std::size_t size) {
         std::lock_guard<std::mutex> lock(m_state->mutex);
         if (m_state->shutdown_requested) return;
         m_state->max_queue_size = size;
     }
 
+    /// \brief Change the queue overflow policy.
+    ///
+    /// No-op if shutdown() has already been called.
     void set_queue_policy(QueuePolicy policy) {
         std::lock_guard<std::mutex> lock(m_state->mutex);
         if (m_state->shutdown_requested) return;

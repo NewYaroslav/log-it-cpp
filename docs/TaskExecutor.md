@@ -121,7 +121,9 @@ a cooperative per-instance queue. `Logger::shutdown()` calls each backend's
 `ILogger::shutdown()` hook before stopping the global executor so these
 logger-owned workers drain and stop cleanly. For `SingleThreadExecutor`,
 `wait()` waits for already accepted tasks to drain, while `shutdown()` rejects
-new tasks and joins the worker on native builds.
+new tasks and joins the worker on native builds. Full lifecycle guarantees
+(including no-op behaviour after shutdown) are documented in the Doxygen
+comments of `SingleThreadExecutor.hpp`.
 
 ## 6. Emscripten (no pthreads)
 
