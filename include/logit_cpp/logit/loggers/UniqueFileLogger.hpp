@@ -147,6 +147,42 @@ namespace logit {
             stop_logging();
         }
 
+        /// \brief Update executor-related configuration at runtime.
+        ///
+        /// Only async, use_dedicated_executor, queue_capacity, and queue_policy
+        /// are applied. All other Config fields are ignored.
+        void set_config(const Config& config) {
+            std::unique_ptr<detail::SingleThreadExecutor> old_executor;
+            {
+                std::unique_lock<std::mutex> lock(m_mutex);
+                if (m_shutdown.load(std::memory_order_acquire)) return;
+                if (m_config.async) {
+                    if (m_executor) {
+                        m_executor->wait();
+                    } else {
+                        detail::TaskExecutor::get_instance().wait();
+                    }
+                }
+                m_config.async = config.async;
+                m_config.use_dedicated_executor = config.use_dedicated_executor;
+                m_config.queue_capacity = config.queue_capacity;
+                m_config.queue_policy = config.queue_policy;
+                if (m_config.async && m_config.use_dedicated_executor) {
+                    if (!m_executor) {
+                        m_executor.reset(new detail::SingleThreadExecutor());
+                    }
+                    m_executor->set_max_queue_size(m_config.queue_capacity);
+                    m_executor->set_queue_policy(m_config.queue_policy);
+                } else if (m_executor) {
+                    old_executor = std::move(m_executor);
+                    m_executor.reset();
+                }
+            }
+            if (old_executor) {
+                old_executor->shutdown();
+            }
+        }
+
         /// \brief Logs a message to a unique file with thread safety.
         ///
         /// If asynchronous logging is enabled, the message is added to the task queue;
