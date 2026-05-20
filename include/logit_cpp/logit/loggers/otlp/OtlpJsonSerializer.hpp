@@ -7,8 +7,10 @@
 
 #include "OtlpHttpLoggerConfig.hpp"
 #include "OtlpRecordSnapshot.hpp"
+#include <cctype>
 #include <cstdint>
 #include <cmath>
+#include <iomanip>
 #include <limits>
 #include <sstream>
 #include <string>
@@ -117,7 +119,9 @@ namespace logit {
     inline void otlp_write_double_attr(std::ostringstream& os, const std::string& key, double value) {
         if (std::isfinite(value)) {
             os << "{\"key\":\"" << otlp_json_escape(key)
-               << "\",\"value\":{\"doubleValue\":" << value << "}}";
+               << "\",\"value\":{\"doubleValue\":"
+               << std::setprecision(std::numeric_limits<double>::max_digits10)
+               << value << "}}";
         } else {
             os << "{\"key\":\"" << otlp_json_escape(key)
                << "\",\"value\":{\"stringValue\":\"" << otlp_json_escape(std::to_string(value)) << "\"}}";
