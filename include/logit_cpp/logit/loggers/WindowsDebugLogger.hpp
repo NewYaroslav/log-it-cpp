@@ -83,7 +83,7 @@ namespace logit {
         /// \details This call is blocking. If asynchronous logging is currently enabled,
         /// it waits until already accepted tasks are drained before changing async mode
         /// or executor ownership. Only async, use_dedicated_executor, queue_capacity,
-        /// and queue_policy are applied. File/rotation/compression fields are ignored.
+        /// and queue_policy are applied. Other fields in Config are ignored.
         /// For hot queue tuning without switching executor mode, use set_queue_config().
         void set_config(const Config& config) {
             std::unique_ptr<detail::SingleThreadExecutor> old_executor;

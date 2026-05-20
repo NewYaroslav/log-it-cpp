@@ -81,7 +81,7 @@ int main() {
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("px", 3.14));
         std::string json = serialize_single(make_item_with_args(args), config);
-        assert(json_contains(json, "\"key\":\"logit.arg.px\",\"value\":{\"doubleValue\":\"3.14\"}"));
+        assert(json_contains(json, "\"key\":\"logit.arg.px\",\"value\":{\"doubleValue\":3.14}"));
     }
 
     // double NaN
@@ -136,6 +136,34 @@ int main() {
         std::string json = serialize_single(make_item_with_args(args), config);
         assert(json_contains(json, "\"key\":\"logit.arg.px\",\"value\":{\"intValue\":\"1\"}"));
         assert(json_contains(json, "\"key\":\"logit.arg.px.1\",\"value\":{\"intValue\":\"2\"}"));
+    }
+
+    // three duplicates
+    {
+        logit::OtlpHttpLoggerConfig config;
+        config.include_arg_names = false;
+        std::vector<logit::VariableValue> args;
+        args.push_back(logit::VariableValue("px", 1));
+        args.push_back(logit::VariableValue("px", 2));
+        args.push_back(logit::VariableValue("px", 3));
+        std::string json = serialize_single(make_item_with_args(args), config);
+        assert(json_contains(json, "\"key\":\"logit.arg.px\",\"value\":{\"intValue\":\"1\"}"));
+        assert(json_contains(json, "\"key\":\"logit.arg.px.1\",\"value\":{\"intValue\":\"2\"}"));
+        assert(json_contains(json, "\"key\":\"logit.arg.px.2\",\"value\":{\"intValue\":\"3\"}"));
+    }
+
+    // dedup suffix vs natural name collision
+    {
+        logit::OtlpHttpLoggerConfig config;
+        config.include_arg_names = false;
+        std::vector<logit::VariableValue> args;
+        args.push_back(logit::VariableValue("a", 1));
+        args.push_back(logit::VariableValue("a", 2));
+        args.push_back(logit::VariableValue("a.1", 3));
+        std::string json = serialize_single(make_item_with_args(args), config);
+        assert(json_contains(json, "\"key\":\"logit.arg.a\",\"value\":{\"intValue\":\"1\"}"));
+        assert(json_contains(json, "\"key\":\"logit.arg.a.1\",\"value\":{\"intValue\":\"2\"}"));
+        assert(json_contains(json, "\"key\":\"logit.arg.a.1.1\",\"value\":{\"intValue\":\"3\"}"));
     }
 
     // empty names (positional fallback)

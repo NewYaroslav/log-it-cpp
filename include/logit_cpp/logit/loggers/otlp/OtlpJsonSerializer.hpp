@@ -117,7 +117,7 @@ namespace logit {
     inline void otlp_write_double_attr(std::ostringstream& os, const std::string& key, double value) {
         if (std::isfinite(value)) {
             os << "{\"key\":\"" << otlp_json_escape(key)
-               << "\",\"value\":{\"doubleValue\":\"" << value << "\"}}";
+               << "\",\"value\":{\"doubleValue\":" << value << "}}";
         } else {
             os << "{\"key\":\"" << otlp_json_escape(key)
                << "\",\"value\":{\"stringValue\":\"" << otlp_json_escape(std::to_string(value)) << "\"}}";
@@ -223,9 +223,8 @@ namespace logit {
                 if (it != key_count.end()) {
                     ++(it->second);
                     key += "." + std::to_string(it->second);
-                } else {
-                    key_count[key] = 0;
                 }
+                key_count[key] = 0;
 
                 otlp_write_comma_if_needed(os, first);
 
