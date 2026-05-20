@@ -346,6 +346,7 @@ namespace logit {
 
         /// \brief Waits for all asynchronous tasks to complete.
         void wait() override {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
             if (!m_config.async) return;
             if (m_executor) {
                 m_executor->wait();
