@@ -79,10 +79,12 @@ namespace logit {
                     queue_capacity,
                     queue_policy)) {}
 
-        /// \brief Update executor-related configuration at runtime.
-        ///
-        /// Only these Config fields are applied:
-        ///   async, use_dedicated_executor, queue_capacity, queue_policy.
+        /// \brief Updates executor-related configuration at runtime.
+        /// \details This call is blocking. If asynchronous logging is currently enabled,
+        /// it waits until already accepted tasks are drained before changing async mode
+        /// or executor ownership. Only async, use_dedicated_executor, queue_capacity,
+        /// and queue_policy are applied. File/rotation/compression fields are ignored.
+        /// For hot queue tuning without switching executor mode, use set_queue_config().
         void set_config(const Config& config) {
             std::unique_ptr<detail::SingleThreadExecutor> old_executor;
             {
@@ -113,6 +115,34 @@ namespace logit {
             if (old_executor) {
                 old_executor->shutdown();
             }
+        }
+
+        /// \brief Updates queue_capacity and queue_policy at runtime without draining tasks.
+        /// \param queue_capacity New maximum queue size (0 = unlimited).
+        /// \param queue_policy Overflow policy for the executor queue.
+        /// \return true if a dedicated executor was present and updated;
+        ///         false if the logger is shut down or uses the global executor.
+        /// \details Unlike set_config(), this method never blocks on task drain and never
+        /// changes async mode or executor ownership. If no dedicated executor exists,
+        /// only the stored config fields are updated for future reference.
+        bool set_queue_config(std::size_t queue_capacity,
+                              detail::QueuePolicy queue_policy) {
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+
+            if (m_shutdown.load(std::memory_order_acquire)) {
+                return false;
+            }
+
+            m_config.queue_capacity = queue_capacity;
+            m_config.queue_policy = queue_policy;
+
+            if (!m_executor) {
+                return false;
+            }
+
+            m_executor->set_max_queue_size(queue_capacity);
+            m_executor->set_queue_policy(queue_policy);
+            return true;
         }
 
         /// \brief Logs a message to the Windows debug output or stderr.

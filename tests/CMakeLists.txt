@@ -30,6 +30,7 @@ else()
         file_logger_rotation_naming_timestamp_test.cpp
         file_logger_rotation_test.cpp
         file_logger_test.cpp
+        file_logger_set_queue_config_test.cpp
         file_logger_zstd_compression_test.cpp
         fmt_macros_test.cpp
         include_buffered_log_entry_nhr_test.cpp
@@ -61,6 +62,8 @@ else()
         single_thread_executor_test.cpp
         task_executor_resize_race_test.cpp
         unique_file_logger_file_api_test.cpp
+        unique_file_logger_set_queue_config_test.cpp
+        windows_debug_logger_set_queue_config_test.cpp
         windows_debug_macro_compile_test.cpp
     )
     if(NOT LOGIT_WITH_GZIP)
