@@ -60,7 +60,49 @@ LogIt++ -> OtlpHttpLogger -> kurlyk::HttpClient -> OpenTelemetry Collector / Lok
 | `file`, `line`, `function` | `code.file.path`, `code.line.number`, `code.function.name` |
 | `thread_id` | `thread.id` |
 | `format` | `logit.format` |
-| `arg_names` | `logit.arg_names` |
+| `arg_names` | `logit.arg_names` (legacy, deprecated) |
+| `args_array` elements | typed attributes under `logit.arg.*` prefix |
+
+## Structured typed attributes
+
+When `include_args = true` (the default), each element of `args_array` is emitted as a separate OTLP attribute with a typed value. The key is built from `args_prefix` + the sanitized argument name.
+
+### Configuration flags
+
+| Flag | Default | Description |
+| --- | --- | --- |
+| `include_args` | `true` | Emit structured typed arg attributes. |
+| `include_arg_names` | `false` | Emit legacy `logit.arg_names` string attribute. |
+| `args_prefix` | `"logit.arg."` | Key prefix for structured arg attributes. |
+
+### Type mapping
+
+| VariableValue type | OTLP AnyValue field |
+| --- | --- |
+| `BOOL_VAL` | `boolValue` |
+| `INT8_VAL`..`INT64_VAL` | `intValue` |
+| `UINT8_VAL`..`UINT32_VAL` | `intValue` |
+| `UINT64_VAL` | `intValue` if <= INT64_MAX, else `stringValue` |
+| `FLOAT_VAL`, `DOUBLE_VAL`, `LONG_DOUBLE_VAL` | `doubleValue` if finite, else `stringValue` |
+| All other types | `stringValue` (via `to_string()`) |
+
+### Name sanitization and deduplication
+
+Argument names are sanitized: characters that are not alphanumeric, `_`, `.`, or `-` are replaced with `_`. If the sanitized name is empty or consists only of underscores, a positional key (`args_prefix` + index) is used instead.
+
+Duplicate keys are resolved by appending `.N` (starting at 1 for the second occurrence). For example, two args both named `px` produce keys `logit.arg.px` and `logit.arg.px.1`.
+
+### Reserved prefix
+
+The default prefix `logit.arg.` is reserved. Changing `args_prefix` is supported but may cause attribute collisions with other OTLP receivers.
+
+### Cardinality warning
+
+Avoid putting unique values (timestamps, request IDs, UUIDs) into arg attributes. High-cardinality attributes increase memory and storage costs in OTLP collectors and backends (Loki, Tempo, etc.). Use structured attributes for low-cardinality dimensions like `symbol`, `side`, or `region`.
+
+### Deprecation notice
+
+The `logit.arg_names` OTLP attribute (controlled by `include_arg_names`) is deprecated. It emits argument names as a single comma-separated string with no type information. Prefer `include_args = true` for typed, queryable attributes.
 
 Resource attributes are configured through `OtlpHttpLoggerConfig`, including `service.name`, `service.namespace`, `service.instance.id`, and `deployment.environment.name`.
 

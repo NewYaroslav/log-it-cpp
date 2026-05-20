@@ -7,9 +7,14 @@
 
 #include "OtlpHttpLoggerConfig.hpp"
 #include "OtlpRecordSnapshot.hpp"
+#include <cctype>
 #include <cstdint>
+#include <cmath>
+#include <iomanip>
+#include <limits>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace logit {
@@ -107,6 +112,48 @@ namespace logit {
            << "\",\"value\":{\"boolValue\":" << (value ? "true" : "false") << "}}";
     }
 
+    /// \brief Writes a double OTLP attribute.
+    /// \param os Output stream.
+    /// \param key Attribute key.
+    /// \param value Attribute double value.
+    inline void otlp_write_double_attr(std::ostringstream& os, const std::string& key, double value) {
+        if (std::isfinite(value)) {
+            os << "{\"key\":\"" << otlp_json_escape(key)
+               << "\",\"value\":{\"doubleValue\":"
+               << std::setprecision(std::numeric_limits<double>::max_digits10)
+               << value << "}}";
+        } else {
+            os << "{\"key\":\"" << otlp_json_escape(key)
+               << "\",\"value\":{\"stringValue\":\"" << otlp_json_escape(std::to_string(value)) << "\"}}";
+        }
+    }
+
+    /// \brief Writes a uint64 OTLP attribute.
+    /// \param os Output stream.
+    /// \param key Attribute key.
+    /// \param value Attribute uint64 value.
+    inline void otlp_write_uint_attr(std::ostringstream& os, const std::string& key, uint64_t value) {
+        if (value <= static_cast<uint64_t>((std::numeric_limits<int64_t>::max)())) {
+            otlp_write_int_attr(os, key, static_cast<int64_t>(value));
+        } else {
+            os << "{\"key\":\"" << otlp_json_escape(key)
+               << "\",\"value\":{\"stringValue\":\"" << value << "\"}}";
+        }
+    }
+
+    /// \brief Sanitizes an attribute key for OTLP.
+    /// \param name Raw key name.
+    /// \return Sanitized key with invalid chars replaced by underscore.
+    inline std::string sanitize_otlp_key(const std::string& name) {
+        std::string result = name;
+        for (char& c : result) {
+            if (!std::isalnum(static_cast<unsigned char>(c)) && c != '_' && c != '.' && c != '-') {
+                c = '_';
+            }
+        }
+        return result;
+    }
+
     /// \brief Writes one OTLP JSON log record.
     /// \param os Output stream.
     /// \param item Log item to serialize.
@@ -151,6 +198,82 @@ namespace logit {
         if (config.include_arg_names && !r.arg_names.empty()) {
             otlp_write_comma_if_needed(os, first);
             otlp_write_string_attr(os, "logit.arg_names", r.arg_names);
+        }
+
+        if (config.include_args && !r.args_array.empty()) {
+            std::unordered_map<std::string, std::size_t> key_count;
+
+            for (std::size_t i = 0; i < r.args_array.size(); ++i) {
+                const VariableValue& arg = r.args_array[i];
+
+                std::string sanitized = sanitize_otlp_key(arg.name);
+
+                bool all_underscore = true;
+                for (std::size_t j = 0; j < sanitized.size(); ++j) {
+                    if (sanitized[j] != '_') {
+                        all_underscore = false;
+                        break;
+                    }
+                }
+
+                std::string key;
+                if (sanitized.empty() || all_underscore) {
+                    key = config.args_prefix + std::to_string(i);
+                } else {
+                    key = config.args_prefix + sanitized;
+                }
+
+                auto it = key_count.find(key);
+                if (it != key_count.end()) {
+                    ++(it->second);
+                    key += "." + std::to_string(it->second);
+                }
+                key_count[key] = 0;
+
+                otlp_write_comma_if_needed(os, first);
+
+                switch (arg.type) {
+                case VariableValue::ValueType::BOOL_VAL:
+                    otlp_write_bool_attr(os, key, arg.pod_value.bool_value);
+                    break;
+                case VariableValue::ValueType::INT8_VAL:
+                    otlp_write_int_attr(os, key, static_cast<int64_t>(arg.pod_value.int8_value));
+                    break;
+                case VariableValue::ValueType::INT16_VAL:
+                    otlp_write_int_attr(os, key, static_cast<int64_t>(arg.pod_value.int16_value));
+                    break;
+                case VariableValue::ValueType::INT32_VAL:
+                    otlp_write_int_attr(os, key, static_cast<int64_t>(arg.pod_value.int32_value));
+                    break;
+                case VariableValue::ValueType::INT64_VAL:
+                    otlp_write_int_attr(os, key, arg.pod_value.int64_value);
+                    break;
+                case VariableValue::ValueType::UINT8_VAL:
+                    otlp_write_uint_attr(os, key, static_cast<uint64_t>(arg.pod_value.uint8_value));
+                    break;
+                case VariableValue::ValueType::UINT16_VAL:
+                    otlp_write_uint_attr(os, key, static_cast<uint64_t>(arg.pod_value.uint16_value));
+                    break;
+                case VariableValue::ValueType::UINT32_VAL:
+                    otlp_write_uint_attr(os, key, static_cast<uint64_t>(arg.pod_value.uint32_value));
+                    break;
+                case VariableValue::ValueType::UINT64_VAL:
+                    otlp_write_uint_attr(os, key, arg.pod_value.uint64_value);
+                    break;
+                case VariableValue::ValueType::FLOAT_VAL:
+                    otlp_write_double_attr(os, key, static_cast<double>(arg.pod_value.float_value));
+                    break;
+                case VariableValue::ValueType::DOUBLE_VAL:
+                    otlp_write_double_attr(os, key, arg.pod_value.double_value);
+                    break;
+                case VariableValue::ValueType::LONG_DOUBLE_VAL:
+                    otlp_write_double_attr(os, key, static_cast<double>(arg.pod_value.long_double_value));
+                    break;
+                default:
+                    otlp_write_string_attr(os, key, arg.to_string());
+                    break;
+                }
+            }
         }
 
         otlp_write_comma_if_needed(os, first);
