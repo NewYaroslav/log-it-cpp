@@ -201,8 +201,13 @@ namespace logit {
 
         /// \brief Update executor-related configuration at runtime.
         ///
-        /// Only async, use_dedicated_executor, queue_capacity, and queue_policy
-        /// are applied. All other Config fields are ignored.
+        /// Only these Config fields are applied:
+        ///   async, use_dedicated_executor, queue_capacity, queue_policy.
+        ///
+        /// The following fields are ignored to avoid disturbing open files
+        /// and active rotation/compression state:
+        ///   directory, auto_delete_days, max_file_size_bytes, max_rotated_files,
+        ///   compress, compress_level, compress_async, external_cmd, naming, seq_width.
         void set_config(const Config& config) {
             std::unique_ptr<detail::SingleThreadExecutor> old_executor;
             {
