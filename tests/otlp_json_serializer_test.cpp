@@ -5,6 +5,7 @@
 
 int main() {
     logit::OtlpHttpLoggerConfig config;
+    config.include_arg_names = true;
     config.service_name = "trade-bot";
     config.service_namespace = "tests";
     config.service_instance_id = "instance-1";

@@ -36,7 +36,9 @@ namespace logit {
         bool include_source = true;     ///< Export source file, line, and function attributes.
         bool include_thread_id = true;  ///< Export thread id attribute.
         bool include_format = true;     ///< Export original format string as `logit.format`.
-        bool include_arg_names = true;  ///< Export original argument names as `logit.arg_names`.
+        bool include_arg_names = false; ///< Export original argument names as `logit.arg_names` (legacy).
+        bool include_args = true;       ///< Export structured typed arg attributes.
+        std::string args_prefix = "logit.arg."; ///< Key prefix for structured arg attributes.
     };
 
 } // namespace logit

@@ -9,6 +9,7 @@
 #include <sstream>
 #include <string>
 #include <thread>
+#include <vector>
 
 namespace logit {
 
@@ -22,6 +23,7 @@ namespace logit {
         std::string function;                         ///< Source function name.
         std::string format;                           ///< Original message or format string.
         std::string arg_names;                        ///< Original argument names.
+        std::vector<VariableValue> args_array;        ///< Structured argument values.
         std::string thread_id;                        ///< Stringified std::thread::id.
         int logger_index = -1;                        ///< Target logger index, or -1 for all.
         bool print_mode = false;                      ///< Raw argument print mode flag.
@@ -50,6 +52,7 @@ namespace logit {
         out.function = record.function;
         out.format = record.format;
         out.arg_names = record.arg_names;
+        out.args_array = record.args_array;
         out.thread_id = otlp_thread_id_to_string(record.thread_id);
         out.logger_index = record.logger_index;
         out.print_mode = record.print_mode;
