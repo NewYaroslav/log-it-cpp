@@ -53,6 +53,7 @@ else()
         otlp_http_logger_callback_test.cpp
         otlp_json_serializer_test.cpp
         otlp_structured_attributes_test.cpp
+        otlp_payload_logger_test.cpp
         per_logger_isolation_test.cpp
         per_logger_mixed_mode_test.cpp
         printf_format_macros_test.cpp
@@ -82,6 +83,7 @@ else()
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_integration_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_callback_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_structured_attributes_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES otlp_payload_logger_test.cpp)
     endif()
     foreach(test_src ${TEST_SOURCES})
         get_filename_component(test_name ${test_src} NAME_WE)

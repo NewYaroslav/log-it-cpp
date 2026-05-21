@@ -30,6 +30,7 @@
 
 #ifdef LOGIT_WITH_OTLP
 #include "loggers/OtlpHttpLogger.hpp"
+#include "loggers/OtlpPayloadLogger.hpp"
 #endif
 
 #endif // _LOGIT_LOGGERS_HPP_INCLUDED
