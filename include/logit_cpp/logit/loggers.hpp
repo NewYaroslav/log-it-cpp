@@ -33,4 +33,11 @@
 #include "loggers/OtlpPayloadLogger.hpp"
 #endif
 
+#ifdef LOGIT_WITH_PROMETHEUS
+#include "loggers/PrometheusPayloadLogger.hpp"
+#endif
+#ifdef LOGIT_WITH_PROMETHEUS_SERVER
+#include "loggers/PrometheusHttpServerLogger.hpp"
+#endif
+
 #endif // _LOGIT_LOGGERS_HPP_INCLUDED

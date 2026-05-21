@@ -54,6 +54,9 @@ else()
         otlp_json_serializer_test.cpp
         otlp_structured_attributes_test.cpp
         otlp_payload_logger_test.cpp
+        prometheus_text_serializer_test.cpp
+        prometheus_payload_logger_test.cpp
+        prometheus_http_server_logger_test.cpp
         per_logger_isolation_test.cpp
         per_logger_mixed_mode_test.cpp
         printf_format_macros_test.cpp
@@ -85,6 +88,14 @@ else()
         list(REMOVE_ITEM TEST_SOURCES otlp_structured_attributes_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_payload_logger_test.cpp)
     endif()
+    if(NOT LOGIT_WITH_PROMETHEUS)
+        list(REMOVE_ITEM TEST_SOURCES prometheus_text_serializer_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES prometheus_payload_logger_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES prometheus_http_server_logger_test.cpp)
+    endif()
+    if(LOGIT_WITH_PROMETHEUS AND NOT LOGIT_WITH_PROMETHEUS_SERVER)
+        list(REMOVE_ITEM TEST_SOURCES prometheus_http_server_logger_test.cpp)
+    endif()
     foreach(test_src ${TEST_SOURCES})
         get_filename_component(test_name ${test_src} NAME_WE)
         add_executable(${test_name} ${test_src})
@@ -93,6 +104,18 @@ else()
         if(LOGIT_WITH_OTLP AND test_name MATCHES "^otlp_http_logger_(integration|callback)_test$")
             target_include_directories(${test_name} PRIVATE
                 "${CMAKE_CURRENT_SOURCE_DIR}/../external/kurlyk/external/Simple-Web-Server")
+        endif()
+        if(LOGIT_WITH_PROMETHEUS_SERVER AND test_name STREQUAL "prometheus_http_server_logger_test")
+            if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../external/Simple-Web-Server/server_http.hpp")
+                target_include_directories(${test_name} PRIVATE
+                    "${CMAKE_CURRENT_SOURCE_DIR}/../external/Simple-Web-Server")
+            else()
+                target_include_directories(${test_name} PRIVATE
+                    "${CMAKE_CURRENT_SOURCE_DIR}/../external/kurlyk/external/Simple-Web-Server")
+            endif()
+            if(WIN32)
+                target_link_libraries(${test_name} PRIVATE ws2_32 wsock32)
+            endif()
         endif()
         if(test_name STREQUAL "backpressure_policy_test" OR
            test_name STREQUAL "backpressure_ordering_test")
