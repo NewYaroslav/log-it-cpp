@@ -38,8 +38,6 @@ namespace logit {
             PrometheusTextFormatConfig format;
             std::function<void(std::string)> on_payload;
             std::function<void(std::vector<PrometheusMetricFamily>&)> on_collect;
-            bool async = true;
-            unsigned export_interval_ms = 1000;
             bool emit_on_log = false;
             bool emit_on_wait = true;
         };

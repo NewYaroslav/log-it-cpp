@@ -43,9 +43,10 @@ namespace logit {
             std::string address = "0.0.0.0";
             unsigned short port = 9090;
             std::string path = "/metrics";
+            std::string health_path = "/health";
+            bool enable_health_endpoint = true;
             std::function<void(std::vector<PrometheusMetricFamily>&)> on_collect;
             bool start_immediately = true;
-            bool async = true;
         };
 
         /// \brief Constructs Prometheus HTTP server logger with default configuration.
@@ -59,6 +60,9 @@ namespace logit {
             m_server.config.address = m_config.address;
             m_server.config.port = m_config.port;
 
+            // Lifecycle note: this lambda captures `this`. The destructor calls stop()
+            // which invokes server.stop() and joins m_server_thread, ensuring no
+            // active handlers reference the logger after destruction.
             m_server.resource[m_config.path]["GET"] =
                 [this](std::shared_ptr<HttpServer::Response> response,
                        std::shared_ptr<HttpServer::Request>) {
@@ -74,10 +78,20 @@ namespace logit {
                     }
                 };
 
+            if (m_config.enable_health_endpoint) {
+                m_server.resource[m_config.health_path]["GET"] =
+                    [](std::shared_ptr<HttpServer::Response> response,
+                       std::shared_ptr<HttpServer::Request>) {
+                        response->write(SimpleWeb::StatusCode::success_ok, "ok");
+                    };
+            }
+
             m_server.default_resource["GET"] =
                 [](std::shared_ptr<HttpServer::Response> response,
                    std::shared_ptr<HttpServer::Request>) {
-                    response->write(SimpleWeb::StatusCode::success_ok, "ok");
+                    response->write(
+                        SimpleWeb::StatusCode::client_error_not_found,
+                        "not found");
                 };
 
             if (m_config.start_immediately) {
@@ -131,6 +145,7 @@ namespace logit {
                     try {
                         m_config.on_collect(families);
                     } catch (...) {
+                        ++m_failed_exports;
                     }
                 }
             }

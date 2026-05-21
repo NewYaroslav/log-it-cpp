@@ -9,6 +9,8 @@
 #include <thread>
 #include <vector>
 
+#include <client_http.hpp>
+
 int main() {
     // Test 1: Construction and shutdown without deadlock
     {
@@ -164,6 +166,115 @@ int main() {
             std::chrono::steady_clock::now() - start).count();
 
         assert(elapsed < 5000);
+    }
+
+    // Test 7: HTTP GET /metrics returns valid payload
+    {
+        logit::PrometheusHttpServerLogger::Config config;
+        config.port = 43197;
+        config.path = "/metrics";
+        config.format.metric_prefix = "logit_";
+        config.start_immediately = false;
+
+        logit::PrometheusHttpServerLogger logger(config);
+
+        logit::LogRecord record(
+            logit::LogLevel::LOG_LVL_INFO, 1710000000123LL,
+            "test.cpp", 60, "test_func", "http metrics test", "",
+            -1, false, false, false);
+        logger.log(record, "http metrics test");
+
+        logger.start();
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+
+        using HttpClient = SimpleWeb::Client<SimpleWeb::HTTP>;
+        HttpClient client("localhost:43197");
+        auto response = client.request("GET", "/metrics");
+
+        assert(response->status_code.find("200") != std::string::npos);
+
+        auto ct_it = response->header.find("Content-Type");
+        assert(ct_it != response->header.end());
+        assert(ct_it->second.find("text/plain") != std::string::npos);
+
+        std::string body = response->content.string();
+        assert(body.find("# HELP logit_log_records_total") != std::string::npos);
+        assert(body.find("# TYPE logit_log_records_total counter") != std::string::npos);
+        assert(body.find("logit_log_records_total") != std::string::npos);
+
+        logger.shutdown();
+    }
+
+    // Test 8: HTTP GET /health returns 200
+    {
+        logit::PrometheusHttpServerLogger::Config config;
+        config.port = 43198;
+        config.enable_health_endpoint = true;
+        config.start_immediately = false;
+
+        logit::PrometheusHttpServerLogger logger(config);
+        logger.start();
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+
+        using HttpClient = SimpleWeb::Client<SimpleWeb::HTTP>;
+        HttpClient client("localhost:43198");
+        auto response = client.request("GET", "/health");
+
+        assert(response->status_code.find("200") != std::string::npos);
+        assert(response->content.string() == "ok");
+
+        logger.shutdown();
+    }
+
+    // Test 9: Unknown path returns 404
+    {
+        logit::PrometheusHttpServerLogger::Config config;
+        config.port = 43199;
+        config.start_immediately = false;
+
+        logit::PrometheusHttpServerLogger logger(config);
+        logger.start();
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+
+        using HttpClient = SimpleWeb::Client<SimpleWeb::HTTP>;
+        HttpClient client("localhost:43199");
+        auto response = client.request("GET", "/unknown");
+
+        assert(response->status_code.find("404") != std::string::npos);
+
+        logger.shutdown();
+    }
+
+    // Test 10: Custom metrics path works via HTTP
+    {
+        logit::PrometheusHttpServerLogger::Config config;
+        config.port = 43200;
+        config.path = "/custom_metrics";
+        config.format.metric_prefix = "app_";
+        config.start_immediately = false;
+
+        logit::PrometheusHttpServerLogger logger(config);
+
+        logit::LogRecord record(
+            logit::LogLevel::LOG_LVL_WARN, 1710000000123LL,
+            "test.cpp", 70, "test_func", "custom path test", "",
+            -1, false, false, false);
+        logger.log(record, "custom path test");
+
+        logger.start();
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+
+        using HttpClient = SimpleWeb::Client<SimpleWeb::HTTP>;
+        HttpClient client("localhost:43200");
+        auto response = client.request("GET", "/custom_metrics");
+
+        assert(response->status_code.find("200") != std::string::npos);
+
+        std::string body = response->content.string();
+        assert(body.find("# HELP app_log_records_total") != std::string::npos);
+        assert(body.find("app_log_records_total") != std::string::npos);
+
+        logger.shutdown();
     }
 
     return 0;

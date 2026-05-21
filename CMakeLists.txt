@@ -9,6 +9,8 @@ option(LOGIT_WITH_GZIP "Enable gzip via zlib" OFF)
 option(LOGIT_WITH_ZSTD "Enable zstd" OFF)
 option(LOGIT_WITH_FMT "Enable fmt support" OFF)
 option(LOGIT_WITH_OTLP "Enable OTLP/HTTP log export via optional kurlyk dependency" OFF)
+option(LOGIT_WITH_PROMETHEUS "Enable Prometheus text payload support" OFF)
+option(LOGIT_WITH_PROMETHEUS_SERVER "Enable Prometheus HTTP server backend" OFF)
 option(LOGIT_USE_SUBMODULES "Allow bundled optional dependency fallback" OFF)
 option(LOGIT_WITH_SYSLOG "Enable POSIX syslog backend" ON)
 option(LOGIT_WITH_WIN_EVENT_LOG "Enable Windows Event Log backend" ON)
@@ -131,9 +133,6 @@ if(LOGIT_WITH_OTLP)
 endif()
 
 # ---------- Prometheus ----------
-option(LOGIT_WITH_PROMETHEUS "Enable Prometheus text payload support" OFF)
-option(LOGIT_WITH_PROMETHEUS_SERVER "Enable Prometheus HTTP server backend" OFF)
-
 if(LOGIT_WITH_PROMETHEUS)
     if(EMSCRIPTEN)
         message(FATAL_ERROR "LOGIT_WITH_PROMETHEUS is not supported for Emscripten.")
