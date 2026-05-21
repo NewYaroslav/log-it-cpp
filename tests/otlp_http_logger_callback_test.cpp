@@ -97,10 +97,10 @@ int main() {
         std::thread server_thread;
         start_server(server, server_thread, counter, port);
 
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpHttpLogger::Config config;
         config.host = "http://127.0.0.1:" + std::to_string(port);
         config.path = "/v1/logs";
-        config.service_name = "callback-test";
+        config.format.service_name = "callback-test";
         config.max_batch_size = 256;
         config.export_interval_ms = 50;
         config.request_timeout_sec = 2;
@@ -138,10 +138,10 @@ int main() {
         std::thread server_thread;
         start_server(server, server_thread, counter, port);
 
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpHttpLogger::Config config;
         config.host = "http://127.0.0.1:" + std::to_string(port);
         config.path = "/v1/logs";
-        config.service_name = "callback-test";
+        config.format.service_name = "callback-test";
         config.max_batch_size = 1;
         config.max_in_flight_requests = 1;
         config.export_interval_ms = 50;
@@ -175,10 +175,10 @@ int main() {
         std::thread server_thread;
         start_server(server, server_thread, counter, port);
 
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpHttpLogger::Config config;
         config.host = "http://127.0.0.1:" + std::to_string(port);
         config.path = "/v1/logs";
-        config.service_name = "callback-test";
+        config.format.service_name = "callback-test";
         config.max_batch_size = 1;
         config.max_in_flight_requests = 2;
         config.export_interval_ms = 50;
@@ -210,10 +210,10 @@ int main() {
         std::thread server_thread;
         start_server(server, server_thread, counter, port, 500);
 
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpHttpLogger::Config config;
         config.host = "http://127.0.0.1:" + std::to_string(port);
         config.path = "/v1/logs";
-        config.service_name = "callback-test";
+        config.format.service_name = "callback-test";
         config.max_batch_size = 256;
         config.export_interval_ms = 50;
         config.request_timeout_sec = 2;
@@ -251,10 +251,10 @@ int main() {
         std::thread server_thread;
         start_server(server, server_thread, counter, port);
 
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpHttpLogger::Config config;
         config.host = "http://127.0.0.1:" + std::to_string(port);
         config.path = "/v1/logs";
-        config.service_name = "callback-test";
+        config.format.service_name = "callback-test";
         config.max_batch_size = 256;
         config.export_interval_ms = 50;
         config.request_timeout_sec = 5;
@@ -288,10 +288,10 @@ int main() {
         std::thread server_thread;
         start_server(server, server_thread, counter, port);
 
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpHttpLogger::Config config;
         config.host = "http://127.0.0.1:" + std::to_string(port);
         config.path = "/v1/logs";
-        config.service_name = "callback-test";
+        config.format.service_name = "callback-test";
         config.max_batch_size = 256;
         config.export_interval_ms = 50;
         config.request_timeout_sec = 10;
@@ -327,10 +327,10 @@ int main() {
         std::thread server_thread;
         start_server(server, server_thread, counter, port);
 
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpHttpLogger::Config config;
         config.host = "http://127.0.0.1:" + std::to_string(port);
         config.path = "/v1/logs";
-        config.service_name = "callback-test";
+        config.format.service_name = "callback-test";
         config.max_batch_size = 256;
         config.export_interval_ms = 50;
         config.request_timeout_sec = 10;

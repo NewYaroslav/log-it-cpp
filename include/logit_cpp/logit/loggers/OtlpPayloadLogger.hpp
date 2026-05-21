@@ -10,7 +10,7 @@
 #endif
 
 #include "ILogger.hpp"
-#include "otlp/OtlpPayloadLoggerConfig.hpp"
+#include "otlp/OtlpJsonFormatConfig.hpp"
 #include "otlp/OtlpJsonSerializer.hpp"
 
 #include <atomic>
@@ -34,12 +34,22 @@ namespace logit {
     /// to a user-provided callback instead of sending HTTP itself.
     class OtlpPayloadLogger final : public ILogger {
     public:
+        struct Config {
+            OtlpJsonFormatConfig format;
+            std::function<void(std::string)> on_payload;
+            bool async = true;
+            std::size_t max_batch_size = 256;
+            std::size_t max_queue_size = 1024;
+            bool drop_on_overflow = true;
+            unsigned export_interval_ms = 100;
+        };
+
         /// \brief Constructs OTLP payload logger with default configuration.
-        OtlpPayloadLogger() : OtlpPayloadLogger(OtlpPayloadLoggerConfig()) {}
+        OtlpPayloadLogger() : OtlpPayloadLogger(Config()) {}
 
         /// \brief Constructs OTLP payload logger with custom configuration.
         /// \param config Export configuration.
-        explicit OtlpPayloadLogger(const OtlpPayloadLoggerConfig& config)
+        explicit OtlpPayloadLogger(const Config& config)
             : m_config(config) {
             if (m_config.async) {
                 m_worker = std::thread(&OtlpPayloadLogger::worker_loop, this);
@@ -207,7 +217,7 @@ namespace logit {
         }
 
     private:
-        OtlpPayloadLoggerConfig m_config;
+        Config m_config;
 
         std::mutex m_mutex;
         std::condition_variable m_cv;

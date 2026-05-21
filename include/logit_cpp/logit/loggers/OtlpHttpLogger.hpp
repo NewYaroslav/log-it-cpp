@@ -10,7 +10,7 @@
 #endif
 
 #include "ILogger.hpp"
-#include "otlp/OtlpHttpLoggerConfig.hpp"
+#include "otlp/OtlpJsonFormatConfig.hpp"
 #include "otlp/OtlpJsonSerializer.hpp"
 
 #ifndef KURLYK_WEBSOCKET_SUPPORT
@@ -52,12 +52,28 @@ namespace logit {
     /// OTLP/HTTP JSON and sends batches to an OpenTelemetry Collector-compatible endpoint.
     class OtlpHttpLogger final : public ILogger {
     public:
+        struct Config {
+            OtlpJsonFormatConfig format;
+            std::string host = "http://localhost:4318";
+            std::string path = "/v1/logs";
+            std::size_t max_queue_size = 8192;
+            std::size_t max_batch_size = 256;
+            std::size_t max_in_flight_requests = 1;
+            int export_interval_ms = 1000;
+            int request_timeout_sec = 3;
+            long retry_attempts = 2;
+            long retry_delay_ms = 250;
+            bool drop_on_overflow = true;
+            bool async = true;
+            bool cancel_on_shutdown = false;
+        };
+
         /// \brief Constructs OTLP HTTP logger with default configuration.
-        OtlpHttpLogger() : OtlpHttpLogger(OtlpHttpLoggerConfig()) {}
+        OtlpHttpLogger() : OtlpHttpLogger(Config()) {}
 
         /// \brief Constructs OTLP HTTP logger with custom configuration.
         /// \param config Export configuration.
-        explicit OtlpHttpLogger(const OtlpHttpLoggerConfig& config)
+        explicit OtlpHttpLogger(const Config& config)
             : m_config(config),
               m_client(config.host),
               m_state(std::make_shared<OtlpHttpLoggerState>()) {
@@ -238,7 +254,7 @@ namespace logit {
         }
 
     private:
-        OtlpHttpLoggerConfig m_config;       ///< Export configuration.
+        Config m_config;       ///< Export configuration.
         kurlyk::HttpClient   m_client;       ///< HTTP client used for OTLP export.
 
         mutable std::mutex m_lifecycle_mutex;///< Serializes log() with shutdown.
@@ -298,7 +314,7 @@ namespace logit {
         /// \brief Submits one batch asynchronously to the configured OTLP endpoint.
         /// \param batch Batch to export.
         void submit_batch_async(const std::vector<OtlpLogItem>& batch) {
-            const std::string payload = build_otlp_logs_json_payload(batch, m_config);
+            const std::string payload = build_otlp_logs_json_payload(batch, m_config.format);
             kurlyk::Headers headers;
             headers.emplace("Content-Type", "application/json");
 

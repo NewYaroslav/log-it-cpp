@@ -7,11 +7,11 @@ int main() {
     LOGIT_WAIT();
     return 0;
 #else
-    logit::OtlpHttpLoggerConfig config;
+    logit::OtlpHttpLogger::Config config;
     config.host = "http://localhost:4318";
     config.path = "/v1/logs";
-    config.service_name = "logit-otlp-example";
-    config.deployment_environment = "dev";
+    config.format.service_name = "logit-otlp-example";
+    config.format.deployment_environment = "dev";
     config.max_batch_size = 32;
     config.export_interval_ms = 500;
 

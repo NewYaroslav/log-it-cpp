@@ -4,7 +4,7 @@
 #include <vector>
 
 int main() {
-    logit::OtlpHttpLoggerConfig config;
+    logit::OtlpJsonFormatConfig config;
     config.include_arg_names = true;
     config.service_name = "trade-bot";
     config.service_namespace = "tests";

@@ -27,7 +27,7 @@ int main() {
     {
         PayloadCollector collector;
 
-        logit::OtlpPayloadLoggerConfig config;
+        logit::OtlpPayloadLogger::Config config;
         config.async = false;
         config.format.service_name = "sync-test";
         config.on_payload = [&collector](std::string payload) {
@@ -57,7 +57,7 @@ int main() {
     {
         std::atomic<int> call_count{0};
 
-        logit::OtlpPayloadLoggerConfig config;
+        logit::OtlpPayloadLogger::Config config;
         config.async = false;
         config.format.service_name = "sync-throw-test";
         config.on_payload = [&call_count](std::string) {
@@ -85,7 +85,7 @@ int main() {
     {
         PayloadCollector collector;
 
-        logit::OtlpPayloadLoggerConfig config;
+        logit::OtlpPayloadLogger::Config config;
         config.async = true;
         config.format.service_name = "batch-test";
         config.max_batch_size = 256;
@@ -138,7 +138,7 @@ int main() {
     {
         PayloadCollector collector;
 
-        logit::OtlpPayloadLoggerConfig config;
+        logit::OtlpPayloadLogger::Config config;
         config.async = true;
         config.format.service_name = "overflow-test";
         config.max_queue_size = 2;
@@ -175,7 +175,7 @@ int main() {
     {
         PayloadCollector collector;
 
-        logit::OtlpPayloadLoggerConfig config;
+        logit::OtlpPayloadLogger::Config config;
         config.async = true;
         config.format.service_name = "wait-test";
         config.max_batch_size = 256;
@@ -213,7 +213,7 @@ int main() {
     {
         PayloadCollector collector;
 
-        logit::OtlpPayloadLoggerConfig config;
+        logit::OtlpPayloadLogger::Config config;
         config.async = true;
         config.format.service_name = "shutdown-test";
         config.max_batch_size = 256;
@@ -248,7 +248,7 @@ int main() {
     {
         PayloadCollector collector;
 
-        logit::OtlpPayloadLoggerConfig config;
+        logit::OtlpPayloadLogger::Config config;
         config.async = true;
         config.format.service_name = "slow-callback-test";
         config.max_batch_size = 256;
@@ -285,7 +285,7 @@ int main() {
     {
         std::atomic<int> call_count{0};
 
-        logit::OtlpPayloadLoggerConfig config;
+        logit::OtlpPayloadLogger::Config config;
         config.async = true;
         config.format.service_name = "throw-test";
         config.max_batch_size = 256;
