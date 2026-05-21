@@ -21,7 +21,11 @@ option(LOGIT_USE_MPSC_RING "Enable lock-free TaskExecutor queue" ON)
 option(LOGIT_ENABLE_DROP_OLDEST_SLOWPATH "Enable TaskExecutor DropOldest slow-path" ON)
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 11)
+    if(LOGIT_WITH_OTLP)
+        set(CMAKE_CXX_STANDARD 17)
+    else()
+        set(CMAKE_CXX_STANDARD 11)
+    endif()
 endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -189,11 +193,16 @@ install(DIRECTORY include/ DESTINATION include)
 
 install(TARGETS log-it-cpp EXPORT log-it-cppTargets)
 
+# kurlyk (OTLP) is brought in via add_subdirectory(EXCLUDE_FROM_ALL) and is
+# not in any export set, so install(EXPORT) fails when LOGIT_WITH_OTLP=ON.
+# Guard the export install step; packaging with OTLP requires pre-installed kurlyk.
+if(NOT LOGIT_WITH_OTLP)
 install(EXPORT log-it-cppTargets
     FILE log-it-cppTargets.cmake
     NAMESPACE log-it-cpp::
     DESTINATION lib/cmake/log-it-cpp
 )
+endif()
 
 write_basic_package_version_file(
     "${CMAKE_CURRENT_BINARY_DIR}/log-it-cppConfigVersion.cmake"

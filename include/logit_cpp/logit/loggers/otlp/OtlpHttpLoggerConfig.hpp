@@ -23,6 +23,7 @@ namespace logit {
 
         std::size_t max_queue_size = 8192; ///< Maximum pending records before overflow policy is applied.
         std::size_t max_batch_size = 256;  ///< Maximum records per OTLP export request.
+        std::size_t max_in_flight_requests = 1; ///< Maximum concurrent HTTP export requests.
 
         int export_interval_ms = 1000; ///< Maximum delay before exporting a non-empty batch.
         int request_timeout_sec = 3;   ///< HTTP request timeout in seconds.
@@ -39,6 +40,7 @@ namespace logit {
         bool include_arg_names = false; ///< Export original argument names as `logit.arg_names` (legacy).
         bool include_args = true;       ///< Export structured typed arg attributes.
         std::string args_prefix = "logit.arg."; ///< Key prefix for structured arg attributes.
+        bool cancel_on_shutdown = false; ///< If true, cancel in-flight HTTP requests on shutdown instead of waiting.
     };
 
 } // namespace logit
