@@ -193,15 +193,22 @@ install(DIRECTORY include/ DESTINATION include)
 
 install(TARGETS log-it-cpp EXPORT log-it-cppTargets)
 
-# kurlyk (OTLP) is brought in via add_subdirectory(EXCLUDE_FROM_ALL) and is
-# not in any export set, so install(EXPORT) fails when LOGIT_WITH_OTLP=ON.
-# Guard the export install step; packaging with OTLP requires pre-installed kurlyk.
-if(NOT LOGIT_WITH_OTLP)
-install(EXPORT log-it-cppTargets
-    FILE log-it-cppTargets.cmake
-    NAMESPACE log-it-cpp::
-    DESTINATION lib/cmake/log-it-cpp
-)
+# install(EXPORT) requires all linked targets to be in an export set.
+# When kurlyk is pre-installed (IMPORTED target) the export works.
+# When kurlyk is a submodule (non-IMPORTED), its transitive deps are not
+# exportable; skip install(EXPORT) and require pre-installed kurlyk instead.
+if(LOGIT_WITH_OTLP AND TARGET kurlyk)
+    get_target_property(_kurlyk_imported kurlyk IMPORTED)
+endif()
+if(NOT LOGIT_WITH_OTLP OR NOT TARGET kurlyk OR _kurlyk_imported)
+    install(EXPORT log-it-cppTargets
+        FILE log-it-cppTargets.cmake
+        NAMESPACE log-it-cpp::
+        DESTINATION lib/cmake/log-it-cpp
+    )
+else()
+    message(WARNING "log-it-cpp: kurlyk is a submodule target; install(EXPORT) skipped. "
+                    "For packaging with OTLP, install kurlyk separately first.")
 endif()
 
 write_basic_package_version_file(

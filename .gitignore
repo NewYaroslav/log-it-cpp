@@ -1,0 +1,3 @@
+# Local agent configs (not shared)
+.claude/proxy-config.json
+.claude/settings.local.json

@@ -38,8 +38,11 @@ namespace logit {
     struct OtlpHttpLoggerState {
         std::mutex mutex;
         std::condition_variable cv;
-        std::atomic<std::size_t> http_in_flight{0};
+        std::condition_variable space_cv;
+        std::deque<OtlpLogItem> queue;
+        std::size_t http_in_flight = 0;
         std::atomic<uint64_t> failed_exports{0};
+        bool stopping = false;
     };
 
     /// \class OtlpHttpLogger
@@ -59,6 +62,9 @@ namespace logit {
             : m_config(config),
               m_client(config.host),
               m_state(std::make_shared<OtlpHttpLoggerState>()) {
+            if (m_config.max_in_flight_requests == 0) {
+                m_config.max_in_flight_requests = 1;
+            }
             m_client.set_content_type("application/json");
             m_client.set_timeout(config.request_timeout_sec);
             m_client.set_retry_attempts(config.retry_attempts, config.retry_delay_ms);
@@ -82,7 +88,7 @@ namespace logit {
         void log(const LogRecord& record, const std::string& message) override {
             std::unique_lock<std::mutex> lifecycle_lock(m_lifecycle_mutex);
 
-            if (m_stopping) {
+            if (m_state->stopping) {
                 ++m_dropped;
                 return;
             }
@@ -95,7 +101,10 @@ namespace logit {
             if (!m_config.async) {
                 std::vector<OtlpLogItem> batch;
                 batch.push_back(item);
-                m_state->http_in_flight.fetch_add(1);
+                {
+                    std::lock_guard<std::mutex> lock(m_state->mutex);
+                    ++m_state->http_in_flight;
+                }
                 submit_batch_async(batch);
                 try {
                     m_client.wait_requests();
@@ -105,26 +114,26 @@ namespace logit {
             }
 
             for (;;) {
-                std::unique_lock<std::mutex> lock(m_mutex);
-                if (m_stopping) {
+                std::unique_lock<std::mutex> lock(m_state->mutex);
+                if (m_state->stopping) {
                     ++m_dropped;
                     return;
                 }
 
-                if (m_queue.size() >= m_config.max_queue_size) {
+                if (m_state->queue.size() >= m_config.max_queue_size) {
                     if (m_config.drop_on_overflow) {
                         ++m_dropped;
                         return;
                     }
 
                     lifecycle_lock.unlock();
-                    m_cv_space.wait(lock, [this]() {
-                        return m_stopping || m_queue.size() < m_config.max_queue_size;
+                    m_state->space_cv.wait(lock, [this]() {
+                        return m_state->stopping || m_state->queue.size() < m_config.max_queue_size;
                     });
                     lock.unlock();
                     lifecycle_lock.lock();
 
-                    if (m_stopping) {
+                    if (m_state->stopping) {
                         ++m_dropped;
                         return;
                     }
@@ -132,9 +141,9 @@ namespace logit {
                     continue;
                 }
 
-                m_queue.push_back(item);
+                m_state->queue.push_back(item);
                 lock.unlock();
-                m_cv.notify_one();
+                m_state->cv.notify_one();
                 return;
             }
         }
@@ -145,13 +154,9 @@ namespace logit {
                 return;
             }
 
-            std::unique_lock<std::mutex> state_lock(m_state->mutex);
-            m_state->cv.wait(state_lock, [this, state = m_state.get()]() {
-                if (state->http_in_flight.load() > 0) {
-                    return false;
-                }
-                std::lock_guard<std::mutex> queue_lock(m_mutex);
-                return m_queue.empty();
+            std::unique_lock<std::mutex> lock(m_state->mutex);
+            m_state->cv.wait(lock, [this]() {
+                return m_state->queue.empty() && m_state->http_in_flight == 0;
             });
         }
 
@@ -238,14 +243,8 @@ namespace logit {
         kurlyk::HttpClient   m_client;       ///< HTTP client used for OTLP export.
 
         mutable std::mutex m_lifecycle_mutex;///< Serializes log() with shutdown.
-        mutable std::mutex m_mutex;          ///< Protects queue and worker state.
-        std::condition_variable m_cv;        ///< Signals queued records.
-        std::condition_variable m_cv_space;  ///< Signals available queue space.
-        std::condition_variable m_cv_drained;///< Signals drained queue and exports.
-        std::deque<OtlpLogItem> m_queue;     ///< Pending records.
-
         std::thread m_worker;                ///< Export worker thread.
-        bool m_stopping = false;             ///< Stop flag protected by lifecycle/mutex locks.
+
         std::shared_ptr<OtlpHttpLoggerState> m_state;
 
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
@@ -259,33 +258,32 @@ namespace logit {
                 batch.reserve(m_config.max_batch_size);
 
                 {
-                    std::unique_lock<std::mutex> lock(m_mutex);
-                    m_cv.wait_for(
+                    std::unique_lock<std::mutex> lock(m_state->mutex);
+                    m_state->cv.wait_for(
                         lock,
                         std::chrono::milliseconds(m_config.export_interval_ms),
                         [this]() {
-                            return m_stopping ||
-                                   (!m_queue.empty() &&
-                                    m_state->http_in_flight.load() < m_config.max_in_flight_requests);
+                            return m_state->stopping ||
+                                   (!m_state->queue.empty() &&
+                                    m_state->http_in_flight < m_config.max_in_flight_requests);
                         });
 
-                    if (m_stopping && m_queue.empty() && m_state->http_in_flight.load() == 0) {
-                        m_cv_drained.notify_all();
+                    if (m_state->stopping && m_state->queue.empty() && m_state->http_in_flight == 0) {
                         return;
                     }
 
-                    if (m_queue.empty() ||
-                        m_state->http_in_flight.load() >= m_config.max_in_flight_requests) {
+                    if (m_state->queue.empty() ||
+                        m_state->http_in_flight >= m_config.max_in_flight_requests) {
                         continue;
                     }
 
-                    while (!m_queue.empty() && batch.size() < m_config.max_batch_size) {
-                        batch.push_back(m_queue.front());
-                        m_queue.pop_front();
+                    while (!m_state->queue.empty() && batch.size() < m_config.max_batch_size) {
+                        batch.push_back(m_state->queue.front());
+                        m_state->queue.pop_front();
                     }
 
-                    m_cv_space.notify_all();
-                    m_state->http_in_flight.fetch_add(1);
+                    m_state->space_cv.notify_all();
+                    ++m_state->http_in_flight;
                 }
 
                 if (!batch.empty()) {
@@ -317,7 +315,9 @@ namespace logit {
                         if (!response || response->status_code < 200 || response->status_code >= 300) {
                             state->failed_exports.fetch_add(1);
                         }
-                        state->http_in_flight.fetch_sub(1);
+                        if (state->http_in_flight > 0) {
+                            --state->http_in_flight;
+                        }
                         state->cv.notify_all();
                     });
             } catch (...) {
@@ -328,27 +328,22 @@ namespace logit {
                 auto state = m_state;
                 std::lock_guard<std::mutex> lock(state->mutex);
                 state->failed_exports.fetch_add(1);
-                state->http_in_flight.fetch_sub(1);
+                if (state->http_in_flight > 0) {
+                    --state->http_in_flight;
+                }
                 state->cv.notify_all();
             }
         }
 
         /// \brief Stops worker and cancels pending requests.
         void stop() {
-            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
             {
-                std::lock_guard<std::mutex> lock(m_mutex);
-                if (m_stopping) {
+                std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+                std::lock_guard<std::mutex> lock(m_state->mutex);
+                if (m_state->stopping) {
                     return;
                 }
-                m_stopping = true;
-            }
-
-            m_cv.notify_all();
-            m_cv_space.notify_all();
-
-            if (m_worker.joinable()) {
-                m_worker.join();
+                m_state->stopping = true;
             }
 
             if (m_config.cancel_on_shutdown) {
@@ -356,7 +351,16 @@ namespace logit {
                     m_client.cancel_requests();
                 } catch (...) {
                 }
-            } else {
+            }
+
+            m_state->cv.notify_all();
+            m_state->space_cv.notify_all();
+
+            if (m_worker.joinable()) {
+                m_worker.join();
+            }
+
+            if (!m_config.cancel_on_shutdown) {
                 try {
                     m_client.wait_requests();
                 } catch (...) {
