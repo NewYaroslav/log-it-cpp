@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__codebase-memory__index_repository",
+      "mcp__codebase-memory__index_status",
+      "mcp__codebase-memory__list_projects",
+      "mcp__codebase-memory__search_graph",
+      "mcp__codebase-memory__search_code",
+      "mcp__codebase-memory__get_code_snippet"
+    ]
+  }
+}
