@@ -104,14 +104,20 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 <!-- User Overrides — NOT managed by OMC, persists across updates -->
 
 ## Specific Overrides
+
 - "Delegate" → always route via `~/.claude/rules/delegation.md` routing table; never decide ad-hoc.
-- "Lightest path" → use context-mode for output >20 lines, haiku for lookups, and avoid unnecessary intermediate tools.
+- "Lightest path" → use the fewest tools that preserve correctness.
+  For non-trivial codebase understanding, Codebase Memory is considered the lightest correct first step,
+  not an unnecessary intermediate tool.
 - "Official docs" → use context7 (`resolve-library-id`, then `query-docs`) before any web search.
 - "Tool selection" → follow `~/.claude/rules/tool-priority.md` priority chain.
+- "Codebase discovery" → for non-trivial code questions, architecture questions, cross-file edits,
+  refactors, call chains, and unknown implementation locations, use Codebase Memory before Grep/Read/LSP.
 - "WebSearch" → prefer DDG MCP > Tavily > Fetch. Do not use built-in WebSearch unless the documented fallback chain requires it.
 - "Software Laws" → all software laws are centralized in `~/.claude/rules/software-laws.md`.
 
 ## Additional Agent Rules
+
 - Nuanced analysis and gray-area work: [nuanced-analysis.md](rules/nuanced-analysis.md)
 - Image analysis and vision workflow: [image-analysis.md](rules/image-analysis.md)
 - General meta-rules, L0/L2, provenance, git, and coding workflow: [AGENTS.md](../AGENTS.md)
@@ -120,4 +126,5 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 - When changing relevant code, read the corresponding guide first.
 
 ## Agent Configuration Files
+
 - Do not modify `CLAUDE.md`, `AGENTS.md`, `.claude/**`, `.codex/**`, or `.omc/**` unless the user explicitly asks to update agent configuration.
