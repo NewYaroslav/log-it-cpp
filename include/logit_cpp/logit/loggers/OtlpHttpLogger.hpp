@@ -26,7 +26,6 @@
 #include <condition_variable>
 #include <cstdint>
 #include <deque>
-#include <future>
 #include <limits>
 #include <mutex>
 #include <string>
@@ -272,6 +271,10 @@ namespace logit {
                         return;
                     }
 
+                    if (m_state->stopping && m_config.cancel_on_shutdown) {
+                        return;
+                    }
+
                     if (m_state->queue.empty() ||
                         m_state->http_in_flight >= m_config.max_in_flight_requests) {
                         continue;
@@ -344,6 +347,12 @@ namespace logit {
                     return;
                 }
                 m_state->stopping = true;
+
+                if (m_config.cancel_on_shutdown) {
+                    m_dropped.fetch_add(m_state->queue.size());
+                    m_state->queue.clear();
+                    m_state->space_cv.notify_all();
+                }
             }
 
             if (m_config.cancel_on_shutdown) {
