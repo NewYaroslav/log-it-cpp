@@ -21,7 +21,7 @@ option(LOGIT_USE_MPSC_RING "Enable lock-free TaskExecutor queue" ON)
 option(LOGIT_ENABLE_DROP_OLDEST_SLOWPATH "Enable TaskExecutor DropOldest slow-path" ON)
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    if(LOGIT_WITH_OTLP)
+    if(LOGIT_WITH_OTLP OR LOGIT_WITH_PROMETHEUS_SERVER)
         set(CMAKE_CXX_STANDARD 17)
     else()
         set(CMAKE_CXX_STANDARD 11)
@@ -128,6 +128,57 @@ if(LOGIT_WITH_OTLP)
     target_compile_definitions(log-it-cpp INTERFACE KURLYK_WEBSOCKET_SUPPORT=0)
     target_compile_definitions(log-it-cpp INTERFACE KURLYK_HTTP_SUPPORT=1)
     target_link_libraries(log-it-cpp INTERFACE kurlyk)
+endif()
+
+# ---------- Prometheus ----------
+option(LOGIT_WITH_PROMETHEUS "Enable Prometheus text payload support" OFF)
+option(LOGIT_WITH_PROMETHEUS_SERVER "Enable Prometheus HTTP server backend" OFF)
+
+if(LOGIT_WITH_PROMETHEUS)
+    if(EMSCRIPTEN)
+        message(FATAL_ERROR "LOGIT_WITH_PROMETHEUS is not supported for Emscripten.")
+    endif()
+    target_compile_definitions(log-it-cpp INTERFACE LOGIT_WITH_PROMETHEUS=1)
+endif()
+
+if(LOGIT_WITH_PROMETHEUS_SERVER)
+    if(EMSCRIPTEN)
+        message(FATAL_ERROR "LOGIT_WITH_PROMETHEUS_SERVER is not supported for Emscripten.")
+    endif()
+
+    target_compile_definitions(log-it-cpp INTERFACE ASIO_STANDALONE)
+
+    # Prefer standalone external/Simple-Web-Server
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/Simple-Web-Server/server_http.hpp")
+        target_include_directories(log-it-cpp INTERFACE
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/Simple-Web-Server>
+        )
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/Simple-Web-Server/../asio/include/asio.hpp")
+            target_include_directories(log-it-cpp INTERFACE
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/asio/include>
+            )
+        endif()
+    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/kurlyk/external/Simple-Web-Server/server_http.hpp")
+        target_include_directories(log-it-cpp INTERFACE
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/kurlyk/external/Simple-Web-Server>
+        )
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/kurlyk/external/asio/include/asio.hpp")
+            target_include_directories(log-it-cpp INTERFACE
+                $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/kurlyk/external/asio/include>
+            )
+        endif()
+    else()
+        message(FATAL_ERROR "Simple-Web-Server not found. Add it as external/Simple-Web-Server or enable/provide kurlyk submodule.")
+    endif()
+
+    if(NOT LOGIT_WITH_PROMETHEUS)
+        set(LOGIT_WITH_PROMETHEUS ON)
+        target_compile_definitions(log-it-cpp INTERFACE LOGIT_WITH_PROMETHEUS=1)
+    endif()
+    target_compile_definitions(log-it-cpp INTERFACE LOGIT_WITH_PROMETHEUS_SERVER=1)
+    if(WIN32)
+        target_link_libraries(log-it-cpp INTERFACE ws2_32 wsock32)
+    endif()
 endif()
 
 # ---------- GZIP (zlib) ----------
