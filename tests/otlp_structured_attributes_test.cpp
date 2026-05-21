@@ -35,7 +35,7 @@ logit::OtlpLogItem make_item_with_args(
 }
 
 std::string serialize_single(const logit::OtlpLogItem& item,
-                              const logit::OtlpHttpLoggerConfig& config) {
+                              const logit::OtlpJsonFormatConfig& config) {
     std::vector<logit::OtlpLogItem> batch;
     batch.push_back(item);
     return logit::build_otlp_logs_json_payload(batch, config);
@@ -46,7 +46,7 @@ std::string serialize_single(const logit::OtlpLogItem& item,
 int main() {
     // string attr
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("sym", std::string("AAPL")));
@@ -56,7 +56,7 @@ int main() {
 
     // int attr
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("vol", 100));
@@ -66,7 +66,7 @@ int main() {
 
     // uint64 > INT64_MAX
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("ts", 18446744073709551615ULL));
@@ -76,7 +76,7 @@ int main() {
 
     // double finite
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("px", 3.14));
@@ -86,7 +86,7 @@ int main() {
 
     // double NaN
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("bad", NAN));
@@ -97,7 +97,7 @@ int main() {
 
     // bool attr
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("ok", true));
@@ -107,7 +107,7 @@ int main() {
 
     // char attr (stored as string, serializer emits stringValue)
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("ch", std::string("x")));
@@ -117,7 +117,7 @@ int main() {
 
     // enum attr
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         enum Color { RED = 2, GREEN = 5 };
         std::vector<logit::VariableValue> args;
@@ -128,7 +128,7 @@ int main() {
 
     // duplicate names
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("px", 1));
@@ -140,7 +140,7 @@ int main() {
 
     // three duplicates
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("px", 1));
@@ -154,7 +154,7 @@ int main() {
 
     // dedup suffix vs natural name collision
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("a", 1));
@@ -168,7 +168,7 @@ int main() {
 
     // empty names (positional fallback)
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("", 1));
@@ -180,7 +180,7 @@ int main() {
 
     // sanitized invalid chars
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
         args.push_back(logit::VariableValue("a b", std::string("x")));
@@ -190,7 +190,7 @@ int main() {
 
     // custom prefix
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_arg_names = false;
         config.args_prefix = "user.";
         std::vector<logit::VariableValue> args;
@@ -201,7 +201,7 @@ int main() {
 
     // include_args=false, include_arg_names=false: no arg-related attributes
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_args = false;
         config.include_arg_names = false;
         std::vector<logit::VariableValue> args;
@@ -213,7 +213,7 @@ int main() {
 
     // include_arg_names legacy (include_args=false)
     {
-        logit::OtlpHttpLoggerConfig config;
+        logit::OtlpJsonFormatConfig config;
         config.include_args = false;
         config.include_arg_names = true;
         logit::OtlpLogItem item;

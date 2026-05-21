@@ -72,11 +72,11 @@ int main() {
 
     assert(wait_for_server(port));
 
-    logit::OtlpHttpLoggerConfig config;
+    logit::OtlpHttpLogger::Config config;
     config.host = "http://127.0.0.1:" + std::to_string(port);
     config.path = "/v1/logs";
-    config.service_name = "logit-otlp-test";
-    config.deployment_environment = "test";
+    config.format.service_name = "logit-otlp-test";
+    config.format.deployment_environment = "test";
     config.max_batch_size = 8;
     config.export_interval_ms = 50;
     config.request_timeout_sec = 2;

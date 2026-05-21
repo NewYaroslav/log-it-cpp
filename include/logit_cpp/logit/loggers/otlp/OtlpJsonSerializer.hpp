@@ -5,7 +5,7 @@
 /// \file OtlpJsonSerializer.hpp
 /// \brief Defines OTLP/HTTP JSON serialization helpers for logs.
 
-#include "OtlpHttpLoggerConfig.hpp"
+#include "OtlpJsonFormatConfig.hpp"
 #include "OtlpRecordSnapshot.hpp"
 #include <cctype>
 #include <cstdint>
@@ -161,7 +161,7 @@ namespace logit {
     inline void otlp_write_log_record_json(
             std::ostringstream& os,
             const OtlpLogItem& item,
-            const OtlpHttpLoggerConfig& config) {
+            const OtlpJsonFormatConfig& config) {
         const OtlpRecordSnapshot& r = item.record;
         const int64_t time_unix_nano = r.timestamp_ms * 1000000LL;
 
@@ -298,7 +298,7 @@ namespace logit {
     /// \return OTLP/HTTP JSON payload.
     inline std::string build_otlp_logs_json_payload(
             const std::vector<OtlpLogItem>& batch,
-            const OtlpHttpLoggerConfig& config) {
+            const OtlpJsonFormatConfig& config) {
         std::ostringstream os;
 
         os << '{';

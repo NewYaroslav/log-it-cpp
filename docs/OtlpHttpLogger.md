@@ -22,11 +22,11 @@ For Windows MinGW builds, the CMake integration enables kurlyk fallback options 
 #include <logit.hpp>
 
 int main() {
-    logit::OtlpHttpLoggerConfig config;
+    logit::OtlpHttpLogger::Config config;
     config.host = "http://localhost:4318";
     config.path = "/v1/logs";
-    config.service_name = "trade-bot";
-    config.deployment_environment = "dev";
+    config.format.service_name = "trade-bot";
+    config.format.deployment_environment = "dev";
 
     LOGIT_ADD_LOGGER(
         logit::OtlpHttpLogger,
@@ -104,7 +104,7 @@ Avoid putting unique values (timestamps, request IDs, UUIDs) into arg attributes
 
 The `logit.arg_names` OTLP attribute (controlled by `include_arg_names`) is deprecated. It emits argument names as a single comma-separated string with no type information. Prefer `include_args = true` for typed, queryable attributes.
 
-Resource attributes are configured through `OtlpHttpLoggerConfig`, including `service.name`, `service.namespace`, `service.instance.id`, and `deployment.environment.name`.
+Resource attributes are configured through `OtlpHttpLogger::Config.format`, including `service.name`, `service.namespace`, `service.instance.id`, and `deployment.environment.name`.
 
 ## Diagnostics
 

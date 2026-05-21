@@ -10,7 +10,7 @@
 #endif
 
 #include "ILogger.hpp"
-#include "otlp/OtlpHttpLoggerConfig.hpp"
+#include "otlp/OtlpJsonFormatConfig.hpp"
 #include "otlp/OtlpJsonSerializer.hpp"
 
 #ifndef KURLYK_WEBSOCKET_SUPPORT
@@ -26,7 +26,6 @@
 #include <condition_variable>
 #include <cstdint>
 #include <deque>
-#include <future>
 #include <limits>
 #include <mutex>
 #include <string>
@@ -34,6 +33,16 @@
 #include <vector>
 
 namespace logit {
+
+    struct OtlpHttpLoggerState {
+        std::mutex mutex;
+        std::condition_variable cv;
+        std::condition_variable space_cv;
+        std::deque<OtlpLogItem> queue;
+        std::size_t http_in_flight = 0;
+        std::atomic<uint64_t> failed_exports{0};
+        bool stopping = false;
+    };
 
     /// \class OtlpHttpLogger
     /// \ingroup LogBackends
@@ -43,14 +52,34 @@ namespace logit {
     /// OTLP/HTTP JSON and sends batches to an OpenTelemetry Collector-compatible endpoint.
     class OtlpHttpLogger final : public ILogger {
     public:
+        struct Config {
+            OtlpJsonFormatConfig format;
+            std::string host = "http://localhost:4318";
+            std::string path = "/v1/logs";
+            std::size_t max_queue_size = 8192;
+            std::size_t max_batch_size = 256;
+            std::size_t max_in_flight_requests = 1;
+            int export_interval_ms = 1000;
+            int request_timeout_sec = 3;
+            long retry_attempts = 2;
+            long retry_delay_ms = 250;
+            bool drop_on_overflow = true;
+            bool async = true;
+            bool cancel_on_shutdown = false;
+        };
+
         /// \brief Constructs OTLP HTTP logger with default configuration.
-        OtlpHttpLogger() : OtlpHttpLogger(OtlpHttpLoggerConfig()) {}
+        OtlpHttpLogger() : OtlpHttpLogger(Config()) {}
 
         /// \brief Constructs OTLP HTTP logger with custom configuration.
         /// \param config Export configuration.
-        explicit OtlpHttpLogger(const OtlpHttpLoggerConfig& config)
+        explicit OtlpHttpLogger(const Config& config)
             : m_config(config),
-              m_client(config.host) {
+              m_client(config.host),
+              m_state(std::make_shared<OtlpHttpLoggerState>()) {
+            if (m_config.max_in_flight_requests == 0) {
+                m_config.max_in_flight_requests = 1;
+            }
             m_client.set_content_type("application/json");
             m_client.set_timeout(config.request_timeout_sec);
             m_client.set_retry_attempts(config.retry_attempts, config.retry_delay_ms);
@@ -74,7 +103,7 @@ namespace logit {
         void log(const LogRecord& record, const std::string& message) override {
             std::unique_lock<std::mutex> lifecycle_lock(m_lifecycle_mutex);
 
-            if (m_stopping) {
+            if (m_state->stopping) {
                 ++m_dropped;
                 return;
             }
@@ -87,31 +116,39 @@ namespace logit {
             if (!m_config.async) {
                 std::vector<OtlpLogItem> batch;
                 batch.push_back(item);
-                export_batch(batch);
+                {
+                    std::lock_guard<std::mutex> lock(m_state->mutex);
+                    ++m_state->http_in_flight;
+                }
+                submit_batch_async(batch);
+                try {
+                    m_client.wait_requests();
+                } catch (...) {
+                }
                 return;
             }
 
             for (;;) {
-                std::unique_lock<std::mutex> lock(m_mutex);
-                if (m_stopping) {
+                std::unique_lock<std::mutex> lock(m_state->mutex);
+                if (m_state->stopping) {
                     ++m_dropped;
                     return;
                 }
 
-                if (m_queue.size() >= m_config.max_queue_size) {
+                if (m_state->queue.size() >= m_config.max_queue_size) {
                     if (m_config.drop_on_overflow) {
                         ++m_dropped;
                         return;
                     }
 
                     lifecycle_lock.unlock();
-                    m_cv_space.wait(lock, [this]() {
-                        return m_stopping || m_queue.size() < m_config.max_queue_size;
+                    m_state->space_cv.wait(lock, [this]() {
+                        return m_state->stopping || m_state->queue.size() < m_config.max_queue_size;
                     });
                     lock.unlock();
                     lifecycle_lock.lock();
 
-                    if (m_stopping) {
+                    if (m_state->stopping) {
                         ++m_dropped;
                         return;
                     }
@@ -119,9 +156,9 @@ namespace logit {
                     continue;
                 }
 
-                m_queue.push_back(item);
+                m_state->queue.push_back(item);
                 lock.unlock();
-                m_cv.notify_one();
+                m_state->cv.notify_one();
                 return;
             }
         }
@@ -132,9 +169,9 @@ namespace logit {
                 return;
             }
 
-            std::unique_lock<std::mutex> lock(m_mutex);
-            m_cv_drained.wait(lock, [this]() {
-                return m_queue.empty() && m_in_flight == 0;
+            std::unique_lock<std::mutex> lock(m_state->mutex);
+            m_state->cv.wait(lock, [this]() {
+                return m_state->queue.empty() && m_state->http_in_flight == 0;
             });
         }
 
@@ -213,28 +250,21 @@ namespace logit {
         /// \brief Returns number of failed export attempts.
         /// \return Failed export count.
         uint64_t failed_export_count() const {
-            return m_failed_exports.load();
+            return m_state->failed_exports.load();
         }
 
     private:
-        OtlpHttpLoggerConfig m_config;       ///< Export configuration.
+        Config m_config;       ///< Export configuration.
         kurlyk::HttpClient   m_client;       ///< HTTP client used for OTLP export.
 
         mutable std::mutex m_lifecycle_mutex;///< Serializes log() with shutdown.
-        mutable std::mutex m_mutex;          ///< Protects queue and worker state.
-        std::condition_variable m_cv;        ///< Signals queued records.
-        std::condition_variable m_cv_space;  ///< Signals available queue space.
-        std::condition_variable m_cv_drained;///< Signals drained queue and exports.
-        std::deque<OtlpLogItem> m_queue;     ///< Pending records.
-
         std::thread m_worker;                ///< Export worker thread.
-        bool m_stopping = false;             ///< Stop flag protected by lifecycle/mutex locks.
-        std::size_t m_in_flight = 0;         ///< Number of batches currently being exported.
+
+        std::shared_ptr<OtlpHttpLoggerState> m_state;
 
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
         std::atomic<uint64_t> m_dropped = ATOMIC_VAR_INIT(0);
-        std::atomic<uint64_t> m_failed_exports = ATOMIC_VAR_INIT(0);
 
         /// \brief Worker thread loop.
         void worker_loop() {
@@ -243,95 +273,123 @@ namespace logit {
                 batch.reserve(m_config.max_batch_size);
 
                 {
-                    std::unique_lock<std::mutex> lock(m_mutex);
-                    m_cv.wait_for(
+                    std::unique_lock<std::mutex> lock(m_state->mutex);
+                    m_state->cv.wait_for(
                         lock,
                         std::chrono::milliseconds(m_config.export_interval_ms),
                         [this]() {
-                            return m_stopping || !m_queue.empty();
+                            return m_state->stopping ||
+                                   (!m_state->queue.empty() &&
+                                    m_state->http_in_flight < m_config.max_in_flight_requests);
                         });
 
-                    while (!m_queue.empty() && batch.size() < m_config.max_batch_size) {
-                        batch.push_back(m_queue.front());
-                        m_queue.pop_front();
-                    }
-
-                    m_cv_space.notify_all();
-
-                    if (batch.empty() && m_stopping) {
-                        m_cv_drained.notify_all();
+                    if (m_state->stopping && m_state->queue.empty() && m_state->http_in_flight == 0) {
                         return;
                     }
 
-                    if (!batch.empty()) {
-                        ++m_in_flight;
+                    if (m_state->stopping && m_config.cancel_on_shutdown) {
+                        return;
                     }
+
+                    if (m_state->queue.empty() ||
+                        m_state->http_in_flight >= m_config.max_in_flight_requests) {
+                        continue;
+                    }
+
+                    while (!m_state->queue.empty() && batch.size() < m_config.max_batch_size) {
+                        batch.push_back(m_state->queue.front());
+                        m_state->queue.pop_front();
+                    }
+
+                    m_state->space_cv.notify_all();
+                    ++m_state->http_in_flight;
                 }
 
                 if (!batch.empty()) {
-                    export_batch(batch);
-
-                    std::lock_guard<std::mutex> lock(m_mutex);
-                    --m_in_flight;
-                    if (m_queue.empty() && m_in_flight == 0) {
-                        m_cv_drained.notify_all();
-                    }
+                    submit_batch_async(batch);
                 }
             }
         }
 
-        /// \brief Exports one batch to the configured OTLP endpoint.
+        /// \brief Submits one batch asynchronously to the configured OTLP endpoint.
         /// \param batch Batch to export.
-        void export_batch(const std::vector<OtlpLogItem>& batch) {
-            if (batch.empty()) {
-                return;
-            }
-
-            const std::string payload = build_otlp_logs_json_payload(batch, m_config);
-
+        void submit_batch_async(const std::vector<OtlpLogItem>& batch) {
+            const std::string payload = build_otlp_logs_json_payload(batch, m_config.format);
             kurlyk::Headers headers;
             headers.emplace("Content-Type", "application/json");
 
+            auto weak_state = std::weak_ptr<OtlpHttpLoggerState>(m_state);
+            bool submitted = false;
+
             try {
-                std::future<kurlyk::HttpResponsePtr> future = m_client.post(m_config.path, {}, headers, payload);
-                const std::future_status status = future.wait_for(
-                    std::chrono::seconds(m_config.request_timeout_sec + 1));
+                submitted = m_client.post(
+                    m_config.path, {}, headers, payload,
+                    [weak_state](kurlyk::HttpResponsePtr response) {
+                        auto state = weak_state.lock();
+                        if (!state) {
+                            return;
+                        }
 
-                if (status != std::future_status::ready) {
-                    ++m_failed_exports;
-                    return;
-                }
-
-                kurlyk::HttpResponsePtr response = future.get();
-                if (!response || response->status_code < 200 || response->status_code >= 300) {
-                    ++m_failed_exports;
-                }
+                        std::lock_guard<std::mutex> lock(state->mutex);
+                        if (!response || response->status_code < 200 || response->status_code >= 300) {
+                            state->failed_exports.fetch_add(1);
+                        }
+                        if (state->http_in_flight > 0) {
+                            --state->http_in_flight;
+                        }
+                        state->cv.notify_all();
+                    });
             } catch (...) {
-                ++m_failed_exports;
+                submitted = false;
+            }
+
+            if (!submitted) {
+                auto state = m_state;
+                std::lock_guard<std::mutex> lock(state->mutex);
+                state->failed_exports.fetch_add(1);
+                if (state->http_in_flight > 0) {
+                    --state->http_in_flight;
+                }
+                state->cv.notify_all();
             }
         }
 
         /// \brief Stops worker and cancels pending requests.
         void stop() {
-            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
             {
-                std::lock_guard<std::mutex> lock(m_mutex);
-                if (m_stopping) {
+                std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+                std::lock_guard<std::mutex> lock(m_state->mutex);
+                if (m_state->stopping) {
                     return;
                 }
-                m_stopping = true;
+                m_state->stopping = true;
+
+                if (m_config.cancel_on_shutdown) {
+                    m_dropped.fetch_add(m_state->queue.size());
+                    m_state->queue.clear();
+                    m_state->space_cv.notify_all();
+                }
             }
 
-            m_cv.notify_all();
-            m_cv_space.notify_all();
+            if (m_config.cancel_on_shutdown) {
+                try {
+                    m_client.cancel_requests();
+                } catch (...) {
+                }
+            }
+
+            m_state->cv.notify_all();
+            m_state->space_cv.notify_all();
 
             if (m_worker.joinable()) {
                 m_worker.join();
             }
 
-            try {
-                m_client.cancel_requests();
-            } catch (...) {
+            if (!m_config.cancel_on_shutdown) {
+                try {
+                    m_client.wait_requests();
+                } catch (...) {
+                }
             }
         }
 
