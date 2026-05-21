@@ -62,14 +62,6 @@ namespace logit {
                 return;
             }
 
-            {
-                std::lock_guard<std::mutex> lock(m_mutex);
-                if (m_stopping) {
-                    ++m_dropped;
-                    return;
-                }
-            }
-
             m_last_log_ts = record.timestamp_ms;
 
             OtlpLogItem item;
@@ -77,10 +69,23 @@ namespace logit {
             item.message = message;
 
             if (!m_config.async) {
+                {
+                    std::lock_guard<std::mutex> lock(m_mutex);
+                    if (m_stopping) {
+                        ++m_dropped;
+                        return;
+                    }
+                }
                 std::vector<OtlpLogItem> batch;
                 batch.push_back(item);
                 std::string payload = build_otlp_logs_json_payload(batch, m_config.format);
-                m_config.on_payload(std::move(payload));
+                try {
+                    if (m_config.on_payload) {
+                        m_config.on_payload(std::move(payload));
+                    }
+                } catch (...) {
+                    ++m_failed_exports;
+                }
                 return;
             }
 
@@ -136,6 +141,7 @@ namespace logit {
             case LoggerParam::LastLogTimestamp: return std::to_string(get_last_log_ts());
             case LoggerParam::TimeSinceLastLog: return std::to_string(get_time_since_last_log());
             case LoggerParam::DroppedLogCount: return std::to_string(dropped_count());
+            case LoggerParam::FailedExportCount: return std::to_string(failed_export_count());
             default:
                 break;
             }
@@ -150,6 +156,7 @@ namespace logit {
             case LoggerParam::LastLogTimestamp: return get_last_log_ts();
             case LoggerParam::TimeSinceLastLog: return get_time_since_last_log();
             case LoggerParam::DroppedLogCount: return counter_to_int64(dropped_count());
+            case LoggerParam::FailedExportCount: return counter_to_int64(failed_export_count());
             default:
                 break;
             }
@@ -167,6 +174,8 @@ namespace logit {
                 return static_cast<double>(get_time_since_last_log()) / 1000.0;
             case LoggerParam::DroppedLogCount:
                 return static_cast<double>(dropped_count());
+            case LoggerParam::FailedExportCount:
+                return static_cast<double>(failed_export_count());
             default:
                 break;
             }
@@ -191,6 +200,12 @@ namespace logit {
             return m_dropped.load();
         }
 
+        /// \brief Returns number of failed export attempts.
+        /// \return Failed export count.
+        uint64_t failed_export_count() const {
+            return m_failed_exports.load();
+        }
+
     private:
         OtlpPayloadLoggerConfig m_config;
 
@@ -206,6 +221,7 @@ namespace logit {
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
         std::atomic<uint64_t> m_dropped = ATOMIC_VAR_INIT(0);
+        std::atomic<uint64_t> m_failed_exports = ATOMIC_VAR_INIT(0);
 
         /// \brief Worker thread loop.
         void worker_loop() {
@@ -215,9 +231,6 @@ namespace logit {
 
                 {
                     std::unique_lock<std::mutex> lock(m_mutex);
-                    m_idle = true;
-                    m_cv.notify_all();
-
                     m_cv.wait_for(
                         lock,
                         std::chrono::milliseconds(m_config.export_interval_ms),
@@ -247,10 +260,20 @@ namespace logit {
 
                 if (!batch.empty()) {
                     std::string payload = build_otlp_logs_json_payload(batch, m_config.format);
-                    if (m_config.on_payload) {
-                        m_config.on_payload(std::move(payload));
+                    try {
+                        if (m_config.on_payload) {
+                            m_config.on_payload(std::move(payload));
+                        }
+                    } catch (...) {
+                        ++m_failed_exports;
                     }
                 }
+
+                {
+                    std::lock_guard<std::mutex> lock(m_mutex);
+                    m_idle = true;
+                }
+                m_cv.notify_all();
             }
         }
 

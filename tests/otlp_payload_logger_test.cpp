@@ -53,6 +53,34 @@ int main() {
         LOGIT_SHUTDOWN();
     }
 
+    // Test a2: sync mode throwing callback increments failed exports
+    {
+        std::atomic<int> call_count{0};
+
+        logit::OtlpPayloadLoggerConfig config;
+        config.async = false;
+        config.format.service_name = "sync-throw-test";
+        config.on_payload = [&call_count](std::string) {
+            ++call_count;
+            throw std::runtime_error("sync payload rejected");
+        };
+
+        LOGIT_ADD_LOGGER(
+            logit::OtlpPayloadLogger,
+            (config),
+            logit::SimpleLogFormatter,
+            ("%v")
+        );
+
+        LOGIT_WARN("sync throw test");
+
+        assert(call_count.load() == 1);
+        uint64_t failed = static_cast<uint64_t>(LOGIT_GET_INT_PARAM(0, logit::LoggerParam::FailedExportCount));
+        assert(failed >= 1);
+
+        LOGIT_SHUTDOWN();
+    }
+
     // Test b: async mode with batching - log 5 messages, verify callback receives 1 call with all 5 bodies
     {
         PayloadCollector collector;
@@ -214,6 +242,77 @@ int main() {
         assert(elapsed < 5000);
 
         LOGIT_SHUTDOWN();
+    }
+
+    // Test f: wait() blocks until slow callback finishes
+    {
+        PayloadCollector collector;
+
+        logit::OtlpPayloadLoggerConfig config;
+        config.async = true;
+        config.format.service_name = "slow-callback-test";
+        config.max_batch_size = 256;
+        config.export_interval_ms = 50;
+        config.on_payload = [&collector](std::string payload) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::lock_guard<std::mutex> lock(collector.mutex);
+            collector.payloads.push_back(std::move(payload));
+            collector.count.fetch_add(1);
+            collector.cv.notify_all();
+        };
+
+        LOGIT_ADD_LOGGER(
+            logit::OtlpPayloadLogger,
+            (config),
+            logit::SimpleLogFormatter,
+            ("%v")
+        );
+
+        LOGIT_WARN("slow callback test");
+
+        auto start = std::chrono::steady_clock::now();
+        LOGIT_WAIT();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now() - start).count();
+
+        assert(elapsed >= 400);
+        assert(collector.count.load() >= 1);
+
+        LOGIT_SHUTDOWN();
+    }
+
+    // Test g: throwing callback increments failed export count
+    {
+        std::atomic<int> call_count{0};
+
+        logit::OtlpPayloadLoggerConfig config;
+        config.async = true;
+        config.format.service_name = "throw-test";
+        config.max_batch_size = 256;
+        config.export_interval_ms = 50;
+        config.on_payload = [&call_count](std::string) {
+            ++call_count;
+            throw std::runtime_error("payload rejected");
+        };
+
+        LOGIT_ADD_LOGGER(
+            logit::OtlpPayloadLogger,
+            (config),
+            logit::SimpleLogFormatter,
+            ("%v")
+        );
+
+        LOGIT_WARN("throw test 1");
+        LOGIT_WARN("throw test 2");
+
+        LOGIT_WAIT();
+        LOGIT_SHUTDOWN();
+
+        // both logs should have been attempted (maybe in one batch, maybe two)
+        assert(call_count.load() >= 1);
+
+        uint64_t failed = static_cast<uint64_t>(LOGIT_GET_INT_PARAM(0, logit::LoggerParam::FailedExportCount));
+        assert(failed >= static_cast<uint64_t>(call_count.load()));
     }
 
     return 0;
