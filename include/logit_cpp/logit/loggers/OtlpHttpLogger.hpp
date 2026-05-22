@@ -344,12 +344,18 @@ namespace logit {
 
                 if (m_config.compression == OtlpCompression::Gzip) {
                     if (!compress_string_gzip(chunk, post_content, m_config.compression_level)) {
+                        // Compression failed: fallback to uncompressed payload.
+                        // Count this as a failed export attempt so operators can observe compression issues.
+                        m_state->failed_exports.fetch_add(1);
                         post_content = std::move(chunk);
                     } else {
                         chunk_headers.emplace("Content-Encoding", "gzip");
                     }
                 } else if (m_config.compression == OtlpCompression::Zstd) {
                     if (!compress_string_zstd(chunk, post_content, m_config.compression_level)) {
+                        // Compression failed: fallback to uncompressed payload.
+                        // Count this as a failed export attempt so operators can observe compression issues.
+                        m_state->failed_exports.fetch_add(1);
                         post_content = std::move(chunk);
                     } else {
                         chunk_headers.emplace("Content-Encoding", "zstd");
