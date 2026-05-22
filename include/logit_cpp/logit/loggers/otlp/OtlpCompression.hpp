@@ -2,6 +2,7 @@
 #ifndef _LOGIT_OTLP_COMPRESSION_HPP_INCLUDED
 #define _LOGIT_OTLP_COMPRESSION_HPP_INCLUDED
 
+#include <cstddef>
 #include <string>
 
 #if defined(LOGIT_HAS_ZLIB)
