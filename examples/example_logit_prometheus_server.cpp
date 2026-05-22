@@ -1,5 +1,9 @@
 #include <logit.hpp>
 
+#ifdef LOGIT_WITH_PROMETHEUS_SERVER
+#include <logit/loggers/prometheus/PrometheusMetricBuilders.hpp>
+#endif
+
 int main() {
 #ifndef LOGIT_WITH_PROMETHEUS_SERVER
     LOGIT_ADD_CONSOLE_DEFAULT();
@@ -15,15 +19,11 @@ int main() {
 
     // Optional: add custom metrics on each scrape
     config.on_collect = [](std::vector<logit::PrometheusMetricFamily>& families) {
-        logit::PrometheusMetricFamily mf;
-        mf.name = "myapp_uptime_seconds";
-        mf.help = "Application uptime in seconds";
-        mf.type = logit::PrometheusMetricType::Gauge;
-        logit::PrometheusSample s;
-        s.name = "myapp_uptime_seconds";
-        s.value = 42.0;
-        mf.samples.push_back(s);
-        families.push_back(mf);
+        logit::add_prometheus_gauge(
+            families,
+            "myapp_uptime_seconds",
+            "Application uptime in seconds",
+            42.0);
     };
 
     LOGIT_ADD_LOGGER(

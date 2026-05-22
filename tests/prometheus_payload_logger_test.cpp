@@ -1,5 +1,6 @@
 #include <logit/utils.hpp>
 #include <logit/loggers/PrometheusPayloadLogger.hpp>
+#include <logit/loggers/prometheus/PrometheusMetricBuilders.hpp>
 
 #ifdef LOGIT_WITH_PROMETHEUS
 
@@ -111,15 +112,7 @@ int main() {
     {
         logit::PrometheusPayloadLogger::Config config;
         config.on_collect = [](std::vector<logit::PrometheusMetricFamily>& families) {
-            logit::PrometheusMetricFamily mf;
-            mf.name = "custom_metric";
-            mf.help = "A custom metric";
-            mf.type = logit::PrometheusMetricType::Gauge;
-            logit::PrometheusSample s;
-            s.name = "custom_metric";
-            s.value = 99.0;
-            mf.samples.push_back(s);
-            families.push_back(mf);
+            logit::add_prometheus_gauge(families, "custom_metric", "A custom metric", 99.0);
         };
 
         auto logger = std::unique_ptr<logit::PrometheusPayloadLogger>(new logit::PrometheusPayloadLogger(config));
