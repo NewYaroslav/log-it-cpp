@@ -106,6 +106,14 @@ LSP, OMC State/Notepad, and AST tools listed as `lsp_*`, `state_*`, `notepad_*`,
 
 ## Codebase Memory Usage Policy
 
+This policy applies to the orchestrator and to every subagent that performs codebase discovery.
+Subagents must not assume the orchestrator has already completed discovery unless the prompt
+explicitly provides the relevant Codebase Memory results, qualified names, or file paths.
+
+If the orchestrator delegates discovery to a subagent, the delegation prompt must either:
+1. include explicit Codebase Memory preflight instructions, or
+2. provide already verified Codebase Memory results and tell the subagent to continue from them.
+
 Use Codebase Memory before Grep/Read/LSP when the task asks to:
 - find where behavior is implemented;
 - understand module architecture;
