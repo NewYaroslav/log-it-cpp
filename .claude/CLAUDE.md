@@ -103,6 +103,31 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 
 <!-- User Overrides — NOT managed by OMC, persists across updates -->
 
+## Mandatory Codebase Discovery Preflight
+
+For any task that requires finding files, symbols, classes, modules, call chains,
+cross-file relationships, or unknown implementation locations, the first discovery
+step MUST be Codebase Memory.
+
+Required sequence:
+
+1. If Codebase Memory tools are not currently visible, resolve them first:
+   `ToolSearch("select:mcp__codebase-memory__index_status")`.
+2. Call `mcp__codebase-memory__index_status`.
+3. If the project is indexed, use:
+   - `mcp__codebase-memory__search_graph` for symbols/classes/modules/files;
+   - `mcp__codebase-memory__trace_path` for call chains/dependencies;
+   - `mcp__codebase-memory__get_architecture` for module structure;
+   - `mcp__codebase-memory__get_code_snippet` for targeted code.
+4. If the project is not indexed or path is ambiguous, use
+   `mcp__codebase-memory__list_projects` and/or `mcp__codebase-memory__index_repository`.
+5. Only if Codebase Memory is unavailable or fails after retry, fall back to
+   Glob/Grep/Read/LSP.
+
+Do not start first-pass codebase discovery with `git status`, Bash, Glob, Grep,
+or Read. `git status` is allowed for worktree safety before edits/staging, but it
+does not satisfy discovery preflight and must not replace Codebase Memory.
+
 ## Specific Overrides
 
 - "Delegate" → always route via `~/.claude/rules/delegation.md` routing table; never decide ad-hoc.
