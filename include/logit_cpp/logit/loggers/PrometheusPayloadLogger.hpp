@@ -10,14 +10,12 @@
 #endif
 
 #include "ILogger.hpp"
-#include "prometheus/PrometheusTextFormatConfig.hpp"
+#include "prometheus/PrometheusLoggerMetrics.hpp"
 #include "prometheus/PrometheusTextSerializer.hpp"
 
 #include <atomic>
-#include <chrono>
 #include <cstdint>
 #include <functional>
-#include <limits>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -50,9 +48,7 @@ namespace logit {
         explicit PrometheusPayloadLogger(const Config& config)
             : m_config(config) {}
 
-        ~PrometheusPayloadLogger() override {
-            stop();
-        }
+        ~PrometheusPayloadLogger() override = default;
 
         PrometheusPayloadLogger(const PrometheusPayloadLogger&) = delete;
         PrometheusPayloadLogger& operator=(const PrometheusPayloadLogger&) = delete;
@@ -62,15 +58,14 @@ namespace logit {
         /// \param message Formatted log message (unused by Prometheus metrics).
         void log(const LogRecord& record, const std::string& message) override {
             (void)message;
-            m_last_log_ts.store(record.timestamp_ms);
-            ++m_log_records_total;
+            m_metrics.on_log(record.timestamp_ms);
 
             if (m_config.emit_on_log && m_config.on_payload) {
                 try {
                     std::string payload = collect_payload();
                     m_config.on_payload(std::move(payload));
                 } catch (...) {
-                    ++m_failed_collects;
+                    m_metrics.add_failed_export();
                 }
             }
         }
@@ -82,15 +77,13 @@ namespace logit {
                     std::string payload = collect_payload();
                     m_config.on_payload(std::move(payload));
                 } catch (...) {
-                    ++m_failed_collects;
+                    m_metrics.add_failed_export();
                 }
             }
         }
 
         /// \brief Stops the logger (no worker thread to drain for payload logger).
-        void shutdown() override {
-            stop();
-        }
+        void shutdown() override {}
 
         /// \brief Collects current metrics and returns serialized Prometheus text payload.
         /// \return Complete Prometheus text exposition format string.
@@ -98,12 +91,14 @@ namespace logit {
             std::vector<PrometheusMetricFamily> families;
             {
                 std::lock_guard<std::mutex> lock(m_collect_mutex);
-                build_builtin_metrics(families);
+                m_metrics.build_builtin_metrics(
+                    families, m_config.format, "prometheus_payload",
+                    LOGIT_CURRENT_TIMESTAMP_MS());
                 if (m_config.on_collect) {
                     try {
                         m_config.on_collect(families);
                     } catch (...) {
-                        ++m_failed_collects;
+                        m_metrics.add_failed_export();
                     }
                 }
             }
@@ -115,10 +110,10 @@ namespace logit {
         /// \return Parameter value, or empty string when unsupported.
         std::string get_string_param(const LoggerParam& param) const override {
             switch (param) {
-            case LoggerParam::LastLogTimestamp: return std::to_string(get_last_log_ts());
-            case LoggerParam::TimeSinceLastLog: return std::to_string(get_time_since_last_log());
-            case LoggerParam::DroppedLogCount: return std::to_string(m_dropped.load());
-            case LoggerParam::FailedExportCount: return std::to_string(m_failed_collects.load());
+            case LoggerParam::LastLogTimestamp: return std::to_string(m_metrics.last_log_ts());
+            case LoggerParam::TimeSinceLastLog: return std::to_string(m_metrics.time_since_last_log_ms(LOGIT_CURRENT_TIMESTAMP_MS()));
+            case LoggerParam::DroppedLogCount: return std::to_string(m_metrics.dropped_count());
+            case LoggerParam::FailedExportCount: return std::to_string(m_metrics.failed_export_count());
             default:
                 break;
             }
@@ -130,10 +125,10 @@ namespace logit {
         /// \return Parameter value, or 0 when unsupported.
         int64_t get_int_param(const LoggerParam& param) const override {
             switch (param) {
-            case LoggerParam::LastLogTimestamp: return get_last_log_ts();
-            case LoggerParam::TimeSinceLastLog: return get_time_since_last_log();
-            case LoggerParam::DroppedLogCount: return counter_to_int64(m_dropped.load());
-            case LoggerParam::FailedExportCount: return counter_to_int64(m_failed_collects.load());
+            case LoggerParam::LastLogTimestamp: return m_metrics.last_log_ts();
+            case LoggerParam::TimeSinceLastLog: return m_metrics.time_since_last_log_ms(LOGIT_CURRENT_TIMESTAMP_MS());
+            case LoggerParam::DroppedLogCount: return PrometheusLoggerMetrics::counter_to_int64(m_metrics.dropped_count());
+            case LoggerParam::FailedExportCount: return PrometheusLoggerMetrics::counter_to_int64(m_metrics.failed_export_count());
             default:
                 break;
             }
@@ -146,13 +141,13 @@ namespace logit {
         double get_float_param(const LoggerParam& param) const override {
             switch (param) {
             case LoggerParam::LastLogTimestamp:
-                return static_cast<double>(get_last_log_ts()) / 1000.0;
+                return static_cast<double>(m_metrics.last_log_ts()) / 1000.0;
             case LoggerParam::TimeSinceLastLog:
-                return static_cast<double>(get_time_since_last_log()) / 1000.0;
+                return static_cast<double>(m_metrics.time_since_last_log_ms(LOGIT_CURRENT_TIMESTAMP_MS())) / 1000.0;
             case LoggerParam::DroppedLogCount:
-                return static_cast<double>(m_dropped.load());
+                return static_cast<double>(m_metrics.dropped_count());
             case LoggerParam::FailedExportCount:
-                return static_cast<double>(m_failed_collects.load());
+                return static_cast<double>(m_metrics.failed_export_count());
             default:
                 break;
             }
@@ -174,149 +169,9 @@ namespace logit {
     private:
         Config m_config;
         std::mutex m_collect_mutex;
-        bool m_stopped = false;
+        PrometheusLoggerMetrics m_metrics;
 
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
-        std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
-        std::atomic<uint64_t> m_log_records_total = ATOMIC_VAR_INIT(0);
-        std::atomic<uint64_t> m_dropped = ATOMIC_VAR_INIT(0);
-        std::atomic<uint64_t> m_failed_collects = ATOMIC_VAR_INIT(0);
-
-        void stop() {
-            std::lock_guard<std::mutex> lock(m_collect_mutex);
-            m_stopped = true;
-        }
-
-        int64_t get_last_log_ts() const {
-            return m_last_log_ts.load();
-        }
-
-        int64_t get_time_since_last_log() const {
-            const int64_t last = get_last_log_ts();
-            if (last <= 0) {
-                return 0;
-            }
-            const int64_t now = LOGIT_CURRENT_TIMESTAMP_MS();
-            return now > last ? now - last : 0;
-        }
-
-        static int64_t counter_to_int64(uint64_t value) {
-            const uint64_t max_value = static_cast<uint64_t>((std::numeric_limits<int64_t>::max)());
-            return value > max_value ? (std::numeric_limits<int64_t>::max)() : static_cast<int64_t>(value);
-        }
-
-        void build_builtin_metrics(std::vector<PrometheusMetricFamily>& families) const {
-            const std::string& prefix = m_config.format.metric_prefix;
-
-            // logit_log_records_total (counter)
-            {
-                PrometheusMetricFamily mf;
-                mf.name = prefix + "log_records_total";
-                mf.help = "Total number of log records processed";
-                mf.type = PrometheusMetricType::Counter;
-                PrometheusSample s;
-                s.name = prefix + "log_records_total";
-                s.value = static_cast<double>(m_log_records_total.load());
-                add_common_labels(s);
-                mf.samples.push_back(s);
-                families.push_back(mf);
-            }
-
-            // logit_dropped_logs_total (counter)
-            {
-                PrometheusMetricFamily mf;
-                mf.name = prefix + "dropped_logs_total";
-                mf.help = "Total number of dropped log records";
-                mf.type = PrometheusMetricType::Counter;
-                PrometheusSample s;
-                s.name = prefix + "dropped_logs_total";
-                s.value = static_cast<double>(m_dropped.load());
-                add_common_labels(s);
-                mf.samples.push_back(s);
-                families.push_back(mf);
-            }
-
-            // logit_failed_exports_total (counter)
-            {
-                PrometheusMetricFamily mf;
-                mf.name = prefix + "failed_exports_total";
-                mf.help = "Total number of failed export attempts";
-                mf.type = PrometheusMetricType::Counter;
-                PrometheusSample s;
-                s.name = prefix + "failed_exports_total";
-                s.value = static_cast<double>(m_failed_collects.load());
-                add_common_labels(s);
-                mf.samples.push_back(s);
-                families.push_back(mf);
-            }
-
-            // logit_last_log_timestamp_ms (gauge)
-            {
-                PrometheusMetricFamily mf;
-                mf.name = prefix + "last_log_timestamp_ms";
-                mf.help = "Timestamp of the last log record in milliseconds";
-                mf.type = PrometheusMetricType::Gauge;
-                PrometheusSample s;
-                s.name = prefix + "last_log_timestamp_ms";
-                s.value = static_cast<double>(m_last_log_ts.load());
-                add_common_labels(s);
-                mf.samples.push_back(s);
-                families.push_back(mf);
-            }
-
-            // logit_time_since_last_log_ms (gauge)
-            {
-                PrometheusMetricFamily mf;
-                mf.name = prefix + "time_since_last_log_ms";
-                mf.help = "Milliseconds since the last log record";
-                mf.type = PrometheusMetricType::Gauge;
-                PrometheusSample s;
-                s.name = prefix + "time_since_last_log_ms";
-                s.value = static_cast<double>(get_time_since_last_log());
-                add_common_labels(s);
-                mf.samples.push_back(s);
-                families.push_back(mf);
-            }
-
-            // logit_build_info (gauge, value=1) with version/compiler labels
-            if (m_config.format.include_build_info) {
-                PrometheusMetricFamily mf;
-                mf.name = prefix + "build_info";
-                mf.help = "Build information for logit-cpp";
-                mf.type = PrometheusMetricType::Gauge;
-                PrometheusSample s;
-                s.name = prefix + "build_info";
-                s.value = 1.0;
-#ifdef LOGIT_VERSION
-                s.labels.push_back({"version", LOGIT_VERSION});
-#else
-                s.labels.push_back({"version", "1.0.2"});
-#endif
-#if defined(__GNUC__) && !defined(__clang__)
-                s.labels.push_back({"compiler", "gcc"});
-#elif defined(__clang__)
-                s.labels.push_back({"compiler", "clang"});
-#elif defined(_MSC_VER)
-                s.labels.push_back({"compiler", "msvc"});
-#else
-                s.labels.push_back({"compiler", "unknown"});
-#endif
-                add_common_labels(s);
-                mf.samples.push_back(s);
-                families.push_back(mf);
-            }
-        }
-
-        void add_common_labels(PrometheusSample& sample) const {
-            if (m_config.format.include_logger_label) {
-                sample.labels.push_back(
-                    {m_config.format.logger_label_name, "prometheus_payload"});
-            }
-            if (m_config.format.include_instance_label) {
-                sample.labels.push_back(
-                    {m_config.format.instance_label_name, m_config.format.instance_label_value});
-            }
-        }
     };
 
 } // namespace logit
