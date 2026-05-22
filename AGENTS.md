@@ -11,6 +11,17 @@ itself rather than on generic product or application architecture.
 - Use Conventional Commits: `type(scope): summary`.
 - Commit headers must be in English and include a descriptive body.
 
+## Codebase Discovery
+
+For non-trivial codebase investigation, architecture questions, cross-file edits,
+refactors, call chains, or unknown implementation locations, use Codebase Memory
+before Grep/Glob/Read/LSP.
+
+Preferred sequence:
+`index_status` → `search_graph` / `trace_path` / `get_code_snippet` → targeted Read/LSP.
+
+Grep/Glob are fallback or precision-confirmation tools, not first-pass architecture discovery.
+
 ## Public Entry Headers
 
 Use the project umbrella headers instead of recreating include order manually:
