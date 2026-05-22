@@ -12,6 +12,7 @@
 #include "ILogger.hpp"
 #include "otlp/OtlpJsonFormatConfig.hpp"
 #include "otlp/OtlpJsonSerializer.hpp"
+#include "otlp/OtlpPayloadSplitter.hpp"
 
 #ifndef KURLYK_WEBSOCKET_SUPPORT
 #   define KURLYK_WEBSOCKET_SUPPORT 0
@@ -63,6 +64,7 @@ namespace logit {
             int request_timeout_sec = 3;
             long retry_attempts = 2;
             long retry_delay_ms = 250;
+            std::size_t max_payload_bytes = 1024 * 1024;
             bool drop_on_overflow = true;
             bool async = true;
             bool cancel_on_shutdown = false;
@@ -116,10 +118,6 @@ namespace logit {
             if (!m_config.async) {
                 std::vector<OtlpLogItem> batch;
                 batch.push_back(item);
-                {
-                    std::lock_guard<std::mutex> lock(m_state->mutex);
-                    ++m_state->http_in_flight;
-                }
                 submit_batch_async(batch);
                 try {
                     m_client.wait_requests();
@@ -302,7 +300,6 @@ namespace logit {
                     }
 
                     m_state->space_cv.notify_all();
-                    ++m_state->http_in_flight;
                 }
 
                 if (!batch.empty()) {
@@ -311,46 +308,60 @@ namespace logit {
             }
         }
 
-        /// \brief Submits one batch asynchronously to the configured OTLP endpoint.
+        /// \brief Submits one batch asynchronously, splitting into payload chunks.
         /// \param batch Batch to export.
         void submit_batch_async(const std::vector<OtlpLogItem>& batch) {
-            const std::string payload = build_otlp_logs_json_payload(batch, m_config.format);
+            auto chunks = build_otlp_logs_json_payload_chunks(
+                batch, m_config.format, m_config.max_payload_bytes);
+
+            if (chunks.empty()) {
+                return;
+            }
+
+            {
+                std::lock_guard<std::mutex> lock(m_state->mutex);
+                m_state->http_in_flight += chunks.size();
+            }
+
             kurlyk::Headers headers;
             headers.emplace("Content-Type", "application/json");
 
             auto weak_state = std::weak_ptr<OtlpHttpLoggerState>(m_state);
-            bool submitted = false;
 
-            try {
-                submitted = m_client.post(
-                    m_config.path, {}, headers, payload,
-                    [weak_state](kurlyk::HttpResponsePtr response) {
-                        auto state = weak_state.lock();
-                        if (!state) {
-                            return;
-                        }
+            for (auto& chunk : chunks) {
+                bool submitted = false;
 
-                        std::lock_guard<std::mutex> lock(state->mutex);
-                        if (!response || response->status_code < 200 || response->status_code >= 300) {
-                            state->failed_exports.fetch_add(1);
-                        }
-                        if (state->http_in_flight > 0) {
-                            --state->http_in_flight;
-                        }
-                        state->cv.notify_all();
-                    });
-            } catch (...) {
-                submitted = false;
-            }
+                try {
+                    submitted = m_client.post(
+                        m_config.path, {}, headers, std::move(chunk),
+                        [weak_state](kurlyk::HttpResponsePtr response) {
+                            auto state = weak_state.lock();
+                            if (!state) {
+                                return;
+                            }
 
-            if (!submitted) {
-                auto state = m_state;
-                std::lock_guard<std::mutex> lock(state->mutex);
-                state->failed_exports.fetch_add(1);
-                if (state->http_in_flight > 0) {
-                    --state->http_in_flight;
+                            std::lock_guard<std::mutex> lock(state->mutex);
+                            if (!response || response->status_code < 200 || response->status_code >= 300) {
+                                state->failed_exports.fetch_add(1);
+                            }
+                            if (state->http_in_flight > 0) {
+                                --state->http_in_flight;
+                            }
+                            state->cv.notify_all();
+                        });
+                } catch (...) {
+                    submitted = false;
                 }
-                state->cv.notify_all();
+
+                if (!submitted) {
+                    auto state = m_state;
+                    std::lock_guard<std::mutex> lock(state->mutex);
+                    state->failed_exports.fetch_add(1);
+                    if (state->http_in_flight > 0) {
+                        --state->http_in_flight;
+                    }
+                    state->cv.notify_all();
+                }
             }
         }
 

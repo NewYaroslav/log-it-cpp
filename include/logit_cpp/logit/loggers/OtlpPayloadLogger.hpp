@@ -12,6 +12,7 @@
 #include "ILogger.hpp"
 #include "otlp/OtlpJsonFormatConfig.hpp"
 #include "otlp/OtlpJsonSerializer.hpp"
+#include "otlp/OtlpPayloadSplitter.hpp"
 
 #include <atomic>
 #include <chrono>
@@ -38,6 +39,7 @@ namespace logit {
             OtlpJsonFormatConfig format;
             std::function<void(std::string)> on_payload;
             bool async = true;
+            std::size_t max_payload_bytes = 1024 * 1024;
             std::size_t max_batch_size = 256;
             std::size_t max_queue_size = 1024;
             bool drop_on_overflow = true;
@@ -88,10 +90,13 @@ namespace logit {
                 }
                 std::vector<OtlpLogItem> batch;
                 batch.push_back(item);
-                std::string payload = build_otlp_logs_json_payload(batch, m_config.format);
+                auto chunks = build_otlp_logs_json_payload_chunks(
+                    batch, m_config.format, m_config.max_payload_bytes);
                 try {
                     if (m_config.on_payload) {
-                        m_config.on_payload(std::move(payload));
+                        for (auto& chunk : chunks) {
+                            m_config.on_payload(std::move(chunk));
+                        }
                     }
                 } catch (...) {
                     ++m_failed_exports;
@@ -269,10 +274,13 @@ namespace logit {
                 }
 
                 if (!batch.empty()) {
-                    std::string payload = build_otlp_logs_json_payload(batch, m_config.format);
+                    auto chunks = build_otlp_logs_json_payload_chunks(
+                        batch, m_config.format, m_config.max_payload_bytes);
                     try {
                         if (m_config.on_payload) {
-                            m_config.on_payload(std::move(payload));
+                            for (auto& chunk : chunks) {
+                                m_config.on_payload(std::move(chunk));
+                            }
                         }
                     } catch (...) {
                         ++m_failed_exports;
