@@ -6,7 +6,6 @@
 /// \brief Shared built-in metrics state and serialization for Prometheus loggers.
 
 #include "PrometheusTextFormatConfig.hpp"
-#include "../../config.hpp"
 
 #include <atomic>
 #include <cstdint>
@@ -57,23 +56,25 @@ namespace logit {
         }
 
         /// \brief Milliseconds since last log record (0 if none).
-        int64_t time_since_last_log_ms() const {
+        /// \param now_ms Current wall time in milliseconds (from LOGIT_CURRENT_TIMESTAMP_MS()).
+        int64_t time_since_last_log_ms(int64_t now_ms) const {
             const int64_t last = last_log_ts();
             if (last <= 0) {
                 return 0;
             }
-            const int64_t now = LOGIT_CURRENT_TIMESTAMP_MS();
-            return now > last ? now - last : 0;
+            return now_ms > last ? now_ms - last : 0;
         }
 
         /// \brief Append the six built-in metric families to \p families.
         /// \param families Destination vector.
         /// \param config Format configuration (prefix, labels, build-info flag).
         /// \param logger_name Value for the logger label (e.g. "prometheus_payload").
+        /// \param now_ms Current wall time in milliseconds (from LOGIT_CURRENT_TIMESTAMP_MS()).
         void build_builtin_metrics(
             std::vector<PrometheusMetricFamily>& families,
             const PrometheusTextFormatConfig& config,
-            const std::string& logger_name) const {
+            const std::string& logger_name,
+            int64_t now_ms = 0) const {
 
             const std::string& prefix = config.metric_prefix;
 
@@ -141,7 +142,7 @@ namespace logit {
                 mf.type = PrometheusMetricType::Gauge;
                 PrometheusSample s;
                 s.name = prefix + "time_since_last_log_ms";
-                s.value = static_cast<double>(time_since_last_log_ms());
+                s.value = static_cast<double>(time_since_last_log_ms(now_ms));
                 add_common_labels(s, config, logger_name);
                 mf.samples.push_back(s);
                 families.push_back(mf);

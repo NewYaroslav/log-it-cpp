@@ -91,7 +91,9 @@ namespace logit {
             std::vector<PrometheusMetricFamily> families;
             {
                 std::lock_guard<std::mutex> lock(m_collect_mutex);
-                m_metrics.build_builtin_metrics(families, m_config.format, "prometheus_payload");
+                m_metrics.build_builtin_metrics(
+                    families, m_config.format, "prometheus_payload",
+                    LOGIT_CURRENT_TIMESTAMP_MS());
                 if (m_config.on_collect) {
                     try {
                         m_config.on_collect(families);
@@ -109,7 +111,7 @@ namespace logit {
         std::string get_string_param(const LoggerParam& param) const override {
             switch (param) {
             case LoggerParam::LastLogTimestamp: return std::to_string(m_metrics.last_log_ts());
-            case LoggerParam::TimeSinceLastLog: return std::to_string(m_metrics.time_since_last_log_ms());
+            case LoggerParam::TimeSinceLastLog: return std::to_string(m_metrics.time_since_last_log_ms(LOGIT_CURRENT_TIMESTAMP_MS()));
             case LoggerParam::DroppedLogCount: return std::to_string(m_metrics.dropped_count());
             case LoggerParam::FailedExportCount: return std::to_string(m_metrics.failed_export_count());
             default:
@@ -124,7 +126,7 @@ namespace logit {
         int64_t get_int_param(const LoggerParam& param) const override {
             switch (param) {
             case LoggerParam::LastLogTimestamp: return m_metrics.last_log_ts();
-            case LoggerParam::TimeSinceLastLog: return m_metrics.time_since_last_log_ms();
+            case LoggerParam::TimeSinceLastLog: return m_metrics.time_since_last_log_ms(LOGIT_CURRENT_TIMESTAMP_MS());
             case LoggerParam::DroppedLogCount: return PrometheusLoggerMetrics::counter_to_int64(m_metrics.dropped_count());
             case LoggerParam::FailedExportCount: return PrometheusLoggerMetrics::counter_to_int64(m_metrics.failed_export_count());
             default:
@@ -141,7 +143,7 @@ namespace logit {
             case LoggerParam::LastLogTimestamp:
                 return static_cast<double>(m_metrics.last_log_ts()) / 1000.0;
             case LoggerParam::TimeSinceLastLog:
-                return static_cast<double>(m_metrics.time_since_last_log_ms()) / 1000.0;
+                return static_cast<double>(m_metrics.time_since_last_log_ms(LOGIT_CURRENT_TIMESTAMP_MS())) / 1000.0;
             case LoggerParam::DroppedLogCount:
                 return static_cast<double>(m_metrics.dropped_count());
             case LoggerParam::FailedExportCount:
