@@ -270,6 +270,67 @@ int main() {
         logger.shutdown();
     }
 
+    // Test 11: scrape metrics present after HTTP GET
+    {
+        logit::PrometheusHttpServerLogger::Config config;
+        config.port = 43201;
+        config.path = "/metrics";
+        config.format.metric_prefix = "logit_";
+        config.start_immediately = false;
+
+        logit::PrometheusHttpServerLogger logger(config);
+
+        logit::LogRecord record(
+            logit::LogLevel::LOG_LVL_INFO, 1710000000123LL,
+            "test.cpp", 80, "test_func", "scrape metrics test", "",
+            -1, false, false, false);
+        logger.log(record, "scrape metrics test");
+
+        logger.start();
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+
+        using HttpClient = SimpleWeb::Client<SimpleWeb::HTTP>;
+        HttpClient client("localhost:43201");
+        auto response = client.request("GET", "/metrics");
+
+        assert(response->status_code.find("200") != std::string::npos);
+
+        std::string body = response->content.string();
+        assert(body.find("# HELP logit_prometheus_scrapes_total") != std::string::npos);
+        assert(body.find("# TYPE logit_prometheus_scrapes_total counter") != std::string::npos);
+        assert(body.find("logit_prometheus_scrapes_total") != std::string::npos);
+
+        assert(body.find("# HELP logit_prometheus_scrape_errors_total") != std::string::npos);
+        assert(body.find("# TYPE logit_prometheus_scrape_errors_total counter") != std::string::npos);
+        assert(body.find("logit_prometheus_scrape_errors_total") != std::string::npos);
+
+        assert(body.find("# HELP logit_prometheus_last_scrape_timestamp_ms") != std::string::npos);
+        assert(body.find("# TYPE logit_prometheus_last_scrape_timestamp_ms gauge") != std::string::npos);
+
+        assert(body.find("# HELP logit_prometheus_collect_duration_seconds") != std::string::npos);
+        assert(body.find("# TYPE logit_prometheus_collect_duration_seconds gauge") != std::string::npos);
+
+        logger.shutdown();
+    }
+
+    // Test 12: collect_payload includes scrape metrics with zero values
+    {
+        logit::PrometheusHttpServerLogger::Config config;
+        config.port = 43202;
+        config.start_immediately = false;
+
+        logit::PrometheusHttpServerLogger logger(config);
+
+        std::string payload = logger.collect_payload();
+
+        assert(payload.find("prometheus_scrapes_total") != std::string::npos);
+        assert(payload.find("prometheus_scrape_errors_total") != std::string::npos);
+        assert(payload.find("prometheus_last_scrape_timestamp_ms") != std::string::npos);
+        assert(payload.find("prometheus_collect_duration_seconds") != std::string::npos);
+
+        logger.shutdown();
+    }
+
     return 0;
 }
 

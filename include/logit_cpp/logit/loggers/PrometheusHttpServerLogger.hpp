@@ -16,6 +16,7 @@
 #include <server_http.hpp>
 
 #include <atomic>
+#include <chrono>
 #include <cstdint>
 #include <functional>
 #include <mutex>
@@ -65,6 +66,8 @@ namespace logit {
                 [this](std::shared_ptr<HttpServer::Response> response,
                        std::shared_ptr<HttpServer::Request>) {
                     try {
+                        m_scrapes_total.fetch_add(1);
+                        m_last_scrape_timestamp_ms.store(LOGIT_CURRENT_TIMESTAMP_MS());
                         std::string payload = this->collect_payload();
                         response->write(
                             SimpleWeb::StatusCode::success_ok,
@@ -72,6 +75,7 @@ namespace logit {
                             {{"Content-Type", "text/plain; version=0.0.4; charset=utf-8"},
                              {"Cache-Control", "no-store"}});
                     } catch (...) {
+                        m_scrape_errors_total.fetch_add(1);
                         response->write(SimpleWeb::StatusCode::server_error_internal_server_error);
                     }
                 };
@@ -134,12 +138,14 @@ namespace logit {
         /// \brief Collects current metrics and returns serialized Prometheus text payload.
         /// \return Complete Prometheus text exposition format string.
         std::string collect_payload() {
+            auto start = std::chrono::steady_clock::now();
             std::vector<PrometheusMetricFamily> families;
             {
                 std::lock_guard<std::mutex> lock(m_collect_mutex);
                 m_metrics.build_builtin_metrics(
                     families, m_config.format, "prometheus_http_server",
                     LOGIT_CURRENT_TIMESTAMP_MS());
+                build_scrape_metrics(families);
                 if (m_config.on_collect) {
                     try {
                         m_config.on_collect(families);
@@ -148,6 +154,9 @@ namespace logit {
                     }
                 }
             }
+            auto end = std::chrono::steady_clock::now();
+            m_last_collect_duration_sec.store(
+                std::chrono::duration<double>(end - start).count());
             return build_prometheus_text_payload(families, m_config.format);
         }
 
@@ -231,6 +240,75 @@ namespace logit {
         PrometheusLoggerMetrics m_metrics;
 
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
+
+        std::atomic<uint64_t> m_scrapes_total{0};
+        std::atomic<uint64_t> m_scrape_errors_total{0};
+        std::atomic<int64_t> m_last_scrape_timestamp_ms{0};
+        std::atomic<double> m_last_collect_duration_sec{0.0};
+
+        void build_scrape_metrics(std::vector<PrometheusMetricFamily>& families) const {
+            const std::string& prefix = m_config.format.metric_prefix;
+
+            // logit_prometheus_scrapes_total
+            {
+                PrometheusMetricFamily mf;
+                mf.name = prefix + "prometheus_scrapes_total";
+                mf.help = "Total number of Prometheus scrape requests";
+                mf.type = PrometheusMetricType::Counter;
+                PrometheusSample s;
+                s.name = mf.name;
+                s.value = static_cast<double>(m_scrapes_total.load());
+                add_scrape_labels(s);
+                mf.samples.push_back(s);
+                families.push_back(mf);
+            }
+
+            // logit_prometheus_scrape_errors_total
+            {
+                PrometheusMetricFamily mf;
+                mf.name = prefix + "prometheus_scrape_errors_total";
+                mf.help = "Total number of failed Prometheus scrape requests";
+                mf.type = PrometheusMetricType::Counter;
+                PrometheusSample s;
+                s.name = mf.name;
+                s.value = static_cast<double>(m_scrape_errors_total.load());
+                add_scrape_labels(s);
+                mf.samples.push_back(s);
+                families.push_back(mf);
+            }
+
+            // logit_prometheus_last_scrape_timestamp_ms
+            {
+                PrometheusMetricFamily mf;
+                mf.name = prefix + "prometheus_last_scrape_timestamp_ms";
+                mf.help = "Timestamp of the last Prometheus scrape request";
+                mf.type = PrometheusMetricType::Gauge;
+                PrometheusSample s;
+                s.name = mf.name;
+                s.value = static_cast<double>(m_last_scrape_timestamp_ms.load());
+                add_scrape_labels(s);
+                mf.samples.push_back(s);
+                families.push_back(mf);
+            }
+
+            // logit_prometheus_collect_duration_seconds
+            {
+                PrometheusMetricFamily mf;
+                mf.name = prefix + "prometheus_collect_duration_seconds";
+                mf.help = "Duration of the last metrics collection in seconds";
+                mf.type = PrometheusMetricType::Gauge;
+                PrometheusSample s;
+                s.name = mf.name;
+                s.value = m_last_collect_duration_sec.load();
+                add_scrape_labels(s);
+                mf.samples.push_back(s);
+                families.push_back(mf);
+            }
+        }
+
+        static void add_scrape_labels(PrometheusSample& sample) {
+            sample.labels.push_back({"logger", "prometheus_http_server"});
+        }
 
         void stop() {
             if (!m_running.exchange(false)) {
