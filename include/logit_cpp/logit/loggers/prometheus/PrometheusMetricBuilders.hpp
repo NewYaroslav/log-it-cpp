@@ -8,6 +8,7 @@
 #include "PrometheusTextFormatConfig.hpp"
 
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace logit {

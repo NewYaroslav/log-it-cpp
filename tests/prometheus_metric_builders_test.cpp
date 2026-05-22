@@ -1,4 +1,3 @@
-#include <logit/utils.hpp>
 #include <logit/loggers/prometheus/PrometheusMetricBuilders.hpp>
 
 #ifdef LOGIT_WITH_PROMETHEUS
