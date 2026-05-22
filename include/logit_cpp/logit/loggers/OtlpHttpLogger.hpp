@@ -10,6 +10,7 @@
 #endif
 
 #include "ILogger.hpp"
+#include "otlp/OtlpCompression.hpp"
 #include "otlp/OtlpJsonFormatConfig.hpp"
 #include "otlp/OtlpJsonSerializer.hpp"
 #include "otlp/OtlpPayloadSplitter.hpp"
@@ -29,6 +30,7 @@
 #include <deque>
 #include <limits>
 #include <mutex>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <vector>
@@ -65,6 +67,8 @@ namespace logit {
             long retry_attempts = 2;
             long retry_delay_ms = 250;
             std::size_t max_payload_bytes = 1024 * 1024;
+            OtlpCompression compression = OtlpCompression::None;
+            int compression_level = 6;
             bool drop_on_overflow = true;
             bool async = true;
             bool cancel_on_shutdown = false;
@@ -85,6 +89,17 @@ namespace logit {
             m_client.set_content_type("application/json");
             m_client.set_timeout(config.request_timeout_sec);
             m_client.set_retry_attempts(config.retry_attempts, config.retry_delay_ms);
+
+            if (m_config.compression == OtlpCompression::Gzip) {
+#if !defined(LOGIT_HAS_ZLIB)
+                throw std::runtime_error("OtlpHttpLogger: gzip compression requested but LOGIT_WITH_GZIP is not enabled");
+#endif
+            }
+            if (m_config.compression == OtlpCompression::Zstd) {
+#if !defined(LOGIT_HAS_ZSTD)
+                throw std::runtime_error("OtlpHttpLogger: zstd compression requested but LOGIT_WITH_ZSTD is not enabled");
+#endif
+            }
 
             if (m_config.async) {
                 m_worker = std::thread(&OtlpHttpLogger::worker_loop, this);
@@ -324,6 +339,25 @@ namespace logit {
             auto weak_state = std::weak_ptr<OtlpHttpLoggerState>(m_state);
 
             for (auto& chunk : chunks) {
+                std::string post_content;
+                kurlyk::Headers chunk_headers = headers;
+
+                if (m_config.compression == OtlpCompression::Gzip) {
+                    if (!compress_string_gzip(chunk, post_content, m_config.compression_level)) {
+                        post_content = std::move(chunk);
+                    } else {
+                        chunk_headers.emplace("Content-Encoding", "gzip");
+                    }
+                } else if (m_config.compression == OtlpCompression::Zstd) {
+                    if (!compress_string_zstd(chunk, post_content, m_config.compression_level)) {
+                        post_content = std::move(chunk);
+                    } else {
+                        chunk_headers.emplace("Content-Encoding", "zstd");
+                    }
+                } else {
+                    post_content = std::move(chunk);
+                }
+
                 {
                     std::unique_lock<std::mutex> lock(m_state->mutex);
                     m_state->cv.wait(lock, [this]() {
@@ -343,7 +377,7 @@ namespace logit {
 
                 try {
                     submitted = m_client.post(
-                        m_config.path, {}, headers, std::move(chunk),
+                        m_config.path, {}, chunk_headers, std::move(post_content),
                         [weak_state](kurlyk::HttpResponsePtr response) {
                             auto state = weak_state.lock();
                             if (!state) {

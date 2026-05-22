@@ -51,6 +51,7 @@ else()
         os_error_macros_test.cpp
         otlp_http_logger_integration_test.cpp
         otlp_http_logger_callback_test.cpp
+        otlp_http_logger_gzip_test.cpp
         otlp_json_serializer_test.cpp
         otlp_payload_splitter_test.cpp
         otlp_structured_attributes_test.cpp
@@ -77,6 +78,7 @@ else()
     if(NOT LOGIT_WITH_GZIP)
         list(REMOVE_ITEM TEST_SOURCES file_logger_gzip_compression_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES file_logger_external_cmd_compression_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_gzip_test.cpp)
     endif()
     if(NOT LOGIT_WITH_ZSTD)
         list(REMOVE_ITEM TEST_SOURCES file_logger_zstd_compression_test.cpp)
@@ -87,6 +89,7 @@ else()
     if(NOT LOGIT_WITH_OTLP)
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_integration_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_callback_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_gzip_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_structured_attributes_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_payload_splitter_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_payload_logger_test.cpp)
@@ -105,7 +108,7 @@ else()
         add_executable(${test_name} ${test_src})
         target_link_libraries(${test_name} PRIVATE log-it-cpp)
         add_test(NAME ${test_name} COMMAND ${test_name})
-        if(LOGIT_WITH_OTLP AND test_name MATCHES "^otlp_http_logger_(integration|callback)_test$")
+        if(LOGIT_WITH_OTLP AND test_name MATCHES "^otlp_http_logger_(integration|callback|gzip)_test$")
             target_include_directories(${test_name} PRIVATE
                 "${CMAKE_CURRENT_SOURCE_DIR}/../external/kurlyk/external/Simple-Web-Server")
         endif()
