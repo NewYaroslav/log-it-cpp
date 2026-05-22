@@ -20,6 +20,7 @@ struct RequestCounter {
     std::mutex mutex;
     std::condition_variable cv;
     std::atomic<int> count{0};
+    std::vector<std::string> bodies;
     std::string last_body;
     bool delay_response = false;
     int delay_ms = 0;
@@ -60,6 +61,7 @@ void start_server(HttpServer& server, std::thread& thread, RequestCounter& count
         {
             std::lock_guard<std::mutex> lock(counter.mutex);
             counter.last_body = request->content.string();
+            counter.bodies.push_back(counter.last_body);
             counter.count.fetch_add(1);
         }
         counter.cv.notify_all();
@@ -354,6 +356,58 @@ int main() {
         assert(elapsed < 1000);
 
         LOGIT_SHUTDOWN();
+        stop_server(server, server_thread);
+    }
+
+    // Test h: payload splitting produces multiple POSTs with small max_payload_bytes
+    {
+        RequestCounter counter;
+        HttpServer server;
+        std::thread server_thread;
+        start_server(server, server_thread, counter, port);
+
+        logit::OtlpHttpLogger::Config config;
+        config.host = "http://127.0.0.1:" + std::to_string(port);
+        config.path = "/v1/logs";
+        config.format.service_name = "http-split-test";
+        config.max_batch_size = 256;
+        config.max_payload_bytes = 1024;
+        config.export_interval_ms = 50;
+        config.request_timeout_sec = 5;
+        config.max_in_flight_requests = 8;
+
+        auto logger = std::unique_ptr<logit::OtlpHttpLogger>(new logit::OtlpHttpLogger(config));
+
+        for (int i = 0; i < 50; ++i) {
+            logit::LogRecord record(
+                logit::LogLevel::LOG_LVL_WARN, 1710000000123LL + i,
+                "test.cpp", 200 + i, "test_func", "http split test", "",
+                -1, false, false, false);
+            logger->log(record, "http split payload test message number " + std::to_string(i));
+        }
+
+        logger->wait();
+        logger->shutdown();
+
+        {
+            std::unique_lock<std::mutex> lock(counter.mutex);
+            counter.cv.wait_for(lock, std::chrono::seconds(3), [&counter]() {
+                return counter.count.load() >= 2;
+            });
+        }
+
+        assert(counter.count.load() > 1);
+
+        int body_count = 0;
+        for (const auto& body : counter.bodies) {
+            std::size_t pos = 0;
+            while ((pos = body.find("\"body\"", pos)) != std::string::npos) {
+                ++body_count;
+                ++pos;
+            }
+        }
+        assert(body_count == 50);
+
         stop_server(server, server_thread);
     }
 

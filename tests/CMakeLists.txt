@@ -52,6 +52,7 @@ else()
         otlp_http_logger_integration_test.cpp
         otlp_http_logger_callback_test.cpp
         otlp_json_serializer_test.cpp
+        otlp_payload_splitter_test.cpp
         otlp_structured_attributes_test.cpp
         otlp_payload_logger_test.cpp
         prometheus_text_serializer_test.cpp
@@ -87,6 +88,7 @@ else()
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_integration_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_callback_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_structured_attributes_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES otlp_payload_splitter_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_payload_logger_test.cpp)
     endif()
     if(NOT LOGIT_WITH_PROMETHEUS)
