@@ -318,17 +318,27 @@ namespace logit {
                 return;
             }
 
-            {
-                std::lock_guard<std::mutex> lock(m_state->mutex);
-                m_state->http_in_flight += chunks.size();
-            }
-
             kurlyk::Headers headers;
             headers.emplace("Content-Type", "application/json");
 
             auto weak_state = std::weak_ptr<OtlpHttpLoggerState>(m_state);
 
             for (auto& chunk : chunks) {
+                {
+                    std::unique_lock<std::mutex> lock(m_state->mutex);
+                    m_state->cv.wait(lock, [this]() {
+                        return (m_state->stopping && m_config.cancel_on_shutdown) ||
+                               m_state->http_in_flight < m_config.max_in_flight_requests;
+                    });
+
+                    if (m_state->stopping && m_config.cancel_on_shutdown) {
+                        m_state->failed_exports.fetch_add(1);
+                        continue;
+                    }
+
+                    ++m_state->http_in_flight;
+                }
+
                 bool submitted = false;
 
                 try {

@@ -19,6 +19,7 @@
 #include <condition_variable>
 #include <cstdint>
 #include <deque>
+#include <functional>
 #include <limits>
 #include <mutex>
 #include <string>
@@ -92,14 +93,14 @@ namespace logit {
                 batch.push_back(item);
                 auto chunks = build_otlp_logs_json_payload_chunks(
                     batch, m_config.format, m_config.max_payload_bytes);
-                try {
-                    if (m_config.on_payload) {
-                        for (auto& chunk : chunks) {
+                if (m_config.on_payload) {
+                    for (auto& chunk : chunks) {
+                        try {
                             m_config.on_payload(std::move(chunk));
+                        } catch (...) {
+                            ++m_failed_exports;
                         }
                     }
-                } catch (...) {
-                    ++m_failed_exports;
                 }
                 return;
             }
@@ -276,14 +277,14 @@ namespace logit {
                 if (!batch.empty()) {
                     auto chunks = build_otlp_logs_json_payload_chunks(
                         batch, m_config.format, m_config.max_payload_bytes);
-                    try {
-                        if (m_config.on_payload) {
-                            for (auto& chunk : chunks) {
+                    if (m_config.on_payload) {
+                        for (auto& chunk : chunks) {
+                            try {
                                 m_config.on_payload(std::move(chunk));
+                            } catch (...) {
+                                ++m_failed_exports;
                             }
                         }
-                    } catch (...) {
-                        ++m_failed_exports;
                     }
                 }
 
