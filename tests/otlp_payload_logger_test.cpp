@@ -355,7 +355,7 @@ int main() {
         logger->shutdown();
     }
 
-    // Test i: sync mode with payload splitting - small max_payload_bytes forces multiple chunks
+    // Test i: sync mode with small max_payload_bytes still exports all records
     {
         std::atomic<int> count{0};
         std::vector<std::string> payloads;
