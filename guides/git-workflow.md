@@ -53,11 +53,12 @@ Examples:
 
 ## Agent Rule
 
-When starting any non-trivial task (feature, bug fix, improvement), an AI agent must:
+When starting any task (feature, bug fix, improvement, documentation), an AI agent must:
 
-1. Verify `main` is current with `origin/main`.
-2. Create a feature branch with an appropriate prefix.
-3. Do all work on that branch.
-4. Push the branch and instruct the user to open a PR instead of merging directly.
+1. Do not edit or commit while on `main`. If currently on `main`, create a branch before editing files.
+2. Verify `main` is current with `origin/main`.
+3. Create a feature branch with an appropriate prefix.
+4. Do all work on that branch.
+5. Push the branch and instruct the user to open a PR instead of merging directly.
 
-Trivial one-line fixes or documentation typos may be committed to `main` only when explicitly requested by the user.
+No direct commits to `main`, including trivial documentation fixes, unless the repository owner explicitly overrides this rule for that exact change.
