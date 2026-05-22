@@ -57,6 +57,7 @@ else()
         prometheus_text_serializer_test.cpp
         prometheus_payload_logger_test.cpp
         prometheus_http_server_logger_test.cpp
+        prometheus_metric_builders_test.cpp
         per_logger_isolation_test.cpp
         per_logger_mixed_mode_test.cpp
         printf_format_macros_test.cpp
@@ -92,6 +93,7 @@ else()
         list(REMOVE_ITEM TEST_SOURCES prometheus_text_serializer_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES prometheus_payload_logger_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES prometheus_http_server_logger_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES prometheus_metric_builders_test.cpp)
     endif()
     if(LOGIT_WITH_PROMETHEUS AND NOT LOGIT_WITH_PROMETHEUS_SERVER)
         list(REMOVE_ITEM TEST_SOURCES prometheus_http_server_logger_test.cpp)
