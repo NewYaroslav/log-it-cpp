@@ -17,6 +17,12 @@ namespace logit {
 
 enum class OtlpCompression { None, Gzip, Zstd };
 
+/// \brief Compress a string with gzip.
+/// \param input Uncompressed data.
+/// \param[out] output Compressed result (valid only on success).
+/// \param level Compression level 1-9.
+/// \return true on success, false if zlib is unavailable or compression fails.
+/// \note Callers must check the return value and handle fallback explicitly.
 inline bool compress_string_gzip(const std::string& input, std::string& output, int level) {
 #if defined(LOGIT_HAS_ZLIB)
     z_stream zs;
@@ -65,6 +71,12 @@ inline bool compress_string_gzip(const std::string& input, std::string& output, 
 #endif
 }
 
+/// \brief Compress a string with zstd.
+/// \param input Uncompressed data.
+/// \param[out] output Compressed result (valid only on success).
+/// \param level Compression level 1-19.
+/// \return true on success, false if zstd is unavailable or compression fails.
+/// \note Callers must check the return value and handle fallback explicitly.
 inline bool compress_string_zstd(const std::string& input, std::string& output, int level) {
 #if defined(LOGIT_HAS_ZSTD)
     if (level < 1) level = 1;
