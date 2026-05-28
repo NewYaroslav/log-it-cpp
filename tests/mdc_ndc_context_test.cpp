@@ -7,6 +7,9 @@
 #include <vector>
 
 int main() {
+#ifndef LOGIT_WITH_CONTEXT
+    return 0;
+#else
     logit::MemoryLogger::Config mem_cfg;
     logit::Logger::get_instance().add_logger(
         std::unique_ptr<logit::MemoryLogger>(new logit::MemoryLogger(mem_cfg)),
@@ -88,4 +91,5 @@ int main() {
     assert(logs1[4].find("req=abc123") != std::string::npos);
 
     return 0;
+#endif
 }

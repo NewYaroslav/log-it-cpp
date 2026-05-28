@@ -19,7 +19,9 @@ For Windows MinGW builds, the CMake integration enables kurlyk fallback options 
 ## Usage
 
 For a runnable version with environment overrides, graceful shutdown, optional
-compression, and MDC trace/span fields, see `examples/example_logit_otlp_http.cpp`.
+compression, and optional MDC trace/span fields, see
+`examples/example_logit_otlp_http.cpp`. Build with `-DLOGIT_WITH_CONTEXT=ON`
+if you want the MDC trace/span fields to be populated.
 
 ```cpp
 #include <logit.hpp>

@@ -3,6 +3,12 @@
 #include <thread>
 
 int main() {
+#ifndef LOGIT_WITH_CONTEXT
+    LOGIT_ADD_CONSOLE_DEFAULT();
+    LOGIT_WARN("MDC/NDC example requires LOGIT_WITH_CONTEXT=ON");
+    LOGIT_WAIT();
+    return 0;
+#else
     LOGIT_ADD_CONSOLE(
         "[%T] [%l] request=%K{request_id} user=%K{user_id} ndc=[%J] %v",
         false);
@@ -41,4 +47,5 @@ int main() {
     LOGIT_NDC_CLEAR();
     LOGIT_SHUTDOWN();
     return 0;
+#endif
 }

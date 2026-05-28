@@ -8,6 +8,7 @@ option(LOGIT_BENCH_WITH_SPDLOG "Enable spdlog comparison benchmarks" OFF)
 option(LOGIT_WITH_GZIP "Enable gzip via zlib" OFF)
 option(LOGIT_WITH_ZSTD "Enable zstd" OFF)
 option(LOGIT_WITH_FMT "Enable fmt support" OFF)
+option(LOGIT_WITH_CONTEXT "Enable MDC/NDC diagnostic context support" OFF)
 option(LOGIT_WITH_OTLP "Enable OTLP/HTTP log export via optional kurlyk dependency" OFF)
 option(LOGIT_WITH_PROMETHEUS "Enable Prometheus text payload support" OFF)
 option(LOGIT_WITH_PROMETHEUS_SERVER "Enable Prometheus HTTP server backend" OFF)
@@ -71,6 +72,10 @@ endif()
 
 if(LOGIT_FORCE_ASYNC_OFF)
     target_compile_definitions(log-it-cpp INTERFACE LOGIT_DEFAULT_ASYNC_OFF=1)
+endif()
+
+if(LOGIT_WITH_CONTEXT)
+    target_compile_definitions(log-it-cpp INTERFACE LOGIT_WITH_CONTEXT=1)
 endif()
 
 if(LOGIT_WITH_SYSLOG AND (UNIX OR APPLE) AND NOT EMSCRIPTEN)

@@ -47,24 +47,34 @@ int main() {
         logit::OtlpHttpLogger,
         (config),
         logit::SimpleLogFormatter,
+#ifdef LOGIT_WITH_CONTEXT
         ("[%l] trace=%K{trace_id} span=%K{span_id} %v")
+#else
+        ("[%l] %v")
+#endif
     );
 
+#ifdef LOGIT_WITH_CONTEXT
     LOGIT_MDC_PUT("trace_id", "7b3f1c8a2e914a99");
     LOGIT_MDC_PUT("span_id", "checkout-001");
     LOGIT_NDC_PUSH("checkout");
+#endif
 
     LOGIT_INFO("OTLP logger started");
     LOGIT_WARN("payment provider latency is above threshold");
 
     {
+#ifdef LOGIT_WITH_CONTEXT
         LOGIT_NDC_GUARD("submit-order");
+#endif
         LOGIT_ERROR("order export failed; collector will count failed exports if HTTP fails");
     }
 
     LOGIT_WAIT();
+#ifdef LOGIT_WITH_CONTEXT
     LOGIT_MDC_CLEAR();
     LOGIT_NDC_CLEAR();
+#endif
     LOGIT_SHUTDOWN();
     return 0;
 #endif

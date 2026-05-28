@@ -8,7 +8,6 @@
 #include <time_shield/time_conversions.hpp>
 #include <vector>
 #include <string>
-#include <map>
 #include <sstream>
 #include <iomanip>
 #include <cstdio>
@@ -268,9 +267,13 @@ namespace logit {
 
                 // Diagnostic context
                 case FormatType::MappedDiagnosticContext: {
+#ifdef LOGIT_WITH_CONTEXT
+                    if (!record.context) {
+                        break;
+                    }
                     bool first = true;
-                    for (std::map<std::string, std::string>::const_iterator it = record.mdc.begin();
-                         it != record.mdc.end();
+                    for (std::map<std::string, std::string>::const_iterator it = record.context->mdc.begin();
+                         it != record.context->mdc.end();
                          ++it) {
                         if (!first) {
                             temp_stream << " ";
@@ -278,19 +281,29 @@ namespace logit {
                         temp_stream << it->first << "=" << it->second;
                         first = false;
                     }
+#endif
                     break;
                 }
                 case FormatType::MappedDiagnosticContextValue: {
-                    std::map<std::string, std::string>::const_iterator it = record.mdc.find(context_key);
-                    if (it != record.mdc.end()) {
-                        temp_stream << it->second;
+#ifdef LOGIT_WITH_CONTEXT
+                    if (record.context) {
+                        std::map<std::string, std::string>::const_iterator it =
+                            record.context->mdc.find(context_key);
+                        if (it != record.context->mdc.end()) {
+                            temp_stream << it->second;
+                        }
                     }
+#endif
                     break;
                 }
                 case FormatType::NestedDiagnosticContext: {
+#ifdef LOGIT_WITH_CONTEXT
+                    if (!record.context) {
+                        break;
+                    }
                     bool first = true;
-                    for (std::vector<std::string>::const_iterator it = record.ndc.begin();
-                         it != record.ndc.end();
+                    for (std::vector<std::string>::const_iterator it = record.context->ndc.begin();
+                         it != record.context->ndc.end();
                          ++it) {
                         if (!first) {
                             temp_stream << " > ";
@@ -298,6 +311,7 @@ namespace logit {
                         temp_stream << *it;
                         first = false;
                     }
+#endif
                     break;
                 }
 
