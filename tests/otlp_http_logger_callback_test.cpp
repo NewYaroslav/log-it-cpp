@@ -8,6 +8,7 @@
 #include <cassert>
 #include <chrono>
 #include <condition_variable>
+#include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
@@ -168,7 +169,53 @@ int main() {
         stop_server(server, server_thread);
     }
 
-    // Test c: max_in_flight_requests=2 parallelism
+    // Test c: graceful shutdown drains queued backlog while in-flight is full
+    {
+        RequestCounter counter;
+        counter.delay_response = true;
+        counter.delay_ms = 300;
+        HttpServer server;
+        std::thread server_thread;
+        start_server(server, server_thread, counter, port);
+
+        logit::OtlpHttpLogger::Config config;
+        config.host = "http://127.0.0.1:" + std::to_string(port);
+        config.path = "/v1/logs";
+        config.format.service_name = "callback-test";
+        config.max_batch_size = 1;
+        config.max_in_flight_requests = 1;
+        config.export_interval_ms = 10;
+        config.request_timeout_sec = 5;
+        config.cancel_on_shutdown = false;
+
+        auto logger = std::unique_ptr<logit::OtlpHttpLogger>(new logit::OtlpHttpLogger(config));
+
+        logit::LogRecord record1(
+            logit::LogLevel::LOG_LVL_WARN, 1710000000123LL,
+            "test.cpp", 120, "test_func", "shutdown backlog 1", "",
+            -1, false, false, false);
+        logit::LogRecord record2(
+            logit::LogLevel::LOG_LVL_WARN, 1710000000124LL,
+            "test.cpp", 121, "test_func", "shutdown backlog 2", "",
+            -1, false, false, false);
+
+        logger->log(record1, "shutdown backlog msg 1");
+        logger->log(record2, "shutdown backlog msg 2");
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        auto start = std::chrono::steady_clock::now();
+        logger->shutdown();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now() - start).count();
+
+        assert(counter.count.load() == 2);
+        assert(elapsed >= 300);
+
+        stop_server(server, server_thread);
+    }
+
+    // Test d: max_in_flight_requests=2 parallelism
     {
         RequestCounter counter;
         counter.delay_response = true;
@@ -205,7 +252,7 @@ int main() {
         stop_server(server, server_thread);
     }
 
-    // Test d: HTTP 500 failure counting
+    // Test e: HTTP 500 failure counting
     {
         RequestCounter counter;
         HttpServer server;
@@ -244,7 +291,7 @@ int main() {
         stop_server(server, server_thread);
     }
 
-    // Test e: wait() waits for callbacks
+    // Test f: wait() waits for callbacks
     {
         RequestCounter counter;
         counter.delay_response = true;
@@ -281,7 +328,7 @@ int main() {
         stop_server(server, server_thread);
     }
 
-    // Test f: Graceful shutdown no UAF
+    // Test g: Graceful shutdown no UAF
     {
         RequestCounter counter;
         counter.delay_response = true;
@@ -320,7 +367,7 @@ int main() {
         stop_server(server, server_thread);
     }
 
-    // Test g: cancel_on_shutdown=true fast shutdown
+    // Test h: cancel_on_shutdown=true fast shutdown
     {
         RequestCounter counter;
         counter.delay_response = true;
@@ -359,7 +406,7 @@ int main() {
         stop_server(server, server_thread);
     }
 
-    // Test h: payload splitting produces multiple POSTs with small max_payload_bytes
+    // Test i: payload splitting produces multiple POSTs with small max_payload_bytes
     {
         RequestCounter counter;
         HttpServer server;

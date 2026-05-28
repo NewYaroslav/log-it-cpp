@@ -20,6 +20,7 @@
 #include "utils/LogFileReadResult.hpp"
 #include "utils/encoding_utils.hpp"
 #include "utils/path_utils.hpp"
+#include "detail/LogContext.hpp"
 #include "utils/LogRecord.hpp"
 #include "utils/tag_utils.hpp"
 

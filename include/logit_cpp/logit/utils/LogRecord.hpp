@@ -5,6 +5,7 @@
 /// \file LogRecord.hpp
 /// \brief Contains the definition of the LogRecord structure for storing log data.
 
+#include <map>
 #include <string>
 #include <vector>
 #include <cstdint>
@@ -29,6 +30,8 @@ namespace logit {
         const bool          print_mode : 1; ///< Flag to determine whether arguments are printed in a raw format without special symbols.
         const bool          fmt_mode   : 1; ///< Flag indicating if fmt formatting should be used.
         const bool          raw_mode   : 1; ///< Flag indicating if formatter and level filters should be bypassed.
+        mutable std::map<std::string, std::string> mdc; ///< Mapped Diagnostic Context (thread-local key-value pairs).
+        mutable std::vector<std::string>           ndc; ///< Nested Diagnostic Context (thread-local stack).
 
         /// \brief Constructor with argument names.
         /// \param log_level Log severity level.
@@ -66,6 +69,8 @@ namespace logit {
                 print_mode(print_mode),
                 fmt_mode(fmt_mode),
                 raw_mode(raw_mode) {
+            mdc = detail::mdc_map();
+            ndc = detail::ndc_stack();
         };
     };
 

@@ -46,6 +46,13 @@ Internal headers under `logit/detail/` are private implementation details and sh
 
 See the macro examples below or browse the `examples/` folder for focused demonstrations, including queue tuning and crash handling.
 
+Recent focused examples include:
+
+- `examples/example_logit_otlp_http.cpp` - OTLP/HTTP export with batching, retries, optional compression, and contextual trace/span fields.
+- `examples/example_logit_prometheus_payload.cpp` - callback-based Prometheus payload emission with custom registry metrics.
+- `examples/example_logit_prometheus_server.cpp` - embedded `/metrics` endpoint with built-in and application metrics.
+- `examples/example_logit_mdc_ndc.cpp` - mapped and nested diagnostic context across scopes and threads.
+
 ## Macro Examples
 
 ### Long-form macros
@@ -99,6 +106,36 @@ void short_names_demo() {
 ```
 
 For a standalone program that brings everything together and intentionally aborts after logging a fatal message, check `examples/example_logit_minimal_crash.cpp`.
+
+### Diagnostic context
+
+Mapped diagnostic context (MDC) stores thread-local key-value pairs, while nested
+diagnostic context (NDC) stores a thread-local stack of scope names. The context
+is captured into each `LogRecord` when the record is created.
+
+```cpp
+#include <logit.hpp>
+
+int main() {
+    LOGIT_ADD_LOGGER(
+        logit::ConsoleLogger, (),
+        logit::SimpleLogFormatter,
+        ("[%T] request=%K{request_id} ndc=[%J] %v")
+    );
+
+    LOGIT_MDC_PUT("request_id", "req-42");
+    LOGIT_NDC_PUSH("checkout");
+
+    {
+        LOGIT_NDC_GUARD("payment");
+        LOGIT_INFO("charge started");
+    }
+
+    LOGIT_MDC_CLEAR();
+    LOGIT_NDC_CLEAR();
+    LOGIT_WAIT();
+}
+```
 
 ### System error helpers
 
@@ -521,6 +558,12 @@ Below is a list of supported formatting flags:
 - *Thread Flags*:
 
     - `%t`: Thread identifier
+
+- *Diagnostic Context Flags*:
+
+    - `%K`: All mapped diagnostic context values as `key=value` pairs
+    - `%K{key}`: One mapped diagnostic context value by key
+    - `%J`: Nested diagnostic context stack
     
 - *Color Flags*:
 
@@ -775,6 +818,8 @@ public:
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Log on every `n`th invocation. |
 | `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Log at most once per `period_ms` milliseconds. |
 | `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Attach key-value tags to a message. |
+| `LOGIT_MDC_PUT(key, value)`, `LOGIT_MDC_REMOVE(key)`, `LOGIT_MDC_CLEAR()` | Manage thread-local mapped diagnostic context. |
+| `LOGIT_NDC_PUSH(value)`, `LOGIT_NDC_POP()`, `LOGIT_NDC_CLEAR()`, `LOGIT_NDC_GUARD(value)` | Manage thread-local nested diagnostic context. |
 | `LOGIT_RAW(msg)`, `LOGIT_RAW_TO(index, msg)`, `LOGIT_RAW_IF(condition, msg)` | Write already formatted text without applying level filters or formatter patterns. |
 | `LOGIT_SECTION(name)`, `LOGIT_SECTION_TO(index, name)`, `LOGIT_SECTION_IF(condition, name)` | Write raw section headers such as `[Proxy]`. |
 | `LOGIT_<LEVEL>_TO(index, ...)` | Target a specific logger index, including single-mode backends. |

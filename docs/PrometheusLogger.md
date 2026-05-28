@@ -24,7 +24,16 @@ LogIt++ provides two Prometheus backends for exposing internal log metrics in th
 | `logit_time_since_last_log_ms` | gauge | Time since last log (ms) |
 | `logit_build_info` | gauge | Build info (value=1, labels: version, compiler) |
 
-The `metric_prefix` config option (default: `logit_`) is applied to all metric names.
+The `metric_prefix` config option (default: `logit_`) is applied to built-in logger metric names.
+
+`PrometheusHttpServerLogger` also exposes scrape diagnostics:
+
+| Metric | Type | Description |
+|--------|------|-------------|
+| `logit_prometheus_scrapes_total` | counter | Total `/metrics` scrape requests |
+| `logit_prometheus_scrape_errors_total` | counter | Failed scrape requests |
+| `logit_prometheus_last_scrape_timestamp_ms` | gauge | Timestamp of the last scrape request |
+| `logit_prometheus_collect_duration_seconds` | gauge | Duration of the last metrics collection |
 
 ## CMake Options
 
@@ -37,6 +46,9 @@ option(LOGIT_WITH_PROMETHEUS_SERVER "Enable Prometheus HTTP server backend" OFF)
 (Simple-Web-Server dependency).
 
 ## Usage: PrometheusPayloadLogger
+
+For a runnable callback example with custom application metrics, see
+`examples/example_logit_prometheus_payload.cpp`.
 
 ```cpp
 #include <logit.hpp>
@@ -61,6 +73,9 @@ LOGIT_WAIT(); // triggers on_payload with current metrics
 
 ## Usage: PrometheusHttpServerLogger
 
+For a runnable embedded `/metrics` server example, see
+`examples/example_logit_prometheus_server.cpp`.
+
 ```cpp
 #include <logit.hpp>
 
@@ -81,21 +96,30 @@ LOGIT_INFO("Server started");
 
 ## Custom Metrics
 
-Use the `on_collect` callback to add application-specific metrics on each scrape:
+Use `PrometheusRegistry` with the `on_collect` callback to register
+application-specific metrics once and collect them on each scrape:
 
 ```cpp
-config.on_collect = [](std::vector<logit::PrometheusMetricFamily>& families) {
-    logit::PrometheusMetricFamily mf;
-    mf.name = "myapp_queue_size";
-    mf.help = "Current queue depth";
-    mf.type = logit::PrometheusMetricType::Gauge;
-    logit::PrometheusSample s;
-    s.name = "myapp_queue_size";
-    s.value = get_queue_depth();
-    mf.samples.push_back(s);
-    families.push_back(mf);
+#include <logit/loggers/prometheus/PrometheusRegistry.hpp>
+
+logit::PrometheusRegistry registry("myapp_");
+
+registry.set_gauge(
+    "queue_size",
+    "Current queue depth",
+    []() { return get_queue_depth(); });
+
+config.on_collect = [&registry](std::vector<logit::PrometheusMetricFamily>& families) {
+    registry.collect(families);
 };
 ```
+
+`PrometheusTextFormatConfig::metric_prefix` applies only to LogIt++ built-in
+metrics. Custom metric names are written as supplied by the registry or manual
+builders, so use the registry prefix for application metric namespaces.
+
+For low-level control, `on_collect` can still append `PrometheusMetricFamily`
+objects directly or use helpers such as `add_prometheus_gauge()`.
 
 ## Prometheus Scrape Config
 

@@ -50,6 +50,14 @@
 /// \param y Second token.
 #define LOGIT_CONCAT(x, y) LOGIT_CONCAT_IMPL(x, y)
 
+#define LOGIT_MDC_PUT(key, value)      ::logit::mdc_put((key), (value))
+#define LOGIT_MDC_REMOVE(key)          ::logit::mdc_remove((key))
+#define LOGIT_MDC_CLEAR()              ::logit::mdc_clear()
+#define LOGIT_NDC_PUSH(value)          ::logit::ndc_push((value))
+#define LOGIT_NDC_POP()                ::logit::ndc_pop()
+#define LOGIT_NDC_CLEAR()              ::logit::ndc_clear()
+#define LOGIT_NDC_GUARD(value)         ::logit::NdcGuard LOGIT_CONCAT(_logit_ndc_guard_, __COUNTER__)((value))
+
 #ifdef _LOGIT_ENUMS_HPP_INCLUDED
 static_assert(LOGIT_LEVEL_TRACE == static_cast<int>(logit::LogLevel::LOG_LVL_TRACE),
               "LOGIT_LEVEL_TRACE mismatch");
