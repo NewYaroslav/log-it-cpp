@@ -118,6 +118,11 @@ config.on_collect = [&registry](std::vector<logit::PrometheusMetricFamily>& fami
 metrics. Custom metric names are written as supplied by the registry or manual
 builders, so use the registry prefix for application metric namespaces.
 
+If a registry value callback throws, the registry skips that sample, keeps
+collecting later metrics, appends the healthy samples, and then rethrows the
+first exception. The Prometheus loggers catch that exception from `on_collect`
+and increment their failed export counter.
+
 For low-level control, `on_collect` can still append `PrometheusMetricFamily`
 objects directly or use helpers such as `add_prometheus_gauge()`.
 

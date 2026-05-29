@@ -8,6 +8,7 @@
 #include "PrometheusTextFormatConfig.hpp"
 
 #include <cstddef>
+#include <exception>
 #include <functional>
 #include <string>
 #include <utility>
@@ -64,10 +65,21 @@ namespace logit {
         /// \brief Appends current registry metrics to the output vector.
         void collect(std::vector<PrometheusMetricFamily>& out) const {
             std::vector<PrometheusMetricFamily> collected;
+            std::exception_ptr first_exception;
 
             for (std::size_t i = 0; i < m_entries.size(); ++i) {
                 const Entry& entry = m_entries[i];
                 const std::string full_name = m_metric_prefix + entry.name;
+                double value = 0.0;
+
+                try {
+                    value = entry.value_fn();
+                } catch (...) {
+                    if (!first_exception) {
+                        first_exception = std::current_exception();
+                    }
+                    continue;
+                }
 
                 PrometheusMetricFamily* family =
                     find_family(collected, full_name, entry.type);
@@ -82,12 +94,15 @@ namespace logit {
 
                 PrometheusSample sample;
                 sample.name = full_name;
-                sample.value = entry.value_fn();
+                sample.value = value;
                 sample.labels = entry.labels;
                 family->samples.push_back(std::move(sample));
             }
 
             out.insert(out.end(), collected.begin(), collected.end());
+            if (first_exception) {
+                std::rethrow_exception(first_exception);
+            }
         }
 
     private:

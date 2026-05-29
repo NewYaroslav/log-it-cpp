@@ -110,12 +110,22 @@ int main() {
         assert(payload.find("logit_myapp_queue_size") == std::string::npos);
     }
 
-    // Test 6: value callback exceptions propagate to caller
+    // Test 6: value callback exceptions report failure without dropping healthy samples
     {
         logit::PrometheusRegistry registry;
+        registry.set_gauge(
+            "healthy_metric",
+            "Healthy metric",
+            []() { return 1.0; },
+            {{"slot", "before"}});
         registry.set_gauge("broken_metric", "Broken metric", []() -> double {
             throw std::runtime_error("broken metric");
         });
+        registry.set_gauge(
+            "healthy_metric",
+            "Healthy metric",
+            []() { return 2.0; },
+            {{"slot", "after"}});
 
         std::vector<logit::PrometheusMetricFamily> families;
         bool caught = false;
@@ -126,6 +136,19 @@ int main() {
         }
 
         assert(caught);
+        assert(families.size() == 1);
+        assert(families[0].name == "healthy_metric");
+        assert(families[0].samples.size() == 2);
+        assert(families[0].samples[0].value == 1.0);
+        assert(families[0].samples[0].labels[0].value == "before");
+        assert(families[0].samples[1].value == 2.0);
+        assert(families[0].samples[1].labels[0].value == "after");
+
+        std::string payload = logit::build_prometheus_text_payload(
+            families, logit::PrometheusTextFormatConfig{});
+        assert(payload.find("healthy_metric{slot=\"before\"} 1") != std::string::npos);
+        assert(payload.find("healthy_metric{slot=\"after\"} 2") != std::string::npos);
+        assert(payload.find("broken_metric") == std::string::npos);
     }
 
     return 0;
