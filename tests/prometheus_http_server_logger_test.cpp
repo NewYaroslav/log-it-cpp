@@ -331,6 +331,54 @@ int main() {
         logger.shutdown();
     }
 
+    // Test 13: scrape metrics follow configured label policy
+    {
+        logit::PrometheusHttpServerLogger::Config config;
+        config.port = 43203;
+        config.start_immediately = false;
+        config.format.logger_label_name = "backend";
+        config.format.include_instance_label = true;
+        config.format.instance_label_name = "node";
+        config.format.instance_label_value = "node-a";
+
+        logit::PrometheusHttpServerLogger logger(config);
+
+        std::string payload = logger.collect_payload();
+
+        assert(payload.find(
+            "logit_prometheus_scrapes_total{backend=\"prometheus_http_server\",node=\"node-a\"}") != std::string::npos);
+        assert(payload.find(
+            "logit_prometheus_scrape_errors_total{backend=\"prometheus_http_server\",node=\"node-a\"}") != std::string::npos);
+        assert(payload.find(
+            "logit_prometheus_last_scrape_timestamp_ms{backend=\"prometheus_http_server\",node=\"node-a\"}") != std::string::npos);
+        assert(payload.find(
+            "logit_prometheus_collect_duration_seconds{backend=\"prometheus_http_server\",node=\"node-a\"}") != std::string::npos);
+
+        logger.shutdown();
+    }
+
+    // Test 14: scrape metrics can suppress logger label
+    {
+        logit::PrometheusHttpServerLogger::Config config;
+        config.port = 43204;
+        config.start_immediately = false;
+        config.format.include_logger_label = false;
+        config.format.include_instance_label = true;
+        config.format.instance_label_name = "node";
+        config.format.instance_label_value = "node-b";
+
+        logit::PrometheusHttpServerLogger logger(config);
+
+        std::string payload = logger.collect_payload();
+
+        assert(payload.find(
+            "logit_prometheus_scrapes_total{node=\"node-b\"}") != std::string::npos);
+        assert(payload.find(
+            "logit_prometheus_scrapes_total{logger=") == std::string::npos);
+
+        logger.shutdown();
+    }
+
     return 0;
 }
 

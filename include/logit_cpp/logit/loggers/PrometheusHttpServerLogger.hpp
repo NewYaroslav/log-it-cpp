@@ -306,8 +306,17 @@ namespace logit {
             }
         }
 
-        static void add_scrape_labels(PrometheusSample& sample) {
-            sample.labels.push_back({"logger", "prometheus_http_server"});
+        void add_scrape_labels(PrometheusSample& sample) const {
+            if (m_config.format.include_logger_label) {
+                sample.labels.push_back({
+                    m_config.format.logger_label_name,
+                    "prometheus_http_server"});
+            }
+            if (m_config.format.include_instance_label) {
+                sample.labels.push_back({
+                    m_config.format.instance_label_name,
+                    m_config.format.instance_label_value});
+            }
         }
 
         void stop() {
