@@ -34,6 +34,7 @@
 #endif
 
 #ifdef LOGIT_WITH_PROMETHEUS
+#include "loggers/prometheus/PrometheusRegistry.hpp"
 #include "loggers/PrometheusPayloadLogger.hpp"
 #endif
 #ifdef LOGIT_WITH_PROMETHEUS_SERVER

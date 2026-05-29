@@ -46,6 +46,13 @@ Internal headers under `logit/detail/` are private implementation details and sh
 
 See the macro examples below or browse the `examples/` folder for focused demonstrations, including queue tuning and crash handling.
 
+Recent focused examples include:
+
+- `examples/example_logit_otlp_http.cpp` - OTLP/HTTP export with batching, retries, optional compression, and contextual trace/span fields.
+- `examples/example_logit_prometheus_payload.cpp` - callback-based Prometheus payload emission with custom registry metrics.
+- `examples/example_logit_prometheus_server.cpp` - embedded `/metrics` endpoint with built-in and application metrics.
+- `examples/example_logit_mdc_ndc.cpp` - mapped and nested diagnostic context across scopes and threads.
+
 ## Macro Examples
 
 ### Long-form macros
@@ -99,6 +106,41 @@ void short_names_demo() {
 ```
 
 For a standalone program that brings everything together and intentionally aborts after logging a fatal message, check `examples/example_logit_minimal_crash.cpp`.
+
+### Diagnostic context
+
+Mapped diagnostic context (MDC) stores thread-local key-value pairs, while nested
+diagnostic context (NDC) stores a thread-local stack of scope names. The context
+is available when the library is configured with `-DLOGIT_WITH_CONTEXT=ON`.
+When this option is off, `LogRecord` keeps the original hot-path shape and the
+context macros become no-ops.
+
+With context enabled, a `LogRecord` captures a shared snapshot only when the
+current thread has non-empty MDC or NDC values.
+
+```cpp
+#include <logit.hpp>
+
+int main() {
+    LOGIT_ADD_LOGGER(
+        logit::ConsoleLogger, (),
+        logit::SimpleLogFormatter,
+        ("[%T] request=%K{request_id} ndc=[%J] %v")
+    );
+
+    LOGIT_MDC_PUT("request_id", "req-42");
+    LOGIT_NDC_PUSH("checkout");
+
+    {
+        LOGIT_NDC_GUARD("payment");
+        LOGIT_INFO("charge started");
+    }
+
+    LOGIT_MDC_CLEAR();
+    LOGIT_NDC_CLEAR();
+    LOGIT_WAIT();
+}
+```
 
 ### System error helpers
 
@@ -521,6 +563,12 @@ Below is a list of supported formatting flags:
 - *Thread Flags*:
 
     - `%t`: Thread identifier
+
+- *Diagnostic Context Flags*:
+
+    - `%K`: All mapped diagnostic context values as `key=value` pairs
+    - `%K{key}`: One mapped diagnostic context value by key
+    - `%J`: Nested diagnostic context stack
     
 - *Color Flags*:
 
@@ -775,6 +823,8 @@ public:
 | `LOGIT_<LEVEL>_EVERY_N(n, ...)` | Log on every `n`th invocation. |
 | `LOGIT_<LEVEL>_THROTTLE(period_ms, ...)` | Log at most once per `period_ms` milliseconds. |
 | `LOGIT_<LEVEL>_TAG(({{"k", "v"}}), msg)` | Attach key-value tags to a message. |
+| `LOGIT_MDC_PUT(key, value)`, `LOGIT_MDC_REMOVE(key)`, `LOGIT_MDC_CLEAR()` | Manage thread-local mapped diagnostic context when `LOGIT_WITH_CONTEXT` is enabled. |
+| `LOGIT_NDC_PUSH(value)`, `LOGIT_NDC_POP()`, `LOGIT_NDC_CLEAR()`, `LOGIT_NDC_GUARD(value)` | Manage thread-local nested diagnostic context when `LOGIT_WITH_CONTEXT` is enabled. |
 | `LOGIT_RAW(msg)`, `LOGIT_RAW_TO(index, msg)`, `LOGIT_RAW_IF(condition, msg)` | Write already formatted text without applying level filters or formatter patterns. |
 | `LOGIT_SECTION(name)`, `LOGIT_SECTION_TO(index, name)`, `LOGIT_SECTION_IF(condition, name)` | Write raw section headers such as `[Proxy]`. |
 | `LOGIT_<LEVEL>_TO(index, ...)` | Target a specific logger index, including single-mode backends. |
@@ -879,7 +929,9 @@ The following toggles cover all build-time features:
 - `LOGIT_CPP_BUILD_EXAMPLES` (default: OFF) — build the example programs.
 - `LOGIT_BENCH_ENABLE` (default: OFF) — build benchmarks; `LOGIT_BENCH_WITH_SPDLOG` (default: OFF) also builds the spdlog comparisons.
 - `LOGIT_WITH_GZIP` / `LOGIT_WITH_ZSTD` (defaults: OFF) — enable gzip or zstd support for rotated files.
-- `LOGIT_WITH_FMT` (default: OFF) — include the `{}`-style formatting macros; `LOGIT_USE_SUBMODULES` (default: OFF) allows bundled optional dependency fallbacks such as fmt, zlib, and zstd when system packages are missing.
+- `LOGIT_WITH_FMT` (default: OFF) — include the `{}`-style formatting macros.
+- `LOGIT_WITH_CONTEXT` (default: OFF) — enable MDC/NDC helpers and `%K`, `%K{key}`, `%J` formatter tokens.
+- `LOGIT_USE_SUBMODULES` (default: OFF) allows bundled optional dependency fallbacks such as fmt, zlib, and zstd when system packages are missing.
 - `LOGIT_WITH_SYSLOG` (default: ON on Unix-like targets) — build the syslog backend.
 - `LOGIT_WITH_WIN_EVENT_LOG` (default: ON on Windows) — build the Windows Event Log backend.
 - `LOGIT_FORCE_ASYNC_OFF` (default: OFF) — force synchronous logging even in multi-threaded builds.

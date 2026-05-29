@@ -67,6 +67,11 @@ namespace logit {
             // Thread
             ThreadId,               ///< %t: Thread identifier
 
+            // Diagnostic context
+            MappedDiagnosticContext,      ///< %K: All mapped diagnostic context values
+            MappedDiagnosticContextValue, ///< %K{key}: Mapped diagnostic context value by key
+            NestedDiagnosticContext,      ///< %J: Nested diagnostic context stack
+
             // Color
             StartColor,             ///< %^: Start of color range
             EndColor,               ///< %$: End of color range
@@ -85,6 +90,7 @@ namespace logit {
         bool center_align   = false;    ///< Center alignment flag.
         bool truncate       = false;    ///< Truncation flag.
         bool strip_ansi     = false;    ///< Removes ANSI escape codes (e.g., colors) if true.
+        std::string context_key;        ///< Optional MDC key for context formatting.
 
         /// \brief Constructor for static text.
         /// \param context Compilation context for handling special cases.
@@ -112,10 +118,12 @@ namespace logit {
                 bool left = false,
                 bool center = false,
                 bool trunc = false,
-                bool strip_ansi = false) :
+                bool strip_ansi = false,
+                const std::string& context_key = std::string()) :
             context(context), type(type), width(width),
             left_align(left), center_align(center),
-            truncate(trunc), strip_ansi(strip_ansi) {
+            truncate(trunc), strip_ansi(strip_ansi),
+            context_key(context_key) {
         };
 
         /// \brief Apply formatting considering alignment and width.
@@ -256,6 +264,56 @@ namespace logit {
                 case FormatType::ThreadId:
                     temp_stream << record.thread_id;
                     break;
+
+                // Diagnostic context
+                case FormatType::MappedDiagnosticContext: {
+#ifdef LOGIT_WITH_CONTEXT
+                    if (!record.context) {
+                        break;
+                    }
+                    bool first = true;
+                    for (std::map<std::string, std::string>::const_iterator it = record.context->mdc.begin();
+                         it != record.context->mdc.end();
+                         ++it) {
+                        if (!first) {
+                            temp_stream << " ";
+                        }
+                        temp_stream << it->first << "=" << it->second;
+                        first = false;
+                    }
+#endif
+                    break;
+                }
+                case FormatType::MappedDiagnosticContextValue: {
+#ifdef LOGIT_WITH_CONTEXT
+                    if (record.context) {
+                        std::map<std::string, std::string>::const_iterator it =
+                            record.context->mdc.find(context_key);
+                        if (it != record.context->mdc.end()) {
+                            temp_stream << it->second;
+                        }
+                    }
+#endif
+                    break;
+                }
+                case FormatType::NestedDiagnosticContext: {
+#ifdef LOGIT_WITH_CONTEXT
+                    if (!record.context) {
+                        break;
+                    }
+                    bool first = true;
+                    for (std::vector<std::string>::const_iterator it = record.context->ndc.begin();
+                         it != record.context->ndc.end();
+                         ++it) {
+                        if (!first) {
+                            temp_stream << " > ";
+                        }
+                        temp_stream << *it;
+                        first = false;
+                    }
+#endif
+                    break;
+                }
 
                 // Color
                 case FormatType::StartColor:
@@ -607,6 +665,23 @@ namespace logit {
                             // Thread
                             case 't':
                                 instructions.emplace_back(context, FormatType::ThreadId, width, left_align, center_align, truncate, strip_ansi);
+                                break;
+
+                            // Diagnostic context
+                            case 'K':
+                                if ((i + 1) < pattern.size() && pattern[i + 1] == '{') {
+                                    size_t end = pattern.find('}', i + 2);
+                                    if (end != std::string::npos) {
+                                        std::string key = pattern.substr(i + 2, end - i - 2);
+                                        instructions.emplace_back(context, FormatType::MappedDiagnosticContextValue, width, left_align, center_align, truncate, strip_ansi, key);
+                                        i = end;
+                                        break;
+                                    }
+                                }
+                                instructions.emplace_back(context, FormatType::MappedDiagnosticContext, width, left_align, center_align, truncate, strip_ansi);
+                                break;
+                            case 'J':
+                                instructions.emplace_back(context, FormatType::NestedDiagnosticContext, width, left_align, center_align, truncate, strip_ansi);
                                 break;
 
                             // File and Function

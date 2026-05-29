@@ -291,16 +291,23 @@ namespace logit {
                         lock,
                         std::chrono::milliseconds(m_config.export_interval_ms),
                         [this]() {
-                            return m_state->stopping ||
-                                   (!m_state->queue.empty() &&
-                                    m_state->http_in_flight < m_config.max_in_flight_requests);
+                            const bool can_submit =
+                                !m_state->queue.empty() &&
+                                m_state->http_in_flight < m_config.max_in_flight_requests;
+
+                            const bool can_stop_now =
+                                m_state->stopping &&
+                                (m_config.cancel_on_shutdown ||
+                                 (m_state->queue.empty() && m_state->http_in_flight == 0));
+
+                            return can_submit || can_stop_now;
                         });
 
-                    if (m_state->stopping && m_state->queue.empty() && m_state->http_in_flight == 0) {
+                    if (m_state->stopping && m_config.cancel_on_shutdown) {
                         return;
                     }
 
-                    if (m_state->stopping && m_config.cancel_on_shutdown) {
+                    if (m_state->stopping && m_state->queue.empty() && m_state->http_in_flight == 0) {
                         return;
                     }
 

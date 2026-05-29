@@ -29,6 +29,9 @@ namespace logit {
         const bool          print_mode : 1; ///< Flag to determine whether arguments are printed in a raw format without special symbols.
         const bool          fmt_mode   : 1; ///< Flag indicating if fmt formatting should be used.
         const bool          raw_mode   : 1; ///< Flag indicating if formatter and level filters should be bypassed.
+#ifdef LOGIT_WITH_CONTEXT
+        const std::shared_ptr<const LogContextSnapshot> context; ///< Optional MDC/NDC snapshot.
+#endif
 
         /// \brief Constructor with argument names.
         /// \param log_level Log severity level.
@@ -65,7 +68,11 @@ namespace logit {
                 logger_index(logger_index),
                 print_mode(print_mode),
                 fmt_mode(fmt_mode),
-                raw_mode(raw_mode) {
+                raw_mode(raw_mode)
+#ifdef LOGIT_WITH_CONTEXT
+                , context(capture_log_context())
+#endif
+        {
         };
     };
 

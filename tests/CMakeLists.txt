@@ -48,10 +48,12 @@ else()
         memory_logger_backend_test.cpp
         memory_logger_concurrency_test.cpp
         memory_logger_integration_test.cpp
+        mdc_ndc_context_test.cpp
         os_error_macros_test.cpp
         otlp_http_logger_integration_test.cpp
         otlp_http_logger_callback_test.cpp
         otlp_http_logger_gzip_test.cpp
+        otlp_http_logger_zstd_test.cpp
         otlp_json_serializer_test.cpp
         otlp_payload_splitter_test.cpp
         otlp_structured_attributes_test.cpp
@@ -60,6 +62,7 @@ else()
         prometheus_payload_logger_test.cpp
         prometheus_http_server_logger_test.cpp
         prometheus_metric_builders_test.cpp
+        prometheus_registry_test.cpp
         per_logger_isolation_test.cpp
         per_logger_mixed_mode_test.cpp
         printf_format_macros_test.cpp
@@ -82,14 +85,19 @@ else()
     endif()
     if(NOT LOGIT_WITH_ZSTD)
         list(REMOVE_ITEM TEST_SOURCES file_logger_zstd_compression_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_zstd_test.cpp)
     endif()
     if(NOT LOGIT_WITH_FMT)
         list(REMOVE_ITEM TEST_SOURCES fmt_macros_test.cpp)
+    endif()
+    if(NOT LOGIT_WITH_CONTEXT)
+        list(REMOVE_ITEM TEST_SOURCES mdc_ndc_context_test.cpp)
     endif()
     if(NOT LOGIT_WITH_OTLP)
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_integration_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_callback_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_gzip_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES otlp_http_logger_zstd_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_structured_attributes_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_payload_splitter_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES otlp_payload_logger_test.cpp)
@@ -99,6 +107,7 @@ else()
         list(REMOVE_ITEM TEST_SOURCES prometheus_payload_logger_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES prometheus_http_server_logger_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES prometheus_metric_builders_test.cpp)
+        list(REMOVE_ITEM TEST_SOURCES prometheus_registry_test.cpp)
     endif()
     if(LOGIT_WITH_PROMETHEUS AND NOT LOGIT_WITH_PROMETHEUS_SERVER)
         list(REMOVE_ITEM TEST_SOURCES prometheus_http_server_logger_test.cpp)
@@ -108,7 +117,7 @@ else()
         add_executable(${test_name} ${test_src})
         target_link_libraries(${test_name} PRIVATE log-it-cpp)
         add_test(NAME ${test_name} COMMAND ${test_name})
-        if(LOGIT_WITH_OTLP AND test_name MATCHES "^otlp_http_logger_(integration|callback|gzip)_test$")
+        if(LOGIT_WITH_OTLP AND test_name MATCHES "^otlp_http_logger_(integration|callback|gzip|zstd)_test$")
             target_include_directories(${test_name} PRIVATE
                 "${CMAKE_CURRENT_SOURCE_DIR}/../external/kurlyk/external/Simple-Web-Server")
         endif()
