@@ -128,6 +128,10 @@ void test_async_large_payload_spill() {
         assert(payload_opt->compression == logit::MdbxPayloadCompression::None);
         assert(payload_opt->data == large);
 
+        auto data_opt = logger.read_payload_data(records[1].payload_id);
+        assert(data_opt);
+        assert(*data_opt == large);
+
         logger.shutdown();
     }
 
@@ -162,12 +166,64 @@ void test_gzip_payload_compression() {
         assert(!payload_opt->data.empty());
         assert(payload_opt->data != large);
 
+        auto data_opt = logger.read_payload_data(records[0].payload_id);
+        assert(data_opt);
+        assert(*data_opt == large);
+
         logger.shutdown();
     }
 
     cleanup_db(path);
 }
 #endif
+
+void test_async_queue_overflow_drop() {
+    const std::string path = make_db_path("overflow");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = true;
+        config.max_queue_size = 2;
+        config.drop_on_overflow = true;
+        config.flush_interval_ms = 5000;
+        config.max_batch_size = 64;
+
+        logit::MdbxLogger logger(config);
+
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 5000, 40), "first");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 5001, 41), "second");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 5002, 42), "third-overflow");
+
+        assert(logger.dropped_count() == 1);
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
+void test_on_error_callback() {
+    const std::string path = make_db_path("error_cb");
+    cleanup_db(path);
+
+    {
+        std::vector<std::string> errors;
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+        config.on_error = [&errors](const std::string& msg) {
+            errors.push_back(msg);
+        };
+
+        logit::MdbxLogger logger(config);
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 6000, 50), "ok");
+        logger.shutdown();
+        assert(errors.empty());
+    }
+
+    cleanup_db(path);
+}
 
 } // namespace
 
@@ -177,6 +233,8 @@ int main() {
 #if defined(LOGIT_HAS_ZLIB)
     test_gzip_payload_compression();
 #endif
+    test_async_queue_overflow_drop();
+    test_on_error_callback();
     std::cout << "PASS: mdbx_logger_test" << std::endl;
     return 0;
 }

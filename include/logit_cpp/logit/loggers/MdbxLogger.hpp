@@ -6,7 +6,7 @@
 /// \brief MDBX structured log storage backend.
 
 #include "ILogger.hpp"
-#include "otlp/OtlpCompression.hpp"
+#include "../detail/CompressionUtils.hpp"
 #include "../detail/MdbxByteIO.hpp"
 #include "../detail/MdbxKeyUtils.hpp"
 #include "../detail/MdbxProcessId.hpp"
@@ -17,7 +17,7 @@
 #include <cstdint>
 #include <cstring>
 #include <deque>
-#include <iostream>
+#include <functional>
 #include <limits>
 #include <memory>
 #include <mutex>
@@ -59,6 +59,7 @@ namespace logit {
             bool store_large_payloads_separately = true;///< Store large messages in `log_payloads`.
             MdbxPayloadCompression payload_compression = MdbxPayloadCompression::None; ///< Payload compression.
             int payload_compression_level = 6; ///< Compression level for gzip/zstd.
+            std::function<void(const std::string&)> on_error; ///< Optional callback invoked on write errors instead of stderr.
         };
 
         /// \struct SessionView
@@ -260,6 +261,26 @@ namespace logit {
             } catch (...) {
                 return std::nullopt;
             }
+        }
+
+        /// \brief Reads and decompresses payload data by id.
+        /// \return Original (decompressed) payload string, or std::nullopt if not found or decompression fails.
+        std::optional<std::string> read_payload_data(uint64_t payload_id) const {
+            auto view = read_payload(payload_id);
+            if (!view) {
+                return std::nullopt;
+            }
+            if (view->compression == MdbxPayloadCompression::None) {
+                return view->data;
+            }
+            std::string output;
+            bool ok = false;
+            if (view->compression == MdbxPayloadCompression::Gzip) {
+                ok = detail::decompress_string_gzip(view->data, output);
+            } else if (view->compression == MdbxPayloadCompression::Zstd) {
+                ok = detail::decompress_string_zstd(view->data, output);
+            }
+            return ok ? std::optional<std::string>(std::move(output)) : std::nullopt;
         }
 
         /// \brief Reads session metadata by id.
@@ -692,10 +713,14 @@ namespace logit {
                 txn.commit();
             } catch (const std::exception& e) {
                 m_failed_writes.fetch_add(1, std::memory_order_acq_rel);
-                std::cerr << "MdbxLogger write error: " << e.what() << std::endl;
+                if (m_config.on_error) {
+                    m_config.on_error(std::string("MdbxLogger write error: ") + e.what());
+                }
             } catch (...) {
                 m_failed_writes.fetch_add(1, std::memory_order_acq_rel);
-                std::cerr << "MdbxLogger write error" << std::endl;
+                if (m_config.on_error) {
+                    m_config.on_error("MdbxLogger write error");
+                }
             }
         }
 
@@ -748,9 +773,9 @@ namespace logit {
             std::string compressed;
             bool ok = false;
             if (m_config.payload_compression == MdbxPayloadCompression::Gzip) {
-                ok = compress_string_gzip(message, compressed, m_config.payload_compression_level);
+                ok = detail::compress_string_gzip(message, compressed, m_config.payload_compression_level);
             } else if (m_config.payload_compression == MdbxPayloadCompression::Zstd) {
-                ok = compress_string_zstd(message, compressed, m_config.payload_compression_level);
+                ok = detail::compress_string_zstd(message, compressed, m_config.payload_compression_level);
             }
 
             if (ok) {

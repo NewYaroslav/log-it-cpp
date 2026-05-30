@@ -302,8 +302,8 @@ if(LOGIT_WITH_OTLP AND TARGET kurlyk)
     endif()
 endif()
 
-if(LOGIT_WITH_MDBX AND TARGET mdbx_containers)
-    get_target_property(_mdbx_containers_imported mdbx_containers IMPORTED)
+if(LOGIT_WITH_MDBX AND TARGET mdbx_containers::mdbx_containers)
+    get_target_property(_mdbx_containers_imported mdbx_containers::mdbx_containers IMPORTED)
     if(NOT _mdbx_containers_imported)
         set(_logit_install_export_supported OFF)
         install(CODE [[
