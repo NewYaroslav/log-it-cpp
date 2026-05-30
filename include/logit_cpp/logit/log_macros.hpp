@@ -2980,6 +2980,38 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_READ_RECENT_DESC(logger_index, limit, period_ms) \
     LOGIT_READ_RECENT((logger_index), (limit), (period_ms), ::logit::LogReadOrder::Descending)
 
+/// \brief Retrieves a live-subscription interface from a logger by index.
+/// \param logger_index Index of logger.
+/// \return Pointer to ILogSubscriber, or nullptr if the backend does not implement it.
+#define LOGIT_GET_LOG_SUBSCRIBER(logger_index) \
+    LOGIT_GET_LOGGER_AS((logger_index), ::logit::ILogSubscriber)
+
+/// \brief Executes a code block when the logger backend supports ILogSubscriber.
+/// \param logger_index Index of logger.
+/// \param var_name Variable name available inside the block.
+#define LOGIT_WITH_LOG_SUBSCRIBER(logger_index, var_name) \
+    if (auto* var_name = LOGIT_GET_LOG_SUBSCRIBER((logger_index)))
+
+/// \brief Registers a callback to receive newly written log records.
+/// \param logger_index Index of logger.
+/// \param callback     Function invoked with LogRecordView after each commit.
+/// \return Callback id (0 if the backend does not support subscriptions).
+#define LOGIT_ADD_LOG_CALLBACK(logger_index, callback) \
+    ([](int _idx, ::logit::ILogSubscriber::Callback _cb) -> uint64_t { \
+        auto* _subscriber = LOGIT_GET_LOG_SUBSCRIBER(_idx); \
+        return _subscriber ? _subscriber->add_log_callback(std::move(_cb)) : 0; \
+    }((logger_index), (callback)))
+
+/// \brief Unregisters a previously added log callback.
+/// \param logger_index Index of logger.
+/// \param callback_id  Id returned by LOGIT_ADD_LOG_CALLBACK.
+/// \return True if the callback was found and removed.
+#define LOGIT_REMOVE_LOG_CALLBACK(logger_index, callback_id) \
+    ([](int _idx, uint64_t _id) -> bool { \
+        auto* _subscriber = LOGIT_GET_LOG_SUBSCRIBER(_idx); \
+        return _subscriber ? _subscriber->remove_log_callback(_id) : false; \
+    }((logger_index), (callback_id)))
+
 /// \}
 
 #endif // LOGIT_LOG_MACROS_HPP_INCLUDED

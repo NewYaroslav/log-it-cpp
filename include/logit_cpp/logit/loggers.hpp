@@ -27,6 +27,7 @@
 #include <vector>
 
 #include "loggers/ILogReader.hpp"
+#include "loggers/ILogSubscriber.hpp"
 #include "loggers/ILogger.hpp"
 #include "loggers/ConsoleLogger.hpp"
 #include "loggers/MemoryLogger.hpp"

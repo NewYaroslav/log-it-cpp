@@ -301,6 +301,107 @@ void test_read_recent() {
     cleanup_db(path);
 }
 
+void test_callback_sync() {
+    const std::string path = make_db_path("cb_sync");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+        std::vector<logit::LogRecordView> received;
+        const uint64_t cb_id = logger.add_log_callback(
+            [&received](const logit::LogRecordView& v) {
+                received.push_back(v);
+            });
+        assert(cb_id != 0);
+
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 8000, 80), "hello");
+        assert(received.size() == 1);
+        assert(received[0].message == "hello");
+        assert(received[0].level == logit::LogLevel::LOG_LVL_INFO);
+
+        assert(logger.remove_log_callback(cb_id));
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 8001, 81), "after-remove");
+        assert(received.size() == 1);
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
+void test_callback_async() {
+    const std::string path = make_db_path("cb_async");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = true;
+        config.flush_interval_ms = 5;
+        config.max_batch_size = 64;
+
+        logit::MdbxLogger logger(config);
+        std::vector<logit::LogRecordView> received;
+        const uint64_t cb_id = logger.add_log_callback(
+            [&received](const logit::LogRecordView& v) {
+                received.push_back(v);
+            });
+        assert(cb_id != 0);
+
+        logger.log(make_record(logit::LogLevel::LOG_LVL_WARN, 9000, 90), "async-1");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_ERROR, 9001, 91), "async-2");
+        logger.wait();
+
+        assert(received.size() == 2);
+        assert(received[0].message == "async-1");
+        assert(received[1].message == "async-2");
+
+        assert(logger.remove_log_callback(cb_id));
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
+void test_callback_exception_safe() {
+    const std::string path = make_db_path("cb_ex");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+        std::vector<std::string> errors;
+        config.on_error = [&errors](const std::string& msg) {
+            errors.push_back(msg);
+        };
+
+        logit::MdbxLogger logger(config);
+        bool second_called = false;
+
+        logger.add_log_callback(
+            [](const logit::LogRecordView&) {
+                throw std::runtime_error("boom");
+            });
+        logger.add_log_callback(
+            [&second_called](const logit::LogRecordView&) {
+                second_called = true;
+            });
+
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 10000, 100), "ok");
+        assert(second_called);
+        assert(!errors.empty());
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
 } // namespace
 
 int main() {
@@ -313,6 +414,9 @@ int main() {
     test_on_error_callback();
     test_read_range_empty_and_limits();
     test_read_recent();
+    test_callback_sync();
+    test_callback_async();
+    test_callback_exception_safe();
     std::cout << "PASS: mdbx_logger_test" << std::endl;
     return 0;
 }

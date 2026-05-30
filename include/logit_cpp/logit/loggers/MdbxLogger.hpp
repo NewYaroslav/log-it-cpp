@@ -27,7 +27,7 @@ namespace logit {
 
     /// \class MdbxLogger
     /// \brief Stores formatted logs in MDBX tables with optional async batching.
-    class MdbxLogger final : public ILogger, public ILogReader {
+    class MdbxLogger final : public ILogger, public ILogReader, public ILogSubscriber {
     public:
         /// \struct Config
         /// \brief Configuration for the MDBX logger backend.
@@ -422,6 +422,48 @@ namespace logit {
         std::atomic<uint64_t> m_failed_writes = ATOMIC_VAR_INIT(0);
         std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false);
 
+        mutable std::mutex m_callbacks_mutex;
+        std::unordered_map<uint64_t, Callback> m_callbacks;
+        std::atomic<uint64_t> m_next_callback_id{1};
+
+        uint64_t add_log_callback(Callback callback) override {
+            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+            const uint64_t id = m_next_callback_id.fetch_add(1, std::memory_order_relaxed);
+            m_callbacks.emplace(id, std::move(callback));
+            return id;
+        }
+
+        bool remove_log_callback(uint64_t callback_id) override {
+            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+            return m_callbacks.erase(callback_id) > 0;
+        }
+
+        void notify_callbacks(const std::vector<LogRecordView>& views) const {
+            std::vector<Callback> callbacks_copy;
+            callbacks_copy.reserve(m_callbacks.size());
+            {
+                std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+                for (const auto& kv : m_callbacks) {
+                    callbacks_copy.push_back(kv.second);
+                }
+            }
+            for (const auto& view : views) {
+                for (const auto& cb : callbacks_copy) {
+                    try {
+                        cb(view);
+                    } catch (const std::exception& e) {
+                        if (m_config.on_error) {
+                            m_config.on_error(std::string("MdbxLogger callback error: ") + e.what());
+                        }
+                    } catch (...) {
+                        if (m_config.on_error) {
+                            m_config.on_error("MdbxLogger callback error");
+                        }
+                    }
+                }
+            }
+        }
+
         static LogRecordView to_view(const Record& r) {
             LogRecordView v;
             v.session_id = r.session_id;
@@ -699,11 +741,13 @@ namespace logit {
                 return;
             }
 
+            std::vector<LogRecordView> written_views;
             try {
                 std::lock_guard<std::mutex> db_lock(m_db_mutex);
                 auto txn = m_connection->transaction(mdbxc::TransactionMode::WRITABLE);
                 for (size_t i = 0; i < batch.size(); ++i) {
-                    write_item_locked(batch[i], txn);
+                    Record record = write_item_locked(batch[i], txn);
+                    written_views.push_back(to_view(record));
                 }
                 txn.commit();
             } catch (const std::exception& e) {
@@ -711,15 +755,19 @@ namespace logit {
                 if (m_config.on_error) {
                     m_config.on_error(std::string("MdbxLogger write error: ") + e.what());
                 }
+                return;
             } catch (...) {
                 m_failed_writes.fetch_add(1, std::memory_order_acq_rel);
                 if (m_config.on_error) {
                     m_config.on_error("MdbxLogger write error");
                 }
+                return;
             }
+
+            notify_callbacks(written_views);
         }
 
-        void write_item_locked(const MdbxLogItem& item, mdbxc::Transaction& txn) {
+        Record write_item_locked(const MdbxLogItem& item, mdbxc::Transaction& txn) {
             Record record;
             record.session_id = m_session_id;
             record.timestamp_ms = item.timestamp_ms;
@@ -741,10 +789,11 @@ namespace logit {
             for (;;) {
                 const std::string key = next_record_key_locked(record.timestamp_ms, record.sequence, txn);
                 if (m_records->insert(key, record, txn)) {
-                    return;
+                    break;
                 }
                 advance_sequence_after_collision(record.timestamp_ms, record.sequence);
             }
+            return record;
         }
 
         bool should_spill_payload(const std::string& message) const {
