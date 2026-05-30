@@ -265,9 +265,10 @@ void test_read_recent() {
         config.async = false;
 
         logit::MdbxLogger logger(config);
-        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 1000, 70), "old");
-        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 2000, 71), "mid");
-        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 3000, 72), "new");
+        const int64_t now = LOGIT_CURRENT_TIMESTAMP_MS();
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, now - 3000, 70), "old");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, now - 1000, 71), "mid");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, now, 72), "new");
 
         auto all_asc = logger.read_recent(0, 0, logit::LogReadOrder::Ascending);
         assert(all_asc.size() == 3);
@@ -281,6 +282,13 @@ void test_read_recent() {
 
         auto limited = logger.read_recent(2, 0, logit::LogReadOrder::Ascending);
         assert(limited.size() == 2);
+        assert(limited[0].message == "mid");
+        assert(limited[1].message == "new");
+
+        auto limited_desc = logger.read_recent(2, 0, logit::LogReadOrder::Descending);
+        assert(limited_desc.size() == 2);
+        assert(limited_desc[0].message == "new");
+        assert(limited_desc[1].message == "mid");
 
         auto period = logger.read_recent(10, 1500, logit::LogReadOrder::Ascending);
         assert(period.size() == 2);

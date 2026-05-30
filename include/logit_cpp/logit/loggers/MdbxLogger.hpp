@@ -224,7 +224,12 @@ namespace logit {
                 LogReadOrder order = LogReadOrder::Ascending) const override {
             const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
             const int64_t from_ms = (period_ms > 0) ? (now_ms - period_ms) : 0;
-            auto records = read_range(from_ms, now_ms + 1, limit);
+            auto records = read_range(from_ms, now_ms + 1, 0);
+            if (limit > 0 && records.size() > limit) {
+                records.erase(
+                    records.begin(),
+                    records.begin() + static_cast<std::ptrdiff_t>(records.size() - limit));
+            }
             if (order == LogReadOrder::Descending && !records.empty()) {
                 std::reverse(records.begin(), records.end());
             }
