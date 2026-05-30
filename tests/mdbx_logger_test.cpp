@@ -177,26 +177,24 @@ void test_gzip_payload_compression() {
 }
 #endif
 
-void test_async_queue_overflow_drop() {
-    const std::string path = make_db_path("overflow");
+void test_counters_zero_for_sync_writes() {
+    const std::string path = make_db_path("counters");
     cleanup_db(path);
 
     {
         logit::MdbxLogger::Config config;
         config.path = path;
-        config.async = true;
-        config.max_queue_size = 2;
-        config.drop_on_overflow = true;
-        config.flush_interval_ms = 5000;
-        config.max_batch_size = 64;
+        config.async = false;
 
         logit::MdbxLogger logger(config);
+        assert(logger.dropped_count() == 0);
+        assert(logger.failed_export_count() == 0);
 
         logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 5000, 40), "first");
         logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 5001, 41), "second");
-        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 5002, 42), "third-overflow");
 
-        assert(logger.dropped_count() == 1);
+        assert(logger.dropped_count() == 0);
+        assert(logger.failed_export_count() == 0);
         logger.shutdown();
     }
 
@@ -225,6 +223,38 @@ void test_on_error_callback() {
     cleanup_db(path);
 }
 
+void test_read_range_empty_and_limits() {
+    const std::string path = make_db_path("range");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 7000, 60), "a");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 7001, 61), "b");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 7002, 62), "c");
+
+        auto empty = logger.read_range(8000, 9000);
+        assert(empty.empty());
+
+        auto all = logger.read_range(7000, 7003);
+        assert(all.size() == 3);
+
+        auto limited = logger.read_range(7000, 7003, 2);
+        assert(limited.size() == 2);
+
+        auto zero_span = logger.read_range(7001, 7001);
+        assert(zero_span.empty());
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
 } // namespace
 
 int main() {
@@ -233,8 +263,9 @@ int main() {
 #if defined(LOGIT_HAS_ZLIB)
     test_gzip_payload_compression();
 #endif
-    test_async_queue_overflow_drop();
+    test_counters_zero_for_sync_writes();
     test_on_error_callback();
+    test_read_range_empty_and_limits();
     std::cout << "PASS: mdbx_logger_test" << std::endl;
     return 0;
 }

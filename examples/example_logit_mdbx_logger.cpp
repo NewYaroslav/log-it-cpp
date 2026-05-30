@@ -29,18 +29,6 @@ void cleanup_db(const std::string& path) {
     std::remove((path + "-lck").c_str());
 }
 
-/// Convert YYYY-MM-DD local midnight to epoch milliseconds.
-std::chrono::milliseconds date_to_ms(const std::string& yyyymmdd) {
-    std::tm tm = {};
-    std::istringstream iss(yyyymmdd);
-    iss >> std::get_time(&tm, "%Y-%m-%d");
-    if (iss.fail()) {
-        throw std::invalid_argument("Invalid date format, expected YYYY-MM-DD");
-    }
-    std::time_t t = std::mktime(&tm);
-    return std::chrono::milliseconds(static_cast<int64_t>(t) * 1000);
-}
-
 } // namespace
 
 int main() {
@@ -178,17 +166,25 @@ int main() {
     }
 
     // ------------------------------------------------------------------
-    // 4. Query by a concrete date (today midnight to tomorrow midnight)
+    // 4. Query by today's local midnight range
     // ------------------------------------------------------------------
     try {
-        auto today_ms = date_to_ms("2026-05-30");
+        auto now_local = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+        std::tm* tm_now = std::localtime(&now_local);
+        std::tm tm_midnight = *tm_now;
+        tm_midnight.tm_hour = 0;
+        tm_midnight.tm_min = 0;
+        tm_midnight.tm_sec = 0;
+        std::time_t midnight_t = std::mktime(&tm_midnight);
+
+        auto today_ms = std::chrono::milliseconds(static_cast<int64_t>(midnight_t) * 1000);
         auto tomorrow_ms = today_ms + std::chrono::hours(24);
 
         auto day_records = mdbx->read_range(
             today_ms.count(),
             tomorrow_ms.count());
 
-        std::cout << "\n--- Records for 2026-05-30 (" << day_records.size() << ") ---" << std::endl;
+        std::cout << "\n--- Records for today (" << day_records.size() << ") ---" << std::endl;
         for (const auto& r : day_records) {
             std::cout << "  [" << logit::to_string(r.level) << "] "
                       << r.timestamp_ms << " " << r.message << std::endl;
