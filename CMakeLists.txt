@@ -34,7 +34,7 @@ endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Dependency: TimeShield
-find_package(TimeShield 1.0.4 QUIET CONFIG)
+find_package(TimeShield 1.0.6 QUIET CONFIG)
 if(NOT TimeShield_FOUND)
     if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/time-shield-cpp/CMakeLists.txt")
         add_subdirectory(external/time-shield-cpp)

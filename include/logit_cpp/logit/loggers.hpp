@@ -17,6 +17,7 @@
 #include "detail/CompressionWorker.hpp"
 #endif
 
+#include <algorithm>
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
