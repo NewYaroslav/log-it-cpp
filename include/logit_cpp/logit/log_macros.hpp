@@ -2924,6 +2924,62 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_WITH_LOGGER_AS(logger_index, logger_type, var_name) \
     if (auto* var_name = LOGIT_GET_LOGGER_AS((logger_index), logger_type))
 
+/// \brief Retrieves a read-only log-reader interface from a logger by index.
+/// \param logger_index Index of logger.
+/// \return Pointer to ILogReader, or nullptr if the backend does not implement it.
+#define LOGIT_GET_LOG_READER(logger_index) \
+    LOGIT_GET_LOGGER_AS((logger_index), ::logit::ILogReader)
+
+/// \brief Executes a code block when the logger backend supports ILogReader.
+/// \param logger_index Index of logger.
+/// \param var_name Variable name available inside the block.
+#define LOGIT_WITH_LOG_READER(logger_index, var_name) \
+    if (auto* var_name = LOGIT_GET_LOG_READER((logger_index)))
+
+/// \brief Reads a time-range of records from a backend that supports ILogReader.
+/// \param logger_index Index of logger.
+/// \param from_ms Inclusive start timestamp.
+/// \param to_ms   Exclusive end timestamp.
+/// \param limit   Maximum number of records (0 = unlimited).
+/// \return Matching records, or empty vector if backend does not support reading.
+#define LOGIT_READ_RANGE(logger_index, from_ms, to_ms, limit) \
+    ([](int _idx, int64_t _from, int64_t _to, std::size_t _limit) { \
+        auto* _reader = LOGIT_GET_LOG_READER(_idx); \
+        return _reader \
+            ? _reader->read_range(_from, _to, _limit) \
+            : std::vector<::logit::LogRecordView>{}; \
+    }((logger_index), (from_ms), (to_ms), (limit)))
+
+/// \brief Reads recent records from a backend that supports ILogReader.
+/// \param logger_index Index of logger.
+/// \param limit      Maximum number of records (0 = unlimited).
+/// \param period_ms  Time window in milliseconds from now backward (0 = unlimited).
+/// \param order      Ascending or descending result order.
+/// \return Matching records, or empty vector if backend does not support reading.
+#define LOGIT_READ_RECENT(logger_index, limit, period_ms, order) \
+    ([](int _idx, std::size_t _limit, int64_t _period_ms, ::logit::LogReadOrder _order) { \
+        auto* _reader = LOGIT_GET_LOG_READER(_idx); \
+        return _reader \
+            ? _reader->read_recent(_limit, _period_ms, _order) \
+            : std::vector<::logit::LogRecordView>{}; \
+    }((logger_index), (limit), (period_ms), (order)))
+
+/// \brief Reads recent records in ascending order (oldest first).
+/// \param logger_index Index of logger.
+/// \param limit      Maximum number of records (0 = unlimited).
+/// \param period_ms  Time window in milliseconds from now backward (0 = unlimited).
+/// \return Matching records in ascending order, or empty vector if backend does not support reading.
+#define LOGIT_READ_RECENT_ASC(logger_index, limit, period_ms) \
+    LOGIT_READ_RECENT((logger_index), (limit), (period_ms), ::logit::LogReadOrder::Ascending)
+
+/// \brief Reads recent records in descending order (newest first).
+/// \param logger_index Index of logger.
+/// \param limit      Maximum number of records (0 = unlimited).
+/// \param period_ms  Time window in milliseconds from now backward (0 = unlimited).
+/// \return Matching records in descending order, or empty vector if backend does not support reading.
+#define LOGIT_READ_RECENT_DESC(logger_index, limit, period_ms) \
+    LOGIT_READ_RECENT((logger_index), (limit), (period_ms), ::logit::LogReadOrder::Descending)
+
 /// \}
 
 #endif // LOGIT_LOG_MACROS_HPP_INCLUDED
