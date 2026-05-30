@@ -17,6 +17,15 @@
 #include "detail/CompressionWorker.hpp"
 #endif
 
+#include <atomic>
+#include <cstddef>
+#include <cstdint>
+#include <deque>
+#include <mutex>
+#include <string>
+#include <vector>
+
+#include "loggers/ILogReader.hpp"
 #include "loggers/ILogger.hpp"
 #include "loggers/ConsoleLogger.hpp"
 #include "loggers/MemoryLogger.hpp"
@@ -42,6 +51,10 @@
 #endif
 
 #ifdef LOGIT_WITH_MDBX
+#include "detail/CompressionUtils.hpp"
+#include "detail/MdbxByteIO.hpp"
+#include "detail/MdbxKeyUtils.hpp"
+#include "detail/MdbxProcessId.hpp"
 #include "loggers/MdbxLogger.hpp"
 #endif
 

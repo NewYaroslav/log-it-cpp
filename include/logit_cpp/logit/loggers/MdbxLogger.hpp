@@ -5,30 +5,15 @@
 /// \file MdbxLogger.hpp
 /// \brief MDBX structured log storage backend.
 
-#include "ILogger.hpp"
-#include "../ILogReader.hpp"
-#include "../detail/CompressionUtils.hpp"
-#include "../detail/MdbxByteIO.hpp"
-#include "../detail/MdbxKeyUtils.hpp"
-#include "../detail/MdbxProcessId.hpp"
 #include <mdbx_containers/KeyValueTable.hpp>
 #include <algorithm>
-#include <atomic>
-#include <condition_variable>
-#include <cstdint>
 #include <cstring>
-#include <deque>
-#include <functional>
 #include <limits>
 #include <memory>
-#include <mutex>
 #include <optional>
 #include <stdexcept>
-#include <string>
-#include <thread>
 #include <unordered_map>
 #include <utility>
-#include <vector>
 
 namespace logit {
 
