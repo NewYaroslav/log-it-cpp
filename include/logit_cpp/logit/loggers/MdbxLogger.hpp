@@ -356,6 +356,18 @@ namespace logit {
             return m_failed_writes.load(std::memory_order_acquire);
         }
 
+        uint64_t add_log_callback(Callback callback) override {
+            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+            const uint64_t id = m_next_callback_id.fetch_add(1, std::memory_order_relaxed);
+            m_callbacks.emplace(id, std::move(callback));
+            return id;
+        }
+
+        bool remove_log_callback(uint64_t callback_id) override {
+            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+            return m_callbacks.erase(callback_id) > 0;
+        }
+
     private:
         struct MdbxLogItem {
             LogLevel level = LogLevel::LOG_LVL_TRACE;
@@ -426,23 +438,11 @@ namespace logit {
         std::unordered_map<uint64_t, Callback> m_callbacks;
         std::atomic<uint64_t> m_next_callback_id{1};
 
-        uint64_t add_log_callback(Callback callback) override {
-            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
-            const uint64_t id = m_next_callback_id.fetch_add(1, std::memory_order_relaxed);
-            m_callbacks.emplace(id, std::move(callback));
-            return id;
-        }
-
-        bool remove_log_callback(uint64_t callback_id) override {
-            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
-            return m_callbacks.erase(callback_id) > 0;
-        }
-
         void notify_callbacks(const std::vector<LogRecordView>& views) const {
             std::vector<Callback> callbacks_copy;
-            callbacks_copy.reserve(m_callbacks.size());
             {
                 std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+                callbacks_copy.reserve(m_callbacks.size());
                 for (const auto& kv : m_callbacks) {
                     callbacks_copy.push_back(kv.second);
                 }
