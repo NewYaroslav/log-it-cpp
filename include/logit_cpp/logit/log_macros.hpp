@@ -2905,6 +2905,25 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 //------------------------------------------------------------------------------
 
+/// \brief Retrieves a typed backend pointer from a logger by index.
+/// \param logger_index Index of logger.
+/// \param logger_type Concrete logger type (e.g., logit::MdbxLogger).
+/// \return Pointer to the backend, or nullptr if index/type does not match.
+#define LOGIT_GET_LOGGER_AS(logger_index, logger_type) \
+    ([](int _logit_logger_index) -> logger_type* { \
+        auto _logit_strategy = ::logit::Logger::get_instance().get_strategy_snapshot(_logit_logger_index); \
+        return (_logit_strategy && _logit_strategy->logger) \
+            ? dynamic_cast<logger_type*>(_logit_strategy->logger.get()) \
+            : nullptr; \
+    }((logger_index)))
+
+/// \brief Executes a code block when the logger backend has the requested type.
+/// \param logger_index Index of logger.
+/// \param logger_type Concrete logger type.
+/// \param var_name Variable name available inside the block.
+#define LOGIT_WITH_LOGGER_AS(logger_index, logger_type, var_name) \
+    if (auto* var_name = LOGIT_GET_LOGGER_AS((logger_index), logger_type))
+
 /// \}
 
 #endif // LOGIT_LOG_MACROS_HPP_INCLUDED

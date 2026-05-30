@@ -96,119 +96,116 @@ int main() {
     LOGIT_WAIT();
 
     // ------------------------------------------------------------------
-    // 3. Read the MDBX logger directly via the registry snapshot
+    // 3. Read the MDBX logger directly via typed macro helpers
     // ------------------------------------------------------------------
-    auto strategy = logit::Logger::get_instance().get_strategy_snapshot(mdbx_index);
-    if (!strategy || !strategy->logger) {
+    LOGIT_WITH_LOGGER_AS(mdbx_index, logit::MdbxLogger, mdbx) {
+        // Session metadata
+        auto session_opt = mdbx->read_session(mdbx->session_id());
+        if (session_opt) {
+            std::cout << "\n--- Session ---" << std::endl;
+            std::cout << "  app_name:    " << session_opt->app_name << std::endl;
+            std::cout << "  process_id:  " << session_opt->process_id << std::endl;
+            std::cout << "  started_ms:  " << session_opt->start_time_ms << std::endl;
+            std::cout << "  schema_ver:  " << session_opt->schema_version << std::endl;
+        }
+
+        // All records in a wide time window (last 24 hours).
+        const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
+        auto all_records = mdbx->read_range(now_ms - 24 * 60 * 60 * 1000, now_ms + 1);
+
+        std::cout << "\n--- All records (" << all_records.size() << ") ---" << std::endl;
+        for (const auto& r : all_records) {
+            std::cout << "  [" << logit::to_string(r.level) << "] "
+                      << r.timestamp_ms << " seq=" << r.sequence
+                      << " msg=\"" << r.message << "\"";
+            if (r.payload_id != 0) {
+                std::cout << " [payload_id=" << r.payload_id << "]";
+            }
+            std::cout << std::endl;
+        }
+
+        // Level-based client-side filter
+        std::cout << "\n--- Records with level >= WARN ---" << std::endl;
+        for (const auto& r : all_records) {
+            if (static_cast<int>(r.level) >= static_cast<int>(logit::LogLevel::LOG_LVL_WARN)) {
+                std::cout << "  [" << logit::to_string(r.level) << "] "
+                          << r.timestamp_ms << " " << r.message << std::endl;
+            }
+        }
+
+        // Spilled payloads (decompressed transparently)
+        std::cout << "\n--- Spilled payloads ---" << std::endl;
+        for (const auto& r : all_records) {
+            if (r.payload_id != 0) {
+                auto data_opt = mdbx->read_payload_data(r.payload_id);
+                if (data_opt) {
+                    std::cout << "  payload_id=" << r.payload_id
+                              << " size=" << data_opt->size()
+                              << " preview=\"" << r.message << "\""
+                              << std::endl;
+                } else {
+                    std::cout << "  payload_id=" << r.payload_id << " FAILED to read/decompress"
+                              << std::endl;
+                }
+            }
+        }
+
+        // Query by today's local midnight
+        try {
+            auto now_local = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+            std::tm* tm_now = std::localtime(&now_local);
+            std::tm tm_midnight = *tm_now;
+            tm_midnight.tm_hour = 0;
+            tm_midnight.tm_min = 0;
+            tm_midnight.tm_sec = 0;
+            std::time_t midnight_t = std::mktime(&tm_midnight);
+
+            auto today_ms = std::chrono::milliseconds(static_cast<int64_t>(midnight_t) * 1000);
+            auto tomorrow_ms = today_ms + std::chrono::hours(24);
+
+            auto day_records = mdbx->read_range(
+                today_ms.count(),
+                tomorrow_ms.count());
+
+            std::cout << "\n--- Records for today (" << day_records.size() << ") ---" << std::endl;
+            for (const auto& r : day_records) {
+                std::cout << "  [" << logit::to_string(r.level) << "] "
+                          << r.timestamp_ms << " " << r.message << std::endl;
+            }
+        } catch (const std::exception& e) {
+            std::cerr << "Date query example skipped: " << e.what() << std::endl;
+        }
+
+        // read_recent: last 100 records in ascending order
+        auto recent = mdbx->read_recent(100, 0, logit::LogReadOrder::Ascending);
+        std::cout << "\n--- read_recent(100) ascending (" << recent.size() << ") ---" << std::endl;
+        for (const auto& r : recent) {
+            std::cout << "  [" << logit::to_string(r.level) << "] "
+                      << r.timestamp_ms << " " << r.message << std::endl;
+        }
+
+        // Statistics
+        std::cout << "\n--- Statistics ---" << std::endl;
+        std::cout << "  dropped:       " << mdbx->dropped_count() << std::endl;
+        std::cout << "  failed_writes: " << mdbx->failed_export_count() << std::endl;
+    } else {
         std::cerr << "MDBX logger not found at index " << mdbx_index << std::endl;
         LOGIT_SHUTDOWN();
         cleanup_db(db_path);
         return 1;
     }
 
-    auto* mdbx = dynamic_cast<logit::MdbxLogger*>(strategy->logger.get());
-    if (!mdbx) {
-        std::cerr << "Logger at index " << mdbx_index << " is not an MdbxLogger" << std::endl;
-        LOGIT_SHUTDOWN();
-        cleanup_db(db_path);
-        return 1;
-    }
-
-    // Session metadata
-    auto session_opt = mdbx->read_session(mdbx->session_id());
-    if (session_opt) {
-        std::cout << "\n--- Session ---" << std::endl;
-        std::cout << "  app_name:    " << session_opt->app_name << std::endl;
-        std::cout << "  process_id:  " << session_opt->process_id << std::endl;
-        std::cout << "  started_ms:  " << session_opt->start_time_ms << std::endl;
-        std::cout << "  schema_ver:  " << session_opt->schema_version << std::endl;
-    }
-
-    // Read all records in a wide time window (last 24 hours).
-    const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
-    auto all_records = mdbx->read_range(now_ms - 24 * 60 * 60 * 1000, now_ms + 1);
-
-    std::cout << "\n--- All records (" << all_records.size() << ") ---" << std::endl;
-    for (const auto& r : all_records) {
-        std::cout << "  [" << logit::to_string(r.level) << "] "
-                  << r.timestamp_ms << " seq=" << r.sequence
-                  << " msg=\"" << r.message << "\"";
-        if (r.payload_id != 0) {
-            std::cout << " [payload_id=" << r.payload_id << "]";
-        }
-        std::cout << std::endl;
-    }
-
-    // Filter by level in application code
-    std::cout << "\n--- Records with level >= WARN ---" << std::endl;
-    for (const auto& r : all_records) {
-        if (static_cast<int>(r.level) >= static_cast<int>(logit::LogLevel::LOG_LVL_WARN)) {
-            std::cout << "  [" << logit::to_string(r.level) << "] "
-                      << r.timestamp_ms << " " << r.message << std::endl;
-        }
-    }
-
-    // Read any spilled payloads and show the decompressed/original data
-    std::cout << "\n--- Spilled payloads ---" << std::endl;
-    for (const auto& r : all_records) {
-        if (r.payload_id != 0) {
-            auto data_opt = mdbx->read_payload_data(r.payload_id);
-            if (data_opt) {
-                std::cout << "  payload_id=" << r.payload_id
-                          << " size=" << data_opt->size()
-                          << " preview=\"" << r.message << "\""
-                          << std::endl;
-            } else {
-                std::cout << "  payload_id=" << r.payload_id << " FAILED to read/decompress"
-                          << std::endl;
-            }
-        }
-    }
-
     // ------------------------------------------------------------------
-    // 4. Query by today's local midnight range
-    // ------------------------------------------------------------------
-    try {
-        auto now_local = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        std::tm* tm_now = std::localtime(&now_local);
-        std::tm tm_midnight = *tm_now;
-        tm_midnight.tm_hour = 0;
-        tm_midnight.tm_min = 0;
-        tm_midnight.tm_sec = 0;
-        std::time_t midnight_t = std::mktime(&tm_midnight);
-
-        auto today_ms = std::chrono::milliseconds(static_cast<int64_t>(midnight_t) * 1000);
-        auto tomorrow_ms = today_ms + std::chrono::hours(24);
-
-        auto day_records = mdbx->read_range(
-            today_ms.count(),
-            tomorrow_ms.count());
-
-        std::cout << "\n--- Records for today (" << day_records.size() << ") ---" << std::endl;
-        for (const auto& r : day_records) {
-            std::cout << "  [" << logit::to_string(r.level) << "] "
-                      << r.timestamp_ms << " " << r.message << std::endl;
-        }
-    } catch (const std::exception& e) {
-        std::cerr << "Date query example skipped: " << e.what() << std::endl;
-    }
-
-    // ------------------------------------------------------------------
-    // 5. Statistics exposed by the logger
-    // ------------------------------------------------------------------
-    std::cout << "\n--- Statistics ---" << std::endl;
-    std::cout << "  dropped:       " << mdbx->dropped_count() << std::endl;
-    std::cout << "  failed_writes: " << mdbx->failed_export_count() << std::endl;
-
-    // ------------------------------------------------------------------
-    // 6. Graceful shutdown and cleanup
+    // 5. Graceful shutdown and cleanup
     // ------------------------------------------------------------------
     LOGIT_SHUTDOWN();
 
     // After shutdown the session end_time_ms is persisted.
-    session_opt = mdbx->read_session(mdbx->session_id());
-    if (session_opt) {
-        std::cout << "  session end_ms: " << session_opt->end_time_ms << std::endl;
+    LOGIT_WITH_LOGGER_AS(mdbx_index, logit::MdbxLogger, mdbx) {
+        auto session_opt = mdbx->read_session(mdbx->session_id());
+        if (session_opt) {
+            std::cout << "  session end_ms: " << session_opt->end_time_ms << std::endl;
+        }
     }
 
     cleanup_db(db_path);

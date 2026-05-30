@@ -255,6 +255,44 @@ void test_read_range_empty_and_limits() {
     cleanup_db(path);
 }
 
+void test_read_recent() {
+    const std::string path = make_db_path("recent");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 1000, 70), "old");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 2000, 71), "mid");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 3000, 72), "new");
+
+        auto all_asc = logger.read_recent(0, 0, logit::LogReadOrder::Ascending);
+        assert(all_asc.size() == 3);
+        assert(all_asc[0].message == "old");
+        assert(all_asc[2].message == "new");
+
+        auto all_desc = logger.read_recent(0, 0, logit::LogReadOrder::Descending);
+        assert(all_desc.size() == 3);
+        assert(all_desc[0].message == "new");
+        assert(all_desc[2].message == "old");
+
+        auto limited = logger.read_recent(2, 0, logit::LogReadOrder::Ascending);
+        assert(limited.size() == 2);
+
+        auto period = logger.read_recent(10, 1500, logit::LogReadOrder::Ascending);
+        assert(period.size() == 2);
+        assert(period[0].message == "mid");
+        assert(period[1].message == "new");
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
 } // namespace
 
 int main() {
@@ -266,6 +304,7 @@ int main() {
     test_counters_zero_for_sync_writes();
     test_on_error_callback();
     test_read_range_empty_and_limits();
+    test_read_recent();
     std::cout << "PASS: mdbx_logger_test" << std::endl;
     return 0;
 }

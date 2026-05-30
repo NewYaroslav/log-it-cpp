@@ -6,6 +6,7 @@
 /// \brief MDBX structured log storage backend.
 
 #include "ILogger.hpp"
+#include "../ILogReader.hpp"
 #include "../detail/CompressionUtils.hpp"
 #include "../detail/MdbxByteIO.hpp"
 #include "../detail/MdbxKeyUtils.hpp"
@@ -41,7 +42,7 @@ namespace logit {
 
     /// \class MdbxLogger
     /// \brief Stores formatted logs in MDBX tables with optional async batching.
-    class MdbxLogger final : public ILogger {
+    class MdbxLogger final : public ILogger, public ILogReader {
     public:
         /// \struct Config
         /// \brief Configuration for the MDBX logger backend.
@@ -70,20 +71,6 @@ namespace logit {
             int64_t end_time_ms = 0;    ///< Session end timestamp, or 0 while active.
             uint64_t process_id = 0;    ///< Process id that opened the session.
             uint32_t schema_version = 1;///< Storage schema version.
-        };
-
-        /// \struct RecordView
-        /// \brief Public read-only view of a log record.
-        struct RecordView {
-            uint64_t session_id = 0;                     ///< Owning session id.
-            int64_t timestamp_ms = 0;                    ///< Log timestamp in milliseconds.
-            uint32_t sequence = 0;                       ///< Per-timestamp sequence.
-            LogLevel level = LogLevel::LOG_LVL_TRACE;    ///< Log severity level.
-            std::string message;                         ///< Formatted message or payload preview.
-            uint64_t payload_id = 0;                     ///< Payload row id, or 0 when absent.
-            std::string file;                            ///< Source file path.
-            std::string function;                        ///< Source function name.
-            int line = 0;                                ///< Source line number.
         };
 
         /// \struct PayloadView
@@ -213,11 +200,11 @@ namespace logit {
         }
 
         /// \brief Reads records in `[from_ms, to_ms)` ordered by timestamp and sequence.
-        std::vector<RecordView> read_range(
+        std::vector<LogRecordView> read_range(
                 int64_t from_ms,
                 int64_t to_ms,
-                std::size_t limit = 0) const {
-            std::vector<RecordView> out;
+                std::size_t limit = 0) const override {
+            std::vector<LogRecordView> out;
             if (to_ms <= from_ms) {
                 return out;
             }
@@ -239,6 +226,24 @@ namespace logit {
             }
 
             return out;
+        }
+
+        /// \brief Reads the most recent records.
+        /// \param limit     Maximum number of records (0 = unlimited).
+        /// \param period_ms Time window in milliseconds from now backward (0 = unlimited).
+        /// \param order     Ascending or descending result order.
+        /// \return Matching records in the requested order.
+        std::vector<LogRecordView> read_recent(
+                std::size_t limit,
+                int64_t period_ms = 0,
+                LogReadOrder order = LogReadOrder::Ascending) const override {
+            const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
+            const int64_t from_ms = (period_ms > 0) ? (now_ms - period_ms) : 0;
+            auto records = read_range(from_ms, now_ms + 1, limit);
+            if (order == LogReadOrder::Descending && !records.empty()) {
+                std::reverse(records.begin(), records.end());
+            }
+            return records;
         }
 
         /// \brief Reads a payload by id.
@@ -427,8 +432,8 @@ namespace logit {
         std::atomic<uint64_t> m_failed_writes = ATOMIC_VAR_INIT(0);
         std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false);
 
-        static RecordView to_view(const Record& r) {
-            RecordView v;
+        static LogRecordView to_view(const Record& r) {
+            LogRecordView v;
             v.session_id = r.session_id;
             v.timestamp_ms = r.timestamp_ms;
             v.sequence = r.sequence;
