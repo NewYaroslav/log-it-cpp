@@ -5,7 +5,7 @@
 /// \file ILogReader.hpp
 /// \brief Optional read-only interface for log backends that support querying stored records.
 
-#include <logit/enums.hpp>
+#include "../enums.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <string>
