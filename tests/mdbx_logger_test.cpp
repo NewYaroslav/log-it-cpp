@@ -61,7 +61,7 @@ void test_sync_range_session_and_sequences() {
         logger.log(make_record(logit::LogLevel::LOG_LVL_WARN, 2000, 11), "backward");
         logger.log(make_record(logit::LogLevel::LOG_LVL_ERROR, 2001, 12), "later-2");
 
-        std::vector<logit::MdbxLogRecordV1> records = logger.read_range(2000, 2002);
+        auto records = logger.read_range(2000, 2002);
         assert(records.size() == 3);
         assert(records[0].timestamp_ms == 2000);
         assert(records[0].message == "backward");
@@ -74,19 +74,20 @@ void test_sync_range_session_and_sequences() {
         assert(records[2].line == 12);
         assert(records[2].session_id == session_id);
 
-        std::vector<logit::MdbxLogRecordV1> limited = logger.read_range(2000, 2002, 2);
+        auto limited = logger.read_range(2000, 2002, 2);
         assert(limited.size() == 2);
 
-        logit::MdbxLogSessionV1 session;
-        assert(logger.read_session(session_id, session));
-        assert(session.app_name == "mdbx-test");
-        assert(session.start_time_ms > 0);
-        assert(session.end_time_ms == 0);
-        assert(session.schema_version == 1);
+        auto session_opt = logger.read_session(session_id);
+        assert(session_opt);
+        assert(session_opt->app_name == "mdbx-test");
+        assert(session_opt->start_time_ms > 0);
+        assert(session_opt->end_time_ms == 0);
+        assert(session_opt->schema_version == 1);
 
         logger.shutdown();
-        assert(logger.read_session(session_id, session));
-        assert(session.end_time_ms >= session.start_time_ms);
+        session_opt = logger.read_session(session_id);
+        assert(session_opt);
+        assert(session_opt->end_time_ms >= session_opt->start_time_ms);
     }
 
     cleanup_db(path);
@@ -114,18 +115,18 @@ void test_async_large_payload_spill() {
         logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 3001, 21), large);
         logger.wait();
 
-        std::vector<logit::MdbxLogRecordV1> records = logger.read_range(3000, 3002);
+        auto records = logger.read_range(3000, 3002);
         assert(records.size() == 2);
         assert(records[0].message == small);
         assert(records[0].payload_id == 0);
         assert(records[1].message == "abcde");
         assert(records[1].payload_id != 0);
 
-        logit::MdbxLogPayloadV1 payload;
-        assert(logger.read_payload(records[1].payload_id, payload));
-        assert(payload.payload_id == records[1].payload_id);
-        assert(payload.compression == logit::MdbxPayloadCompression::None);
-        assert(payload.data == large);
+        auto payload_opt = logger.read_payload(records[1].payload_id);
+        assert(payload_opt);
+        assert(payload_opt->payload_id == records[1].payload_id);
+        assert(payload_opt->compression == logit::MdbxPayloadCompression::None);
+        assert(payload_opt->data == large);
 
         logger.shutdown();
     }
@@ -151,15 +152,15 @@ void test_gzip_payload_compression() {
         const std::string large(128, 'x');
         logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 4000, 30), large);
 
-        std::vector<logit::MdbxLogRecordV1> records = logger.read_range(4000, 4001);
+        auto records = logger.read_range(4000, 4001);
         assert(records.size() == 1);
         assert(records[0].payload_id != 0);
 
-        logit::MdbxLogPayloadV1 payload;
-        assert(logger.read_payload(records[0].payload_id, payload));
-        assert(payload.compression == logit::MdbxPayloadCompression::Gzip);
-        assert(!payload.data.empty());
-        assert(payload.data != large);
+        auto payload_opt = logger.read_payload(records[0].payload_id);
+        assert(payload_opt);
+        assert(payload_opt->compression == logit::MdbxPayloadCompression::Gzip);
+        assert(!payload_opt->data.empty());
+        assert(payload_opt->data != large);
 
         logger.shutdown();
     }

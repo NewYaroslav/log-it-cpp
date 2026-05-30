@@ -7,6 +7,9 @@
 
 #include "ILogger.hpp"
 #include "otlp/OtlpCompression.hpp"
+#include "../detail/MdbxByteIO.hpp"
+#include "../detail/MdbxKeyUtils.hpp"
+#include "../detail/MdbxProcessId.hpp"
 #include <mdbx_containers/KeyValueTable.hpp>
 #include <algorithm>
 #include <atomic>
@@ -18,19 +21,13 @@
 #include <limits>
 #include <memory>
 #include <mutex>
-#include <sstream>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <thread>
 #include <unordered_map>
 #include <utility>
 #include <vector>
-
-#if defined(_WIN32)
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
 
 namespace logit {
 
@@ -41,274 +38,6 @@ namespace logit {
         Gzip = 1, ///< Store gzip-compressed payload bytes.
         Zstd = 2  ///< Store zstd-compressed payload bytes.
     };
-
-    /// \struct MdbxLogSessionV1
-    /// \brief Session metadata stored in the `log_sessions` table.
-    struct MdbxLogSessionV1 {
-        std::string app_name;       ///< Optional application name.
-        int64_t start_time_ms = 0;  ///< Session start timestamp.
-        int64_t end_time_ms = 0;    ///< Session end timestamp, or 0 while active.
-        uint64_t process_id = 0;    ///< Process id that opened the session.
-        uint32_t schema_version = 1;///< Storage schema version.
-
-        std::vector<uint8_t> to_bytes() const;
-        static MdbxLogSessionV1 from_bytes(const void* data, size_t size);
-    };
-
-    /// \struct MdbxLogRecordV1
-    /// \brief Log record stored in the `log_records_by_time` table.
-    struct MdbxLogRecordV1 {
-        uint64_t session_id = 0;                     ///< Owning session id.
-        int64_t timestamp_ms = 0;                    ///< Log timestamp in milliseconds.
-        uint32_t sequence = 0;                       ///< Per-timestamp sequence.
-        LogLevel level = LogLevel::LOG_LVL_TRACE;    ///< Log severity level.
-        std::string message;                         ///< Formatted message or payload preview.
-        uint64_t payload_id = 0;                     ///< Payload row id, or 0 when absent.
-        std::string file;                            ///< Source file path.
-        std::string function;                        ///< Source function name.
-        int line = 0;                                ///< Source line number.
-
-        std::vector<uint8_t> to_bytes() const;
-        static MdbxLogRecordV1 from_bytes(const void* data, size_t size);
-    };
-
-    /// \struct MdbxLogPayloadV1
-    /// \brief Large payload stored in the `log_payloads` table.
-    struct MdbxLogPayloadV1 {
-        uint64_t payload_id = 0; ///< Stable payload id.
-        MdbxPayloadCompression compression = MdbxPayloadCompression::None; ///< Stored compression.
-        std::string data;       ///< Stored payload bytes.
-
-        std::vector<uint8_t> to_bytes() const;
-        static MdbxLogPayloadV1 from_bytes(const void* data, size_t size);
-    };
-
-namespace detail {
-
-    class MdbxByteWriter {
-    public:
-        void write_u8(uint8_t value) {
-            m_out.push_back(value);
-        }
-
-        void write_u32(uint32_t value) {
-            for (int shift = 24; shift >= 0; shift -= 8) {
-                m_out.push_back(static_cast<uint8_t>((value >> shift) & 0xFFu));
-            }
-        }
-
-        void write_u64(uint64_t value) {
-            for (int shift = 56; shift >= 0; shift -= 8) {
-                m_out.push_back(static_cast<uint8_t>((value >> shift) & 0xFFu));
-            }
-        }
-
-        void write_i64(int64_t value) {
-            uint64_t bits = 0;
-            std::memcpy(&bits, &value, sizeof(bits));
-            write_u64(bits);
-        }
-
-        void write_string(const std::string& value) {
-            if (value.size() > static_cast<size_t>((std::numeric_limits<uint32_t>::max)())) {
-                throw std::length_error("MdbxLogger: string field is too large");
-            }
-            write_u32(static_cast<uint32_t>(value.size()));
-            m_out.insert(m_out.end(), value.begin(), value.end());
-        }
-
-        const std::vector<uint8_t>& bytes() const {
-            return m_out;
-        }
-
-    private:
-        std::vector<uint8_t> m_out;
-    };
-
-    class MdbxByteReader {
-    public:
-        MdbxByteReader(const void* data, size_t size)
-            : m_cur(static_cast<const uint8_t*>(data)),
-              m_end(static_cast<const uint8_t*>(data)) {
-            if (m_cur == nullptr && size != 0) {
-                throw std::runtime_error("MdbxLogger: null serialized value");
-            }
-            m_end = m_cur == nullptr ? m_cur : m_cur + size;
-        }
-
-        uint8_t read_u8() {
-            require(1);
-            return *m_cur++;
-        }
-
-        uint32_t read_u32() {
-            require(4);
-            uint32_t value = 0;
-            for (int i = 0; i < 4; ++i) {
-                value = (value << 8) | static_cast<uint32_t>(*m_cur++);
-            }
-            return value;
-        }
-
-        uint64_t read_u64() {
-            require(8);
-            uint64_t value = 0;
-            for (int i = 0; i < 8; ++i) {
-                value = (value << 8) | static_cast<uint64_t>(*m_cur++);
-            }
-            return value;
-        }
-
-        int64_t read_i64() {
-            const uint64_t bits = read_u64();
-            int64_t value = 0;
-            std::memcpy(&value, &bits, sizeof(value));
-            return value;
-        }
-
-        std::string read_string() {
-            const uint32_t size = read_u32();
-            require(size);
-            const char* begin = reinterpret_cast<const char*>(m_cur);
-            m_cur += size;
-            return std::string(begin, size);
-        }
-
-        void finish() const {
-            if (m_cur != m_end) {
-                throw std::runtime_error("MdbxLogger: trailing bytes in serialized value");
-            }
-        }
-
-    private:
-        const uint8_t* m_cur;
-        const uint8_t* m_end;
-
-        void require(size_t size) const {
-            if (static_cast<size_t>(m_end - m_cur) < size) {
-                throw std::runtime_error("MdbxLogger: corrupted serialized value");
-            }
-        }
-    };
-
-    inline void mdbx_write_record_key_be(std::string& key, uint64_t value, size_t offset) {
-        for (int shift = 56; shift >= 0; shift -= 8) {
-            key[offset++] = static_cast<char>((value >> shift) & 0xFFu);
-        }
-    }
-
-    inline void mdbx_write_record_sequence_be(std::string& key, uint32_t value, size_t offset) {
-        for (int shift = 24; shift >= 0; shift -= 8) {
-            key[offset++] = static_cast<char>((value >> shift) & 0xFFu);
-        }
-    }
-
-    inline std::string make_mdbx_record_key(int64_t timestamp_ms, uint32_t sequence) {
-        std::string key(12, '\0');
-        const uint64_t sortable_ts = static_cast<uint64_t>(timestamp_ms) ^ 0x8000000000000000ULL;
-        mdbx_write_record_key_be(key, sortable_ts, 0);
-        mdbx_write_record_sequence_be(key, sequence, 8);
-        return key;
-    }
-
-    inline uint64_t current_process_id() {
-#       if defined(_WIN32)
-        return static_cast<uint64_t>(GetCurrentProcessId());
-#       else
-        return static_cast<uint64_t>(getpid());
-#       endif
-    }
-
-} // namespace detail
-
-    inline std::vector<uint8_t> MdbxLogSessionV1::to_bytes() const {
-        detail::MdbxByteWriter out;
-        out.write_u32(1);
-        out.write_string(app_name);
-        out.write_i64(start_time_ms);
-        out.write_i64(end_time_ms);
-        out.write_u64(process_id);
-        out.write_u32(schema_version);
-        return out.bytes();
-    }
-
-    inline MdbxLogSessionV1 MdbxLogSessionV1::from_bytes(const void* data, size_t size) {
-        detail::MdbxByteReader in(data, size);
-        const uint32_t version = in.read_u32();
-        if (version != 1) {
-            throw std::runtime_error("MdbxLogger: unsupported session value version");
-        }
-        MdbxLogSessionV1 out;
-        out.app_name = in.read_string();
-        out.start_time_ms = in.read_i64();
-        out.end_time_ms = in.read_i64();
-        out.process_id = in.read_u64();
-        out.schema_version = in.read_u32();
-        in.finish();
-        return out;
-    }
-
-    inline std::vector<uint8_t> MdbxLogRecordV1::to_bytes() const {
-        detail::MdbxByteWriter out;
-        out.write_u32(1);
-        out.write_u64(session_id);
-        out.write_i64(timestamp_ms);
-        out.write_u32(sequence);
-        out.write_u32(static_cast<uint32_t>(level));
-        out.write_string(message);
-        out.write_u64(payload_id);
-        out.write_string(file);
-        out.write_string(function);
-        out.write_i64(static_cast<int64_t>(line));
-        return out.bytes();
-    }
-
-    inline MdbxLogRecordV1 MdbxLogRecordV1::from_bytes(const void* data, size_t size) {
-        detail::MdbxByteReader in(data, size);
-        const uint32_t version = in.read_u32();
-        if (version != 1) {
-            throw std::runtime_error("MdbxLogger: unsupported record value version");
-        }
-        MdbxLogRecordV1 out;
-        out.session_id = in.read_u64();
-        out.timestamp_ms = in.read_i64();
-        out.sequence = in.read_u32();
-        out.level = static_cast<LogLevel>(in.read_u32());
-        out.message = in.read_string();
-        out.payload_id = in.read_u64();
-        out.file = in.read_string();
-        out.function = in.read_string();
-        out.line = static_cast<int>(in.read_i64());
-        in.finish();
-        return out;
-    }
-
-    inline std::vector<uint8_t> MdbxLogPayloadV1::to_bytes() const {
-        detail::MdbxByteWriter out;
-        out.write_u32(1);
-        out.write_u64(payload_id);
-        out.write_u8(static_cast<uint8_t>(compression));
-        out.write_string(data);
-        return out.bytes();
-    }
-
-    inline MdbxLogPayloadV1 MdbxLogPayloadV1::from_bytes(const void* data, size_t size) {
-        detail::MdbxByteReader in(data, size);
-        const uint32_t version = in.read_u32();
-        if (version != 1) {
-            throw std::runtime_error("MdbxLogger: unsupported payload value version");
-        }
-        MdbxLogPayloadV1 out;
-        out.payload_id = in.read_u64();
-        const uint8_t compression = in.read_u8();
-        if (compression > static_cast<uint8_t>(MdbxPayloadCompression::Zstd)) {
-            throw std::runtime_error("MdbxLogger: unsupported payload compression");
-        }
-        out.compression = static_cast<MdbxPayloadCompression>(compression);
-        out.data = in.read_string();
-        in.finish();
-        return out;
-    }
 
     /// \class MdbxLogger
     /// \brief Stores formatted logs in MDBX tables with optional async batching.
@@ -330,6 +59,38 @@ namespace detail {
             bool store_large_payloads_separately = true;///< Store large messages in `log_payloads`.
             MdbxPayloadCompression payload_compression = MdbxPayloadCompression::None; ///< Payload compression.
             int payload_compression_level = 6; ///< Compression level for gzip/zstd.
+        };
+
+        /// \struct SessionView
+        /// \brief Public read-only view of session metadata.
+        struct SessionView {
+            std::string app_name;       ///< Optional application name.
+            int64_t start_time_ms = 0;  ///< Session start timestamp.
+            int64_t end_time_ms = 0;    ///< Session end timestamp, or 0 while active.
+            uint64_t process_id = 0;    ///< Process id that opened the session.
+            uint32_t schema_version = 1;///< Storage schema version.
+        };
+
+        /// \struct RecordView
+        /// \brief Public read-only view of a log record.
+        struct RecordView {
+            uint64_t session_id = 0;                     ///< Owning session id.
+            int64_t timestamp_ms = 0;                    ///< Log timestamp in milliseconds.
+            uint32_t sequence = 0;                       ///< Per-timestamp sequence.
+            LogLevel level = LogLevel::LOG_LVL_TRACE;    ///< Log severity level.
+            std::string message;                         ///< Formatted message or payload preview.
+            uint64_t payload_id = 0;                     ///< Payload row id, or 0 when absent.
+            std::string file;                            ///< Source file path.
+            std::string function;                        ///< Source function name.
+            int line = 0;                                ///< Source line number.
+        };
+
+        /// \struct PayloadView
+        /// \brief Public read-only view of a large payload.
+        struct PayloadView {
+            uint64_t payload_id = 0; ///< Stable payload id.
+            MdbxPayloadCompression compression = MdbxPayloadCompression::None; ///< Stored compression.
+            std::string data;       ///< Stored payload bytes.
         };
 
         MdbxLogger() : MdbxLogger(Config()) {}
@@ -451,11 +212,11 @@ namespace detail {
         }
 
         /// \brief Reads records in `[from_ms, to_ms)` ordered by timestamp and sequence.
-        std::vector<MdbxLogRecordV1> read_range(
+        std::vector<RecordView> read_range(
                 int64_t from_ms,
                 int64_t to_ms,
                 std::size_t limit = 0) const {
-            std::vector<MdbxLogRecordV1> out;
+            std::vector<RecordView> out;
             if (to_ms <= from_ms) {
                 return out;
             }
@@ -468,8 +229,8 @@ namespace detail {
 
                 std::lock_guard<std::mutex> db_lock(m_db_mutex);
                 m_records->for_each_range(from_key, to_key,
-                    [&out, limit](const std::string&, const MdbxLogRecordV1& record) -> bool {
-                        out.push_back(record);
+                    [&out, limit](const std::string&, const Record& record) -> bool {
+                        out.push_back(to_view(record));
                         return limit == 0 || out.size() < limit;
                     });
             } catch (...) {
@@ -480,50 +241,46 @@ namespace detail {
         }
 
         /// \brief Reads a payload by id.
-        bool read_payload(uint64_t payload_id, MdbxLogPayloadV1& out) const {
+        std::optional<PayloadView> read_payload(uint64_t payload_id) const {
             if (payload_id == 0) {
-                return false;
+                return std::nullopt;
             }
 
             try {
                 std::lock_guard<std::mutex> db_lock(m_db_mutex);
 #if __cplusplus >= 201703L
                 auto value = m_payloads->find(payload_id);
-                if (!value) return false;
-                out = *value;
-                return true;
+                if (!value) return std::nullopt;
+                return to_view(*value);
 #else
-                std::pair<bool, MdbxLogPayloadV1> value = m_payloads->find(payload_id);
-                if (!value.first) return false;
-                out = value.second;
-                return true;
+                std::pair<bool, Payload> value = m_payloads->find(payload_id);
+                if (!value.first) return std::nullopt;
+                return to_view(value.second);
 #endif
             } catch (...) {
-                return false;
+                return std::nullopt;
             }
         }
 
         /// \brief Reads session metadata by id.
-        bool read_session(uint64_t session_id, MdbxLogSessionV1& out) const {
+        std::optional<SessionView> read_session(uint64_t session_id) const {
             if (session_id == 0) {
-                return false;
+                return std::nullopt;
             }
 
             try {
                 std::lock_guard<std::mutex> db_lock(m_db_mutex);
 #if __cplusplus >= 201703L
                 auto value = m_sessions->find(session_id);
-                if (!value) return false;
-                out = *value;
-                return true;
+                if (!value) return std::nullopt;
+                return to_view(*value);
 #else
-                std::pair<bool, MdbxLogSessionV1> value = m_sessions->find(session_id);
-                if (!value.first) return false;
-                out = value.second;
-                return true;
+                std::pair<bool, Session> value = m_sessions->find(session_id);
+                if (!value.first) return std::nullopt;
+                return to_view(value.second);
 #endif
             } catch (...) {
-                return false;
+                return std::nullopt;
             }
         }
 
@@ -593,9 +350,35 @@ namespace detail {
             std::string message;
         };
 
-        typedef mdbxc::KeyValueTable<uint64_t, MdbxLogSessionV1> SessionTable;
-        typedef mdbxc::KeyValueTable<std::string, MdbxLogRecordV1> RecordTable;
-        typedef mdbxc::KeyValueTable<uint64_t, MdbxLogPayloadV1> PayloadTable;
+        struct Session {
+            std::string app_name;
+            int64_t start_time_ms = 0;
+            int64_t end_time_ms = 0;
+            uint64_t process_id = 0;
+            uint32_t schema_version = 1;
+        };
+
+        struct Record {
+            uint64_t session_id = 0;
+            int64_t timestamp_ms = 0;
+            uint32_t sequence = 0;
+            LogLevel level = LogLevel::LOG_LVL_TRACE;
+            std::string message;
+            uint64_t payload_id = 0;
+            std::string file;
+            std::string function;
+            int line = 0;
+        };
+
+        struct Payload {
+            uint64_t payload_id = 0;
+            MdbxPayloadCompression compression = MdbxPayloadCompression::None;
+            std::string data;
+        };
+
+        typedef mdbxc::KeyValueTable<uint64_t, Session> SessionTable;
+        typedef mdbxc::KeyValueTable<std::string, Record> RecordTable;
+        typedef mdbxc::KeyValueTable<uint64_t, Payload> PayloadTable;
 
         Config m_config;
         std::shared_ptr<mdbxc::Connection> m_connection;
@@ -622,6 +405,127 @@ namespace detail {
         std::atomic<uint64_t> m_dropped = ATOMIC_VAR_INIT(0);
         std::atomic<uint64_t> m_failed_writes = ATOMIC_VAR_INIT(0);
         std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false);
+
+        static RecordView to_view(const Record& r) {
+            RecordView v;
+            v.session_id = r.session_id;
+            v.timestamp_ms = r.timestamp_ms;
+            v.sequence = r.sequence;
+            v.level = r.level;
+            v.message = r.message;
+            v.payload_id = r.payload_id;
+            v.file = r.file;
+            v.function = r.function;
+            v.line = r.line;
+            return v;
+        }
+
+        static SessionView to_view(const Session& s) {
+            SessionView v;
+            v.app_name = s.app_name;
+            v.start_time_ms = s.start_time_ms;
+            v.end_time_ms = s.end_time_ms;
+            v.process_id = s.process_id;
+            v.schema_version = s.schema_version;
+            return v;
+        }
+
+        static PayloadView to_view(const Payload& p) {
+            PayloadView v;
+            v.payload_id = p.payload_id;
+            v.compression = p.compression;
+            v.data = p.data;
+            return v;
+        }
+
+        static std::vector<uint8_t> serialize_session(const Session& s) {
+            detail::MdbxByteWriter out;
+            out.write_u32(1);
+            out.write_string(s.app_name);
+            out.write_i64(s.start_time_ms);
+            out.write_i64(s.end_time_ms);
+            out.write_u64(s.process_id);
+            out.write_u32(s.schema_version);
+            return out.bytes();
+        }
+
+        static Session deserialize_session(const void* data, size_t size) {
+            detail::MdbxByteReader in(data, size);
+            const uint32_t version = in.read_u32();
+            if (version != 1) {
+                throw std::runtime_error("MdbxLogger: unsupported session value version");
+            }
+            Session s;
+            s.app_name = in.read_string();
+            s.start_time_ms = in.read_i64();
+            s.end_time_ms = in.read_i64();
+            s.process_id = in.read_u64();
+            s.schema_version = in.read_u32();
+            in.finish();
+            return s;
+        }
+
+        static std::vector<uint8_t> serialize_record(const Record& r) {
+            detail::MdbxByteWriter out;
+            out.write_u32(1);
+            out.write_u64(r.session_id);
+            out.write_i64(r.timestamp_ms);
+            out.write_u32(r.sequence);
+            out.write_u32(static_cast<uint32_t>(r.level));
+            out.write_string(r.message);
+            out.write_u64(r.payload_id);
+            out.write_string(r.file);
+            out.write_string(r.function);
+            out.write_i64(static_cast<int64_t>(r.line));
+            return out.bytes();
+        }
+
+        static Record deserialize_record(const void* data, size_t size) {
+            detail::MdbxByteReader in(data, size);
+            const uint32_t version = in.read_u32();
+            if (version != 1) {
+                throw std::runtime_error("MdbxLogger: unsupported record value version");
+            }
+            Record r;
+            r.session_id = in.read_u64();
+            r.timestamp_ms = in.read_i64();
+            r.sequence = in.read_u32();
+            r.level = static_cast<LogLevel>(in.read_u32());
+            r.message = in.read_string();
+            r.payload_id = in.read_u64();
+            r.file = in.read_string();
+            r.function = in.read_string();
+            r.line = static_cast<int>(in.read_i64());
+            in.finish();
+            return r;
+        }
+
+        static std::vector<uint8_t> serialize_payload(const Payload& p) {
+            detail::MdbxByteWriter out;
+            out.write_u32(1);
+            out.write_u64(p.payload_id);
+            out.write_u8(static_cast<uint8_t>(p.compression));
+            out.write_string(p.data);
+            return out.bytes();
+        }
+
+        static Payload deserialize_payload(const void* data, size_t size) {
+            detail::MdbxByteReader in(data, size);
+            const uint32_t version = in.read_u32();
+            if (version != 1) {
+                throw std::runtime_error("MdbxLogger: unsupported payload value version");
+            }
+            Payload p;
+            p.payload_id = in.read_u64();
+            const uint8_t compression = in.read_u8();
+            if (compression > static_cast<uint8_t>(MdbxPayloadCompression::Zstd)) {
+                throw std::runtime_error("MdbxLogger: unsupported payload compression");
+            }
+            p.compression = static_cast<MdbxPayloadCompression>(compression);
+            p.data = in.read_string();
+            in.finish();
+            return p;
+        }
 
         void normalize_config() {
             if (m_config.max_batch_size == 0) {
@@ -665,7 +569,7 @@ namespace detail {
             const uint64_t pid = detail::current_process_id();
 
             if (m_config.session_id != 0) {
-                MdbxLogSessionV1 session;
+                Session session;
                 if (find_session_locked(m_config.session_id, session, txn.handle())) {
                     if (!m_config.app_name.empty()) {
                         session.app_name = m_config.app_name;
@@ -690,7 +594,7 @@ namespace detail {
 
             for (int attempt = 0; attempt < 1024; ++attempt) {
                 const uint64_t candidate = make_unique_id();
-                MdbxLogSessionV1 session;
+                Session session;
                 session.app_name = m_config.app_name;
                 session.start_time_ms = now_ms;
                 session.end_time_ms = 0;
@@ -705,14 +609,14 @@ namespace detail {
             throw std::runtime_error("MdbxLogger: failed to allocate unique session id");
         }
 
-        bool find_session_locked(uint64_t session_id, MdbxLogSessionV1& out, MDBX_txn* txn) const {
+        bool find_session_locked(uint64_t session_id, Session& out, MDBX_txn* txn) const {
 #if __cplusplus >= 201703L
             auto value = m_sessions->find(session_id, txn);
             if (!value) return false;
             out = *value;
             return true;
 #else
-            std::pair<bool, MdbxLogSessionV1> value = m_sessions->find(session_id, txn);
+            std::pair<bool, Session> value = m_sessions->find(session_id, txn);
             if (!value.first) return false;
             out = value.second;
             return true;
@@ -722,7 +626,7 @@ namespace detail {
         void update_session_end() {
             std::lock_guard<std::mutex> db_lock(m_db_mutex);
             auto txn = m_connection->transaction(mdbxc::TransactionMode::WRITABLE);
-            MdbxLogSessionV1 session;
+            Session session;
             if (!find_session_locked(m_session_id, session, txn.handle())) {
                 session.app_name = m_config.app_name;
                 session.start_time_ms = LOGIT_CURRENT_TIMESTAMP_MS();
@@ -796,7 +700,7 @@ namespace detail {
         }
 
         void write_item_locked(const MdbxLogItem& item, mdbxc::Transaction& txn) {
-            MdbxLogRecordV1 record;
+            Record record;
             record.session_id = m_session_id;
             record.timestamp_ms = item.timestamp_ms;
             record.level = item.level;
@@ -806,7 +710,7 @@ namespace detail {
             record.message = item.message;
 
             if (should_spill_payload(item.message)) {
-                MdbxLogPayloadV1 payload;
+                Payload payload;
                 payload.payload_id = allocate_payload_id_locked(txn);
                 fill_payload(item.message, payload);
                 m_payloads->insert(payload.payload_id, payload, txn);
@@ -833,7 +737,7 @@ namespace detail {
             return message.substr(0, count);
         }
 
-        void fill_payload(const std::string& message, MdbxLogPayloadV1& payload) {
+        void fill_payload(const std::string& message, Payload& payload) {
             payload.compression = MdbxPayloadCompression::None;
             payload.data = message;
 

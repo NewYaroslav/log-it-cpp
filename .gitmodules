@@ -16,3 +16,6 @@
 [submodule "external/mdbx-containers"]
 	path = external/mdbx-containers
 	url = https://github.com/NewYaroslav/mdbx-containers.git
+[submodule "external/kurlyk"]
+	path = external/kurlyk
+	url = https://github.com/NewYaroslav/kurlyk.git
