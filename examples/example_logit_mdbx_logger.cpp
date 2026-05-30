@@ -184,6 +184,33 @@ int main() {
                       << r.timestamp_ms << " " << r.message << std::endl;
         }
 
+        // Live subscription: snapshot + real-time updates
+        std::vector<logit::LogRecordView> live_updates;
+        uint64_t cb_id = mdbx->add_log_callback(
+            [&live_updates](const logit::LogRecordView& v) {
+                live_updates.push_back(v);
+            });
+
+        LOGIT_INFO("Live event 1 via callback");
+        LOGIT_INFO("Live event 2 via callback");
+        LOGIT_WAIT();
+
+        std::cout << "\n--- Live updates received (" << live_updates.size()
+                  << ") ---" << std::endl;
+        for (const auto& r : live_updates) {
+            std::cout << "  [" << logit::to_string(r.level) << "] "
+                      << r.message << std::endl;
+        }
+
+        if (mdbx->remove_log_callback(cb_id)) {
+            std::cout << "Callback removed" << std::endl;
+        }
+
+        LOGIT_INFO("Event after unsubscribe");
+        LOGIT_WAIT();
+        std::cout << "Live updates after unsubscribe: " << live_updates.size()
+                  << std::endl;
+
         // Statistics
         std::cout << "\n--- Statistics ---" << std::endl;
         std::cout << "  dropped:       " << mdbx->dropped_count() << std::endl;
