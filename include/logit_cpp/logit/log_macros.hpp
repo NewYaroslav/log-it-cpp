@@ -2905,6 +2905,113 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 //------------------------------------------------------------------------------
 
+/// \brief Retrieves a typed backend pointer from a logger by index.
+/// \param logger_index Index of logger.
+/// \param logger_type Concrete logger type (e.g., logit::MdbxLogger).
+/// \return Pointer to the backend, or nullptr if index/type does not match.
+#define LOGIT_GET_LOGGER_AS(logger_index, logger_type) \
+    ([](int _logit_logger_index) -> logger_type* { \
+        auto _logit_strategy = ::logit::Logger::get_instance().get_strategy_snapshot(_logit_logger_index); \
+        return (_logit_strategy && _logit_strategy->logger) \
+            ? dynamic_cast<logger_type*>(_logit_strategy->logger.get()) \
+            : nullptr; \
+    }((logger_index)))
+
+/// \brief Executes a code block when the logger backend has the requested type.
+/// \param logger_index Index of logger.
+/// \param logger_type Concrete logger type.
+/// \param var_name Variable name available inside the block.
+#define LOGIT_WITH_LOGGER_AS(logger_index, logger_type, var_name) \
+    if (auto* var_name = LOGIT_GET_LOGGER_AS((logger_index), logger_type))
+
+/// \brief Retrieves a read-only log-reader interface from a logger by index.
+/// \param logger_index Index of logger.
+/// \return Pointer to ILogReader, or nullptr if the backend does not implement it.
+#define LOGIT_GET_LOG_READER(logger_index) \
+    LOGIT_GET_LOGGER_AS((logger_index), ::logit::ILogReader)
+
+/// \brief Executes a code block when the logger backend supports ILogReader.
+/// \param logger_index Index of logger.
+/// \param var_name Variable name available inside the block.
+#define LOGIT_WITH_LOG_READER(logger_index, var_name) \
+    if (auto* var_name = LOGIT_GET_LOG_READER((logger_index)))
+
+/// \brief Reads a time-range of records from a backend that supports ILogReader.
+/// \param logger_index Index of logger.
+/// \param from_ms Inclusive start timestamp.
+/// \param to_ms   Exclusive end timestamp.
+/// \param limit   Maximum number of records (0 = unlimited).
+/// \return Matching records, or empty vector if backend does not support reading.
+#define LOGIT_READ_RANGE(logger_index, from_ms, to_ms, limit) \
+    ([](int _idx, int64_t _from, int64_t _to, std::size_t _limit) { \
+        auto* _reader = LOGIT_GET_LOG_READER(_idx); \
+        return _reader \
+            ? _reader->read_range(_from, _to, _limit) \
+            : std::vector<::logit::LogRecordView>{}; \
+    }((logger_index), (from_ms), (to_ms), (limit)))
+
+/// \brief Reads recent records from a backend that supports ILogReader.
+/// \param logger_index Index of logger.
+/// \param limit      Maximum number of records (0 = unlimited).
+/// \param period_ms  Time window in milliseconds from now backward (0 = unlimited).
+/// \param order      Ascending or descending result order.
+/// \return Matching records, or empty vector if backend does not support reading.
+#define LOGIT_READ_RECENT(logger_index, limit, period_ms, order) \
+    ([](int _idx, std::size_t _limit, int64_t _period_ms, ::logit::LogReadOrder _order) { \
+        auto* _reader = LOGIT_GET_LOG_READER(_idx); \
+        return _reader \
+            ? _reader->read_recent(_limit, _period_ms, _order) \
+            : std::vector<::logit::LogRecordView>{}; \
+    }((logger_index), (limit), (period_ms), (order)))
+
+/// \brief Reads recent records in ascending order (oldest first).
+/// \param logger_index Index of logger.
+/// \param limit      Maximum number of records (0 = unlimited).
+/// \param period_ms  Time window in milliseconds from now backward (0 = unlimited).
+/// \return Matching records in ascending order, or empty vector if backend does not support reading.
+#define LOGIT_READ_RECENT_ASC(logger_index, limit, period_ms) \
+    LOGIT_READ_RECENT((logger_index), (limit), (period_ms), ::logit::LogReadOrder::Ascending)
+
+/// \brief Reads recent records in descending order (newest first).
+/// \param logger_index Index of logger.
+/// \param limit      Maximum number of records (0 = unlimited).
+/// \param period_ms  Time window in milliseconds from now backward (0 = unlimited).
+/// \return Matching records in descending order, or empty vector if backend does not support reading.
+#define LOGIT_READ_RECENT_DESC(logger_index, limit, period_ms) \
+    LOGIT_READ_RECENT((logger_index), (limit), (period_ms), ::logit::LogReadOrder::Descending)
+
+/// \brief Retrieves a live-subscription interface from a logger by index.
+/// \param logger_index Index of logger.
+/// \return Pointer to ILogSubscriber, or nullptr if the backend does not implement it.
+#define LOGIT_GET_LOG_SUBSCRIBER(logger_index) \
+    LOGIT_GET_LOGGER_AS((logger_index), ::logit::ILogSubscriber)
+
+/// \brief Executes a code block when the logger backend supports ILogSubscriber.
+/// \param logger_index Index of logger.
+/// \param var_name Variable name available inside the block.
+#define LOGIT_WITH_LOG_SUBSCRIBER(logger_index, var_name) \
+    if (auto* var_name = LOGIT_GET_LOG_SUBSCRIBER((logger_index)))
+
+/// \brief Registers a callback to receive newly written log records.
+/// \param logger_index Index of logger.
+/// \param callback     Function invoked with LogRecordView after each commit.
+/// \return Callback id (0 if the backend does not support subscriptions).
+#define LOGIT_ADD_LOG_CALLBACK(logger_index, callback) \
+    ([](int _idx, ::logit::ILogSubscriber::Callback _cb) -> uint64_t { \
+        auto* _subscriber = LOGIT_GET_LOG_SUBSCRIBER(_idx); \
+        return _subscriber ? _subscriber->add_log_callback(std::move(_cb)) : 0; \
+    }((logger_index), (callback)))
+
+/// \brief Unregisters a previously added log callback.
+/// \param logger_index Index of logger.
+/// \param callback_id  Id returned by LOGIT_ADD_LOG_CALLBACK.
+/// \return True if the callback was found and removed.
+#define LOGIT_REMOVE_LOG_CALLBACK(logger_index, callback_id) \
+    ([](int _idx, uint64_t _id) -> bool { \
+        auto* _subscriber = LOGIT_GET_LOG_SUBSCRIBER(_idx); \
+        return _subscriber ? _subscriber->remove_log_callback(_id) : false; \
+    }((logger_index), (callback_id)))
+
 /// \}
 
 #endif // LOGIT_LOG_MACROS_HPP_INCLUDED

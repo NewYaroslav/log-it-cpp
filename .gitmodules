@@ -13,3 +13,9 @@
 [submodule "external/zlib"]
 	path = external/zlib
 	url = https://github.com/madler/zlib
+[submodule "external/mdbx-containers"]
+	path = external/mdbx-containers
+	url = https://github.com/NewYaroslav/mdbx-containers.git
+[submodule "external/kurlyk"]
+	path = external/kurlyk
+	url = https://github.com/NewYaroslav/kurlyk.git

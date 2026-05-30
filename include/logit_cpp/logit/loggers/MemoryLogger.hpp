@@ -6,14 +6,7 @@
 /// \brief In-memory logger backend that stores recent log snapshots.
 
 #include "ILogger.hpp"
-
-#include <atomic>
-#include <cstddef>
-#include <cstdint>
-#include <deque>
-#include <mutex>
-#include <string>
-#include <vector>
+#include "ILogReader.hpp"
 
 namespace logit {
 
@@ -23,7 +16,7 @@ namespace logit {
     /// \details Snapshots are returned oldest-to-newest. Read operations avoid
     /// `Logger`-level execution serialization, but still synchronize on this
     /// backend's own mutex while copying the current buffer.
-    class MemoryLogger : public ILogger {
+    class MemoryLogger : public ILogger, public ILogReader {
     public:
         /// \struct Config
         /// \brief Retention limits for the in-memory buffer.
@@ -150,7 +143,68 @@ namespace logit {
         /// \brief Memory logger is synchronous, so no flush step is needed.
         void wait() override {}
 
+        /// \brief Reads records in `[from_ms, to_ms)` ordered by timestamp.
+        std::vector<LogRecordView> read_range(
+                int64_t from_ms,
+                int64_t to_ms,
+                std::size_t limit = 0) const override {
+            std::vector<LogRecordView> out;
+            if (to_ms <= from_ms) {
+                return out;
+            }
+
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_evict_expired_locked(LOGIT_CURRENT_TIMESTAMP_MS());
+
+            for (const auto& entry : m_entries) {
+                if (entry.timestamp_ms >= from_ms && entry.timestamp_ms < to_ms) {
+                    out.push_back(to_view(entry));
+                    if (limit > 0 && out.size() >= limit) {
+                        break;
+                    }
+                }
+            }
+            return out;
+        }
+
+        /// \brief Reads the most recent records.
+        std::vector<LogRecordView> read_recent(
+                std::size_t limit,
+                int64_t period_ms = 0,
+                LogReadOrder order = LogReadOrder::Ascending) const override {
+            std::vector<LogRecordView> out;
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_evict_expired_locked(LOGIT_CURRENT_TIMESTAMP_MS());
+
+            const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
+            const int64_t from_ms = (period_ms > 0) ? (now_ms - period_ms) : 0;
+
+            for (auto it = m_entries.rbegin(); it != m_entries.rend(); ++it) {
+                if (period_ms <= 0 || it->timestamp_ms >= from_ms) {
+                    out.push_back(to_view(*it));
+                    if (limit > 0 && out.size() >= limit) {
+                        break;
+                    }
+                }
+            }
+
+            if (order == LogReadOrder::Ascending) {
+                std::reverse(out.begin(), out.end());
+            }
+            return out;
+        }
+
     private:
+        static LogRecordView to_view(const BufferedLogEntry& e) {
+            LogRecordView v;
+            v.level = e.level;
+            v.timestamp_ms = e.timestamp_ms;
+            v.file = e.file;
+            v.line = e.line;
+            v.function = e.function;
+            v.message = e.message;
+            return v;
+        }
         // Count only the retained formatted payload, not the full object footprint.
         static std::size_t m_entry_bytes(const BufferedLogEntry& entry) {
             return entry.message.size();

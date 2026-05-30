@@ -48,6 +48,7 @@ else()
         memory_logger_backend_test.cpp
         memory_logger_concurrency_test.cpp
         memory_logger_integration_test.cpp
+        mdbx_logger_test.cpp
         mdc_ndc_context_test.cpp
         os_error_macros_test.cpp
         otlp_http_logger_integration_test.cpp
@@ -108,6 +109,9 @@ else()
         list(REMOVE_ITEM TEST_SOURCES prometheus_http_server_logger_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES prometheus_metric_builders_test.cpp)
         list(REMOVE_ITEM TEST_SOURCES prometheus_registry_test.cpp)
+    endif()
+    if(NOT LOGIT_WITH_MDBX)
+        list(REMOVE_ITEM TEST_SOURCES mdbx_logger_test.cpp)
     endif()
     if(LOGIT_WITH_PROMETHEUS AND NOT LOGIT_WITH_PROMETHEUS_SERVER)
         list(REMOVE_ITEM TEST_SOURCES prometheus_http_server_logger_test.cpp)
