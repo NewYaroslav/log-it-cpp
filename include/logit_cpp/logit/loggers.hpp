@@ -41,4 +41,8 @@
 #include "loggers/PrometheusHttpServerLogger.hpp"
 #endif
 
+#ifdef LOGIT_WITH_MDBX
+#include "loggers/MdbxLogger.hpp"
+#endif
+
 #endif // _LOGIT_LOGGERS_HPP_INCLUDED

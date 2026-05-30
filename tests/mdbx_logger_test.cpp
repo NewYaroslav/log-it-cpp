@@ -1,0 +1,189 @@
+#include <logit/loggers.hpp>
+#include <logit/loggers/MdbxLogger.hpp>
+
+#ifdef LOGIT_WITH_MDBX
+
+#include <cassert>
+#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+namespace {
+
+std::string make_db_path(const std::string& suffix) {
+    std::ostringstream os;
+    os << logit::get_exec_dir()
+       << "/mdbx_logger_test_"
+       << suffix
+       << "_"
+       << LOGIT_CURRENT_TIMESTAMP_MS()
+       << ".mdbx";
+    return os.str();
+}
+
+void cleanup_db(const std::string& path) {
+    std::remove(path.c_str());
+    std::remove((path + "-lck").c_str());
+}
+
+logit::LogRecord make_record(logit::LogLevel level, int64_t timestamp_ms, int line) {
+    return logit::LogRecord(
+        level,
+        timestamp_ms,
+        "mdbx_logger_test.cpp",
+        line,
+        "make_record",
+        "message",
+        "",
+        -1,
+        false,
+        false,
+        false);
+}
+
+void test_sync_range_session_and_sequences() {
+    const std::string path = make_db_path("sync");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.app_name = "mdbx-test";
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+        const uint64_t session_id = logger.session_id();
+        assert(session_id != 0);
+
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 2001, 10), "later-1");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_WARN, 2000, 11), "backward");
+        logger.log(make_record(logit::LogLevel::LOG_LVL_ERROR, 2001, 12), "later-2");
+
+        std::vector<logit::MdbxLogRecordV1> records = logger.read_range(2000, 2002);
+        assert(records.size() == 3);
+        assert(records[0].timestamp_ms == 2000);
+        assert(records[0].message == "backward");
+        assert(records[1].timestamp_ms == 2001);
+        assert(records[2].timestamp_ms == 2001);
+        assert(records[1].sequence != records[2].sequence);
+        assert(records[2].sequence > records[1].sequence);
+        assert(records[2].file == "mdbx_logger_test.cpp");
+        assert(records[2].function == "make_record");
+        assert(records[2].line == 12);
+        assert(records[2].session_id == session_id);
+
+        std::vector<logit::MdbxLogRecordV1> limited = logger.read_range(2000, 2002, 2);
+        assert(limited.size() == 2);
+
+        logit::MdbxLogSessionV1 session;
+        assert(logger.read_session(session_id, session));
+        assert(session.app_name == "mdbx-test");
+        assert(session.start_time_ms > 0);
+        assert(session.end_time_ms == 0);
+        assert(session.schema_version == 1);
+
+        logger.shutdown();
+        assert(logger.read_session(session_id, session));
+        assert(session.end_time_ms >= session.start_time_ms);
+    }
+
+    cleanup_db(path);
+}
+
+void test_async_large_payload_spill() {
+    const std::string path = make_db_path("payload");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = true;
+        config.flush_interval_ms = 5;
+        config.max_batch_size = 8;
+        config.large_payload_threshold = 10;
+        config.payload_preview_size = 5;
+        config.store_large_payloads_separately = true;
+
+        logit::MdbxLogger logger(config);
+
+        const std::string small = "small";
+        const std::string large = "abcdefghijklmnopqrstuvwxyz";
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 3000, 20), small);
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 3001, 21), large);
+        logger.wait();
+
+        std::vector<logit::MdbxLogRecordV1> records = logger.read_range(3000, 3002);
+        assert(records.size() == 2);
+        assert(records[0].message == small);
+        assert(records[0].payload_id == 0);
+        assert(records[1].message == "abcde");
+        assert(records[1].payload_id != 0);
+
+        logit::MdbxLogPayloadV1 payload;
+        assert(logger.read_payload(records[1].payload_id, payload));
+        assert(payload.payload_id == records[1].payload_id);
+        assert(payload.compression == logit::MdbxPayloadCompression::None);
+        assert(payload.data == large);
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
+#if defined(LOGIT_HAS_ZLIB)
+void test_gzip_payload_compression() {
+    const std::string path = make_db_path("gzip");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+        config.large_payload_threshold = 4;
+        config.payload_preview_size = 3;
+        config.payload_compression = logit::MdbxPayloadCompression::Gzip;
+        config.payload_compression_level = 6;
+
+        logit::MdbxLogger logger(config);
+        const std::string large(128, 'x');
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 4000, 30), large);
+
+        std::vector<logit::MdbxLogRecordV1> records = logger.read_range(4000, 4001);
+        assert(records.size() == 1);
+        assert(records[0].payload_id != 0);
+
+        logit::MdbxLogPayloadV1 payload;
+        assert(logger.read_payload(records[0].payload_id, payload));
+        assert(payload.compression == logit::MdbxPayloadCompression::Gzip);
+        assert(!payload.data.empty());
+        assert(payload.data != large);
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+#endif
+
+} // namespace
+
+int main() {
+    test_sync_range_session_and_sequences();
+    test_async_large_payload_spill();
+#if defined(LOGIT_HAS_ZLIB)
+    test_gzip_payload_compression();
+#endif
+    std::cout << "PASS: mdbx_logger_test" << std::endl;
+    return 0;
+}
+
+#else
+
+int main() {
+    return 0;
+}
+
+#endif

@@ -2,5 +2,8 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(TimeShield)
+if(@LOGIT_WITH_MDBX@)
+    find_dependency(mdbx_containers)
+endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/log-it-cppTargets.cmake")

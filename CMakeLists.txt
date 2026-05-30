@@ -12,6 +12,7 @@ option(LOGIT_WITH_CONTEXT "Enable MDC/NDC diagnostic context support" OFF)
 option(LOGIT_WITH_OTLP "Enable OTLP/HTTP log export via optional kurlyk dependency" OFF)
 option(LOGIT_WITH_PROMETHEUS "Enable Prometheus text payload support" OFF)
 option(LOGIT_WITH_PROMETHEUS_SERVER "Enable Prometheus HTTP server backend" OFF)
+option(LOGIT_WITH_MDBX "Enable MDBX structured log storage backend" OFF)
 option(LOGIT_USE_SUBMODULES "Allow bundled optional dependency fallback" OFF)
 option(LOGIT_WITH_SYSLOG "Enable POSIX syslog backend" ON)
 option(LOGIT_WITH_WIN_EVENT_LOG "Enable Windows Event Log backend" ON)
@@ -185,6 +186,40 @@ if(LOGIT_WITH_PROMETHEUS_SERVER)
     endif()
 endif()
 
+# ---------- MDBX ----------
+if(LOGIT_WITH_MDBX)
+    if(EMSCRIPTEN)
+        message(FATAL_ERROR "LOGIT_WITH_MDBX is not supported for Emscripten.")
+    endif()
+    if(MSVC)
+        message(FATAL_ERROR "LOGIT_WITH_MDBX is not supported with MSVC until mdbx-containers supports MSVC.")
+    endif()
+
+    if(NOT TARGET mdbx_containers::mdbx_containers)
+        find_package(mdbx_containers QUIET CONFIG)
+    endif()
+
+    if(NOT TARGET mdbx_containers::mdbx_containers AND LOGIT_USE_SUBMODULES)
+        if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/external/mdbx-containers/CMakeLists.txt")
+            set(MDBXC_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+            set(MDBXC_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+            set(MDBXC_USE_ASAN OFF CACHE BOOL "" FORCE)
+            set(MDBXC_DEPS_MODE BUNDLED CACHE STRING "Dependency mode for MDBX: AUTO|SYSTEM|BUNDLED" FORCE)
+            add_subdirectory(external/mdbx-containers EXCLUDE_FROM_ALL)
+        endif()
+    endif()
+
+    if(NOT TARGET mdbx_containers::mdbx_containers)
+        message(FATAL_ERROR "mdbx-containers not found. Install it or add it as external/mdbx-containers and enable LOGIT_USE_SUBMODULES.")
+    endif()
+
+    target_compile_definitions(log-it-cpp INTERFACE LOGIT_WITH_MDBX=1)
+    target_link_libraries(log-it-cpp INTERFACE
+        $<BUILD_INTERFACE:mdbx_containers::mdbx_containers>
+        $<INSTALL_INTERFACE:mdbx_containers::mdbx_containers>
+    )
+endif()
+
 # ---------- GZIP (zlib) ----------
 if(LOGIT_WITH_GZIP)
     if(NOT TARGET ZLIB::ZLIB)
@@ -248,27 +283,38 @@ install(DIRECTORY include/ DESTINATION include)
 
 install(TARGETS log-it-cpp EXPORT log-it-cppTargets)
 
+set(_logit_install_export_supported ON)
+
 # install(EXPORT) requires all linked targets to be in an export set.
-# When kurlyk is pre-installed (IMPORTED target) the export works.
-# When kurlyk is a submodule (non-IMPORTED), packaging is unsupported.
-# The FATAL_ERROR is deferred to install time so development builds with
-# submodules still work; only `cmake --install` is blocked.
+# When optional dependencies are pre-installed (IMPORTED targets), the
+# export works. When they are submodules (non-IMPORTED), packaging is
+# unsupported. The FATAL_ERROR is deferred to install time so development
+# builds with submodules still work; only `cmake --install` is blocked.
 if(LOGIT_WITH_OTLP AND TARGET kurlyk)
     get_target_property(_kurlyk_imported kurlyk IMPORTED)
     if(NOT _kurlyk_imported)
+        set(_logit_install_export_supported OFF)
         install(CODE [[
             message(FATAL_ERROR
                 "log-it-cpp: Installing with LOGIT_WITH_OTLP=ON and bundled kurlyk is not supported. "
                 "Install kurlyk separately and use find_package(kurlyk), or disable LOGIT_WITH_OTLP for install.")
         ]])
-    else()
-        install(EXPORT log-it-cppTargets
-            FILE log-it-cppTargets.cmake
-            NAMESPACE log-it-cpp::
-            DESTINATION lib/cmake/log-it-cpp
-        )
     endif()
-else()
+endif()
+
+if(LOGIT_WITH_MDBX AND TARGET mdbx_containers)
+    get_target_property(_mdbx_containers_imported mdbx_containers IMPORTED)
+    if(NOT _mdbx_containers_imported)
+        set(_logit_install_export_supported OFF)
+        install(CODE [[
+            message(FATAL_ERROR
+                "log-it-cpp: Installing with LOGIT_WITH_MDBX=ON and bundled mdbx-containers is not supported. "
+                "Install mdbx-containers separately and use find_package(mdbx_containers), or disable LOGIT_WITH_MDBX for install.")
+        ]])
+    endif()
+endif()
+
+if(_logit_install_export_supported)
     install(EXPORT log-it-cppTargets
         FILE log-it-cppTargets.cmake
         NAMESPACE log-it-cpp::
