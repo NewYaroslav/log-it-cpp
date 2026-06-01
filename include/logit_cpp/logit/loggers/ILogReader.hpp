@@ -10,6 +10,9 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#if __cplusplus >= 201703L
+#include <optional>
+#endif
 
 namespace logit {
 
@@ -34,6 +37,28 @@ namespace logit {
         Descending   ///< Newest first.
     };
 
+#if __cplusplus >= 201703L
+    /// \enum LogReadError
+    /// \brief Result status for log read APIs that preserve failure details.
+    enum class LogReadError {
+        None,
+        NotFound,
+        StorageError,
+        DecodeError,
+        UnsupportedVersion,
+        DecompressionError
+    };
+
+    /// \struct LogReadResult
+    /// \brief Value-or-error result returned by detailed log read APIs.
+    template <typename T>
+    struct LogReadResult {
+        std::optional<T> value; ///< Present when the read succeeded with a value.
+        LogReadError error = LogReadError::None; ///< Error status, or None on success.
+        std::string message; ///< Optional diagnostic message for failed reads.
+    };
+#endif
+
     /// \class ILogReader
     /// \brief Optional interface for backends that expose stored records.
     ///
@@ -54,6 +79,18 @@ namespace logit {
             int64_t to_ms,
             std::size_t limit = 0) const = 0;
 
+#if __cplusplus >= 201703L
+        /// \brief Reads records and preserves backend-specific read errors.
+        virtual LogReadResult<std::vector<LogRecordView>> read_range_result(
+            int64_t from_ms,
+            int64_t to_ms,
+            std::size_t limit = 0) const {
+            LogReadResult<std::vector<LogRecordView>> result;
+            result.value = read_range(from_ms, to_ms, limit);
+            return result;
+        }
+#endif
+
         /// \brief Reads the most recent records.
         /// \param limit     Maximum number of records (0 = unlimited).
         /// \param period_ms Time window in milliseconds from now backward (0 = unlimited).
@@ -63,6 +100,18 @@ namespace logit {
             std::size_t limit,
             int64_t period_ms = 0,
             LogReadOrder order = LogReadOrder::Ascending) const = 0;
+
+#if __cplusplus >= 201703L
+        /// \brief Reads recent records and preserves backend-specific read errors.
+        virtual LogReadResult<std::vector<LogRecordView>> read_recent_result(
+            std::size_t limit,
+            int64_t period_ms = 0,
+            LogReadOrder order = LogReadOrder::Ascending) const {
+            LogReadResult<std::vector<LogRecordView>> result;
+            result.value = read_recent(limit, period_ms, order);
+            return result;
+        }
+#endif
     };
 
 } // namespace logit
