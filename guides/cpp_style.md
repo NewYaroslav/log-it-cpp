@@ -52,3 +52,13 @@
 - Enum values use `CamelCase`.
 - Mark non-inheritable classes with `final`.
 - Use `override` for overridden virtual methods.
+
+## Semantic values
+
+- Avoid magic numbers: do not leave unnamed numbers such as `0xD0` when the meaning is not obvious.
+- Avoid magic literals: apply the same rule to strings, bytes, characters, regexes, paths, and flags.
+- Use intention-revealing names: the name should explain the value role, such as `invalid_utf8_leading_byte` instead of `byte`.
+- Make invalid and edge cases explicit: test data for errors should state which error it validates.
+- Prefer named constants for semantic values: if a value has domain meaning, give it a name.
+- Separate data meaning from representation: `0xD0` is representation; truncated UTF-8 leading byte is meaning.
+- Follow the Principle of Least Astonishment: readers should not have to guess why a specific byte or literal was chosen.

@@ -79,6 +79,71 @@ logit::LogRecord make_record(logit::LogLevel level, int64_t timestamp_ms, int li
         false);
 }
 
+mdbxc::Config make_raw_db_config(const std::string& path) {
+    mdbxc::Config config;
+    config.pathname = path;
+    config.max_dbs = 4;
+    config.no_subdir = true;
+    config.sync_durable = true;
+    return config;
+}
+
+std::string bytes_to_string(const std::vector<uint8_t>& bytes) {
+    if (bytes.empty()) {
+        return std::string();
+    }
+    return std::string(reinterpret_cast<const char*>(&bytes[0]), bytes.size());
+}
+
+std::string make_unsupported_version_value() {
+    const uint32_t unsupported_schema_version = 2;
+    logit::detail::MdbxByteWriter out;
+    out.write_u32(unsupported_schema_version);
+    return bytes_to_string(out.bytes());
+}
+
+std::string make_payload_value(
+        uint64_t payload_id,
+        logit::MdbxPayloadCompression compression,
+        const std::string& data) {
+    const uint32_t current_schema_version = 1;
+    logit::detail::MdbxByteWriter out;
+    out.write_u32(current_schema_version);
+    out.write_u64(payload_id);
+    out.write_u8(static_cast<uint8_t>(compression));
+    out.write_string(data);
+    return bytes_to_string(out.bytes());
+}
+
+std::string make_payload_with_unknown_compression(uint64_t payload_id) {
+    const uint32_t current_schema_version = 1;
+    const uint8_t unknown_payload_compression = 255;
+    logit::detail::MdbxByteWriter out;
+    out.write_u32(current_schema_version);
+    out.write_u64(payload_id);
+    out.write_u8(unknown_payload_compression);
+    out.write_string("payload");
+    return bytes_to_string(out.bytes());
+}
+
+void write_raw_payload_value(const std::string& path, uint64_t payload_id, const std::string& value) {
+    auto connection = mdbxc::Connection::create(make_raw_db_config(path));
+    mdbxc::KeyValueTable<uint64_t, std::string> payloads(connection, "log_payloads");
+    payloads.insert_or_assign(payload_id, value);
+}
+
+void write_raw_session_value(const std::string& path, uint64_t session_id, const std::string& value) {
+    auto connection = mdbxc::Connection::create(make_raw_db_config(path));
+    mdbxc::KeyValueTable<uint64_t, std::string> sessions(connection, "log_sessions");
+    sessions.insert_or_assign(session_id, value);
+}
+
+void write_raw_record_value(const std::string& path, const std::string& key, const std::string& value) {
+    auto connection = mdbxc::Connection::create(make_raw_db_config(path));
+    mdbxc::KeyValueTable<std::string, std::string> records(connection, "log_records_by_time");
+    records.insert_or_assign(key, value);
+}
+
 void test_sync_range_session_and_sequences() {
     const std::string path = make_db_path("sync");
     cleanup_db(path);
@@ -312,6 +377,105 @@ void test_init_error_callback_and_rethrow() {
     cleanup_path_tree(path);
 }
 
+void test_read_result_not_found() {
+    const std::string path = make_db_path("read_not_found");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+        const uint64_t missing_payload_id = 404;
+        const uint64_t missing_session_id = 405;
+
+        auto payload = logger.read_payload_result(missing_payload_id);
+        assert(!payload.value);
+        assert(payload.error == logit::MdbxReadError::NotFound);
+        assert(!payload.message.empty());
+        assert(!logger.read_payload(missing_payload_id));
+
+        auto payload_data = logger.read_payload_data_result(missing_payload_id);
+        assert(!payload_data.value);
+        assert(payload_data.error == logit::MdbxReadError::NotFound);
+        assert(!logger.read_payload_data(missing_payload_id));
+
+        auto session = logger.read_session_result(missing_session_id);
+        assert(!session.value);
+        assert(session.error == logit::MdbxReadError::NotFound);
+        assert(!session.message.empty());
+        assert(!logger.read_session(missing_session_id));
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
+void test_read_result_decode_errors() {
+    const std::string path = make_db_path("read_decode");
+    cleanup_db(path);
+
+    const uint64_t unsupported_version_payload_id = 501;
+    const uint64_t unknown_compression_payload_id = 502;
+    const uint64_t bad_gzip_payload_id = 503;
+    const uint64_t unsupported_version_session_id = 504;
+    const int64_t corrupt_record_timestamp_ms = 6200;
+    const std::string corrupt_record_key =
+        logit::detail::make_mdbx_record_key(corrupt_record_timestamp_ms, 0);
+
+    write_raw_payload_value(path, unsupported_version_payload_id, make_unsupported_version_value());
+    write_raw_payload_value(path, unknown_compression_payload_id,
+        make_payload_with_unknown_compression(unknown_compression_payload_id));
+    write_raw_payload_value(path, bad_gzip_payload_id,
+        make_payload_value(bad_gzip_payload_id, logit::MdbxPayloadCompression::Gzip, "not-gzip-data"));
+    write_raw_session_value(path, unsupported_version_session_id, make_unsupported_version_value());
+    write_raw_record_value(path, corrupt_record_key, make_unsupported_version_value());
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+
+        auto unsupported_payload = logger.read_payload_result(unsupported_version_payload_id);
+        assert(!unsupported_payload.value);
+        assert(unsupported_payload.error == logit::MdbxReadError::UnsupportedVersion);
+        assert(!logger.read_payload(unsupported_version_payload_id));
+
+        auto unknown_compression_payload = logger.read_payload_result(unknown_compression_payload_id);
+        assert(!unknown_compression_payload.value);
+        assert(unknown_compression_payload.error == logit::MdbxReadError::DecodeError);
+
+        auto bad_gzip_payload = logger.read_payload_data_result(bad_gzip_payload_id);
+        assert(!bad_gzip_payload.value);
+        assert(bad_gzip_payload.error == logit::MdbxReadError::DecompressionError);
+        assert(!logger.read_payload_data(bad_gzip_payload_id));
+
+        auto unsupported_session = logger.read_session_result(unsupported_version_session_id);
+        assert(!unsupported_session.value);
+        assert(unsupported_session.error == logit::MdbxReadError::UnsupportedVersion);
+        assert(!logger.read_session(unsupported_version_session_id));
+
+        auto corrupt_range = logger.read_range_result(
+            corrupt_record_timestamp_ms,
+            corrupt_record_timestamp_ms + 1);
+        assert(!corrupt_range.value);
+        assert(corrupt_range.error == logit::MdbxReadError::UnsupportedVersion);
+        assert(logger.read_range(corrupt_record_timestamp_ms, corrupt_record_timestamp_ms + 1).empty());
+
+        auto corrupt_recent = logger.read_recent_result(10, LOGIT_CURRENT_TIMESTAMP_MS());
+        assert(!corrupt_recent.value);
+        assert(corrupt_recent.error == logit::MdbxReadError::UnsupportedVersion);
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
 void test_read_range_empty_and_limits() {
     const std::string path = make_db_path("range");
     cleanup_db(path);
@@ -503,6 +667,8 @@ int main() {
     test_on_error_callback();
     test_nested_parent_directory_created();
     test_init_error_callback_and_rethrow();
+    test_read_result_not_found();
+    test_read_result_decode_errors();
     test_read_range_empty_and_limits();
     test_read_recent();
     test_callback_sync();
