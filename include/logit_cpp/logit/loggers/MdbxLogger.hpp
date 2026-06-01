@@ -45,7 +45,7 @@ namespace logit {
             bool store_large_payloads_separately = true;///< Store large messages in `log_payloads`.
             MdbxPayloadCompression payload_compression = MdbxPayloadCompression::None; ///< Payload compression.
             int payload_compression_level = 6; ///< Compression level for gzip/zstd.
-            std::function<void(const std::string&)> on_error; ///< Optional callback invoked on write errors instead of stderr.
+            std::function<void(const std::string&)> on_error; ///< Optional callback invoked on initialization and write errors instead of stderr.
         };
 
         /// \struct SessionView
@@ -70,12 +70,20 @@ namespace logit {
 
         explicit MdbxLogger(const Config& config)
             : m_config(config) {
-            normalize_config();
-            validate_compression_config();
-            open_storage();
-            m_session_id = open_session();
-            if (m_config.async) {
-                m_worker = std::thread(&MdbxLogger::worker_loop, this);
+            try {
+                normalize_config();
+                validate_compression_config();
+                open_storage();
+                m_session_id = open_session();
+                if (m_config.async) {
+                    m_worker = std::thread(&MdbxLogger::worker_loop, this);
+                }
+            } catch (const std::exception& e) {
+                report_init_error(std::string("MdbxLogger initialization error: ") + e.what());
+                throw;
+            } catch (...) {
+                report_init_error("MdbxLogger initialization error");
+                throw;
             }
         }
 
@@ -623,10 +631,26 @@ namespace logit {
             db_config.no_subdir = true;
             db_config.sync_durable = true;
 
+            ensure_storage_parent(db_config);
             m_connection = mdbxc::Connection::create(db_config);
             m_sessions.reset(new SessionTable(m_connection, "log_sessions"));
             m_records.reset(new RecordTable(m_connection, "log_records_by_time"));
             m_payloads.reset(new PayloadTable(m_connection, "log_payloads"));
+        }
+
+        void ensure_storage_parent(const mdbxc::Config& db_config) const {
+            if (!db_config.read_only && db_config.no_subdir) {
+                mdbxc::create_directories(db_config.pathname);
+            }
+        }
+
+        void report_init_error(const std::string& message) const noexcept {
+            if (m_config.on_error) {
+                try {
+                    m_config.on_error(message);
+                } catch (...) {
+                }
+            }
         }
 
         uint64_t open_session() {

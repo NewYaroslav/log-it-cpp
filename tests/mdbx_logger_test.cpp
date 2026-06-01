@@ -9,6 +9,9 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#if __cplusplus >= 201703L
+#include <filesystem>
+#endif
 
 namespace {
 
@@ -23,9 +26,27 @@ std::string make_db_path(const std::string& suffix) {
     return os.str();
 }
 
+std::string make_nested_db_path(const std::string& suffix) {
+    std::ostringstream os;
+    os << logit::get_exec_dir()
+       << "/mdbx_logger_test_"
+       << suffix
+       << "_"
+       << LOGIT_CURRENT_TIMESTAMP_MS()
+       << "/nested/logs.mdbx";
+    return os.str();
+}
+
 void cleanup_db(const std::string& path) {
     std::remove(path.c_str());
     std::remove((path + "-lck").c_str());
+}
+
+void cleanup_path_tree(const std::string& path) {
+    cleanup_db(path);
+#if __cplusplus >= 201703L
+    std::filesystem::remove_all(std::filesystem::u8path(path).parent_path().parent_path());
+#endif
 }
 
 logit::LogRecord make_record(logit::LogLevel level, int64_t timestamp_ms, int line) {
@@ -223,6 +244,59 @@ void test_on_error_callback() {
     cleanup_db(path);
 }
 
+void test_nested_parent_directory_created() {
+    const std::string path = make_nested_db_path("nested");
+    cleanup_path_tree(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 6100, 51), "nested-ok");
+
+        auto records = logger.read_range(6100, 6101);
+        assert(records.size() == 1);
+        assert(records[0].message == "nested-ok");
+        logger.shutdown();
+    }
+
+    cleanup_path_tree(path);
+}
+
+void test_init_error_callback_and_rethrow() {
+    const std::string path = make_nested_db_path("init_error");
+    cleanup_path_tree(path);
+
+    std::vector<std::string> errors;
+    logit::MdbxLogger::Config config;
+    config.path = path;
+    config.async = false;
+    config.on_error = [&errors](const std::string& msg) {
+        errors.push_back(msg);
+    };
+
+    const std::string blocker = path.substr(0, path.find("/nested/logs.mdbx"));
+    FILE* blocker_file = std::fopen(blocker.c_str(), "wb");
+    assert(blocker_file != nullptr);
+    std::fclose(blocker_file);
+
+    bool thrown = false;
+    try {
+        logit::MdbxLogger logger(config);
+    } catch (const std::exception&) {
+        thrown = true;
+    }
+
+    assert(thrown);
+    assert(!errors.empty());
+    assert(errors[0].find("MdbxLogger initialization error") != std::string::npos);
+
+    std::remove(blocker.c_str());
+    cleanup_path_tree(path);
+}
+
 void test_read_range_empty_and_limits() {
     const std::string path = make_db_path("range");
     cleanup_db(path);
@@ -412,6 +486,8 @@ int main() {
 #endif
     test_counters_zero_for_sync_writes();
     test_on_error_callback();
+    test_nested_parent_directory_created();
+    test_init_error_callback_and_rethrow();
     test_read_range_empty_and_limits();
     test_read_recent();
     test_callback_sync();
