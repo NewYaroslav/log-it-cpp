@@ -2910,12 +2910,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 /// \param logger_type Concrete logger type (e.g., logit::MdbxLogger).
 /// \return Pointer to the backend, or nullptr if index/type does not match.
 #define LOGIT_GET_LOGGER_AS(logger_index, logger_type) \
-    ([](int _logit_logger_index) -> logger_type* { \
-        auto _logit_strategy = ::logit::Logger::get_instance().get_strategy_snapshot(_logit_logger_index); \
-        return (_logit_strategy && _logit_strategy->logger) \
-            ? dynamic_cast<logger_type*>(_logit_strategy->logger.get()) \
-            : nullptr; \
-    }((logger_index)))
+    (::logit::Logger::get_instance().get_logger_as<logger_type>((logger_index)))
 
 /// \brief Executes a code block when the logger backend has the requested type.
 /// \param logger_index Index of logger.

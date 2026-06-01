@@ -25,13 +25,17 @@ option(LOGIT_USE_MPSC_RING "Enable lock-free TaskExecutor queue" ON)
 option(LOGIT_ENABLE_DROP_OLDEST_SLOWPATH "Enable TaskExecutor DropOldest slow-path" ON)
 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    if(LOGIT_WITH_OTLP OR LOGIT_WITH_PROMETHEUS_SERVER)
+    if(LOGIT_WITH_OTLP OR LOGIT_WITH_PROMETHEUS_SERVER OR LOGIT_WITH_MDBX)
         set(CMAKE_CXX_STANDARD 17)
     else()
         set(CMAKE_CXX_STANDARD 11)
     endif()
 endif()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if(LOGIT_WITH_MDBX AND CMAKE_CXX_STANDARD LESS 17)
+    message(FATAL_ERROR "LOGIT_WITH_MDBX requires C++17 or newer.")
+endif()
 
 # Dependency: TimeShield
 find_package(TimeShield 1.0.6 QUIET CONFIG)
