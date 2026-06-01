@@ -13,6 +13,7 @@
 #include <mutex>
 #include <sstream>
 #include <atomic>
+#include <cstddef>
 
 #if __cplusplus >= 201703L
 #include <shared_mutex>
@@ -396,6 +397,30 @@ namespace logit {
                 if (!strategy) continue;
                 strategy->logger->wait();
             }
+        }
+
+        /// \brief Returns the number of registered logger strategies.
+        std::size_t logger_count() const {
+            LoggerReadLock lock(m_loggers_mx);
+            return m_loggers.size();
+        }
+
+        /// \brief Retrieves a typed backend pointer from a logger by index.
+        template <typename LoggerT>
+        LoggerT* get_logger_as(int logger_index) {
+            auto strategy = get_strategy_snapshot(logger_index);
+            return (strategy && strategy->logger)
+                ? dynamic_cast<LoggerT*>(strategy->logger.get())
+                : nullptr;
+        }
+
+        /// \brief Retrieves a typed backend pointer from a logger by index.
+        template <typename LoggerT>
+        const LoggerT* get_logger_as(int logger_index) const {
+            auto strategy = get_strategy_snapshot(logger_index);
+            return (strategy && strategy->logger)
+                ? dynamic_cast<const LoggerT*>(strategy->logger.get())
+                : nullptr;
         }
 
         /// \brief Shuts down logger system.

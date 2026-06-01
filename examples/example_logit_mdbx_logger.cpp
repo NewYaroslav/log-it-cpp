@@ -63,7 +63,7 @@ int main() {
         ("[%l] %v"));
 
     // The MDBX logger is now the last added backend; its index is:
-    const int mdbx_index = static_cast<int>(logit::Logger::get_instance().get_all_strategy_snapshots().size()) - 1;
+    const int mdbx_index = static_cast<int>(logit::Logger::get_instance().logger_count()) - 1;
 
     // Also add a console logger for live observation (optional).
     LOGIT_ADD_CONSOLE_DEFAULT();
