@@ -407,10 +407,19 @@ namespace logit {
 
         /// \brief Retrieves a typed backend pointer from a logger by index.
         template <typename LoggerT>
-        LoggerT* get_logger_as(int logger_index) const {
+        LoggerT* get_logger_as(int logger_index) {
             auto strategy = get_strategy_snapshot(logger_index);
             return (strategy && strategy->logger)
                 ? dynamic_cast<LoggerT*>(strategy->logger.get())
+                : nullptr;
+        }
+
+        /// \brief Retrieves a typed backend pointer from a logger by index.
+        template <typename LoggerT>
+        const LoggerT* get_logger_as(int logger_index) const {
+            auto strategy = get_strategy_snapshot(logger_index);
+            return (strategy && strategy->logger)
+                ? dynamic_cast<const LoggerT*>(strategy->logger.get())
                 : nullptr;
         }
 
