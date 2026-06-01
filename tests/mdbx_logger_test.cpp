@@ -38,11 +38,17 @@ std::string make_nested_db_path(const std::string& suffix) {
 }
 
 std::string make_nested_db_root(const std::string& path) {
-#if __cplusplus >= 202002L
+#if __cplusplus >= 201703L
+#   if __cplusplus >= 202002L
     const auto root = std::filesystem::u8path(path).parent_path().parent_path().u8string();
     return std::string(root.begin(), root.end());
-#else
+#   else
     return std::filesystem::u8path(path).parent_path().parent_path().u8string();
+#   endif
+#else
+    const std::string marker = "/nested/logs.mdbx";
+    const std::string::size_type pos = path.rfind(marker);
+    return pos == std::string::npos ? std::string() : path.substr(0, pos);
 #endif
 }
 
