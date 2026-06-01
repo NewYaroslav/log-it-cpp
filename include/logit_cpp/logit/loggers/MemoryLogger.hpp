@@ -149,6 +149,7 @@ namespace logit {
             std::lock_guard<std::mutex> lock(m_mutex);
             LogClearResult result;
             result.ok = true;
+            result.status = LogClearStatus::Cleared;
             result.cleared_records = m_entries.size();
             result.message = "cleared";
             m_entries.clear();

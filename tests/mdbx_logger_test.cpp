@@ -501,6 +501,7 @@ void test_clear_logs_keeps_session_and_accepts_new_records() {
 
         logit::LogClearResult result = logger.clear_logs();
         assert(result.ok);
+        assert(result.status == logit::LogClearStatus::Cleared);
         assert(result.cleared_records == 1);
         assert(logger.read_range(6300, 6301).empty());
         assert(!logger.read_payload(payload_id));
@@ -537,12 +538,17 @@ void test_clear_logs_can_remove_sessions() {
         options.include_sessions = true;
         logit::LogClearResult result = logger.clear_logs(options);
         assert(result.ok);
+        assert(result.status == logit::LogClearStatus::Cleared);
         assert(result.cleared_records == 1);
         assert(!logger.read_session(session_id));
+        const uint64_t new_session_id = logger.session_id();
+        assert(new_session_id != session_id);
+        assert(logger.read_session(new_session_id));
 
         logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 6401, 58), "after-session-clear");
         auto records = logger.read_range(6401, 6402);
         assert(records.size() == 1);
+        assert(records[0].session_id == new_session_id);
         logger.shutdown();
     }
 

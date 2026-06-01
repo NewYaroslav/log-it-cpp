@@ -37,6 +37,7 @@ void test_memory_logger_clear_direct() {
 
     logit::LogClearResult result = logger.clear_logs();
     assert(result.ok);
+    assert(result.status == logit::LogClearStatus::Cleared);
     assert(result.cleared_records == 2);
     assert(logger.get_buffered_entries().empty());
     assert(logger.get_int_param(logit::LoggerParam::LastLogTimestamp) == 0);
@@ -69,15 +70,18 @@ void test_logger_clear_specific_and_all() {
 
     logit::LogClearResult one = LOGIT_CLEAR_LOGGER(memory_index);
     assert(one.ok);
+    assert(one.status == logit::LogClearStatus::Cleared);
     assert(one.cleared_records == 1);
     assert(LOGIT_GET_BUFFERED_STRINGS(memory_index).empty());
     assert(LOGIT_GET_BUFFERED_STRINGS(second_memory_index).size() == 1);
 
     logit::LogClearResult unsupported = LOGIT_CLEAR_LOGGER(console_index);
     assert(!unsupported.ok);
+    assert(unsupported.status == logit::LogClearStatus::Unsupported);
 
     logit::LogClearResult all = LOGIT_CLEAR_ALL_LOGGERS();
     assert(all.ok);
+    assert(all.status == logit::LogClearStatus::Cleared);
     assert(all.cleared_records >= 1);
     assert(LOGIT_GET_BUFFERED_STRINGS(second_memory_index).empty());
 
@@ -95,6 +99,7 @@ void test_file_loggers_clear_and_continue() {
 
     logit::LogClearResult file_clear = file_logger.clear_logs();
     assert(file_clear.ok);
+    assert(file_clear.status == logit::LogClearStatus::Cleared);
     assert(file_clear.cleared_records >= 1);
     std::vector<logit::LogFileInfo> file_logs = file_logger.list_log_files();
     assert(file_logs.size() == 1);
@@ -118,6 +123,7 @@ void test_file_loggers_clear_and_continue() {
 
     logit::LogClearResult unique_clear = unique_logger.clear_logs();
     assert(unique_clear.ok);
+    assert(unique_clear.status == logit::LogClearStatus::Cleared);
     assert(unique_clear.cleared_records >= 1);
     assert(unique_logger.list_log_files().empty());
 
@@ -145,6 +151,7 @@ public:
         (void)options;
         logit::LogClearResult result;
         result.ok = true;
+        result.status = logit::LogClearStatus::Cleared;
         result.message = "cleared";
         return result;
     }

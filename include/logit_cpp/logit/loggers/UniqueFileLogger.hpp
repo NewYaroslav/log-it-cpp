@@ -392,6 +392,7 @@ namespace logit {
             LogClearResult result;
             if (m_shutdown.load(std::memory_order_acquire)) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "UniqueFileLogger is shut down";
                 return result;
             }
@@ -411,12 +412,15 @@ namespace logit {
                 m_last_log_ts.store(0, std::memory_order_release);
                 m_last_log_mono_ts.store(0, std::memory_order_release);
                 result.ok = true;
+                result.status = LogClearStatus::Cleared;
                 result.message = "cleared";
             } catch (const std::exception& e) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = std::string("UniqueFileLogger clear error: ") + e.what();
             } catch (...) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "UniqueFileLogger clear error";
             }
             return result;

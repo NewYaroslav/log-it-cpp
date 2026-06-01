@@ -22,10 +22,19 @@ namespace logit {
         bool include_sessions = false;          ///< Clear session metadata when supported.
     };
 
+    /// \enum LogClearStatus
+    /// \brief Backend cleanup status.
+    enum class LogClearStatus {
+        Cleared,
+        Unsupported,
+        Failed
+    };
+
     /// \struct LogClearResult
     /// \brief Result returned by logger cleanup operations.
     struct LogClearResult {
         bool ok = false;                  ///< True when the backend completed cleanup.
+        LogClearStatus status = LogClearStatus::Failed; ///< Detailed cleanup status.
         std::size_t cleared_records = 0;  ///< Number of primary records/files cleared when available.
         std::string message;              ///< Optional diagnostic or unsupported reason.
     };
@@ -132,6 +141,7 @@ namespace logit {
             (void)options;
             LogClearResult result;
             result.ok = false;
+            result.status = LogClearStatus::Unsupported;
             result.message = "unsupported";
             return result;
         }

@@ -477,6 +477,14 @@ namespace logit {
                     }
                     if (options.include_sessions) {
                         m_sessions->clear(txn);
+                        Session session;
+                        session.app_name = m_config.app_name;
+                        session.start_time_ms = LOGIT_CURRENT_TIMESTAMP_MS();
+                        session.end_time_ms = 0;
+                        session.process_id = detail::current_process_id();
+                        session.schema_version = 1;
+                        m_session_id = make_unique_id();
+                        m_sessions->insert_or_assign(m_session_id, session, txn);
                     }
                     txn.commit();
                 }
@@ -489,12 +497,15 @@ namespace logit {
                 m_last_log_mono_ts.store(0, std::memory_order_release);
 
                 result.ok = true;
+                result.status = LogClearStatus::Cleared;
                 result.message = "cleared";
             } catch (const std::exception& e) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = std::string("MdbxLogger clear error: ") + e.what();
             } catch (...) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "MdbxLogger clear error";
             }
             return result;

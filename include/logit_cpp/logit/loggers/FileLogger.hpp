@@ -474,6 +474,7 @@ namespace logit {
             LogClearResult result;
             if (m_shutdown.load(std::memory_order_acquire)) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "FileLogger is shut down";
                 return result;
             }
@@ -495,12 +496,15 @@ namespace logit {
                 m_last_log_mono_ts.store(0, std::memory_order_release);
                 open_log_file(get_current_utc_date_ts());
                 result.ok = true;
+                result.status = LogClearStatus::Cleared;
                 result.message = "cleared";
             } catch (const std::exception& e) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = std::string("FileLogger clear error: ") + e.what();
             } catch (...) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "FileLogger clear error";
             }
             return result;

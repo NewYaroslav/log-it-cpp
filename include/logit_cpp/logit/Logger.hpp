@@ -407,6 +407,7 @@ namespace logit {
             LogClearResult result;
             if (m_shutdown.load(std::memory_order_acquire)) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "logger system is shut down";
                 return result;
             }
@@ -414,6 +415,7 @@ namespace logit {
             auto strategy = get_strategy_snapshot(logger_index);
             if (!strategy) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "logger index not found";
                 return result;
             }
@@ -421,6 +423,7 @@ namespace logit {
             std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
             if (m_shutdown.load(std::memory_order_acquire)) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "logger system is shut down";
                 return result;
             }
@@ -434,6 +437,7 @@ namespace logit {
             LogClearResult result;
             if (m_shutdown.load(std::memory_order_acquire)) {
                 result.ok = false;
+                result.status = LogClearStatus::Failed;
                 result.message = "logger system is shut down";
                 return result;
             }
@@ -447,14 +451,15 @@ namespace logit {
                 std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
                 if (m_shutdown.load(std::memory_order_acquire)) {
                     result.ok = false;
+                    result.status = LogClearStatus::Failed;
                     result.message = "logger system is shut down";
                     return result;
                 }
                 const LogClearResult one = strategy->logger->clear_logs(options);
-                if (one.ok) {
+                if (one.status == LogClearStatus::Cleared && one.ok) {
                     ++supported;
                     result.cleared_records += one.cleared_records;
-                } else if (one.message == "unsupported") {
+                } else if (one.status == LogClearStatus::Unsupported) {
                     ++unsupported;
                 } else {
                     ++failed;
@@ -466,9 +471,13 @@ namespace logit {
 
             result.ok = supported > 0 && failed == 0;
             if (result.ok) {
+                result.status = LogClearStatus::Cleared;
                 result.message = unsupported > 0 ? "cleared supported loggers; skipped unsupported loggers" : "cleared";
-            } else if (result.message.empty()) {
-                result.message = unsupported > 0 ? "no logger supports clearing" : "no loggers to clear";
+            } else {
+                result.status = unsupported > 0 && failed == 0 ? LogClearStatus::Unsupported : LogClearStatus::Failed;
+                if (result.message.empty()) {
+                    result.message = unsupported > 0 ? "no logger supports clearing" : "no loggers to clear";
+                }
             }
             return result;
         }
