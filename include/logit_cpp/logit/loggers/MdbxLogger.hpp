@@ -220,7 +220,7 @@ namespace logit {
         LogReadResult<std::vector<LogRecordView>> read_range_result(
                 int64_t from_ms,
                 int64_t to_ms,
-                std::size_t limit = 0) const {
+                std::size_t limit = 0) const override {
             LogReadResult<std::vector<LogRecordView>> result;
             result.value.emplace();
             if (to_ms <= from_ms) {
@@ -277,7 +277,7 @@ namespace logit {
         LogReadResult<std::vector<LogRecordView>> read_recent_result(
                 std::size_t limit,
                 int64_t period_ms = 0,
-                LogReadOrder order = LogReadOrder::Ascending) const {
+                LogReadOrder order = LogReadOrder::Ascending) const override {
             const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
             const int64_t from_ms = (period_ms > 0) ? (now_ms - period_ms) : 0;
             auto result = read_range_result(from_ms, now_ms + 1, 0);
