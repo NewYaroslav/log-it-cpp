@@ -460,6 +460,46 @@ namespace logit {
             return static_cast<LogLevel>(m_log_level.load(std::memory_order_acquire));
         }
 
+        LogClearResult clear_logs(const LogClearOptions& options = LogClearOptions()) override {
+            wait();
+
+            LogClearResult result;
+            try {
+                {
+                    std::lock_guard<std::mutex> db_lock(m_db_mutex);
+                    auto txn = m_connection->transaction(mdbxc::TransactionMode::WRITABLE);
+                    if (options.include_persistent_records) {
+                        result.cleared_records = m_records->count(txn);
+                        m_records->clear(txn);
+                    }
+                    if (options.include_payloads) {
+                        m_payloads->clear(txn);
+                    }
+                    if (options.include_sessions) {
+                        m_sessions->clear(txn);
+                    }
+                    txn.commit();
+                }
+
+                {
+                    std::lock_guard<std::mutex> lock(m_mutex);
+                    m_next_sequence_by_timestamp.clear();
+                }
+                m_last_log_ts.store(0, std::memory_order_release);
+                m_last_log_mono_ts.store(0, std::memory_order_release);
+
+                result.ok = true;
+                result.message = "cleared";
+            } catch (const std::exception& e) {
+                result.ok = false;
+                result.message = std::string("MdbxLogger clear error: ") + e.what();
+            } catch (...) {
+                result.ok = false;
+                result.message = "MdbxLogger clear error";
+            }
+            return result;
+        }
+
         uint64_t dropped_count() const {
             return m_dropped.load(std::memory_order_acquire);
         }

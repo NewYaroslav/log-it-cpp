@@ -2812,6 +2812,30 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_READ_LOG_FILES(logger_index, paths) \
     logit::Logger::get_instance().read_log_files(logger_index, paths)
 
+/// \brief Clears logger-owned records for a specific logger.
+/// \param logger_index Index of logger.
+/// \return Cleanup result for the selected logger.
+#define LOGIT_CLEAR_LOGGER(logger_index) \
+    logit::Logger::get_instance().clear_logger(logger_index)
+
+/// \brief Clears logger-owned records for a specific logger with options.
+/// \param logger_index Index of logger.
+/// \param options LogClearOptions value.
+/// \return Cleanup result for the selected logger.
+#define LOGIT_CLEAR_LOGGER_EX(logger_index, options) \
+    logit::Logger::get_instance().clear_logger(logger_index, options)
+
+/// \brief Clears logger-owned records for all registered loggers.
+/// \return Aggregated cleanup result.
+#define LOGIT_CLEAR_ALL_LOGGERS() \
+    logit::Logger::get_instance().clear_all_loggers()
+
+/// \brief Clears logger-owned records for all registered loggers with options.
+/// \param options LogClearOptions value.
+/// \return Aggregated cleanup result.
+#define LOGIT_CLEAR_ALL_LOGGERS_EX(options) \
+    logit::Logger::get_instance().clear_all_loggers(options)
+
 /// \brief Enables or disables a logger.
 /// \param logger_index Index of logger.
 /// \param enabled True to enable, false to disable.
