@@ -148,6 +148,10 @@ namespace logit {
                 int64_t from_ms,
                 int64_t to_ms,
                 std::size_t limit = 0) const override {
+#if __cplusplus >= 201703L
+            auto result = read_range_result(from_ms, to_ms, limit);
+            return result.value ? *result.value : std::vector<LogRecordView>();
+#else
             std::vector<LogRecordView> out;
             if (to_ms <= from_ms) {
                 return out;
@@ -165,13 +169,45 @@ namespace logit {
                 }
             }
             return out;
+#endif
         }
+
+#if __cplusplus >= 201703L
+        /// \brief Reads records and reports MemoryLogger read status.
+        LogReadResult<std::vector<LogRecordView>> read_range_result(
+                int64_t from_ms,
+                int64_t to_ms,
+                std::size_t limit = 0) const override {
+            LogReadResult<std::vector<LogRecordView>> result;
+            result.value.emplace();
+            if (to_ms <= from_ms) {
+                return result;
+            }
+
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_evict_expired_locked(LOGIT_CURRENT_TIMESTAMP_MS());
+
+            for (const auto& entry : m_entries) {
+                if (entry.timestamp_ms >= from_ms && entry.timestamp_ms < to_ms) {
+                    result.value->push_back(to_view(entry));
+                    if (limit > 0 && result.value->size() >= limit) {
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+#endif
 
         /// \brief Reads the most recent records.
         std::vector<LogRecordView> read_recent(
                 std::size_t limit,
                 int64_t period_ms = 0,
                 LogReadOrder order = LogReadOrder::Ascending) const override {
+#if __cplusplus >= 201703L
+            auto result = read_recent_result(limit, period_ms, order);
+            return result.value ? *result.value : std::vector<LogRecordView>();
+#else
             std::vector<LogRecordView> out;
             std::lock_guard<std::mutex> lock(m_mutex);
             m_evict_expired_locked(LOGIT_CURRENT_TIMESTAMP_MS());
@@ -192,7 +228,38 @@ namespace logit {
                 std::reverse(out.begin(), out.end());
             }
             return out;
+#endif
         }
+
+#if __cplusplus >= 201703L
+        /// \brief Reads recent records and reports MemoryLogger read status.
+        LogReadResult<std::vector<LogRecordView>> read_recent_result(
+                std::size_t limit,
+                int64_t period_ms = 0,
+                LogReadOrder order = LogReadOrder::Ascending) const override {
+            LogReadResult<std::vector<LogRecordView>> result;
+            result.value.emplace();
+            std::lock_guard<std::mutex> lock(m_mutex);
+            m_evict_expired_locked(LOGIT_CURRENT_TIMESTAMP_MS());
+
+            const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
+            const int64_t from_ms = (period_ms > 0) ? (now_ms - period_ms) : 0;
+
+            for (auto it = m_entries.rbegin(); it != m_entries.rend(); ++it) {
+                if (period_ms <= 0 || it->timestamp_ms >= from_ms) {
+                    result.value->push_back(to_view(*it));
+                    if (limit > 0 && result.value->size() >= limit) {
+                        break;
+                    }
+                }
+            }
+
+            if (order == LogReadOrder::Ascending) {
+                std::reverse(result.value->begin(), result.value->end());
+            }
+            return result;
+        }
+#endif
 
     private:
         static LogRecordView to_view(const BufferedLogEntry& e) {

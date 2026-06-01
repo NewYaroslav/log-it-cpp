@@ -392,18 +392,18 @@ void test_read_result_not_found() {
 
         auto payload = logger.read_payload_result(missing_payload_id);
         assert(!payload.value);
-        assert(payload.error == logit::MdbxReadError::NotFound);
+        assert(payload.error == logit::LogReadError::NotFound);
         assert(!payload.message.empty());
         assert(!logger.read_payload(missing_payload_id));
 
         auto payload_data = logger.read_payload_data_result(missing_payload_id);
         assert(!payload_data.value);
-        assert(payload_data.error == logit::MdbxReadError::NotFound);
+        assert(payload_data.error == logit::LogReadError::NotFound);
         assert(!logger.read_payload_data(missing_payload_id));
 
         auto session = logger.read_session_result(missing_session_id);
         assert(!session.value);
-        assert(session.error == logit::MdbxReadError::NotFound);
+        assert(session.error == logit::LogReadError::NotFound);
         assert(!session.message.empty());
         assert(!logger.read_session(missing_session_id));
 
@@ -442,33 +442,33 @@ void test_read_result_decode_errors() {
 
         auto unsupported_payload = logger.read_payload_result(unsupported_version_payload_id);
         assert(!unsupported_payload.value);
-        assert(unsupported_payload.error == logit::MdbxReadError::UnsupportedVersion);
+        assert(unsupported_payload.error == logit::LogReadError::UnsupportedVersion);
         assert(!logger.read_payload(unsupported_version_payload_id));
 
         auto unknown_compression_payload = logger.read_payload_result(unknown_compression_payload_id);
         assert(!unknown_compression_payload.value);
-        assert(unknown_compression_payload.error == logit::MdbxReadError::DecodeError);
+        assert(unknown_compression_payload.error == logit::LogReadError::DecodeError);
 
         auto bad_gzip_payload = logger.read_payload_data_result(bad_gzip_payload_id);
         assert(!bad_gzip_payload.value);
-        assert(bad_gzip_payload.error == logit::MdbxReadError::DecompressionError);
+        assert(bad_gzip_payload.error == logit::LogReadError::DecompressionError);
         assert(!logger.read_payload_data(bad_gzip_payload_id));
 
         auto unsupported_session = logger.read_session_result(unsupported_version_session_id);
         assert(!unsupported_session.value);
-        assert(unsupported_session.error == logit::MdbxReadError::UnsupportedVersion);
+        assert(unsupported_session.error == logit::LogReadError::UnsupportedVersion);
         assert(!logger.read_session(unsupported_version_session_id));
 
         auto corrupt_range = logger.read_range_result(
             corrupt_record_timestamp_ms,
             corrupt_record_timestamp_ms + 1);
         assert(!corrupt_range.value);
-        assert(corrupt_range.error == logit::MdbxReadError::UnsupportedVersion);
+        assert(corrupt_range.error == logit::LogReadError::UnsupportedVersion);
         assert(logger.read_range(corrupt_record_timestamp_ms, corrupt_record_timestamp_ms + 1).empty());
 
         auto corrupt_recent = logger.read_recent_result(10, LOGIT_CURRENT_TIMESTAMP_MS());
         assert(!corrupt_recent.value);
-        assert(corrupt_recent.error == logit::MdbxReadError::UnsupportedVersion);
+        assert(corrupt_recent.error == logit::LogReadError::UnsupportedVersion);
 
         logger.shutdown();
     }

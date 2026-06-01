@@ -25,38 +25,18 @@ namespace logit {
         Zstd = 2  ///< Store zstd-compressed payload bytes.
     };
 
-    /// \enum MdbxReadError
-    /// \brief Result status for MDBX read APIs that preserve failure details.
-    enum class MdbxReadError {
-        None,
-        NotFound,
-        StorageError,
-        DecodeError,
-        UnsupportedVersion,
-        DecompressionError
-    };
-
-    /// \struct MdbxReadResult
-    /// \brief Value-or-error result returned by detailed MDBX read APIs.
-    template <typename T>
-    struct MdbxReadResult {
-        std::optional<T> value; ///< Present when the read succeeded with a value.
-        MdbxReadError error = MdbxReadError::None; ///< Error status, or None on success.
-        std::string message; ///< Optional diagnostic message for failed reads.
-    };
-
     namespace detail {
         class MdbxReadException : public std::runtime_error {
         public:
-            MdbxReadException(MdbxReadError error, const std::string& message)
+            MdbxReadException(LogReadError error, const std::string& message)
                 : std::runtime_error(message), m_error(error) {}
 
-            MdbxReadError error() const noexcept {
+            LogReadError error() const noexcept {
                 return m_error;
             }
 
         private:
-            MdbxReadError m_error;
+            LogReadError m_error;
         };
     }
 
@@ -237,11 +217,11 @@ namespace logit {
         }
 
         /// \brief Reads records and preserves storage/decode errors.
-        MdbxReadResult<std::vector<LogRecordView>> read_range_result(
+        LogReadResult<std::vector<LogRecordView>> read_range_result(
                 int64_t from_ms,
                 int64_t to_ms,
                 std::size_t limit = 0) const {
-            MdbxReadResult<std::vector<LogRecordView>> result;
+            LogReadResult<std::vector<LogRecordView>> result;
             result.value.emplace();
             if (to_ms <= from_ms) {
                 return result;
@@ -265,15 +245,15 @@ namespace logit {
                 result.message = e.what();
             } catch (const mdbxc::MdbxException& e) {
                 result.value.reset();
-                result.error = MdbxReadError::StorageError;
+                result.error = LogReadError::StorageError;
                 result.message = e.what();
             } catch (const std::exception& e) {
                 result.value.reset();
-                result.error = MdbxReadError::DecodeError;
+                result.error = LogReadError::DecodeError;
                 result.message = e.what();
             } catch (...) {
                 result.value.reset();
-                result.error = MdbxReadError::DecodeError;
+                result.error = LogReadError::DecodeError;
                 result.message = "MdbxLogger: unknown read_range error";
             }
 
@@ -294,7 +274,7 @@ namespace logit {
         }
 
         /// \brief Reads the most recent records and preserves storage/decode errors.
-        MdbxReadResult<std::vector<LogRecordView>> read_recent_result(
+        LogReadResult<std::vector<LogRecordView>> read_recent_result(
                 std::size_t limit,
                 int64_t period_ms = 0,
                 LogReadOrder order = LogReadOrder::Ascending) const {
@@ -321,10 +301,10 @@ namespace logit {
         }
 
         /// \brief Reads a payload by id and preserves storage/decode errors.
-        MdbxReadResult<PayloadView> read_payload_result(uint64_t payload_id) const {
-            MdbxReadResult<PayloadView> result;
+        LogReadResult<PayloadView> read_payload_result(uint64_t payload_id) const {
+            LogReadResult<PayloadView> result;
             if (payload_id == 0) {
-                result.error = MdbxReadError::NotFound;
+                result.error = LogReadError::NotFound;
                 result.message = "MdbxLogger: payload id is zero";
                 return result;
             }
@@ -344,13 +324,13 @@ namespace logit {
                 result.error = e.error();
                 result.message = e.what();
             } catch (const mdbxc::MdbxException& e) {
-                result.error = MdbxReadError::StorageError;
+                result.error = LogReadError::StorageError;
                 result.message = e.what();
             } catch (const std::exception& e) {
-                result.error = MdbxReadError::DecodeError;
+                result.error = LogReadError::DecodeError;
                 result.message = e.what();
             } catch (...) {
-                result.error = MdbxReadError::DecodeError;
+                result.error = LogReadError::DecodeError;
                 result.message = "MdbxLogger: unknown payload read error";
             }
             return result;
@@ -363,8 +343,8 @@ namespace logit {
         }
 
         /// \brief Reads and decompresses payload data while preserving failure details.
-        MdbxReadResult<std::string> read_payload_data_result(uint64_t payload_id) const {
-            MdbxReadResult<std::string> result;
+        LogReadResult<std::string> read_payload_data_result(uint64_t payload_id) const {
+            LogReadResult<std::string> result;
             auto view = read_payload_result(payload_id);
             if (!view.value) {
                 result.error = view.error;
@@ -385,7 +365,7 @@ namespace logit {
             if (ok) {
                 result.value = std::move(output);
             } else {
-                result.error = MdbxReadError::DecompressionError;
+                result.error = LogReadError::DecompressionError;
                 result.message = "MdbxLogger: failed to decompress payload data";
             }
             return result;
@@ -397,10 +377,10 @@ namespace logit {
         }
 
         /// \brief Reads session metadata by id and preserves storage/decode errors.
-        MdbxReadResult<SessionView> read_session_result(uint64_t session_id) const {
-            MdbxReadResult<SessionView> result;
+        LogReadResult<SessionView> read_session_result(uint64_t session_id) const {
+            LogReadResult<SessionView> result;
             if (session_id == 0) {
-                result.error = MdbxReadError::NotFound;
+                result.error = LogReadError::NotFound;
                 result.message = "MdbxLogger: session id is zero";
                 return result;
             }
@@ -420,13 +400,13 @@ namespace logit {
                 result.error = e.error();
                 result.message = e.what();
             } catch (const mdbxc::MdbxException& e) {
-                result.error = MdbxReadError::StorageError;
+                result.error = LogReadError::StorageError;
                 result.message = e.what();
             } catch (const std::exception& e) {
-                result.error = MdbxReadError::DecodeError;
+                result.error = LogReadError::DecodeError;
                 result.message = e.what();
             } catch (...) {
-                result.error = MdbxReadError::DecodeError;
+                result.error = LogReadError::DecodeError;
                 result.message = "MdbxLogger: unknown session read error";
             }
             return result;
@@ -580,9 +560,9 @@ namespace logit {
         std::atomic<uint64_t> m_next_callback_id{1};
 
         template <typename T>
-        static MdbxReadResult<T> make_not_found_result(const std::string& message) {
-            MdbxReadResult<T> result;
-            result.error = MdbxReadError::NotFound;
+        static LogReadResult<T> make_not_found_result(const std::string& message) {
+            LogReadResult<T> result;
+            result.error = LogReadError::NotFound;
             result.message = message;
             return result;
         }
@@ -661,7 +641,7 @@ namespace logit {
             const uint32_t version = in.read_u32();
             if (version != 1) {
                 throw detail::MdbxReadException(
-                    MdbxReadError::UnsupportedVersion,
+                    LogReadError::UnsupportedVersion,
                     "MdbxLogger: unsupported session value version");
             }
             Session s;
@@ -694,7 +674,7 @@ namespace logit {
             const uint32_t version = in.read_u32();
             if (version != 1) {
                 throw detail::MdbxReadException(
-                    MdbxReadError::UnsupportedVersion,
+                    LogReadError::UnsupportedVersion,
                     "MdbxLogger: unsupported record value version");
             }
             Record r;
@@ -725,7 +705,7 @@ namespace logit {
             const uint32_t version = in.read_u32();
             if (version != 1) {
                 throw detail::MdbxReadException(
-                    MdbxReadError::UnsupportedVersion,
+                    LogReadError::UnsupportedVersion,
                     "MdbxLogger: unsupported payload value version");
             }
             Payload p;
@@ -733,7 +713,7 @@ namespace logit {
             const uint8_t compression = in.read_u8();
             if (compression > static_cast<uint8_t>(MdbxPayloadCompression::Zstd)) {
                 throw detail::MdbxReadException(
-                    MdbxReadError::DecodeError,
+                    LogReadError::DecodeError,
                     "MdbxLogger: unsupported payload compression");
             }
             p.compression = static_cast<MdbxPayloadCompression>(compression);
