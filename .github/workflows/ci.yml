@@ -53,6 +53,29 @@ jobs:
             build/Testing/Temporary/LastTest.log
           if-no-files-found: ignore
 
+  linux-mdbx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - run: git submodule update --init --recursive
+      - name: Configure MDBX
+        run: cmake -S . -B build-mdbx -DLOGIT_CPP_BUILD_TESTS=ON -DLOGIT_CPP_BUILD_EXAMPLES=ON -DLOGIT_WITH_MDBX=ON -DLOGIT_USE_SUBMODULES=ON -DCMAKE_CXX_STANDARD=17
+      - name: Build MDBX
+        run: cmake --build build-mdbx
+      - name: Test MDBX
+        run: ctest --test-dir build-mdbx --output-on-failure -R mdbx_logger_test
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-mdbx
+          path: |
+            build-mdbx/CMakeFiles/CMakeOutput.log
+            build-mdbx/Testing/Temporary/LastTest.log
+          if-no-files-found: ignore
+
   windows:
     runs-on: windows-latest
     strategy:

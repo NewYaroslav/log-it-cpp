@@ -384,6 +384,9 @@ namespace logit {
             int64_t end_time_ms = 0;
             uint64_t process_id = 0;
             uint32_t schema_version = 1;
+
+            std::vector<uint8_t> to_bytes() const;
+            static Session from_bytes(const void* data, size_t size);
         };
 
         struct Record {
@@ -396,12 +399,18 @@ namespace logit {
             std::string file;
             std::string function;
             int line = 0;
+
+            std::vector<uint8_t> to_bytes() const;
+            static Record from_bytes(const void* data, size_t size);
         };
 
         struct Payload {
             uint64_t payload_id = 0;
             MdbxPayloadCompression compression = MdbxPayloadCompression::None;
             std::string data;
+
+            std::vector<uint8_t> to_bytes() const;
+            static Payload from_bytes(const void* data, size_t size);
         };
 
         typedef mdbxc::KeyValueTable<uint64_t, Session> SessionTable;
@@ -904,6 +913,30 @@ namespace logit {
             return value > max_value ? (std::numeric_limits<int64_t>::max)() : static_cast<int64_t>(value);
         }
     };
+
+    inline std::vector<uint8_t> MdbxLogger::Session::to_bytes() const {
+        return MdbxLogger::serialize_session(*this);
+    }
+
+    inline MdbxLogger::Session MdbxLogger::Session::from_bytes(const void* data, size_t size) {
+        return MdbxLogger::deserialize_session(data, size);
+    }
+
+    inline std::vector<uint8_t> MdbxLogger::Record::to_bytes() const {
+        return MdbxLogger::serialize_record(*this);
+    }
+
+    inline MdbxLogger::Record MdbxLogger::Record::from_bytes(const void* data, size_t size) {
+        return MdbxLogger::deserialize_record(data, size);
+    }
+
+    inline std::vector<uint8_t> MdbxLogger::Payload::to_bytes() const {
+        return MdbxLogger::serialize_payload(*this);
+    }
+
+    inline MdbxLogger::Payload MdbxLogger::Payload::from_bytes(const void* data, size_t size) {
+        return MdbxLogger::deserialize_payload(data, size);
+    }
 
 } // namespace logit
 
