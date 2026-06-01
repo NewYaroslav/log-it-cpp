@@ -37,6 +37,15 @@ std::string make_nested_db_path(const std::string& suffix) {
     return os.str();
 }
 
+std::string make_nested_db_root(const std::string& path) {
+#if __cplusplus >= 202002L
+    const auto root = std::filesystem::u8path(path).parent_path().parent_path().u8string();
+    return std::string(root.begin(), root.end());
+#else
+    return std::filesystem::u8path(path).parent_path().parent_path().u8string();
+#endif
+}
+
 void cleanup_db(const std::string& path) {
     std::remove(path.c_str());
     std::remove((path + "-lck").c_str());
@@ -277,7 +286,7 @@ void test_init_error_callback_and_rethrow() {
         errors.push_back(msg);
     };
 
-    const std::string blocker = path.substr(0, path.find("/nested/logs.mdbx"));
+    const std::string blocker = make_nested_db_root(path);
     FILE* blocker_file = std::fopen(blocker.c_str(), "wb");
     assert(blocker_file != nullptr);
     std::fclose(blocker_file);
