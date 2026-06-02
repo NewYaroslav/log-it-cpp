@@ -6,9 +6,11 @@
 /// \brief Console logger implementation that outputs logs to the console with color support.
 
 #include "ILogger.hpp"
+#include "ConsoleStreamRoute.hpp"
 #include <condition_variable>
 #include <iostream>
 #include <memory>
+#include <vector>
 #if defined(_WIN32)
 #include <windows.h>
 #endif
@@ -59,6 +61,14 @@ namespace logit {
     /// - Cross-platform color support (ANSI on Linux/macOS, Windows-specific handling).
     /// - Thread-safe logging.
     /// - Synchronous or asynchronous operation.
+    /// - Configurable output stream: defaults to `std::cout`; can be redirected to
+    ///   any `std::ostream&` (e.g. `std::cerr`, a file stream). The lifetime of the
+    ///   target stream is owned by the caller.
+    /// - Optional level-based routing via `Config::routes`: maps log level ranges
+    ///   to specific streams so diagnostics can be split from regular output.
+    ///   When `routes` is empty, every record is written to the primary stream.
+    ///   ANSI/Windows color support is preserved for `std::cout` and `std::cerr`;
+    ///   for any other stream, colors are disabled.
     class ConsoleLogger : public ILogger {
     public:
 
@@ -74,16 +84,41 @@ namespace logit {
             bool use_dedicated_executor = false; ///< Use a dedicated executor instead of the global TaskExecutor; native builds create one worker thread per logger.
             std::size_t queue_capacity = 0;       ///< Maximum queue size for the dedicated executor (0 = unlimited).
             detail::QueuePolicy queue_policy = detail::QueuePolicy::Block; ///< Overflow policy for the dedicated executor.
+            /// \brief Optional level-based stream routing.
+            /// \details When non-empty, the first matching route (inclusive range
+            /// `[min_level, max_level]`) wins. Falls back to the primary stream when
+            /// no route matches. Empty by default, preserving the historical single-stream behavior.
+            std::vector<ConsoleStreamRoute> routes;
         };
 
-        /// \brief Default constructor that uses default configuration.
-        ConsoleLogger() {
+        /// \brief Default constructor that uses default configuration and std::cout.
+        ConsoleLogger() : m_stream(&std::cout) {
             reset_color();
         }
 
-        /// \brief Constructor with custom configuration.
+        /// \brief Constructor with custom configuration and the default std::cout stream.
         /// \param config The configuration for the logger.
-        ConsoleLogger(const Config& config) : m_config(config) {
+        ConsoleLogger(const Config& config)
+            : ConsoleLogger(std::cout, config) {}
+
+        /// \brief Constructor with a custom primary output stream and default config.
+        /// \param stream Output stream to write records to. Lifetime is owned by the caller.
+        explicit ConsoleLogger(std::ostream& stream)
+            : m_stream(&stream) {
+            reset_color();
+        }
+
+        /// \brief Constructor with a custom primary output stream and configuration.
+        /// \param stream Output stream to write records to. Lifetime is owned by the caller.
+        /// \param config The configuration for the logger.
+        ConsoleLogger(std::ostream& stream, const Config& config)
+            : m_config(config), m_stream(&stream) {
+            m_config.async = config.async;
+            m_config.use_dedicated_executor = config.use_dedicated_executor;
+            m_config.queue_capacity = config.queue_capacity;
+            m_config.queue_policy = config.queue_policy;
+            m_config.default_color = config.default_color;
+            m_config.routes = config.routes;
             reset_color();
             if (m_config.async && m_config.use_dedicated_executor) {
                 m_executor.reset(new detail::SingleThreadExecutor());
@@ -91,9 +126,17 @@ namespace logit {
             }
         }
 
-        /// \brief Constructor with asynchronous flag.
+        /// \brief Constructor with asynchronous flag and std::cout.
         /// \param async Boolean flag for asynchronous logging.
-        ConsoleLogger(const bool async) {
+        ConsoleLogger(const bool async) : m_stream(&std::cout) {
+            m_config.async = async;
+            reset_color();
+        }
+
+        /// \brief Constructor with asynchronous flag and a custom primary output stream.
+        /// \param stream Output stream to write records to. Lifetime is owned by the caller.
+        /// \param async Boolean flag for asynchronous logging.
+        ConsoleLogger(std::ostream& stream, const bool async) : m_stream(&stream) {
             m_config.async = async;
             reset_color();
         }
@@ -105,6 +148,19 @@ namespace logit {
                 std::size_t queue_capacity = 0,
                 detail::QueuePolicy queue_policy = detail::QueuePolicy::Block)
             : ConsoleLogger(make_config(
+                    async,
+                    use_dedicated_executor,
+                    queue_capacity,
+                    queue_policy)) {}
+
+        /// \brief Constructor with a custom primary output stream, async mode, and executor options.
+        ConsoleLogger(
+                std::ostream& stream,
+                bool async,
+                bool use_dedicated_executor,
+                std::size_t queue_capacity = 0,
+                detail::QueuePolicy queue_policy = detail::QueuePolicy::Block)
+            : ConsoleLogger(stream, make_config(
                     async,
                     use_dedicated_executor,
                     queue_capacity,
@@ -200,40 +256,23 @@ namespace logit {
             if (m_shutdown.load(std::memory_order_acquire)) return;
             m_last_log_ts = record.timestamp_ms;
             std::shared_ptr<detail::SingleThreadExecutor> executor = m_executor;
+            std::ostream* stream = select_stream_for(record.log_level);
             if (!m_config.async) {
-#               if defined(_WIN32)
-                // For Windows, parse the message for ANSI color codes and apply them
-                handle_ansi_colors_windows(message);
-#               else
-                // For other systems, output the message as is
-                std::cout << message << std::endl;
-#               endif
+                write_colored_message(*stream, message);
                 return;
             }
             ++m_pending_enqueues;
             lock.unlock();
             PendingEnqueue pending_enqueue(*this);
             if (executor) {
-                executor->add_task([this, message](){
+                executor->add_task([this, stream, message](){
                     std::lock_guard<std::mutex> lock(m_mutex);
-#               if defined(_WIN32)
-                    // For Windows, parse the message for ANSI color codes and apply them
-                    handle_ansi_colors_windows(message);
-#               else
-                    // For other systems, output the message as is
-                    std::cout << message << std::endl;
-#               endif
+                    write_colored_message(*stream, message);
                 });
             } else {
-                detail::TaskExecutor::get_instance().add_task([this, message](){
+                detail::TaskExecutor::get_instance().add_task([this, stream, message](){
                     std::lock_guard<std::mutex> lock(m_mutex);
-#               if defined(_WIN32)
-                    // For Windows, parse the message for ANSI color codes and apply them
-                    handle_ansi_colors_windows(message);
-#               else
-                    // For other systems, output the message as is
-                    std::cout << message << std::endl;
-#               endif
+                    write_colored_message(*stream, message);
                 });
             }
 #endif
@@ -331,12 +370,47 @@ namespace logit {
     private:
         mutable std::mutex m_mutex;     ///< Mutex to protect console output
         Config             m_config;    ///< Configuration for the console logger.
+        std::ostream*      m_stream;    ///< Primary output stream; lifetime owned by the caller.
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
         std::atomic<int>    m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
         std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false);
         std::shared_ptr<detail::SingleThreadExecutor> m_executor;
         std::condition_variable m_enqueue_cv;
         std::size_t m_pending_enqueues = 0;
+
+        /// \brief Selects the target stream for a given log level.
+        /// \details Uses Config::routes when non-empty; falls back to the
+        /// primary stream. Must be called under m_mutex.
+        std::ostream* select_stream_for(LogLevel level) const {
+            for (const auto& route : m_config.routes) {
+                if (route.min_level > route.max_level) continue;
+                if (level >= route.min_level && level <= route.max_level) {
+                    switch (route.kind) {
+                    case ConsoleStreamKind::Cout: return &std::cout;
+                    case ConsoleStreamKind::Cerr: return &std::cerr;
+                    case ConsoleStreamKind::Custom: return route.custom_stream;
+                    }
+                }
+            }
+            return m_stream;
+        }
+
+        /// \brief Writes one formatted message to a stream, applying colors
+        /// when supported. Must be called under m_mutex.
+        void write_colored_message(std::ostream& stream, const std::string& message) const {
+#       ifdef __EMSCRIPTEN__
+            (void)stream;
+            (void)message;
+#       elif defined(_WIN32)
+            if (&stream == &std::cout || &stream == &std::cerr) {
+                handle_ansi_colors_windows(message, stream);
+            } else {
+                stream << message << std::endl;
+            }
+#       else
+            stream << message << std::endl;
+#       endif
+        }
 
         static void configure_executor(
                 const std::shared_ptr<detail::SingleThreadExecutor>& executor,
@@ -437,16 +511,19 @@ namespace logit {
 
         /// \brief Handle ANSI color codes in the message for Windows console.
         /// \param message The message containing ANSI color codes.
-        void handle_ansi_colors_windows(const std::string& message) const {
+        /// \param stream Target output stream (std::cout or std::cerr).
+        void handle_ansi_colors_windows(const std::string& message, std::ostream& stream) const {
             std::string::size_type start = 0;
             std::string::size_type pos = 0;
 
-            HANDLE handle_stdout = GetStdHandle(STD_OUTPUT_HANDLE);
+            HANDLE handle_stdout = (&stream == &std::cerr)
+                ? GetStdHandle(STD_ERROR_HANDLE)
+                : GetStdHandle(STD_OUTPUT_HANDLE);
 
             while ((pos = message.find("\033[", start)) != std::string::npos) {
                 // Output the part of the string before the ANSI code
                 if (pos > start) {
-                    std::cout << message.substr(start, pos - start);
+                    stream << message.substr(start, pos - start);
                 }
 
                 // Find the end of the ANSI code
@@ -465,9 +542,9 @@ namespace logit {
 
             // Output any remaining part of the message
             if (start < message.size()) {
-                std::cout << message.substr(start);
+                stream << message.substr(start);
             }
-            if (!message.empty()) std::cout << std::endl;
+            if (!message.empty()) stream << std::endl;
 
             // Reset the console color to default
             SetConsoleTextAttribute(handle_stdout, static_cast<WORD>(text_color_to_win_color(m_config.default_color)));
@@ -537,9 +614,9 @@ namespace logit {
             // No persistent console color in browsers
             return;
 #           elif defined(_WIN32)
-            handle_ansi_colors_windows(std::string());
+            handle_ansi_colors_windows(std::string(), *m_stream);
 #           else
-            std::cout << to_string(m_config.default_color);
+            *m_stream << to_string(m_config.default_color);
 #           endif
         }
 

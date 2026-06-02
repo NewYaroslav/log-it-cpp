@@ -2243,6 +2243,39 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 #define LOGIT_ADD_CONSOLE_DEDICATED_SINGLE_MODE(pattern, queue_capacity, queue_policy) \
     LOGIT_ADD_CONSOLE_EX_SINGLE_MODE((pattern), true, true, (queue_capacity), (queue_policy))
 
+/// \brief Add a console logger writing to a caller-provided std::ostream& (e.g. std::cerr).
+/// \param stream Output stream reference; lifetime is owned by the caller.
+#define LOGIT_ADD_CONSOLE_TO_STREAM(stream, pattern, async)                     \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(         \
+            (stream), (async))),                                                \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        false)
+
+/// \brief Add a console logger writing to a caller-provided std::ostream& in single_mode.
+#define LOGIT_ADD_CONSOLE_TO_STREAM_SINGLE_MODE(stream, pattern, async)         \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(         \
+            (stream), (async))),                                                \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
+/// \brief Add a console logger from an explicit Config writing to a caller-provided std::ostream&.
+#define LOGIT_ADD_CONSOLE_TO_STREAM_EX(stream, config, pattern)                 \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(         \
+            (stream), (config))),                                               \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        false)
+
+/// \brief Add a console logger from an explicit Config writing to a caller-provided std::ostream& in single_mode.
+#define LOGIT_ADD_CONSOLE_TO_STREAM_EX_SINGLE_MODE(stream, config, pattern)     \
+    logit::Logger::get_instance().add_logger(                                   \
+        std::unique_ptr<logit::ConsoleLogger>(new logit::ConsoleLogger(         \
+            (stream), (config))),                                               \
+        std::unique_ptr<logit::SimpleLogFormatter>(new logit::SimpleLogFormatter(pattern)), \
+        true)
+
 /// \brief Macro for adding the default console logger.
 /// This logger uses the default format pattern and asynchronous logging.
 /// This version uses `new` and `std::unique_ptr` for C++11 compatibility.
