@@ -113,12 +113,6 @@ namespace logit {
         /// \param config The configuration for the logger.
         ConsoleLogger(std::ostream& stream, const Config& config)
             : m_config(config), m_stream(&stream) {
-            m_config.async = config.async;
-            m_config.use_dedicated_executor = config.use_dedicated_executor;
-            m_config.queue_capacity = config.queue_capacity;
-            m_config.queue_policy = config.queue_policy;
-            m_config.default_color = config.default_color;
-            m_config.routes = config.routes;
             reset_color();
             if (m_config.async && m_config.use_dedicated_executor) {
                 m_executor.reset(new detail::SingleThreadExecutor());
@@ -380,19 +374,30 @@ namespace logit {
 
         /// \brief Selects the target stream for a given log level.
         /// \details Uses Config::routes when non-empty; falls back to the
-        /// primary stream. Must be called under m_mutex.
+        /// primary stream. Routes with kind == Custom and a null
+        /// custom_stream are skipped, so the next route or the primary
+        /// stream wins. Must be called under m_mutex.
         std::ostream* select_stream_for(LogLevel level) const {
             for (const auto& route : m_config.routes) {
                 if (route.min_level > route.max_level) continue;
-                if (level >= route.min_level && level <= route.max_level) {
-                    switch (route.kind) {
-                    case ConsoleStreamKind::Cout: return &std::cout;
-                    case ConsoleStreamKind::Cerr: return &std::cerr;
-                    case ConsoleStreamKind::Custom: return route.custom_stream;
-                    }
+                if (level < route.min_level || level > route.max_level) continue;
+                switch (route.kind) {
+                case ConsoleStreamKind::Cout:
+                    return &std::cout;
+                case ConsoleStreamKind::Cerr:
+                    return &std::cerr;
+                case ConsoleStreamKind::Custom:
+                    if (route.custom_stream) return route.custom_stream;
+                    break;
                 }
             }
             return m_stream;
+        }
+
+        /// \brief Returns true for streams whose console handle we may drive
+        /// (std::cout, std::cerr). Custom streams skip ANSI/Windows coloring.
+        static bool is_standard_console_stream(const std::ostream& stream) {
+            return &stream == &std::cout || &stream == &std::cerr;
         }
 
         /// \brief Writes one formatted message to a stream, applying colors
@@ -402,7 +407,7 @@ namespace logit {
             (void)stream;
             (void)message;
 #       elif defined(_WIN32)
-            if (&stream == &std::cout || &stream == &std::cerr) {
+            if (is_standard_console_stream(stream)) {
                 handle_ansi_colors_windows(message, stream);
             } else {
                 stream << message << std::endl;
@@ -609,7 +614,10 @@ namespace logit {
 
 
         /// \brief Resets the console text color to the default.
+        /// \details Only writes color escape codes for standard console
+        /// streams (std::cout / std::cerr); custom streams stay plain.
         void reset_color() {
+            if (!is_standard_console_stream(*m_stream)) return;
 #           ifdef __EMSCRIPTEN__
             // No persistent console color in browsers
             return;

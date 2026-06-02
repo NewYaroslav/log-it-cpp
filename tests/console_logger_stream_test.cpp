@@ -149,6 +149,71 @@ void test_level_based_routing_to_custom_stream() {
     }
 }
 
+void test_null_custom_route_falls_back_to_primary_stream() {
+    logit::ConsoleLogger::Config config;
+    logit::ConsoleStreamRoute route;
+    route.min_level = logit::LogLevel::LOG_LVL_ERROR;
+    route.max_level = logit::LogLevel::LOG_LVL_FATAL;
+    route.kind = logit::ConsoleStreamKind::Custom;
+    route.custom_stream = nullptr;
+    config.routes.push_back(route);
+
+    std::stringstream sink;
+    logit::ConsoleLogger logger(sink, config);
+
+    logger.log(make_record(logit::LogLevel::LOG_LVL_ERROR, "error-record"),
+               "fallback-error");
+    logger.wait();
+
+    if (sink.str().find("fallback-error") == std::string::npos) {
+        std::cerr << "FAIL: null custom stream should fall back to primary stream" << std::endl;
+        std::exit(1);
+    }
+}
+
+void test_sync_custom_stream() {
+    std::stringstream sink;
+    logit::ConsoleLogger::Config config;
+    config.async = false;
+
+    logit::ConsoleLogger logger(sink, config);
+    logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, "sync-record"),
+               "sync-message");
+
+    if (sink.str().find("sync-message") == std::string::npos) {
+        std::cerr << "FAIL: sync logger should write to custom stream" << std::endl;
+        std::exit(1);
+    }
+}
+
+void test_sync_level_based_routing_to_custom_stream() {
+    std::stringstream primary_sink;
+    std::stringstream error_sink;
+
+    logit::ConsoleLogger::Config config;
+    config.async = false;
+    config.routes.push_back(logit::ConsoleStreamRoute::to_stream(
+        logit::LogLevel::LOG_LVL_ERROR,
+        logit::LogLevel::LOG_LVL_FATAL,
+        error_sink));
+
+    logit::ConsoleLogger logger(primary_sink, config);
+
+    logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, "info-record"),
+               "sync-info");
+    logger.log(make_record(logit::LogLevel::LOG_LVL_ERROR, "error-record"),
+               "sync-error");
+
+    if (primary_sink.str().find("sync-info") == std::string::npos) {
+        std::cerr << "FAIL: INFO should go to primary stream" << std::endl;
+        std::exit(1);
+    }
+    if (error_sink.str().find("sync-error") == std::string::npos) {
+        std::cerr << "FAIL: ERROR should route to custom stream" << std::endl;
+        std::exit(1);
+    }
+}
+
 } // namespace
 
 int main() {
@@ -158,5 +223,8 @@ int main() {
     test_cout_does_not_pick_up_cerr_output();
     test_level_based_routing_to_cerr();
     test_level_based_routing_to_custom_stream();
+    test_null_custom_route_falls_back_to_primary_stream();
+    test_sync_custom_stream();
+    test_sync_level_based_routing_to_custom_stream();
     return 0;
 }
