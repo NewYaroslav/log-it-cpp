@@ -5,7 +5,6 @@
 /// \file ConsoleStreamRoute.hpp
 /// \brief Level-based output stream routing for ConsoleLogger.
 
-#include "../enums.hpp"
 #include <ostream>
 
 namespace logit {

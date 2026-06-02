@@ -6,7 +6,7 @@
 /// \brief Console logger implementation that outputs logs to the console with color support.
 
 #include "ILogger.hpp"
-#include "ConsoleStreamRoute.hpp"
+#include "ConsoleLogger/ConsoleStreamRoute.hpp"
 #include <condition_variable>
 #include <iostream>
 #include <memory>
