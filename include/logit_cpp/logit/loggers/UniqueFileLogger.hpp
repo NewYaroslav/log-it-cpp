@@ -383,6 +383,49 @@ namespace logit {
             }
         }
 
+        /// \brief Clears managed unique log files.
+        LogClearResult clear_logs(const LogClearOptions& options = LogClearOptions()) override {
+            (void)options;
+            wait();
+
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+            LogClearResult result;
+            if (m_shutdown.load(std::memory_order_acquire)) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "UniqueFileLogger is shut down";
+                return result;
+            }
+
+            try {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                const std::vector<LogFileInfo> files = list_log_files();
+                for (size_t i = 0; i < files.size(); ++i) {
+                    if (remove_file_path(files[i].path)) {
+                        ++result.cleared_records;
+                    }
+                }
+                {
+                    std::lock_guard<std::mutex> info_lock(m_thread_log_info_mutex);
+                    m_thread_log_info.clear();
+                }
+                m_last_log_ts.store(0, std::memory_order_release);
+                m_last_log_mono_ts.store(0, std::memory_order_release);
+                result.ok = true;
+                result.status = LogClearStatus::Cleared;
+                result.message = "cleared";
+            } catch (const std::exception& e) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = std::string("UniqueFileLogger clear error: ") + e.what();
+            } catch (...) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "UniqueFileLogger clear error";
+            }
+            return result;
+        }
+
         /// \brief Stops logger-owned asynchronous resources after draining pending writes.
         void shutdown() override {
             {
@@ -576,6 +619,14 @@ namespace logit {
             stream << in.rdbuf();
             out = stream.str();
             return !in.bad();
+        }
+
+        bool remove_file_path(const std::string& file_path) const {
+#           if defined(_WIN32)
+            return std::remove(utf8_to_ansi(file_path).c_str()) == 0;
+#           else
+            return std::remove(file_path.c_str()) == 0;
+#           endif
         }
 
         bool is_direct_child_path(const std::string& file_path, const std::string& directory_path) const {

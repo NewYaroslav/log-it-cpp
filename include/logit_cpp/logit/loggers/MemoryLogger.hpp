@@ -143,6 +143,22 @@ namespace logit {
         /// \brief Memory logger is synchronous, so no flush step is needed.
         void wait() override {}
 
+        /// \brief Clears buffered entries.
+        LogClearResult clear_logs(const LogClearOptions& options = LogClearOptions()) override {
+            (void)options;
+            std::lock_guard<std::mutex> lock(m_mutex);
+            LogClearResult result;
+            result.ok = true;
+            result.status = LogClearStatus::Cleared;
+            result.cleared_records = m_entries.size();
+            result.message = "cleared";
+            m_entries.clear();
+            m_total_bytes = 0;
+            m_last_log_ts.store(0, std::memory_order_relaxed);
+            m_last_log_mono_ts.store(0, std::memory_order_relaxed);
+            return result;
+        }
+
         /// \brief Reads records in `[from_ms, to_ms)` ordered by timestamp.
         std::vector<LogRecordView> read_range(
                 int64_t from_ms,

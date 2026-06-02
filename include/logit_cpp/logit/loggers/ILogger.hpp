@@ -8,10 +8,36 @@
 /// \ingroup LogBackends Logging Backends
 /// \{
 
+#include <cstddef>
 #include <string>
 #include <vector>
 
 namespace logit {
+
+    /// \struct LogClearOptions
+    /// \brief Selects which data categories a logger cleanup should remove.
+    struct LogClearOptions {
+        bool include_persistent_records = true; ///< Clear primary stored log records.
+        bool include_payloads = true;           ///< Clear associated payload/blob data.
+        bool include_sessions = false;          ///< Clear session metadata when supported.
+    };
+
+    /// \enum LogClearStatus
+    /// \brief Backend cleanup status.
+    enum class LogClearStatus {
+        Cleared,
+        Unsupported,
+        Failed
+    };
+
+    /// \struct LogClearResult
+    /// \brief Result returned by logger cleanup operations.
+    struct LogClearResult {
+        bool ok = false;                  ///< True when the backend completed cleanup.
+        LogClearStatus status = LogClearStatus::Failed; ///< Detailed cleanup status.
+        std::size_t cleared_records = 0;  ///< Number of primary records/files cleared when available.
+        std::string message;              ///< Optional diagnostic or unsupported reason.
+    };
 
     /// \brief Optional buffered snapshot access returns empty results by default.
     /// Custom loggers may override these methods when they keep recent history.
@@ -106,6 +132,18 @@ namespace logit {
                 results.push_back(read_log_file(paths[i]));
             }
             return results;
+        }
+
+        /// \brief Clears logger-owned buffered or persisted records when supported.
+        /// \param options Data categories to clear.
+        /// \return Cleanup result. Default reports unsupported.
+        virtual LogClearResult clear_logs(const LogClearOptions& options = LogClearOptions()) {
+            (void)options;
+            LogClearResult result;
+            result.ok = false;
+            result.status = LogClearStatus::Unsupported;
+            result.message = "unsupported";
+            return result;
         }
 
         /// \brief Waits for all asynchronous logging operations to complete.

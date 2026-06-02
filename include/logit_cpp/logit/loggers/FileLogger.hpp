@@ -465,6 +465,51 @@ namespace logit {
             return results;
         }
 
+        /// \brief Clears managed log files and reopens the current log file.
+        LogClearResult clear_logs(const LogClearOptions& options = LogClearOptions()) override {
+            (void)options;
+            wait();
+
+            std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
+            LogClearResult result;
+            if (m_shutdown.load(std::memory_order_acquire)) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "FileLogger is shut down";
+                return result;
+            }
+
+            try {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                const std::vector<LogFileInfo> files = list_log_files();
+                if (m_file.is_open()) {
+                    m_file.flush();
+                    m_file.close();
+                }
+                for (size_t i = 0; i < files.size(); ++i) {
+                    if (remove_file_path(files[i].path)) {
+                        ++result.cleared_records;
+                    }
+                }
+                m_current_file_size = 0;
+                m_last_log_ts.store(0, std::memory_order_release);
+                m_last_log_mono_ts.store(0, std::memory_order_release);
+                open_log_file(get_current_utc_date_ts());
+                result.ok = true;
+                result.status = LogClearStatus::Cleared;
+                result.message = "cleared";
+            } catch (const std::exception& e) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = std::string("FileLogger clear error: ") + e.what();
+            } catch (...) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "FileLogger clear error";
+            }
+            return result;
+        }
+
         /// \brief Waits for all asynchronous tasks to complete.
         void wait() override {
             std::lock_guard<std::mutex> lifecycle_lock(m_lifecycle_mutex);
@@ -658,6 +703,14 @@ namespace logit {
             stream << in.rdbuf();
             out = stream.str();
             return !in.bad();
+        }
+
+        bool remove_file_path(const std::string& file_path) const {
+#           if defined(_WIN32)
+            return std::remove(utf8_to_ansi(file_path).c_str()) == 0;
+#           else
+            return std::remove(file_path.c_str()) == 0;
+#           endif
         }
 
         void sort_log_files_newest_first(std::vector<LogFileInfo>& files) const {

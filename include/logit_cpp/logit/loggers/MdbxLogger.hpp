@@ -460,6 +460,57 @@ namespace logit {
             return static_cast<LogLevel>(m_log_level.load(std::memory_order_acquire));
         }
 
+        LogClearResult clear_logs(const LogClearOptions& options = LogClearOptions()) override {
+            wait();
+
+            LogClearResult result;
+            try {
+                {
+                    std::lock_guard<std::mutex> db_lock(m_db_mutex);
+                    auto txn = m_connection->transaction(mdbxc::TransactionMode::WRITABLE);
+                    if (options.include_persistent_records) {
+                        result.cleared_records = m_records->count(txn);
+                        m_records->clear(txn);
+                    }
+                    if (options.include_payloads) {
+                        m_payloads->clear(txn);
+                    }
+                    if (options.include_sessions) {
+                        m_sessions->clear(txn);
+                        Session session;
+                        session.app_name = m_config.app_name;
+                        session.start_time_ms = LOGIT_CURRENT_TIMESTAMP_MS();
+                        session.end_time_ms = 0;
+                        session.process_id = detail::current_process_id();
+                        session.schema_version = 1;
+                        m_session_id = make_unique_id();
+                        m_sessions->insert_or_assign(m_session_id, session, txn);
+                    }
+                    txn.commit();
+                }
+
+                {
+                    std::lock_guard<std::mutex> lock(m_mutex);
+                    m_next_sequence_by_timestamp.clear();
+                }
+                m_last_log_ts.store(0, std::memory_order_release);
+                m_last_log_mono_ts.store(0, std::memory_order_release);
+
+                result.ok = true;
+                result.status = LogClearStatus::Cleared;
+                result.message = "cleared";
+            } catch (const std::exception& e) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = std::string("MdbxLogger clear error: ") + e.what();
+            } catch (...) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "MdbxLogger clear error";
+            }
+            return result;
+        }
+
         uint64_t dropped_count() const {
             return m_dropped.load(std::memory_order_acquire);
         }

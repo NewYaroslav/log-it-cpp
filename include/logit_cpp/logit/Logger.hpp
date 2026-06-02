@@ -399,6 +399,89 @@ namespace logit {
             }
         }
 
+        /// \brief Clears logger-owned records for a specific logger.
+        /// \param logger_index Index of logger.
+        /// \param options Data categories to clear.
+        /// \return Cleanup result for the selected logger.
+        LogClearResult clear_logger(int logger_index, const LogClearOptions& options = LogClearOptions()) {
+            LogClearResult result;
+            if (m_shutdown.load(std::memory_order_acquire)) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "logger system is shut down";
+                return result;
+            }
+
+            auto strategy = get_strategy_snapshot(logger_index);
+            if (!strategy) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "logger index not found";
+                return result;
+            }
+
+            std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+            if (m_shutdown.load(std::memory_order_acquire)) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "logger system is shut down";
+                return result;
+            }
+            return strategy->logger->clear_logs(options);
+        }
+
+        /// \brief Clears logger-owned records for all registered loggers.
+        /// \param options Data categories to clear.
+        /// \return Aggregated cleanup result. Unsupported loggers are skipped.
+        LogClearResult clear_all_loggers(const LogClearOptions& options = LogClearOptions()) {
+            LogClearResult result;
+            if (m_shutdown.load(std::memory_order_acquire)) {
+                result.ok = false;
+                result.status = LogClearStatus::Failed;
+                result.message = "logger system is shut down";
+                return result;
+            }
+
+            const auto snapshot = get_all_strategy_snapshots();
+            std::size_t supported = 0;
+            std::size_t failed = 0;
+            std::size_t unsupported = 0;
+            for (const auto& strategy : snapshot) {
+                if (!strategy) continue;
+                std::lock_guard<std::mutex> exec_lock(strategy->exec_mx);
+                if (m_shutdown.load(std::memory_order_acquire)) {
+                    result.ok = false;
+                    result.status = LogClearStatus::Failed;
+                    result.message = "logger system is shut down";
+                    return result;
+                }
+                const LogClearResult one = strategy->logger->clear_logs(options);
+                if (one.status == LogClearStatus::Cleared && one.ok) {
+                    ++supported;
+                    result.cleared_records += one.cleared_records;
+                } else if (one.status == LogClearStatus::Unsupported) {
+                    ++unsupported;
+                } else {
+                    ++failed;
+                    if (result.message.empty()) {
+                        result.message = one.message;
+                    }
+                }
+            }
+
+            result.ok = supported > 0 && failed == 0;
+            if (result.ok) {
+                result.status = LogClearStatus::Cleared;
+                result.message = unsupported > 0 ? "cleared supported loggers; skipped unsupported loggers" : "cleared";
+            } else {
+                result.status = unsupported > 0 && failed == 0 ? LogClearStatus::Unsupported : LogClearStatus::Failed;
+                if (result.message.empty()) {
+                    result.message = unsupported > 0 ? "no logger supports clearing" : "no loggers to clear";
+                }
+            }
+            return result;
+        }
+
         /// \brief Returns the number of registered logger strategies.
         std::size_t logger_count() const {
             LoggerReadLock lock(m_loggers_mx);

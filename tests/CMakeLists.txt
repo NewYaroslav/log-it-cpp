@@ -45,6 +45,7 @@ else()
         log_filters_tags_test.cpp
         logger_shutdown_race_test.cpp
         logger_snapshot_read_path_test.cpp
+        logger_clear_api_test.cpp
         memory_logger_backend_test.cpp
         memory_logger_concurrency_test.cpp
         memory_logger_integration_test.cpp

@@ -476,6 +476,85 @@ void test_read_result_decode_errors() {
     cleanup_db(path);
 }
 
+void test_clear_logs_keeps_session_and_accepts_new_records() {
+    const std::string path = make_db_path("clear_keep_session");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+        config.large_payload_threshold = 4;
+        config.payload_preview_size = 3;
+        config.store_large_payloads_separately = true;
+
+        logit::MdbxLogger logger(config);
+        const uint64_t session_id = logger.session_id();
+        const std::string large_payload = "large-payload-before-clear";
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 6300, 55), large_payload);
+
+        auto before = logger.read_range(6300, 6301);
+        assert(before.size() == 1);
+        assert(before[0].payload_id != 0);
+        const uint64_t payload_id = before[0].payload_id;
+        assert(logger.read_payload(payload_id));
+
+        logit::LogClearResult result = logger.clear_logs();
+        assert(result.ok);
+        assert(result.status == logit::LogClearStatus::Cleared);
+        assert(result.cleared_records == 1);
+        assert(logger.read_range(6300, 6301).empty());
+        assert(!logger.read_payload(payload_id));
+
+        auto session = logger.read_session(session_id);
+        assert(session);
+        assert(session->end_time_ms == 0);
+
+        logger.log(make_record(logit::LogLevel::LOG_LVL_WARN, 6301, 56), "after-clear");
+        auto after = logger.read_range(6301, 6302);
+        assert(after.size() == 1);
+        assert(after[0].message == "after-clear");
+
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
+void test_clear_logs_can_remove_sessions() {
+    const std::string path = make_db_path("clear_sessions");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+        const uint64_t session_id = logger.session_id();
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 6400, 57), "before-clear");
+
+        logit::LogClearOptions options;
+        options.include_sessions = true;
+        logit::LogClearResult result = logger.clear_logs(options);
+        assert(result.ok);
+        assert(result.status == logit::LogClearStatus::Cleared);
+        assert(result.cleared_records == 1);
+        assert(!logger.read_session(session_id));
+        const uint64_t new_session_id = logger.session_id();
+        assert(new_session_id != session_id);
+        assert(logger.read_session(new_session_id));
+
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 6401, 58), "after-session-clear");
+        auto records = logger.read_range(6401, 6402);
+        assert(records.size() == 1);
+        assert(records[0].session_id == new_session_id);
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
 void test_read_range_empty_and_limits() {
     const std::string path = make_db_path("range");
     cleanup_db(path);
@@ -669,6 +748,8 @@ int main() {
     test_init_error_callback_and_rethrow();
     test_read_result_not_found();
     test_read_result_decode_errors();
+    test_clear_logs_keeps_session_and_accepts_new_records();
+    test_clear_logs_can_remove_sessions();
     test_read_range_empty_and_limits();
     test_read_recent();
     test_callback_sync();
