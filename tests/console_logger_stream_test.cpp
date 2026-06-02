@@ -214,6 +214,19 @@ void test_sync_level_based_routing_to_custom_stream() {
     }
 }
 
+void test_route_helpers_to_cerr() {
+    logit::ConsoleStreamRoute route = logit::ConsoleStreamRoute::to_cerr(
+        logit::LogLevel::LOG_LVL_ERROR,
+        logit::LogLevel::LOG_LVL_FATAL);
+
+    if (route.kind != logit::ConsoleStreamKind::Cerr ||
+        route.min_level != logit::LogLevel::LOG_LVL_ERROR ||
+        route.max_level != logit::LogLevel::LOG_LVL_FATAL) {
+        std::cerr << "FAIL: to_cerr helper should initialize route" << std::endl;
+        std::exit(1);
+    }
+}
+
 } // namespace
 
 int main() {
@@ -226,5 +239,6 @@ int main() {
     test_null_custom_route_falls_back_to_primary_stream();
     test_sync_custom_stream();
     test_sync_level_based_routing_to_custom_stream();
+    test_route_helpers_to_cerr();
     return 0;
 }

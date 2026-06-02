@@ -192,7 +192,7 @@ namespace logit {
         /// \brief Gets the current logger configuration.
         /// Returns the logger's configuration with thread safety ensured.
         /// \return The current configuration.
-        Config get_config() {
+        Config get_config() const {
             std::lock_guard<std::mutex> lock(m_mutex);
             return m_config;
         }
