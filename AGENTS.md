@@ -75,3 +75,5 @@ Read the matching file in `guides/` when the task needs more detail:
 - `guides/concurrency.md` - thread-safety contracts, callback dispatch,
   mutex ordering, and shutdown invariants.
 - `guides/build.md` - submodules, configure/build/test/bench flow.
+- `guides/ci.md` - CI environment parity, toolchain compatibility,
+  sanitizer/timing test guidance, and CI-failure workflow.

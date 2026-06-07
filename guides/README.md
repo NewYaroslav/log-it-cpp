@@ -21,6 +21,7 @@ These files are shared AI-agent instruction files for `log-it-cpp`.
 | `header-impl-RU.md` | Russian localization of the header ownership playbook. |
 | `logging-macros.md` | Macro-first logging guidance for agents and maintainers. |
 | `build.md` | Build, test, example, and benchmark flows. |
+| `ci.md` | CI environment parity, toolchain compatibility, sanitizer/timing test guidance, and CI-failure workflow. |
 | `commits.md` | Commit message conventions and grouping rules. |
 | `git-workflow.md` | Branch policy, naming conventions, and required steps before starting work. |
 
