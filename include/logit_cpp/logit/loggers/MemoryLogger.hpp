@@ -7,6 +7,9 @@
 
 #include "ILogger.hpp"
 #include "ILogReader.hpp"
+#include "ILogSubscriber.hpp"
+
+#include <map>
 
 namespace logit {
 
@@ -16,7 +19,7 @@ namespace logit {
     /// \details Snapshots are returned oldest-to-newest. Read operations avoid
     /// `Logger`-level execution serialization, but still synchronize on this
     /// backend's own mutex while copying the current buffer.
-    class MemoryLogger : public ILogger, public ILogReader {
+    class MemoryLogger : public ILogger, public ILogReader, public ILogSubscriber {
     public:
         /// \struct Config
         /// \brief Retention limits for the in-memory buffer.
@@ -58,15 +61,21 @@ namespace logit {
             entry.function = record.function;
             entry.message = message;
 
-            std::lock_guard<std::mutex> lock(m_mutex);
-            m_evict_expired_locked(record.timestamp_ms);
+            LogRecordView written_view;
+            {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                m_evict_expired_locked(record.timestamp_ms);
 
-            m_total_bytes += m_entry_bytes(entry);
-            m_entries.push_back(std::move(entry));
-            m_last_log_ts.store(record.timestamp_ms, std::memory_order_relaxed);
-            m_last_log_mono_ts.store(LOGIT_MONOTONIC_MS(), std::memory_order_relaxed);
+                written_view = to_view(entry);
+                m_total_bytes += m_entry_bytes(entry);
+                m_entries.push_back(std::move(entry));
+                m_last_log_ts.store(record.timestamp_ms, std::memory_order_relaxed);
+                m_last_log_mono_ts.store(LOGIT_MONOTONIC_MS(), std::memory_order_relaxed);
 
-            m_enforce_limits_locked(record.timestamp_ms);
+                m_enforce_limits_locked(record.timestamp_ms);
+            }
+
+            notify_callbacks(written_view);
         }
 
         /// \brief Retrieve legacy string-based metadata.
@@ -142,6 +151,18 @@ namespace logit {
 
         /// \brief Memory logger is synchronous, so no flush step is needed.
         void wait() override {}
+
+        uint64_t add_log_callback(Callback callback) override {
+            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+            const uint64_t id = m_next_callback_id.fetch_add(1, std::memory_order_relaxed);
+            m_callbacks.emplace(id, std::move(callback));
+            return id;
+        }
+
+        bool remove_log_callback(uint64_t callback_id) override {
+            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+            return m_callbacks.erase(callback_id) > 0;
+        }
 
         /// \brief Clears buffered entries.
         LogClearResult clear_logs(const LogClearOptions& options = LogClearOptions()) override {
@@ -288,6 +309,24 @@ namespace logit {
             v.message = e.message;
             return v;
         }
+
+        void notify_callbacks(const LogRecordView& view) const {
+            std::vector<Callback> callbacks_copy;
+            {
+                std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+                callbacks_copy.reserve(m_callbacks.size());
+                for (const auto& kv : m_callbacks) {
+                    callbacks_copy.push_back(kv.second);
+                }
+            }
+            for (const auto& cb : callbacks_copy) {
+                try {
+                    cb(view);
+                } catch (...) {
+                }
+            }
+        }
+
         // Count only the retained formatted payload, not the full object footprint.
         static std::size_t m_entry_bytes(const BufferedLogEntry& entry) {
             return entry.message.size();
@@ -349,6 +388,9 @@ namespace logit {
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
         std::atomic<int64_t> m_last_log_mono_ts = ATOMIC_VAR_INIT(0);
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
+        mutable std::mutex m_callbacks_mutex;
+        std::map<uint64_t, Callback> m_callbacks;
+        std::atomic<uint64_t> m_next_callback_id{1};
     };
 
 } // namespace logit
