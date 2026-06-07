@@ -55,11 +55,11 @@ int main() {
     std::cout << "Range records for the last hour: "
               << range_records.size() << std::endl;
 
-    std::vector<logit::LogRecordView> live_updates;
+    std::vector<logit::LogRecordSnapshot> live_updates;
     std::mutex live_mutex;
     const uint64_t callback_id = LOGIT_ADD_LOG_CALLBACK(
         memory_index,
-        ([&live_updates, &live_mutex](const logit::LogRecordView& view) {
+        ([&live_updates, &live_mutex](const logit::LogRecordSnapshot& view) {
             std::lock_guard<std::mutex> lock(live_mutex);
             live_updates.push_back(view);
         }));

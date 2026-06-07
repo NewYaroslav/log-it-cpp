@@ -145,7 +145,7 @@ own mutex while copying the current buffer.
 
 Use `ILogReader` and `ILogSubscriber` when application code should work with
 either `MemoryLogger` or `MdbxLogger`. The shared macro helpers return
-`LogRecordView` records and avoid depending on backend-specific storage:
+`LogRecordSnapshot` records and avoid depending on backend-specific storage:
 
 \code{.cpp}
 #include <logit.hpp>
@@ -162,10 +162,10 @@ int main() {
         now_ms + 1,
         0);
 
-    std::vector<logit::LogRecordView> live_updates;
+    std::vector<logit::LogRecordSnapshot> live_updates;
     const uint64_t callback_id = LOGIT_ADD_LOG_CALLBACK(
         backend_index,
-        ([&live_updates](const logit::LogRecordView& record) {
+        ([&live_updates](const logit::LogRecordSnapshot& record) {
             live_updates.push_back(record);
         }));
 
@@ -182,8 +182,10 @@ int main() {
 `LOGIT_READ_RANGE`, `LOGIT_READ_RECENT_ASC`, and
 `LOGIT_READ_RECENT_DESC` use `ILogReader`. `LOGIT_ADD_LOG_CALLBACK` and
 `LOGIT_REMOVE_LOG_CALLBACK` use `ILogSubscriber`; callbacks receive a
-`LogRecordView` after the backend has written the record. This is the preferred
-fallback-friendly API between `MemoryLogger` and `MdbxLogger`.
+`LogRecordSnapshot` after the backend has written the record. Snapshots own
+their string fields, so they can be copied or stored by value. Callback
+dispatch follows registration order. This is the preferred fallback-friendly
+API between `MemoryLogger` and `MdbxLogger`.
 
 `LOGIT_GET_BUFFERED_STRINGS` and `LOGIT_GET_BUFFERED_ENTRIES` are convenience
 helpers for the `MemoryLogger` snapshot buffer. They are useful for local

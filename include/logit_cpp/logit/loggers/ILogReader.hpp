@@ -16,9 +16,12 @@
 
 namespace logit {
 
-    /// \struct LogRecordView
-    /// \brief Common read-only view of a stored log record.
-    struct LogRecordView {
+    /// \struct LogRecordSnapshot
+    /// \brief Common owning snapshot of a stored log record.
+    ///
+    /// String fields are copied from the backend, so callers may store the
+    /// snapshot by value without depending on backend locks or record lifetime.
+    struct LogRecordSnapshot {
         uint64_t session_id = 0;                     ///< Owning session id, or 0 if unused.
         int64_t timestamp_ms = 0;                    ///< Log timestamp in milliseconds.
         uint32_t sequence = 0;                       ///< Per-timestamp sequence, or 0 if unused.
@@ -63,8 +66,8 @@ namespace logit {
     /// \brief Optional interface for backends that expose stored records.
     ///
     /// Implementations should provide read_range for time-window queries
-    /// and read_recent for "tail -n" style access.  Both return copies
-    /// so the caller does not depend on backend locking details.
+    /// and read_recent for "tail -n" style access. Both return owning
+    /// snapshots so the caller does not depend on backend locking details.
     class ILogReader {
     public:
         virtual ~ILogReader() = default;
@@ -74,18 +77,18 @@ namespace logit {
         /// \param to_ms   Exclusive end timestamp.
         /// \param limit   Maximum number of records (0 = unlimited).
         /// \return Matching records in backend-defined order (usually ascending).
-        virtual std::vector<LogRecordView> read_range(
+        virtual std::vector<LogRecordSnapshot> read_range(
             int64_t from_ms,
             int64_t to_ms,
             std::size_t limit = 0) const = 0;
 
 #if __cplusplus >= 201703L
         /// \brief Reads records and preserves backend-specific read errors.
-        virtual LogReadResult<std::vector<LogRecordView>> read_range_result(
+        virtual LogReadResult<std::vector<LogRecordSnapshot>> read_range_result(
             int64_t from_ms,
             int64_t to_ms,
             std::size_t limit = 0) const {
-            LogReadResult<std::vector<LogRecordView>> result;
+            LogReadResult<std::vector<LogRecordSnapshot>> result;
             result.value = read_range(from_ms, to_ms, limit);
             return result;
         }
@@ -96,18 +99,18 @@ namespace logit {
         /// \param period_ms Time window in milliseconds from now backward (0 = unlimited).
         /// \param order     Ascending (oldest first) or Descending (newest first).
         /// \return Matching records in the requested order.
-        virtual std::vector<LogRecordView> read_recent(
+        virtual std::vector<LogRecordSnapshot> read_recent(
             std::size_t limit,
             int64_t period_ms = 0,
             LogReadOrder order = LogReadOrder::Ascending) const = 0;
 
 #if __cplusplus >= 201703L
         /// \brief Reads recent records and preserves backend-specific read errors.
-        virtual LogReadResult<std::vector<LogRecordView>> read_recent_result(
+        virtual LogReadResult<std::vector<LogRecordSnapshot>> read_recent_result(
             std::size_t limit,
             int64_t period_ms = 0,
             LogReadOrder order = LogReadOrder::Ascending) const {
-            LogReadResult<std::vector<LogRecordView>> result;
+            LogReadResult<std::vector<LogRecordSnapshot>> result;
             result.value = read_recent(limit, period_ms, order);
             return result;
         }

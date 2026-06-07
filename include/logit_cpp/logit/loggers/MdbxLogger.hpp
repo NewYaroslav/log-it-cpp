@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cstring>
 #include <limits>
+#include <map>
 #include <memory>
 #include <optional>
 #include <stdexcept>
@@ -208,20 +209,20 @@ namespace logit {
         }
 
         /// \brief Reads records in `[from_ms, to_ms)` ordered by timestamp and sequence.
-        std::vector<LogRecordView> read_range(
+        std::vector<LogRecordSnapshot> read_range(
                 int64_t from_ms,
                 int64_t to_ms,
                 std::size_t limit = 0) const override {
             auto result = read_range_result(from_ms, to_ms, limit);
-            return result.value ? *result.value : std::vector<LogRecordView>();
+            return result.value ? *result.value : std::vector<LogRecordSnapshot>();
         }
 
         /// \brief Reads records and preserves storage/decode errors.
-        LogReadResult<std::vector<LogRecordView>> read_range_result(
+        LogReadResult<std::vector<LogRecordSnapshot>> read_range_result(
                 int64_t from_ms,
                 int64_t to_ms,
                 std::size_t limit = 0) const override {
-            LogReadResult<std::vector<LogRecordView>> result;
+            LogReadResult<std::vector<LogRecordSnapshot>> result;
             result.value.emplace();
             if (to_ms <= from_ms) {
                 return result;
@@ -236,7 +237,7 @@ namespace logit {
                 std::lock_guard<std::mutex> db_lock(m_db_mutex);
                 m_records->for_each_range(from_key, to_key,
                     [&result, limit](const std::string&, const Record& record) -> bool {
-                        result.value->push_back(to_view(record));
+                        result.value->push_back(to_log_record_snapshot(record));
                         return limit == 0 || result.value->size() < limit;
                     });
             } catch (const detail::MdbxReadException& e) {
@@ -265,16 +266,16 @@ namespace logit {
         /// \param period_ms Time window in milliseconds from now backward (0 = unlimited).
         /// \param order     Ascending or descending result order.
         /// \return Matching records in the requested order.
-        std::vector<LogRecordView> read_recent(
+        std::vector<LogRecordSnapshot> read_recent(
                 std::size_t limit,
                 int64_t period_ms = 0,
                 LogReadOrder order = LogReadOrder::Ascending) const override {
             auto result = read_recent_result(limit, period_ms, order);
-            return result.value ? *result.value : std::vector<LogRecordView>();
+            return result.value ? *result.value : std::vector<LogRecordSnapshot>();
         }
 
         /// \brief Reads the most recent records and preserves storage/decode errors.
-        LogReadResult<std::vector<LogRecordView>> read_recent_result(
+        LogReadResult<std::vector<LogRecordSnapshot>> read_recent_result(
                 std::size_t limit,
                 int64_t period_ms = 0,
                 LogReadOrder order = LogReadOrder::Ascending) const override {
@@ -607,7 +608,7 @@ namespace logit {
         std::atomic<bool> m_shutdown = ATOMIC_VAR_INIT(false);
 
         mutable std::mutex m_callbacks_mutex;
-        std::unordered_map<uint64_t, Callback> m_callbacks;
+        std::map<uint64_t, Callback> m_callbacks;
         std::atomic<uint64_t> m_next_callback_id{1};
 
         template <typename T>
@@ -618,7 +619,7 @@ namespace logit {
             return result;
         }
 
-        void notify_callbacks(const std::vector<LogRecordView>& views) const {
+        void notify_callbacks(const std::vector<LogRecordSnapshot>& snapshots) const {
             std::vector<Callback> callbacks_copy;
             {
                 std::lock_guard<std::mutex> lock(m_callbacks_mutex);
@@ -627,10 +628,10 @@ namespace logit {
                     callbacks_copy.push_back(kv.second);
                 }
             }
-            for (const auto& view : views) {
+            for (const auto& snapshot : snapshots) {
                 for (const auto& cb : callbacks_copy) {
                     try {
-                        cb(view);
+                        cb(snapshot);
                     } catch (const std::exception& e) {
                         if (m_config.on_error) {
                             m_config.on_error(std::string("MdbxLogger callback error: ") + e.what());
@@ -644,18 +645,18 @@ namespace logit {
             }
         }
 
-        static LogRecordView to_view(const Record& r) {
-            LogRecordView v;
-            v.session_id = r.session_id;
-            v.timestamp_ms = r.timestamp_ms;
-            v.sequence = r.sequence;
-            v.level = r.level;
-            v.message = r.message;
-            v.payload_id = r.payload_id;
-            v.file = r.file;
-            v.function = r.function;
-            v.line = r.line;
-            return v;
+        static LogRecordSnapshot to_log_record_snapshot(const Record& r) {
+            LogRecordSnapshot snapshot;
+            snapshot.session_id = r.session_id;
+            snapshot.timestamp_ms = r.timestamp_ms;
+            snapshot.sequence = r.sequence;
+            snapshot.level = r.level;
+            snapshot.message = r.message;
+            snapshot.payload_id = r.payload_id;
+            snapshot.file = r.file;
+            snapshot.function = r.function;
+            snapshot.line = r.line;
+            return snapshot;
         }
 
         static SessionView to_view(const Session& s) {
@@ -945,13 +946,13 @@ namespace logit {
                 return;
             }
 
-            std::vector<LogRecordView> written_views;
+            std::vector<LogRecordSnapshot> written_snapshots;
             try {
                 std::lock_guard<std::mutex> db_lock(m_db_mutex);
                 auto txn = m_connection->transaction(mdbxc::TransactionMode::WRITABLE);
                 for (size_t i = 0; i < batch.size(); ++i) {
                     Record record = write_item_locked(batch[i], txn);
-                    written_views.push_back(to_view(record));
+                    written_snapshots.push_back(to_log_record_snapshot(record));
                 }
                 txn.commit();
             } catch (const std::exception& e) {
@@ -968,7 +969,7 @@ namespace logit {
                 return;
             }
 
-            notify_callbacks(written_views);
+            notify_callbacks(written_snapshots);
         }
 
         Record write_item_locked(const MdbxLogItem& item, mdbxc::Transaction& txn) {

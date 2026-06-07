@@ -2999,7 +2999,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         auto* _reader = LOGIT_GET_LOG_READER(_idx); \
         return _reader \
             ? _reader->read_range(_from, _to, _limit) \
-            : std::vector<::logit::LogRecordView>{}; \
+            : std::vector<::logit::LogRecordSnapshot>{}; \
     }((logger_index), (from_ms), (to_ms), (limit)))
 
 /// \brief Reads recent records from a backend that supports ILogReader.
@@ -3013,7 +3013,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
         auto* _reader = LOGIT_GET_LOG_READER(_idx); \
         return _reader \
             ? _reader->read_recent(_limit, _period_ms, _order) \
-            : std::vector<::logit::LogRecordView>{}; \
+            : std::vector<::logit::LogRecordSnapshot>{}; \
     }((logger_index), (limit), (period_ms), (order)))
 
 /// \brief Reads recent records in ascending order (oldest first).
@@ -3046,7 +3046,7 @@ static_assert(LOGIT_LEVEL_FATAL == static_cast<int>(logit::LogLevel::LOG_LVL_FAT
 
 /// \brief Registers a callback to receive newly written log records.
 /// \param logger_index Index of logger.
-/// \param callback     Function invoked with LogRecordView after each commit.
+/// \param callback     Function invoked with an owning LogRecordSnapshot after each commit.
 /// \return Callback id (0 if the backend does not support subscriptions).
 #define LOGIT_ADD_LOG_CALLBACK(logger_index, callback) \
     ([](int _idx, ::logit::ILogSubscriber::Callback _cb) -> uint64_t { \

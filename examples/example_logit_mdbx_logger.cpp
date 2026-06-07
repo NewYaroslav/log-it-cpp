@@ -193,10 +193,10 @@ int main() {
 
         // Live subscription: the LOGIT_* callback macros also work with both
         // MemoryLogger and MdbxLogger.
-        std::vector<logit::LogRecordView> live_updates;
+        std::vector<logit::LogRecordSnapshot> live_updates;
         const uint64_t cb_id = LOGIT_ADD_LOG_CALLBACK(
             mdbx_index,
-            ([&live_updates](const logit::LogRecordView& v) {
+            ([&live_updates](const logit::LogRecordSnapshot& v) {
                 live_updates.push_back(v);
             }));
 

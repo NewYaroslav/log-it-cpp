@@ -20,12 +20,12 @@ logit::LogRecord make_record(int64_t ts, int line, const char* function = "write
         false);
 }
 
-bool test_add_remove_and_view() {
+bool test_add_remove_and_snapshot() {
     logit::MemoryLogger logger(logit::MemoryLogger::Config{0, 0, 0});
-    std::vector<logit::LogRecordView> received;
+    std::vector<logit::LogRecordSnapshot> received;
 
     const uint64_t callback_id = logger.add_log_callback(
-        [&received](const logit::LogRecordView& view) {
+        [&received](const logit::LogRecordSnapshot& view) {
             received.push_back(view);
         });
 
@@ -56,9 +56,9 @@ bool test_callback_order() {
     logit::MemoryLogger logger(logit::MemoryLogger::Config{0, 0, 0});
     std::vector<int> order;
 
-    logger.add_log_callback([&order](const logit::LogRecordView&) { order.push_back(1); });
-    logger.add_log_callback([&order](const logit::LogRecordView&) { order.push_back(2); });
-    logger.add_log_callback([&order](const logit::LogRecordView&) { order.push_back(3); });
+    logger.add_log_callback([&order](const logit::LogRecordSnapshot&) { order.push_back(1); });
+    logger.add_log_callback([&order](const logit::LogRecordSnapshot&) { order.push_back(2); });
+    logger.add_log_callback([&order](const logit::LogRecordSnapshot&) { order.push_back(3); });
 
     logger.log(make_record(200, 20, "ordered"), "ordered");
 
@@ -73,7 +73,7 @@ bool test_callbacks_can_reenter_logger() {
     uint64_t callback_id = 0;
 
     callback_id = logger.add_log_callback(
-        [&logger, &calls, &failed, &callback_id](const logit::LogRecordView& view) {
+        [&logger, &calls, &failed, &callback_id](const logit::LogRecordSnapshot& view) {
             const auto entries = logger.get_buffered_entries();
             if (entries.empty() || entries.back().message != view.message) {
                 failed = true;
@@ -103,7 +103,7 @@ bool test_thread_safety() {
     std::atomic<bool> failed(false);
 
     const uint64_t primary_id = logger.add_log_callback(
-        [&primary_calls, &failed](const logit::LogRecordView& view) {
+        [&primary_calls, &failed](const logit::LogRecordSnapshot& view) {
             if (view.message.empty()) {
                 failed = true;
             }
@@ -129,7 +129,7 @@ bool test_thread_safety() {
         }
         for (int i = 0; i < 500; ++i) {
             const uint64_t id = logger.add_log_callback(
-                [&transient_calls](const logit::LogRecordView&) {
+                [&transient_calls](const logit::LogRecordSnapshot&) {
                     transient_calls.fetch_add(1, std::memory_order_relaxed);
                 });
             if (!logger.remove_log_callback(id)) {
@@ -166,7 +166,7 @@ bool test_thread_safety() {
 } // namespace
 
 int main() {
-    if (!test_add_remove_and_view()) {
+    if (!test_add_remove_and_snapshot()) {
         return 1;
     }
     if (!test_callback_order()) {

@@ -14,21 +14,25 @@ namespace logit {
     /// \class ILogSubscriber
     /// \brief Optional interface for backends that can notify callers when a record is successfully written.
     ///
-    /// Callbacks receive a \ref LogRecordView containing the persisted preview and metadata.
-    /// They are guaranteed to be invoked only after the record has been committed to storage.
+    /// Callbacks receive a \ref LogRecordSnapshot containing the persisted preview and metadata.
+    /// String fields inside the snapshot are owned copies and may be stored by value.
+    /// Callbacks are invoked in registration order after the record has been committed to storage.
     /// Implementations must not hold internal locks while invoking callbacks.
     class ILogSubscriber {
     public:
-        using Callback = std::function<void(const LogRecordView&)>;
+        using Callback = std::function<void(const LogRecordSnapshot&)>;
 
         virtual ~ILogSubscriber() = default;
 
         /// \brief Registers a callback to be invoked after each successfully written record.
-        /// \param callback Function called with the written LogRecordView.
+        /// \param callback Function called with the written LogRecordSnapshot.
         /// \return Stable callback id that can be passed to remove_log_callback.
         virtual uint64_t add_log_callback(Callback callback) = 0;
 
         /// \brief Unregisters a previously added callback.
+        ///
+        /// Removal prevents future dispatch snapshots from including the callback, but cannot
+        /// cancel an invocation that has already been copied for dispatch.
         /// \param callback_id Id returned by add_log_callback.
         /// \return True if the callback existed and was removed.
         virtual bool remove_log_callback(uint64_t callback_id) = 0;

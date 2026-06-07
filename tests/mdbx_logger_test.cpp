@@ -643,9 +643,9 @@ void test_callback_sync() {
         config.async = false;
 
         logit::MdbxLogger logger(config);
-        std::vector<logit::LogRecordView> received;
+        std::vector<logit::LogRecordSnapshot> received;
         const uint64_t cb_id = logger.add_log_callback(
-            [&received](const logit::LogRecordView& v) {
+            [&received](const logit::LogRecordSnapshot& v) {
                 received.push_back(v);
             });
         assert(cb_id != 0);
@@ -677,9 +677,9 @@ void test_callback_async() {
         config.max_batch_size = 64;
 
         logit::MdbxLogger logger(config);
-        std::vector<logit::LogRecordView> received;
+        std::vector<logit::LogRecordSnapshot> received;
         const uint64_t cb_id = logger.add_log_callback(
-            [&received](const logit::LogRecordView& v) {
+            [&received](const logit::LogRecordSnapshot& v) {
                 received.push_back(v);
             });
         assert(cb_id != 0);
@@ -693,6 +693,38 @@ void test_callback_async() {
         assert(received[1].message == "async-2");
 
         assert(logger.remove_log_callback(cb_id));
+        logger.shutdown();
+    }
+
+    cleanup_db(path);
+}
+
+void test_callback_order() {
+    const std::string path = make_db_path("cb_order");
+    cleanup_db(path);
+
+    {
+        logit::MdbxLogger::Config config;
+        config.path = path;
+        config.async = false;
+
+        logit::MdbxLogger logger(config);
+        std::vector<int> order;
+
+        logger.add_log_callback([&order](const logit::LogRecordSnapshot&) {
+            order.push_back(1);
+        });
+        logger.add_log_callback([&order](const logit::LogRecordSnapshot&) {
+            order.push_back(2);
+        });
+        logger.add_log_callback([&order](const logit::LogRecordSnapshot&) {
+            order.push_back(3);
+        });
+
+        logger.log(make_record(logit::LogLevel::LOG_LVL_INFO, 9500, 95), "ordered");
+        const std::vector<int> expected{1, 2, 3};
+        assert(order == expected);
+
         logger.shutdown();
     }
 
@@ -716,11 +748,11 @@ void test_callback_exception_safe() {
         bool second_called = false;
 
         logger.add_log_callback(
-            [](const logit::LogRecordView&) {
+            [](const logit::LogRecordSnapshot&) {
                 throw std::runtime_error("boom");
             });
         logger.add_log_callback(
-            [&second_called](const logit::LogRecordView&) {
+            [&second_called](const logit::LogRecordSnapshot&) {
                 second_called = true;
             });
 
@@ -754,6 +786,7 @@ int main() {
     test_read_recent();
     test_callback_sync();
     test_callback_async();
+    test_callback_order();
     test_callback_exception_safe();
     std::cout << "PASS: mdbx_logger_test" << std::endl;
     return 0;
