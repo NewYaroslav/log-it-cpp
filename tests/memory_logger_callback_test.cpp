@@ -112,7 +112,7 @@ bool test_thread_safety() {
 
     std::vector<std::thread> writers;
     for (int t = 0; t < writer_count; ++t) {
-        writers.push_back(std::thread([&logger, &sequence, &start, t]() {
+        writers.push_back(std::thread([&logger, &sequence, &start, logs_per_writer, t]() {
             while (!start.load(std::memory_order_acquire)) {
                 std::this_thread::yield();
             }
