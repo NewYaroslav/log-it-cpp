@@ -48,6 +48,7 @@ else()
         logger_snapshot_read_path_test.cpp
         logger_clear_api_test.cpp
         memory_logger_backend_test.cpp
+        memory_logger_callback_test.cpp
         memory_logger_concurrency_test.cpp
         memory_logger_integration_test.cpp
         mdbx_logger_test.cpp

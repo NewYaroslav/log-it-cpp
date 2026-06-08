@@ -48,6 +48,8 @@ See the macro examples below or browse the `examples/` folder for focused demons
 
 Recent focused examples include:
 
+- `examples/example_logit_memory_logger.cpp` - in-memory snapshots plus shared `ILogReader` and `ILogSubscriber` macros.
+- `examples/example_logit_mdbx_logger.cpp` - persistent MDBX storage plus the same shared read/callback macros and MDBX-specific session/payload APIs.
 - `examples/example_logit_otlp_http.cpp` - OTLP/HTTP export with batching, retries, optional compression, and contextual trace/span fields.
 - `examples/example_logit_prometheus_payload.cpp` - callback-based Prometheus payload emission with custom registry metrics.
 - `examples/example_logit_prometheus_server.cpp` - embedded `/metrics` endpoint with built-in and application metrics.
@@ -228,6 +230,57 @@ full object footprint of each `BufferedLogEntry`. Snapshot reads are lightweight
 at the `Logger` layer and do not take the per-backend execution mutex, but they
 still synchronize on the memory backend's own mutex while copying the current
 buffer.
+
+### Common stored-log API
+
+Use `ILogReader` and `ILogSubscriber` when application code should work with
+either `MemoryLogger` or `MdbxLogger`. The shared macro helpers return
+`LogRecordSnapshot` records and avoid depending on backend-specific storage:
+
+```cpp
+#include <logit.hpp>
+
+int main() {
+    // This can be a MemoryLogger index or an MdbxLogger index.
+    const int backend_index = 0;
+
+    const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
+    const auto recent = LOGIT_READ_RECENT_ASC(backend_index, 100, 0);
+    const auto window = LOGIT_READ_RANGE(
+        backend_index,
+        now_ms - 60LL * 60 * 1000,
+        now_ms + 1,
+        0);
+
+    std::vector<logit::LogRecordSnapshot> live_updates;
+    const uint64_t callback_id = LOGIT_ADD_LOG_CALLBACK(
+        backend_index,
+        ([&live_updates](const logit::LogRecordSnapshot& record) {
+            live_updates.push_back(record);
+        }));
+
+    LOGIT_INFO_TO(backend_index, "visible through read and callback APIs");
+    LOGIT_WAIT();
+    LOGIT_REMOVE_LOG_CALLBACK(backend_index, callback_id);
+
+    (void)recent;
+    (void)window;
+    (void)live_updates;
+}
+```
+
+`LOGIT_READ_RANGE`, `LOGIT_READ_RECENT_ASC`, and
+`LOGIT_READ_RECENT_DESC` use `ILogReader`. `LOGIT_ADD_LOG_CALLBACK` and
+`LOGIT_REMOVE_LOG_CALLBACK` use `ILogSubscriber`; callbacks receive a
+`LogRecordSnapshot` after the backend has written the record. Snapshots own
+their string fields, so they can be copied or stored by value. Callback
+dispatch follows registration order. This is the preferred fallback-friendly
+API between `MemoryLogger` and `MdbxLogger`.
+
+`LOGIT_GET_BUFFERED_STRINGS` and `LOGIT_GET_BUFFERED_ENTRIES` are convenience
+helpers for the `MemoryLogger` snapshot buffer. They are useful for local
+diagnostics panes, but code that should switch between in-memory and MDBX
+storage should prefer the shared `LOGIT_READ_*` and callback macros above.
 
 File-based backends also expose persisted-file access through
 `LOGIT_LIST_LOG_FILES(index)`, `LOGIT_READ_LOG_FILE(index, path)`, and

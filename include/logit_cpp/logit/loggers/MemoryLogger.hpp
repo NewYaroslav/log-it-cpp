@@ -7,6 +7,9 @@
 
 #include "ILogger.hpp"
 #include "ILogReader.hpp"
+#include "ILogSubscriber.hpp"
+
+#include <map>
 
 namespace logit {
 
@@ -16,7 +19,7 @@ namespace logit {
     /// \details Snapshots are returned oldest-to-newest. Read operations avoid
     /// `Logger`-level execution serialization, but still synchronize on this
     /// backend's own mutex while copying the current buffer.
-    class MemoryLogger : public ILogger, public ILogReader {
+    class MemoryLogger : public ILogger, public ILogReader, public ILogSubscriber {
     public:
         /// \struct Config
         /// \brief Retention limits for the in-memory buffer.
@@ -58,15 +61,23 @@ namespace logit {
             entry.function = record.function;
             entry.message = message;
 
-            std::lock_guard<std::mutex> lock(m_mutex);
-            m_evict_expired_locked(record.timestamp_ms);
+            LogRecordSnapshot written_snapshot;
+            {
+                std::lock_guard<std::mutex> lock(m_mutex);
+                m_evict_expired_locked(record.timestamp_ms);
 
-            m_total_bytes += m_entry_bytes(entry);
-            m_entries.push_back(std::move(entry));
-            m_last_log_ts.store(record.timestamp_ms, std::memory_order_relaxed);
-            m_last_log_mono_ts.store(LOGIT_MONOTONIC_MS(), std::memory_order_relaxed);
+                // Capture an owning snapshot before moving the entry; callbacks
+                // are dispatched only after the buffer update finishes.
+                written_snapshot = to_snapshot(entry);
+                m_total_bytes += m_entry_bytes(entry);
+                m_entries.push_back(std::move(entry));
+                m_last_log_ts.store(record.timestamp_ms, std::memory_order_relaxed);
+                m_last_log_mono_ts.store(LOGIT_MONOTONIC_MS(), std::memory_order_relaxed);
 
-            m_enforce_limits_locked(record.timestamp_ms);
+                m_enforce_limits_locked(record.timestamp_ms);
+            }
+
+            notify_callbacks(written_snapshot);
         }
 
         /// \brief Retrieve legacy string-based metadata.
@@ -143,6 +154,18 @@ namespace logit {
         /// \brief Memory logger is synchronous, so no flush step is needed.
         void wait() override {}
 
+        uint64_t add_log_callback(Callback callback) override {
+            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+            const uint64_t id = m_next_callback_id.fetch_add(1, std::memory_order_relaxed);
+            m_callbacks.emplace(id, std::move(callback));
+            return id;
+        }
+
+        bool remove_log_callback(uint64_t callback_id) override {
+            std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+            return m_callbacks.erase(callback_id) > 0;
+        }
+
         /// \brief Clears buffered entries.
         LogClearResult clear_logs(const LogClearOptions& options = LogClearOptions()) override {
             (void)options;
@@ -160,15 +183,15 @@ namespace logit {
         }
 
         /// \brief Reads records in `[from_ms, to_ms)` ordered by timestamp.
-        std::vector<LogRecordView> read_range(
+        std::vector<LogRecordSnapshot> read_range(
                 int64_t from_ms,
                 int64_t to_ms,
                 std::size_t limit = 0) const override {
 #if __cplusplus >= 201703L
             auto result = read_range_result(from_ms, to_ms, limit);
-            return result.value ? *result.value : std::vector<LogRecordView>();
+            return result.value ? *result.value : std::vector<LogRecordSnapshot>();
 #else
-            std::vector<LogRecordView> out;
+            std::vector<LogRecordSnapshot> out;
             if (to_ms <= from_ms) {
                 return out;
             }
@@ -178,7 +201,7 @@ namespace logit {
 
             for (const auto& entry : m_entries) {
                 if (entry.timestamp_ms >= from_ms && entry.timestamp_ms < to_ms) {
-                    out.push_back(to_view(entry));
+                    out.push_back(to_snapshot(entry));
                     if (limit > 0 && out.size() >= limit) {
                         break;
                     }
@@ -190,11 +213,11 @@ namespace logit {
 
 #if __cplusplus >= 201703L
         /// \brief Reads records and reports MemoryLogger read status.
-        LogReadResult<std::vector<LogRecordView>> read_range_result(
+        LogReadResult<std::vector<LogRecordSnapshot>> read_range_result(
                 int64_t from_ms,
                 int64_t to_ms,
                 std::size_t limit = 0) const override {
-            LogReadResult<std::vector<LogRecordView>> result;
+            LogReadResult<std::vector<LogRecordSnapshot>> result;
             result.value.emplace();
             if (to_ms <= from_ms) {
                 return result;
@@ -205,7 +228,7 @@ namespace logit {
 
             for (const auto& entry : m_entries) {
                 if (entry.timestamp_ms >= from_ms && entry.timestamp_ms < to_ms) {
-                    result.value->push_back(to_view(entry));
+                    result.value->push_back(to_snapshot(entry));
                     if (limit > 0 && result.value->size() >= limit) {
                         break;
                     }
@@ -216,15 +239,15 @@ namespace logit {
 #endif
 
         /// \brief Reads the most recent records.
-        std::vector<LogRecordView> read_recent(
+        std::vector<LogRecordSnapshot> read_recent(
                 std::size_t limit,
                 int64_t period_ms = 0,
                 LogReadOrder order = LogReadOrder::Ascending) const override {
 #if __cplusplus >= 201703L
             auto result = read_recent_result(limit, period_ms, order);
-            return result.value ? *result.value : std::vector<LogRecordView>();
+            return result.value ? *result.value : std::vector<LogRecordSnapshot>();
 #else
-            std::vector<LogRecordView> out;
+            std::vector<LogRecordSnapshot> out;
             std::lock_guard<std::mutex> lock(m_mutex);
             m_evict_expired_locked(LOGIT_CURRENT_TIMESTAMP_MS());
 
@@ -233,7 +256,7 @@ namespace logit {
 
             for (auto it = m_entries.rbegin(); it != m_entries.rend(); ++it) {
                 if (period_ms <= 0 || it->timestamp_ms >= from_ms) {
-                    out.push_back(to_view(*it));
+                    out.push_back(to_snapshot(*it));
                     if (limit > 0 && out.size() >= limit) {
                         break;
                     }
@@ -249,11 +272,11 @@ namespace logit {
 
 #if __cplusplus >= 201703L
         /// \brief Reads recent records and reports MemoryLogger read status.
-        LogReadResult<std::vector<LogRecordView>> read_recent_result(
+        LogReadResult<std::vector<LogRecordSnapshot>> read_recent_result(
                 std::size_t limit,
                 int64_t period_ms = 0,
                 LogReadOrder order = LogReadOrder::Ascending) const override {
-            LogReadResult<std::vector<LogRecordView>> result;
+            LogReadResult<std::vector<LogRecordSnapshot>> result;
             result.value.emplace();
             std::lock_guard<std::mutex> lock(m_mutex);
             m_evict_expired_locked(LOGIT_CURRENT_TIMESTAMP_MS());
@@ -263,7 +286,7 @@ namespace logit {
 
             for (auto it = m_entries.rbegin(); it != m_entries.rend(); ++it) {
                 if (period_ms <= 0 || it->timestamp_ms >= from_ms) {
-                    result.value->push_back(to_view(*it));
+                    result.value->push_back(to_snapshot(*it));
                     if (limit > 0 && result.value->size() >= limit) {
                         break;
                     }
@@ -278,16 +301,34 @@ namespace logit {
 #endif
 
     private:
-        static LogRecordView to_view(const BufferedLogEntry& e) {
-            LogRecordView v;
-            v.level = e.level;
-            v.timestamp_ms = e.timestamp_ms;
-            v.file = e.file;
-            v.line = e.line;
-            v.function = e.function;
-            v.message = e.message;
-            return v;
+        static LogRecordSnapshot to_snapshot(const BufferedLogEntry& e) {
+            LogRecordSnapshot snapshot;
+            snapshot.level = e.level;
+            snapshot.timestamp_ms = e.timestamp_ms;
+            snapshot.file = e.file;
+            snapshot.line = e.line;
+            snapshot.function = e.function;
+            snapshot.message = e.message;
+            return snapshot;
         }
+
+        void notify_callbacks(const LogRecordSnapshot& snapshot) const {
+            std::vector<Callback> callbacks_copy;
+            {
+                std::lock_guard<std::mutex> lock(m_callbacks_mutex);
+                callbacks_copy.reserve(m_callbacks.size());
+                for (const auto& kv : m_callbacks) {
+                    callbacks_copy.push_back(kv.second);
+                }
+            }
+            for (const auto& cb : callbacks_copy) {
+                try {
+                    cb(snapshot);
+                } catch (...) {
+                }
+            }
+        }
+
         // Count only the retained formatted payload, not the full object footprint.
         static std::size_t m_entry_bytes(const BufferedLogEntry& entry) {
             return entry.message.size();
@@ -349,6 +390,9 @@ namespace logit {
         std::atomic<int64_t> m_last_log_ts = ATOMIC_VAR_INIT(0);
         std::atomic<int64_t> m_last_log_mono_ts = ATOMIC_VAR_INIT(0);
         std::atomic<int> m_log_level = ATOMIC_VAR_INIT(static_cast<int>(LogLevel::LOG_LVL_TRACE));
+        mutable std::mutex m_callbacks_mutex;
+        std::map<uint64_t, Callback> m_callbacks;
+        std::atomic<uint64_t> m_next_callback_id{1};
     };
 
 } // namespace logit

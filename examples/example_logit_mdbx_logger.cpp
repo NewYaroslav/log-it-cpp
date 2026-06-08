@@ -54,9 +54,12 @@ int main() {
         std::cerr << "[MdbxLogger error callback] " << msg << std::endl;
     };
 
-    // Add to the registry in single_mode so it does not duplicate console output.
-    // After this call the logger index depends on what was added before it.
-    LOGIT_ADD_LOGGER_SINGLE_MODE(
+    // Add a console logger for live observation (optional).
+    LOGIT_ADD_CONSOLE_DEFAULT();
+
+    // Add to the registry as a regular backend so standard LOGIT_* macros
+    // write both to MDBX and to the console logger above.
+    LOGIT_ADD_LOGGER(
         logit::MdbxLogger,
         (mdbx_config),
         logit::SimpleLogFormatter,
@@ -64,9 +67,6 @@ int main() {
 
     // The MDBX logger is now the last added backend; its index is:
     const int mdbx_index = static_cast<int>(logit::Logger::get_instance().logger_count()) - 1;
-
-    // Also add a console logger for live observation (optional).
-    LOGIT_ADD_CONSOLE_DEFAULT();
 
     // ------------------------------------------------------------------
     // 2. Log messages via standard macros
@@ -96,7 +96,7 @@ int main() {
     LOGIT_WAIT();
 
     // ------------------------------------------------------------------
-    // 3. Read the MDBX logger directly via typed macro helpers
+    // 3. Read through the common ILogReader API, then use MDBX-only extras
     // ------------------------------------------------------------------
     LOGIT_WITH_LOGGER_AS(mdbx_index, logit::MdbxLogger, mdbx) {
         // Session metadata
@@ -109,9 +109,14 @@ int main() {
             std::cout << "  schema_ver:  " << session_opt->schema_version << std::endl;
         }
 
+        // The LOGIT_READ_* macros work with both MemoryLogger and MdbxLogger.
         // All records in a wide time window (last 24 hours).
         const int64_t now_ms = LOGIT_CURRENT_TIMESTAMP_MS();
-        auto all_records = mdbx->read_range(now_ms - 24 * 60 * 60 * 1000, now_ms + 1);
+        auto all_records = LOGIT_READ_RANGE(
+            mdbx_index,
+            now_ms - 24LL * 60 * 60 * 1000,
+            now_ms + 1,
+            0);
 
         std::cout << "\n--- All records (" << all_records.size() << ") ---" << std::endl;
         for (const auto& r : all_records) {
@@ -163,9 +168,11 @@ int main() {
             auto today_ms = std::chrono::milliseconds(static_cast<int64_t>(midnight_t) * 1000);
             auto tomorrow_ms = today_ms + std::chrono::hours(24);
 
-            auto day_records = mdbx->read_range(
+            auto day_records = LOGIT_READ_RANGE(
+                mdbx_index,
                 today_ms.count(),
-                tomorrow_ms.count());
+                tomorrow_ms.count(),
+                0);
 
             std::cout << "\n--- Records for today (" << day_records.size() << ") ---" << std::endl;
             for (const auto& r : day_records) {
@@ -176,20 +183,22 @@ int main() {
             std::cerr << "Date query example skipped: " << e.what() << std::endl;
         }
 
-        // read_recent: last 100 records in ascending order
-        auto recent = mdbx->read_recent(100, 0, logit::LogReadOrder::Ascending);
-        std::cout << "\n--- read_recent(100) ascending (" << recent.size() << ") ---" << std::endl;
+        // read_recent: last 100 records in ascending order, through ILogReader.
+        auto recent = LOGIT_READ_RECENT_ASC(mdbx_index, 100, 0);
+        std::cout << "\n--- LOGIT_READ_RECENT_ASC(100) (" << recent.size() << ") ---" << std::endl;
         for (const auto& r : recent) {
             std::cout << "  [" << logit::to_string(r.level) << "] "
                       << r.timestamp_ms << " " << r.message << std::endl;
         }
 
-        // Live subscription: snapshot + real-time updates
-        std::vector<logit::LogRecordView> live_updates;
-        uint64_t cb_id = mdbx->add_log_callback(
-            [&live_updates](const logit::LogRecordView& v) {
+        // Live subscription: the LOGIT_* callback macros also work with both
+        // MemoryLogger and MdbxLogger.
+        std::vector<logit::LogRecordSnapshot> live_updates;
+        const uint64_t cb_id = LOGIT_ADD_LOG_CALLBACK(
+            mdbx_index,
+            ([&live_updates](const logit::LogRecordSnapshot& v) {
                 live_updates.push_back(v);
-            });
+            }));
 
         LOGIT_INFO("Live event 1 via callback");
         LOGIT_INFO("Live event 2 via callback");
@@ -202,7 +211,7 @@ int main() {
                       << r.message << std::endl;
         }
 
-        if (mdbx->remove_log_callback(cb_id)) {
+        if (LOGIT_REMOVE_LOG_CALLBACK(mdbx_index, cb_id)) {
             std::cout << "Callback removed" << std::endl;
         }
 
