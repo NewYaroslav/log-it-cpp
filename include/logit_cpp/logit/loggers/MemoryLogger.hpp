@@ -66,6 +66,8 @@ namespace logit {
                 std::lock_guard<std::mutex> lock(m_mutex);
                 m_evict_expired_locked(record.timestamp_ms);
 
+                // Capture an owning snapshot before moving the entry; callbacks
+                // are dispatched only after the buffer update finishes.
                 written_snapshot = to_snapshot(entry);
                 m_total_bytes += m_entry_bytes(entry);
                 m_entries.push_back(std::move(entry));
